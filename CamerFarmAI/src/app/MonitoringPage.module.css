@@ -1,0 +1,423 @@
+.monitoringPage {
+  min-height: calc(100vh - 90px);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  padding: var(--spacing-4xl) var(--spacing-lg);
+}
+
+.monitoringPage__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xl);
+}
+
+.monitoringPage__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.monitoringPage__sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--color-primary);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.monitoringPage__sectionTitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.monitoringPage__modeToggle {
+  display: flex;
+  gap: var(--spacing-xs);
+  background-color: var(--color-gray-100);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-lg);
+}
+
+.monitoringPage__modeButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--border-radius-md);
+  background-color: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.monitoringPage__modeButton:hover {
+  background-color: var(--color-gray-200);
+}
+
+.monitoringPage__modeButtonActive {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.monitoringPage__modeInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.monitoringPage__sensorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-xl);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.monitoringPage__sensorsGridVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.monitoringPage__widget {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.monitoringPage__widget:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.monitoringPage__widgetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.monitoringPage__widgetTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.monitoringPage__widgetUpdated {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+}
+
+/* Jauge semi-circulaire */
+.monitoringPage__gaugeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.monitoringPage__gauge {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+.monitoringPage__gaugeValue {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.monitoringPage__gaugeStatus {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+/* Widget d'humidité du sol */
+.monitoringPage__humidityContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.monitoringPage__humidityValue {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.monitoringPage__humidityStatus {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+.monitoringPage__progressBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.monitoringPage__progressBarTrack {
+  width: 100%;
+  height: 24px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.monitoringPage__progressBarFill {
+  height: 100%;
+  border-radius: var(--border-radius-full);
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+}
+
+.monitoringPage__progressBarLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  padding: 0 var(--spacing-xs);
+}
+
+/* Widget de luminosité */
+.monitoringPage__luminosityContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
+  border-radius: var(--border-radius-lg);
+}
+
+.monitoringPage__luminosityIcon {
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+.monitoringPage__luminosityValue {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-align: center;
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-xs);
+}
+
+.monitoringPage__luminosityUnit {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-light);
+}
+
+.monitoringPage__luminosityStatus {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+/* Widget de niveau d'eau */
+.monitoringPage__waterLevelContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.monitoringPage__verticalProgressBar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  height: 200px;
+}
+
+.monitoringPage__verticalProgressBarTrack {
+  width: 40px;
+  height: 100%;
+  background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-full);
+  position: relative;
+  overflow: hidden;
+}
+
+.monitoringPage__verticalProgressBarFill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-radius: var(--border-radius-full);
+  transition: height 0.5s ease;
+}
+
+.monitoringPage__verticalProgressBarIndicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 4px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-full);
+  transition: bottom 0.5s ease;
+}
+
+.monitoringPage__verticalProgressBarLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  padding: var(--spacing-xs) 0;
+}
+
+.monitoringPage__waterLevelValue {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+}
+
+.monitoringPage__waterLevelStatus {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+/* Section de contrôle des équipements */
+.monitoringPage__equipmentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.monitoringPage__equipmentGridVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.monitoringPage__equipmentCard {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.monitoringPage__equipmentCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.monitoringPage__equipmentIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monitoringPage__equipmentTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  text-align: center;
+}
+
+.monitoringPage__equipmentControls {
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.monitoringPage__equipmentButton {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--color-white);
+  color: var(--color-text);
+}
+
+.monitoringPage__equipmentButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.monitoringPage__equipmentButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.monitoringPage__equipmentButtonActive {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.monitoringPage__equipmentButtonOff {
+  background-color: #ef4444;
+  color: var(--color-white);
+  border-color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .monitoringPage {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .monitoringPage__sensorsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .monitoringPage__equipmentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .monitoringPage__gauge {
+    max-width: 250px;
+  }
+
+  .monitoringPage__luminosityValue {
+    font-size: var(--font-size-3xl);
+  }
+}
+

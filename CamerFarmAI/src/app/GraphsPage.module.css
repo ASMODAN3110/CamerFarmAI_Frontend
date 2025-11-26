@@ -1,0 +1,259 @@
+.graphsPage {
+  min-height: calc(100vh - 90px);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  padding: var(--spacing-4xl) var(--spacing-lg);
+}
+
+.graphsPage__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.graphsPage__titleSection {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-white);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.graphsPage__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  letter-spacing: 0.05em;
+}
+
+.graphsPage__welcomeSection {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.graphsPage__welcomeTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.graphsPage__welcomeDescription {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: var(--line-height-relaxed);
+  margin: 0 0 var(--spacing-md) 0;
+  max-width: 800px;
+}
+
+.graphsPage__welcomeHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.graphsPage__sensorFilters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.graphsPage__sensorButton {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  background-color: var(--color-gray-100);
+  color: var(--color-text);
+}
+
+.graphsPage__sensorButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.graphsPage__sensorButtonActive {
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  border-width: 2px;
+}
+
+.graphsPage__sensorButtonInactive {
+  background-color: var(--color-gray-100);
+  color: var(--color-text);
+}
+
+.graphsPage__sensorButtonInactive:hover {
+  background-color: var(--color-gray-200);
+}
+
+.graphsPage__sensorButtonLabel {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .graphsPage__sensorButtonLabel {
+    display: inline;
+  }
+}
+
+/* Sensor color classes */
+.sensorHumidity {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: var(--color-text) !important;
+}
+
+.sensorTemperature {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: var(--color-text) !important;
+}
+
+.sensorLuminosity {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  color: var(--color-text) !important;
+}
+
+.sensorCo2 {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+  color: var(--color-text) !important;
+}
+
+.graphsPage__dateRangeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.graphsPage__dateInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.graphsPage__dateInput {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.graphsPage__dateLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.graphsPage__dateInputField {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.graphsPage__dateInputField:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.graphsPage__applyButton {
+  margin-top: var(--spacing-sm);
+}
+
+@media (min-width: 640px) {
+  .graphsPage__dateRangeSection {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .graphsPage__applyButton {
+    margin-top: 0;
+  }
+}
+
+.graphsPage__chartSection {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.graphsPage__chartSectionVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.graphsPage__chartTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-xl) 0;
+}
+
+.graphsPage__chartContainer {
+  width: 100%;
+  height: 400px;
+}
+
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .graphsPage {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .graphsPage__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .graphsPage__chartContainer {
+    height: 300px;
+  }
+}
+
+
