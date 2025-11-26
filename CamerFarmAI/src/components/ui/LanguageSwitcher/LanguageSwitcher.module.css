@@ -1,0 +1,123 @@
+.languageSwitcher {
+  position: relative;
+}
+
+.languageSwitcher__button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: none;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.languageSwitcher__button:hover {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-primary);
+}
+
+.languageSwitcher__icon {
+  font-size: 16px;
+  color: var(--color-primary);
+}
+
+.languageSwitcher__current {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.languageSwitcher__chevron {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+  margin-left: var(--spacing-xs);
+}
+
+.languageSwitcher__chevronOpen {
+  transform: rotate(180deg);
+}
+
+.languageSwitcher__dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  right: 0;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 160px;
+  z-index: var(--z-index-dropdown);
+  overflow: hidden;
+  animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.languageSwitcher__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  transition: background-color 0.2s ease;
+}
+
+.languageSwitcher__option:hover {
+  background-color: var(--color-gray-100);
+}
+
+.languageSwitcher__optionActive {
+  background-color: var(--color-gray-100);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.languageSwitcher__flag {
+  font-size: 18px;
+}
+
+.languageSwitcher__label {
+  flex: 1;
+}
+
+.languageSwitcher__check {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .languageSwitcher__button {
+    padding: var(--spacing-xs);
+  }
+
+  .languageSwitcher__current {
+    font-size: var(--font-size-xs);
+  }
+
+  .languageSwitcher__dropdown {
+    right: 0;
+    left: auto;
+  }
+}
+

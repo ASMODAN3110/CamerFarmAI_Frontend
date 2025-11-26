@@ -1,0 +1,13 @@
+import { useLanguage } from './useLanguage';
+import { getTranslation, type TranslationKey } from '@/utils/translations';
+
+export function useTranslation() {
+  const { language } = useLanguage();
+
+  const t = (key: TranslationKey): string => {
+    return getTranslation(key, language);
+  };
+
+  return { t, language };
+}
+
