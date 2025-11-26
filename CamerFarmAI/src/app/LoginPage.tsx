@@ -5,7 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import logoIcon from '@/assets/logo.ico';
@@ -13,7 +13,8 @@ import styles from './LoginPage.module.css';
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const { login, isAuthenticated } = useAuth();
+  const login = useAuthStore((s) => s.login);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,19 +80,26 @@ export function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Appeler le service d'authentification
-      // const response = await authService.login(email, password);
-      // login(response.token, response.user);
-      
-      // Simulation temporaire
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      login('mock-token', { id: '1', email, name: email.split('@')[0] });
-      
+      await login(email, password);
       // Redirection après connexion réussie
       navigate('/', { replace: true });
-    } catch (error) {
+    } catch (error: any) {
+      // Afficher le message d'erreur détaillé du backend
+      const errorMessage = 
+        error?.response?.data?.message || 
+        error?.response?.data?.error || 
+        error?.message || 
+        t('login.errors.loginFailed') || 
+        'Échec de la connexion';
+      
+      console.error('Login error details:', {
+        status: error?.response?.status,
+        data: error?.response?.data,
+        message: errorMessage
+      });
+      
       setErrors({ 
-        email: t('login.errors.loginFailed'),
+        email: errorMessage,
       });
     } finally {
       setIsSubmitting(false);

@@ -14,6 +14,8 @@ export type TranslationKey =
   | 'login.title'
   | 'login.emailLabel'
   | 'login.emailPlaceholder'
+  | 'login.phoneLabel'
+  | 'login.phonePlaceholder'
   | 'login.passwordLabel'
   | 'login.passwordPlaceholder'
   | 'login.submitButton'
@@ -24,6 +26,8 @@ export type TranslationKey =
   | 'login.backToHome'
   | 'login.errors.emailRequired'
   | 'login.errors.emailInvalid'
+  | 'login.errors.phoneRequired'
+  | 'login.errors.phoneInvalid'
   | 'login.errors.passwordRequired'
   | 'login.errors.passwordMinLength'
   | 'login.errors.loginFailed'
@@ -165,6 +169,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.title': 'CONNEXION',
     'login.emailLabel': 'Adresse email',
     'login.emailPlaceholder': 'Adresse email',
+    'login.phoneLabel': 'Numéro de téléphone',
+    'login.phonePlaceholder': 'Entrez votre numéro de téléphone',
     'login.passwordLabel': 'Mot de passe',
     'login.passwordPlaceholder': 'Mot de passe',
     'login.submitButton': 'Se Connecter',
@@ -175,6 +181,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.backToHome': 'Retour à l\'accueil',
     'login.errors.emailRequired': 'L\'adresse email est requise',
     'login.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'login.errors.phoneRequired': 'Le numéro de téléphone est requis',
+    'login.errors.phoneInvalid': 'Le numéro de téléphone n\'est pas valide',
     'login.errors.passwordRequired': 'Le mot de passe est requis',
     'login.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 6 caractères',
     'login.errors.loginFailed': 'Échec de la connexion. Vérifiez vos identifiants.',
@@ -315,6 +323,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.title': 'LOGIN',
     'login.emailLabel': 'Email address',
     'login.emailPlaceholder': 'Email address',
+    'login.phoneLabel': 'Phone number',
+    'login.phonePlaceholder': 'Enter your phone number',
     'login.passwordLabel': 'Password',
     'login.passwordPlaceholder': 'Password',
     'login.submitButton': 'Log In',
@@ -325,6 +335,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.backToHome': 'Back to home',
     'login.errors.emailRequired': 'Email address is required',
     'login.errors.emailInvalid': 'Email address is invalid',
+    'login.errors.phoneRequired': 'Phone number is required',
+    'login.errors.phoneInvalid': 'Phone number is invalid',
     'login.errors.passwordRequired': 'Password is required',
     'login.errors.passwordMinLength': 'Password must be at least 6 characters',
     'login.errors.loginFailed': 'Login failed. Please check your credentials.',
@@ -465,6 +477,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.title': 'SEŊO',
     'login.emailLabel': 'Nder email',
     'login.emailPlaceholder': 'Nder email',
+    'login.phoneLabel': 'Nder tel',
+    'login.phonePlaceholder': 'Naatu nder tel maa',
     'login.passwordLabel': 'Finnde',
     'login.passwordPlaceholder': 'Finnde',
     'login.submitButton': 'Seŋo',
@@ -475,6 +489,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.backToHome': 'Rutto fuɗɗo',
     'login.errors.emailRequired': 'Nder email ina tawaa',
     'login.errors.emailInvalid': 'Nder email fotaani',
+    'login.errors.phoneRequired': 'Nder tel ina tawaa',
+    'login.errors.phoneInvalid': 'Nder tel fotaani',
     'login.errors.passwordRequired': 'Finnde ina tawaa',
     'login.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 6 ɓuri',
     'login.errors.loginFailed': 'Seŋo Ɓaawtaani. Ɗaɓɓu keɓe maɓɓe.',

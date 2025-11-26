@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
 import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt } from 'react-icons/fa';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import logoIcon from '@/assets/logo.ico';
 import styles from './Header.module.css';
@@ -55,7 +55,8 @@ export function Header({
   const [isMobile, setIsMobile] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const logout = useAuthStore((s) => s.logout);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -92,8 +93,8 @@ export function Header({
     }));
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setProfileMenuOpen(false);
     setMobileMenuOpen(false);
     navigate('/');
