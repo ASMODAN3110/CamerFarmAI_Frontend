@@ -61,6 +61,31 @@ export type TranslationKey =
   | 'signup.errors.confirmPasswordRequired'
   | 'signup.errors.passwordsMismatch'
   | 'signup.errors.signupFailed'
+  | 'plantations.loading'
+  | 'plantations.list.title'
+  | 'plantations.create'
+  | 'plantations.area'
+  | 'plantations.viewDetails'
+  | 'plantations.empty.title'
+  | 'plantations.empty.message'
+  | 'plantations.empty.action'
+  | 'plantations.empty.icon'
+  | 'plantations.slogan.line1'
+  | 'plantations.slogan.line2'
+  | 'plantations.createModal.title'
+  | 'plantations.createModal.nameLabel'
+  | 'plantations.createModal.namePlaceholder'
+  | 'plantations.createModal.areaLabel'
+  | 'plantations.createModal.areaPlaceholder'
+  | 'plantations.createModal.locationLabel'
+  | 'plantations.createModal.locationPlaceholder'
+  | 'plantations.createModal.next'
+  | 'plantations.createModal.cancel'
+  | 'plantations.createModal.submitting'
+  | 'plantations.createModal.errors.nameRequired'
+  | 'plantations.createModal.errors.areaRequired'
+  | 'plantations.createModal.errors.areaInvalid'
+  | 'plantations.createModal.errors.locationRequired'
   | 'notifications.title'
   | 'notifications.empty'
   | 'hero.heading'
@@ -180,6 +205,31 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'footer.social.title': 'Suivez Nous',
     'footer.copyright': '© 2025 CamerFarm AI. Tous Droits Réservés.',
     'floatingButton.ariaLabel': 'Contacter le support',
+    'plantations.loading': 'Chargement des plantations...',
+    'plantations.list.title': 'Mes Plantations',
+    'plantations.create': 'Créer une plantation',
+    'plantations.area': 'Superficie',
+    'plantations.viewDetails': 'Voir les détails',
+    'plantations.empty.title': 'OUPS,',
+    'plantations.empty.message': 'Il semble que vous n\'ayez créé une plantation.',
+    'plantations.empty.action': 'Créer-en',
+    'plantations.empty.icon': 'Aucune plantation',
+    'plantations.slogan.line1': 'Modernisez vos cultures, automatisez vos tâches et améliorez vos récoltes',
+    'plantations.slogan.line2': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
+    'plantations.createModal.title': 'Entrez les informations du champ',
+    'plantations.createModal.nameLabel': 'Nom de votre plantation',
+    'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
+    'plantations.createModal.areaLabel': 'Superficie de plantation',
+    'plantations.createModal.areaPlaceholder': 'Entrer la superficie de votre plantation',
+    'plantations.createModal.locationLabel': 'Localisation',
+    'plantations.createModal.locationPlaceholder': 'Entrer la zone de votre plantation',
+    'plantations.createModal.next': 'Suivant',
+    'plantations.createModal.cancel': 'Annuler',
+    'plantations.createModal.submitting': 'Création...',
+    'plantations.createModal.errors.nameRequired': 'Le nom de la plantation est requis',
+    'plantations.createModal.errors.areaRequired': 'La superficie est requise',
+    'plantations.createModal.errors.areaInvalid': 'La superficie doit être un nombre valide',
+    'plantations.createModal.errors.locationRequired': 'La localisation est requise',
   },
   en: {
     'nav.home': 'Home',
@@ -270,6 +320,31 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'footer.social.title': 'Follow Us',
     'footer.copyright': '© 2025 CamerFarm AI. All Rights Reserved.',
     'floatingButton.ariaLabel': 'Contact support',
+    'plantations.loading': 'Loading plantations...',
+    'plantations.list.title': 'My Plantations',
+    'plantations.create': 'Create plantation',
+    'plantations.area': 'Area',
+    'plantations.viewDetails': 'View details',
+    'plantations.empty.title': 'OOPS,',
+    'plantations.empty.message': 'It seems you haven\'t created a plantation.',
+    'plantations.empty.action': 'Create one',
+    'plantations.empty.icon': 'No plantation',
+    'plantations.slogan.line1': 'Modernize your crops, automate your tasks and improve your harvests',
+    'plantations.slogan.line2': 'Connected and automated agriculture is the future',
+    'plantations.createModal.title': 'Enter field information',
+    'plantations.createModal.nameLabel': 'Name of your plantation',
+    'plantations.createModal.namePlaceholder': 'Enter the name of your plantation',
+    'plantations.createModal.areaLabel': 'Plantation area',
+    'plantations.createModal.areaPlaceholder': 'Enter the area of your plantation',
+    'plantations.createModal.locationLabel': 'Location',
+    'plantations.createModal.locationPlaceholder': 'Enter the zone of your plantation',
+    'plantations.createModal.next': 'Next',
+    'plantations.createModal.cancel': 'Cancel',
+    'plantations.createModal.submitting': 'Creating...',
+    'plantations.createModal.errors.nameRequired': 'Plantation name is required',
+    'plantations.createModal.errors.areaRequired': 'Area is required',
+    'plantations.createModal.errors.areaInvalid': 'Area must be a valid number',
+    'plantations.createModal.errors.locationRequired': 'Location is required',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -360,6 +435,31 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'footer.social.title': 'Jokkondir Amen',
     'footer.copyright': '© 2025 CamerFarm AI. Koɗɗe Fof Ɓe Jeyaa.',
     'floatingButton.ariaLabel': 'Jokkondir wallitorde',
+    'plantations.loading': 'Jokkondir nguurndam...',
+    'plantations.list.title': 'Nguurndam Am',
+    'plantations.create': 'Waɗu nguurndam',
+    'plantations.area': 'Leyɗe',
+    'plantations.viewDetails': 'Yiylaade keɓe',
+    'plantations.empty.title': 'ƁAAWO,',
+    'plantations.empty.message': 'Ɗaɓɓu aɗa waɗaani nguurndam.',
+    'plantations.empty.action': 'Waɗuɗe',
+    'plantations.empty.icon': 'Alaa nguurndam',
+    'plantations.slogan.line1': 'Ɓeyduɗe nguurndam maɓɓe, wattinde koɗɗe maɓɓe e ɓeyduɗe alaaɗe maɓɓe',
+    'plantations.slogan.line2': 'Ngaynaaɗe jokkondirɗam e wattinɗam ko koɗɗe jamaa',
+    'plantations.createModal.title': 'Naatu keɓe leyɗe',
+    'plantations.createModal.nameLabel': 'Innde nguurndam maa',
+    'plantations.createModal.namePlaceholder': 'Naatu innde nguurndam maa',
+    'plantations.createModal.areaLabel': 'Leyɗe nguurndam',
+    'plantations.createModal.areaPlaceholder': 'Naatu leyɗe nguurndam maa',
+    'plantations.createModal.locationLabel': 'Nokkuure',
+    'plantations.createModal.locationPlaceholder': 'Naatu nokkuure nguurndam maa',
+    'plantations.createModal.next': 'Jokku',
+    'plantations.createModal.cancel': 'Dirtu',
+    'plantations.createModal.submitting': 'Waɗaade...',
+    'plantations.createModal.errors.nameRequired': 'Innde nguurndam ina tawaa',
+    'plantations.createModal.errors.areaRequired': 'Leyɗe ina tawaa',
+    'plantations.createModal.errors.areaInvalid': 'Leyɗe ina tawaa limoore goonga',
+    'plantations.createModal.errors.locationRequired': 'Nokkuure ina tawaa',
   },
 };
 

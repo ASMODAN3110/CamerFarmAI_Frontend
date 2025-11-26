@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
@@ -24,6 +25,7 @@ interface Notification {
 interface HeaderProps {
   navItems?: NavItem[];
   currentPath?: string;
+  showAuthIcons?: boolean; // Force l'affichage des icônes de notification et profil
 }
 
 // Les labels seront traduits dynamiquement dans le composant
@@ -47,6 +49,7 @@ const authenticatedNavItemsConfig: Array<{
 export function Header({ 
   navItems,
   currentPath = '/',
+  showAuthIcons = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -54,6 +57,7 @@ export function Header({
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // Détection mobile
   useEffect(() => {
@@ -92,27 +96,28 @@ export function Header({
     logout();
     setProfileMenuOpen(false);
     setMobileMenuOpen(false);
+    navigate('/');
   };
 
   return (
     <header className={styles.header} role="banner">
       <div className={styles.header__container}>
-        <a href="/" className={styles.header__logo}>
+        <Link to="/" className={styles.header__logo}>
           <img src={logoIcon} alt="CamerFarm AI" className={styles.header__logoImage} />
           <span className={styles.header__logoText}>CamerFarm AI</span>
-        </a>
+        </Link>
         
         {/* Navigation Desktop */}
         {!isMobile && (
           <nav className={styles.header__nav} aria-label="Navigation principale">
             {navItemsWithActive.map((item) => (
-              <a 
+              <Link 
                 key={item.href} 
-                href={item.href}
+                to={item.href}
                 className={`${styles.header__navLink} ${item.active ? styles.header__navLinkActive : ''}`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
         )}
@@ -121,7 +126,7 @@ export function Header({
         {!isMobile && (
           <div className={styles.header__actions}>
             <LanguageSwitcher />
-            {isAuthenticated ? (
+            {(isAuthenticated || showAuthIcons) ? (
               <>
                 <div className={styles.header__iconButtonContainer}>
                   <button
@@ -186,7 +191,7 @@ export function Header({
                         className={styles.header__profileMenuItem}
                         onClick={() => {
                           setProfileMenuOpen(false);
-                          window.location.href = '/profile';
+                          navigate('/profile');
                         }}
                       >
                         <Icon icon={FaUser} size={18} />
@@ -234,21 +239,21 @@ export function Header({
         <div className={`${styles.header__mobileMenu} ${mobileMenuOpen ? styles.header__mobileMenuOpen : ''}`}>
           <nav className={styles.header__mobileNav} aria-label="Navigation mobile">
             {navItemsWithActive.map((item) => (
-              <a
+              <Link
                 key={item.href}
-                href={item.href}
+                to={item.href}
                 className={`${styles.header__mobileNavLink} ${item.active ? styles.header__mobileNavLinkActive : ''}`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className={styles.header__mobileLanguage}>
             <LanguageSwitcher />
           </div>
-          {isAuthenticated ? (
+          {(isAuthenticated || showAuthIcons) ? (
             <div className={styles.header__mobileActions}>
               <button
                 className={styles.header__mobileIconButton}

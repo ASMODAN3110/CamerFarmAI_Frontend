@@ -1,0 +1,26 @@
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.card[role="button"] {
+  cursor: pointer;
+}
+
+.card[role="button"]:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
