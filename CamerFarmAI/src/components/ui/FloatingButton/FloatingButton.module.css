@@ -1,0 +1,93 @@
+.floatingButton {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--border-radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  z-index: var(--z-index-fixed);
+  text-decoration: none;
+  padding: 0;
+}
+
+.floatingButton:hover {
+  background-color: var(--color-primary-dark);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+}
+
+.floatingButton:active {
+  transform: scale(0.95);
+}
+
+.floatingButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.floatingButton__icon {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+/* Positions */
+.floatingButton--bottom-right {
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+}
+
+.floatingButton--bottom-left {
+  bottom: var(--spacing-xl);
+  left: var(--spacing-xl);
+}
+
+.floatingButton--top-right {
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+}
+
+.floatingButton--top-left {
+  top: var(--spacing-xl);
+  left: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+  .floatingButton {
+    width: 56px;
+    height: 56px;
+  }
+
+  .floatingButton__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .floatingButton--bottom-right {
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+  }
+
+  .floatingButton--bottom-left {
+    bottom: var(--spacing-lg);
+    left: var(--spacing-lg);
+  }
+
+  .floatingButton--top-right {
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+  }
+
+  .floatingButton--top-left {
+    top: var(--spacing-lg);
+    left: var(--spacing-lg);
+  }
+}
+

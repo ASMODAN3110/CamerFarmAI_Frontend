@@ -1,0 +1,98 @@
+.cta {
+  padding: var(--spacing-4xl) var(--spacing-lg);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.ctaVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta__container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--color-white);
+  position: relative;
+  z-index: 1;
+}
+
+.cta__title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.cta__subtitle {
+  font-size: var(--font-size-xl);
+  line-height: 1.7;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--color-white);
+  opacity: 0.95;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.cta__buttonWrapper {
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.cta__button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cta__button:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .cta {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+
+  .cta__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .cta__subtitle {
+    font-size: var(--font-size-base);
+  }
+}
+
