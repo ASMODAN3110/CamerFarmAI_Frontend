@@ -5,7 +5,8 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/services/useAuthStore';
+import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import logoIcon from '@/assets/logo.ico';
@@ -13,7 +14,7 @@ import styles from './SignUpPage.module.css';
 
 export function SignUpPage() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     lastName: '',
@@ -123,18 +124,22 @@ export function SignUpPage() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Appeler le service d'inscription
-      // const response = await authService.signup(formData);
-      // login(response.token, response.user);
-      
-      // Simulation temporaire
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await authService.register({
+        phone: formData.phone,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        language: 'fr', // TODO: Récupérer depuis le contexte de langue
+      });
       
       // Redirection après inscription réussie
       navigate('/login', { replace: true });
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || t('signup.errors.signupFailed') || 'Échec de l\'inscription';
       setErrors({ 
-        email: t('signup.errors.signupFailed'),
+        phone: errorMessage,
+        email: errorMessage,
       });
     } finally {
       setIsSubmitting(false);
