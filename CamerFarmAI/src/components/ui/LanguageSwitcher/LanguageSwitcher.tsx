@@ -6,6 +6,7 @@ import styles from './LanguageSwitcher.module.css';
 const languages = [
   { code: 'fr' as const, label: 'Français', flag: '🇫🇷' },
   { code: 'en' as const, label: 'English', flag: '🇬🇧' },
+  { code: 'ff' as const, label: 'Fulfulde', flag: '🇨🇲' },
 ];
 
 export function LanguageSwitcher() {
@@ -31,7 +32,7 @@ export function LanguageSwitcher() {
     };
   }, [isOpen]);
 
-  const handleLanguageChange = (langCode: 'fr' | 'en') => {
+  const handleLanguageChange = (langCode: 'fr' | 'en' | 'ff') => {
     changeLanguage(langCode);
     setIsOpen(false);
   };
