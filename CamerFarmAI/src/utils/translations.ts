@@ -11,6 +11,56 @@ export type TranslationKey =
   | 'auth.signup'
   | 'auth.logout'
   | 'auth.profile'
+  | 'login.title'
+  | 'login.emailLabel'
+  | 'login.emailPlaceholder'
+  | 'login.passwordLabel'
+  | 'login.passwordPlaceholder'
+  | 'login.submitButton'
+  | 'login.submitting'
+  | 'login.forgotPassword'
+  | 'login.noAccount'
+  | 'login.signupLink'
+  | 'login.backToHome'
+  | 'login.errors.emailRequired'
+  | 'login.errors.emailInvalid'
+  | 'login.errors.passwordRequired'
+  | 'login.errors.passwordMinLength'
+  | 'login.errors.loginFailed'
+  | 'login.motivational.line1'
+  | 'login.motivational.line2'
+  | 'login.motivational.line3'
+  | 'signup.title'
+  | 'signup.lastNameLabel'
+  | 'signup.lastNamePlaceholder'
+  | 'signup.firstNameLabel'
+  | 'signup.firstNamePlaceholder'
+  | 'signup.emailLabel'
+  | 'signup.emailPlaceholder'
+  | 'signup.phoneLabel'
+  | 'signup.phonePlaceholder'
+  | 'signup.passwordLabel'
+  | 'signup.passwordPlaceholder'
+  | 'signup.confirmPasswordLabel'
+  | 'signup.confirmPasswordPlaceholder'
+  | 'signup.submitButton'
+  | 'signup.submitting'
+  | 'signup.hasAccount'
+  | 'signup.loginLink'
+  | 'signup.backToHome'
+  | 'signup.showPassword'
+  | 'signup.hidePassword'
+  | 'signup.errors.lastNameRequired'
+  | 'signup.errors.firstNameRequired'
+  | 'signup.errors.emailRequired'
+  | 'signup.errors.emailInvalid'
+  | 'signup.errors.phoneRequired'
+  | 'signup.errors.phoneInvalid'
+  | 'signup.errors.passwordRequired'
+  | 'signup.errors.passwordMinLength'
+  | 'signup.errors.confirmPasswordRequired'
+  | 'signup.errors.passwordsMismatch'
+  | 'signup.errors.signupFailed'
   | 'notifications.title'
   | 'notifications.empty'
   | 'hero.heading'
@@ -52,6 +102,56 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
     'auth.profile': 'Profil',
+    'login.title': 'CONNEXION',
+    'login.emailLabel': 'Adresse email',
+    'login.emailPlaceholder': 'Adresse email',
+    'login.passwordLabel': 'Mot de passe',
+    'login.passwordPlaceholder': 'Mot de passe',
+    'login.submitButton': 'Se Connecter',
+    'login.submitting': 'Connexion...',
+    'login.forgotPassword': 'Mot de passe oublié ?',
+    'login.noAccount': 'Vous n\'avez pas de compte ?',
+    'login.signupLink': 'Inscrivez-vous.',
+    'login.backToHome': 'Retour à l\'accueil',
+    'login.errors.emailRequired': 'L\'adresse email est requise',
+    'login.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'login.errors.passwordRequired': 'Le mot de passe est requis',
+    'login.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 6 caractères',
+    'login.errors.loginFailed': 'Échec de la connexion. Vérifiez vos identifiants.',
+    'login.motivational.line1': 'Modernisez vos cultures, automatisez',
+    'login.motivational.line2': 'vos tâches et améliorez vos récoltes',
+    'login.motivational.line3': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
+    'signup.title': 'INSCRIPTION',
+    'signup.lastNameLabel': 'Nom',
+    'signup.lastNamePlaceholder': 'Nom',
+    'signup.firstNameLabel': 'Prénom',
+    'signup.firstNamePlaceholder': 'Prénom',
+    'signup.emailLabel': 'Adresse email',
+    'signup.emailPlaceholder': 'Adresse email',
+    'signup.phoneLabel': 'Numéro de tel (Whatsapp)',
+    'signup.phonePlaceholder': 'Numéro de tel (Whatsapp)',
+    'signup.passwordLabel': 'Mot de passe',
+    'signup.passwordPlaceholder': 'Mot de passe',
+    'signup.confirmPasswordLabel': 'Confirmation de mot de passe',
+    'signup.confirmPasswordPlaceholder': 'Confirmation de mot de passe',
+    'signup.submitButton': 'S\'inscrire',
+    'signup.submitting': 'Inscription...',
+    'signup.hasAccount': 'Vous avez déjà un compte ?',
+    'signup.loginLink': 'Connectez-vous.',
+    'signup.backToHome': 'Retour à l\'accueil',
+    'signup.showPassword': 'Afficher le mot de passe',
+    'signup.hidePassword': 'Masquer le mot de passe',
+    'signup.errors.lastNameRequired': 'Le nom est requis',
+    'signup.errors.firstNameRequired': 'Le prénom est requis',
+    'signup.errors.emailRequired': 'L\'adresse email est requise',
+    'signup.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'signup.errors.phoneRequired': 'Le numéro de téléphone est requis',
+    'signup.errors.phoneInvalid': 'Le numéro de téléphone n\'est pas valide',
+    'signup.errors.passwordRequired': 'Le mot de passe est requis',
+    'signup.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 6 caractères',
+    'signup.errors.confirmPasswordRequired': 'La confirmation du mot de passe est requise',
+    'signup.errors.passwordsMismatch': 'Les mots de passe ne correspondent pas',
+    'signup.errors.signupFailed': 'Échec de l\'inscription. Veuillez réessayer.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'Aucune notification',
     'hero.heading': 'CamerFarm AI Connecte Les Producteurs À Leurs Terres Grâce À L\'IoT, Offrant Un Suivi Précis Des Cultures Et La Détection Rapide Des Maladies Grâce À L\'Intelligence Artificielle Pour Transformer Durablement L\'agriculture Camerounaise.',
@@ -92,6 +192,56 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
     'auth.profile': 'Profile',
+    'login.title': 'LOGIN',
+    'login.emailLabel': 'Email address',
+    'login.emailPlaceholder': 'Email address',
+    'login.passwordLabel': 'Password',
+    'login.passwordPlaceholder': 'Password',
+    'login.submitButton': 'Log In',
+    'login.submitting': 'Logging in...',
+    'login.forgotPassword': 'Forgot password?',
+    'login.noAccount': 'Don\'t have an account?',
+    'login.signupLink': 'Sign up.',
+    'login.backToHome': 'Back to home',
+    'login.errors.emailRequired': 'Email address is required',
+    'login.errors.emailInvalid': 'Email address is invalid',
+    'login.errors.passwordRequired': 'Password is required',
+    'login.errors.passwordMinLength': 'Password must be at least 6 characters',
+    'login.errors.loginFailed': 'Login failed. Please check your credentials.',
+    'login.motivational.line1': 'Modernize your crops, automate',
+    'login.motivational.line2': 'your tasks and improve your harvests',
+    'login.motivational.line3': 'Connected and automated agriculture is the future',
+    'signup.title': 'SIGN UP',
+    'signup.lastNameLabel': 'Last Name',
+    'signup.lastNamePlaceholder': 'Last Name',
+    'signup.firstNameLabel': 'First Name',
+    'signup.firstNamePlaceholder': 'First Name',
+    'signup.emailLabel': 'Email address',
+    'signup.emailPlaceholder': 'Email address',
+    'signup.phoneLabel': 'Phone number (Whatsapp)',
+    'signup.phonePlaceholder': 'Phone number (Whatsapp)',
+    'signup.passwordLabel': 'Password',
+    'signup.passwordPlaceholder': 'Password',
+    'signup.confirmPasswordLabel': 'Confirm password',
+    'signup.confirmPasswordPlaceholder': 'Confirm password',
+    'signup.submitButton': 'Sign Up',
+    'signup.submitting': 'Signing up...',
+    'signup.hasAccount': 'You already have an account?',
+    'signup.loginLink': 'Log in.',
+    'signup.backToHome': 'Back to home',
+    'signup.showPassword': 'Show password',
+    'signup.hidePassword': 'Hide password',
+    'signup.errors.lastNameRequired': 'Last name is required',
+    'signup.errors.firstNameRequired': 'First name is required',
+    'signup.errors.emailRequired': 'Email address is required',
+    'signup.errors.emailInvalid': 'Email address is invalid',
+    'signup.errors.phoneRequired': 'Phone number is required',
+    'signup.errors.phoneInvalid': 'Phone number is invalid',
+    'signup.errors.passwordRequired': 'Password is required',
+    'signup.errors.passwordMinLength': 'Password must be at least 6 characters',
+    'signup.errors.confirmPasswordRequired': 'Password confirmation is required',
+    'signup.errors.passwordsMismatch': 'Passwords do not match',
+    'signup.errors.signupFailed': 'Sign up failed. Please try again.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'No notifications',
     'hero.heading': 'CamerFarm AI Connects Producers To Their Land Through IoT, Offering Precise Crop Monitoring And Rapid Disease Detection Through Artificial Intelligence To Sustainably Transform Cameroonian Agriculture.',
@@ -132,6 +282,56 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
     'auth.profile': 'Jokkondiral',
+    'login.title': 'SEŊO',
+    'login.emailLabel': 'Nder email',
+    'login.emailPlaceholder': 'Nder email',
+    'login.passwordLabel': 'Finnde',
+    'login.passwordPlaceholder': 'Finnde',
+    'login.submitButton': 'Seŋo',
+    'login.submitting': 'Seŋo...',
+    'login.forgotPassword': 'Aɗa yejjii finnde?',
+    'login.noAccount': 'Aɗa alaa konte?',
+    'login.signupLink': 'Winndito.',
+    'login.backToHome': 'Rutto fuɗɗo',
+    'login.errors.emailRequired': 'Nder email ina tawaa',
+    'login.errors.emailInvalid': 'Nder email fotaani',
+    'login.errors.passwordRequired': 'Finnde ina tawaa',
+    'login.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 6 ɓuri',
+    'login.errors.loginFailed': 'Seŋo Ɓaawtaani. Ɗaɓɓu keɓe maɓɓe.',
+    'login.motivational.line1': 'Ɓeyduɗe nguurndam maɓɓe, wattinde',
+    'login.motivational.line2': 'koɗɗe maɓɓe e ɓeyduɗe alaaɗe maɓɓe',
+    'login.motivational.line3': 'Ngaynaaɗe jokkondirɗam e wattinɗam ko koɗɗe jamaa',
+    'signup.title': 'WINNDITO',
+    'signup.lastNameLabel': 'Innde',
+    'signup.lastNamePlaceholder': 'Innde',
+    'signup.firstNameLabel': 'Innde fuɗɗo',
+    'signup.firstNamePlaceholder': 'Innde fuɗɗo',
+    'signup.emailLabel': 'Nder email',
+    'signup.emailPlaceholder': 'Nder email',
+    'signup.phoneLabel': 'Nder tel (Whatsapp)',
+    'signup.phonePlaceholder': 'Nder tel (Whatsapp)',
+    'signup.passwordLabel': 'Finnde',
+    'signup.passwordPlaceholder': 'Finnde',
+    'signup.confirmPasswordLabel': 'Fedduɗe finnde',
+    'signup.confirmPasswordPlaceholder': 'Fedduɗe finnde',
+    'signup.submitButton': 'Winndito',
+    'signup.submitting': 'Winndito...',
+    'signup.hasAccount': 'Aɗa heɓii konte?',
+    'signup.loginLink': 'Seŋo.',
+    'signup.backToHome': 'Rutto fuɗɗo',
+    'signup.showPassword': 'Hollu finnde',
+    'signup.hidePassword': 'Suuɗu finnde',
+    'signup.errors.lastNameRequired': 'Innde ina tawaa',
+    'signup.errors.firstNameRequired': 'Innde fuɗɗo ina tawaa',
+    'signup.errors.emailRequired': 'Nder email ina tawaa',
+    'signup.errors.emailInvalid': 'Nder email fotaani',
+    'signup.errors.phoneRequired': 'Nder tel ina tawaa',
+    'signup.errors.phoneInvalid': 'Nder tel fotaani',
+    'signup.errors.passwordRequired': 'Finnde ina tawaa',
+    'signup.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 6 ɓuri',
+    'signup.errors.confirmPasswordRequired': 'Fedduɗe finnde ina tawaa',
+    'signup.errors.passwordsMismatch': 'Finnde ɗe njaatondiraani',
+    'signup.errors.signupFailed': 'Winndito Ɓaawtaani. Ɗaɓɓu yeewto.',
     'notifications.title': 'Tindinɗe',
     'notifications.empty': 'Alaa tindinɗe',
     'hero.heading': 'CamerFarm AI Haɓɓanaa Ngaynaaɓe e Leyɗe Maɓɓe Ngam IoT, Hokki Jokkondiral Goonga e Yiytude Baawɗe Caggal ɓaawo Ngam Aamde Ngaari Ngam Waylude Ngaynaaɗe Kameruun.',

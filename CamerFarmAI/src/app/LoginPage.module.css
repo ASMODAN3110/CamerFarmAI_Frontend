@@ -1,0 +1,547 @@
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.loginPage__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.loginPage__backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.loginPage__backgroundImageActive {
+  opacity: 1;
+}
+
+.loginPage__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+.loginPage__backButton {
+  position: absolute;
+  top: var(--spacing-xl);
+  left: var(--spacing-xl);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius-full);
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.loginPage__backButton:hover {
+  background-color: var(--color-white);
+  transform: translateX(-5px);
+  box-shadow: var(--shadow-lg);
+  color: var(--color-primary);
+}
+
+.loginPage__backIcon {
+  font-size: var(--font-size-base);
+  transition: transform 0.3s ease;
+}
+
+.loginPage__backButton:hover .loginPage__backIcon {
+  transform: translateX(-3px);
+}
+
+.loginPage__backText {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .loginPage__backText {
+    display: inline;
+  }
+}
+
+.loginPage__languageSwitcher {
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  z-index: 10;
+}
+
+.loginPage__container {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4xl);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.loginPage__formWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2xl);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.loginPage__formWrapperVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loginPage__logoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  animation: logoSectionFadeIn 0.8s ease-out 0.2s both;
+}
+
+.loginPage__logoContainer {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  perspective: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glow ring background effect */
+.loginPage__logoContainer::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(93, 173, 226, 0.1) 100%);
+  filter: blur(20px);
+  animation: glowRingPulse 2s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* Orbiting particles container */
+.loginPage__logoContainer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: orbitRotate 8s linear infinite;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.loginPage__logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(40, 167, 69, 0.3));
+  animation: logoPulseRotate 3s ease-in-out infinite, logoAppear 1s ease-out 0.4s both;
+  z-index: 10;
+  transition: filter 0.3s ease;
+}
+
+.loginPage__logoContainer:hover .loginPage__logo {
+  filter: drop-shadow(0 0 30px rgba(40, 167, 69, 0.5));
+}
+
+/* Orbiting particles container */
+.loginPage__logoOrbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: orbitRotate 8s linear infinite;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Three orbiting particles */
+.loginPage__logoParticle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.8);
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.6;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.loginPage__logoParticle2 {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(120deg) translateY(-75px);
+}
+
+.loginPage__logoParticle3 {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(240deg) translateY(-75px);
+}
+
+@keyframes logoAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotateY(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateY(0);
+  }
+}
+
+@keyframes logoPulseRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 20px rgba(40, 167, 69, 0.3));
+  }
+  50% {
+    transform: rotate(2deg) scale(1.05);
+    filter: drop-shadow(0 0 30px rgba(40, 167, 69, 0.5));
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 20px rgba(40, 167, 69, 0.3));
+  }
+}
+
+@keyframes orbitRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glowRingPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+}
+
+@keyframes logoSectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginPage__logoText {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  letter-spacing: -0.02em;
+  margin: 0;
+  animation: textSlideInDown 0.8s ease-out 0.6s both;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes textSlideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.loginPage__form {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-blue-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3xl);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  animation: formSlideIn 0.8s ease-out 0.5s both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loginPage__form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes formSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.loginPage__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  text-align: center;
+  margin: 0 0 var(--spacing-lg) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: titleFadeIn 0.6s ease-out 0.8s both;
+  position: relative;
+  z-index: 1;
+}
+
+.loginPage__title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-blue-light) 100%);
+  animation: titleUnderline 0.8s ease-out 1.2s forwards;
+}
+
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleUnderline {
+  from {
+    width: 0;
+  }
+  to {
+    width: 80px;
+  }
+}
+
+.loginPage__submitButton {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  animation: buttonFadeIn 0.6s ease-out 1s both;
+  transition: transform 0.2s ease;
+}
+
+.loginPage__submitButton:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginPage__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: center;
+  margin-top: var(--spacing-md);
+}
+
+.loginPage__link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color 0.2s ease;
+  font-weight: var(--font-weight-medium);
+}
+
+.loginPage__link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.loginPage__signupText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0;
+  text-align: center;
+}
+
+.loginPage__motivationalText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  color: var(--color-white);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  text-align: right;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.loginPage__motivationalTextVisible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.loginPage__motivationalLine {
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+  animation: motivationalFadeIn 0.6s ease-out both;
+}
+
+.loginPage__motivationalLine:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.loginPage__motivationalLine:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.loginPage__motivationalLine:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.loginPage__motivationalLine:last-child {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes motivationalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .loginPage__container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  .loginPage__motivationalText {
+    text-align: center;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .loginPage {
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .loginPage__backButton {
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .loginPage__languageSwitcher {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+  }
+
+  .loginPage__logoContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .loginPage__logoOrbit::before,
+  .loginPage__logoOrbit::after {
+    width: 4px;
+    height: 4px;
+  }
+
+  .loginPage__logoParticle {
+    width: 4px;
+    height: 4px;
+    transform: translateX(-50%) translateY(-50%) rotate(240deg) translateY(-60px);
+  }
+
+  .loginPage__form {
+    padding: var(--spacing-2xl);
+  }
+
+  .loginPage__logoText {
+    font-size: var(--font-size-xl);
+  }
+
+  .loginPage__title {
+    font-size: var(--font-size-xl);
+  }
+
+  .loginPage__motivationalText {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-lg);
+  }
+}
+
