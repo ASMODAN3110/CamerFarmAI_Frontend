@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type Language = 'fr' | 'en';
+export type Language = 'fr' | 'en' | 'ff';
 
 const LANGUAGE_KEY = 'camerfarm-language';
 const DEFAULT_LANGUAGE: Language = 'fr';
@@ -20,7 +20,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(LANGUAGE_KEY) as Language;
-      return stored && (stored === 'fr' || stored === 'en') ? stored : DEFAULT_LANGUAGE;
+      return stored && (stored === 'fr' || stored === 'en' || stored === 'ff') ? stored : DEFAULT_LANGUAGE;
     }
     return DEFAULT_LANGUAGE;
   });
