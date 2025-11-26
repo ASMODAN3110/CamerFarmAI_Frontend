@@ -113,7 +113,42 @@ export type TranslationKey =
   | 'footer.legal.cookies'
   | 'footer.social.title'
   | 'footer.copyright'
-  | 'floatingButton.ariaLabel';
+  | 'floatingButton.ariaLabel'
+  | 'graphs.title'
+  | 'graphs.welcome.title'
+  | 'graphs.welcome.description'
+  | 'graphs.welcome.hint'
+  | 'graphs.sensors.humidity'
+  | 'graphs.sensors.temperature'
+  | 'graphs.sensors.luminosity'
+  | 'graphs.sensors.co2'
+  | 'graphs.dateFrom'
+  | 'graphs.dateTo'
+  | 'graphs.applyFilter'
+  | 'graphs.chart.title'
+  | 'monitoring.sensors.title'
+  | 'monitoring.sensors.temperature'
+  | 'monitoring.sensors.soilHumidity'
+  | 'monitoring.sensors.co2'
+  | 'monitoring.sensors.luminosity'
+  | 'monitoring.sensors.waterLevel'
+  | 'monitoring.updated'
+  | 'monitoring.status.good'
+  | 'monitoring.status.optimal'
+  | 'monitoring.status.moderate'
+  | 'monitoring.status.low'
+  | 'monitoring.status.high'
+  | 'monitoring.status.critical'
+  | 'monitoring.status.bright'
+  | 'monitoring.status.normal'
+  | 'monitoring.status.dim'
+  | 'monitoring.equipment.title'
+  | 'monitoring.equipment.irrigationPump'
+  | 'monitoring.equipment.fans'
+  | 'monitoring.equipment.lighting'
+  | 'monitoring.mode.automatic'
+  | 'monitoring.mode.manual'
+  | 'monitoring.mode.automaticInfo';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -216,6 +251,41 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.empty.icon': 'Aucune plantation',
     'plantations.slogan.line1': 'Modernisez vos cultures, automatisez vos tâches et améliorez vos récoltes',
     'plantations.slogan.line2': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
+    'graphs.title': 'DASHBOARD',
+    'graphs.welcome.title': 'Bienvenue sur votre tableau de bord Smart Farming.',
+    'graphs.welcome.description': 'Visualisez en temps réel les données de vos capteurs pour mieux comprendre l\'état de vos parcelles et optimiser vos interventions.',
+    'graphs.welcome.hint': 'Utilisez les boutons ci-dessous pour filtrer les types de capteurs (Humidité, température, CO₂, etc.)',
+    'graphs.sensors.humidity': 'Capteur Humidité du sol',
+    'graphs.sensors.temperature': 'Capteur Température ambiante',
+    'graphs.sensors.luminosity': 'Capteur de luminosité',
+    'graphs.sensors.co2': 'Capteur de CO2',
+    'graphs.dateFrom': 'Du',
+    'graphs.dateTo': 'Au',
+    'graphs.applyFilter': 'Appliquer Filtre',
+    'graphs.chart.title': 'Évolution',
+    'monitoring.sensors.title': 'Valeurs des capteurs en temps réel',
+    'monitoring.sensors.temperature': 'Température',
+    'monitoring.sensors.soilHumidity': 'Humidité du sol',
+    'monitoring.sensors.co2': 'Taux de CO2',
+    'monitoring.sensors.luminosity': 'Luminosité',
+    'monitoring.sensors.waterLevel': 'Niveau d\'eau',
+    'monitoring.updated': 'Mis à jour',
+    'monitoring.status.good': 'Bon',
+    'monitoring.status.optimal': 'Optimal',
+    'monitoring.status.moderate': 'Modéré',
+    'monitoring.status.low': 'Faible',
+    'monitoring.status.high': 'Élevé',
+    'monitoring.status.critical': 'Critique',
+    'monitoring.status.bright': 'Lumineux',
+    'monitoring.status.normal': 'Normal',
+    'monitoring.status.dim': 'Sombre',
+    'monitoring.equipment.title': 'Contrôle des matériels et accessoires',
+    'monitoring.equipment.irrigationPump': 'Pompe d\'irrigation',
+    'monitoring.equipment.fans': 'Ventilateurs',
+    'monitoring.equipment.lighting': 'Éclairage',
+    'monitoring.mode.automatic': 'Automatique',
+    'monitoring.mode.manual': 'Manuel',
+    'monitoring.mode.automaticInfo': 'Mode automatique activé : Les équipements sont contrôlés automatiquement selon les données des capteurs.',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
@@ -345,6 +415,41 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.areaRequired': 'Area is required',
     'plantations.createModal.errors.areaInvalid': 'Area must be a valid number',
     'plantations.createModal.errors.locationRequired': 'Location is required',
+    'graphs.title': 'DASHBOARD',
+    'graphs.welcome.title': 'Welcome to your Smart Farming dashboard.',
+    'graphs.welcome.description': 'View real-time data from your sensors to better understand the state of your plots and optimize your interventions.',
+    'graphs.welcome.hint': 'Use the buttons below to filter sensor types (Humidity, temperature, CO₂, etc.)',
+    'graphs.sensors.humidity': 'Soil Humidity Sensor',
+    'graphs.sensors.temperature': 'Ambient Temperature Sensor',
+    'graphs.sensors.luminosity': 'Luminosity Sensor',
+    'graphs.sensors.co2': 'CO2 Sensor',
+    'graphs.dateFrom': 'From',
+    'graphs.dateTo': 'To',
+    'graphs.applyFilter': 'Apply Filter',
+    'graphs.chart.title': 'Evolution',
+    'monitoring.sensors.title': 'Real-time sensor values',
+    'monitoring.sensors.temperature': 'Temperature',
+    'monitoring.sensors.soilHumidity': 'Soil Humidity',
+    'monitoring.sensors.co2': 'CO2 Rate',
+    'monitoring.sensors.luminosity': 'Luminosity',
+    'monitoring.sensors.waterLevel': 'Water Level',
+    'monitoring.updated': 'Updated',
+    'monitoring.status.good': 'Good',
+    'monitoring.status.optimal': 'Optimal',
+    'monitoring.status.moderate': 'Moderate',
+    'monitoring.status.low': 'Low',
+    'monitoring.status.high': 'High',
+    'monitoring.status.critical': 'Critical',
+    'monitoring.status.bright': 'Bright',
+    'monitoring.status.normal': 'Normal',
+    'monitoring.status.dim': 'Dim',
+    'monitoring.equipment.title': 'Equipment and accessories control',
+    'monitoring.equipment.irrigationPump': 'Irrigation Pump',
+    'monitoring.equipment.fans': 'Fans',
+    'monitoring.equipment.lighting': 'Lighting',
+    'monitoring.mode.automatic': 'Automatic',
+    'monitoring.mode.manual': 'Manual',
+    'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -460,6 +565,41 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.areaRequired': 'Leyɗe ina tawaa',
     'plantations.createModal.errors.areaInvalid': 'Leyɗe ina tawaa limoore goonga',
     'plantations.createModal.errors.locationRequired': 'Nokkuure ina tawaa',
+    'graphs.title': 'DASHBOARD',
+    'graphs.welcome.title': 'Aɗa naatii e jokkondiral maa Smart Farming.',
+    'graphs.welcome.description': 'Yiylaade keɓe waktu goonga e jokkondirɗe maɓɓe ngam ɓeyduɗe faamugol nokkuure maɓɓe e ɓeyduɗe tontinɗe maɓɓe.',
+    'graphs.welcome.hint': 'Kuutoraade kuuɗe ɗoo les ngam ɓaŋnguɗe nokkuure jokkondirɗe (Ɓuɓɓe, temperatuur, CO₂, e koɗɗe goɗɗe)',
+    'graphs.sensors.humidity': 'Jokkondiral Ɓuɓɓe Leyɗe',
+    'graphs.sensors.temperature': 'Jokkondiral Temperatuur',
+    'graphs.sensors.luminosity': 'Jokkondiral Ndaariɗe',
+    'graphs.sensors.co2': 'Jokkondiral CO2',
+    'graphs.dateFrom': 'Fuɗɗo',
+    'graphs.dateTo': 'Gila',
+    'graphs.applyFilter': 'Naatu ɓaŋnguɗe',
+    'graphs.chart.title': 'Ɓeydugol',
+    'monitoring.sensors.title': 'Keɓe jokkondirɗe waktu goonga',
+    'monitoring.sensors.temperature': 'Temperatuur',
+    'monitoring.sensors.soilHumidity': 'Ɓuɓɓe Leyɗe',
+    'monitoring.sensors.co2': 'Nder CO2',
+    'monitoring.sensors.luminosity': 'Ndaariɗe',
+    'monitoring.sensors.waterLevel': 'Nder Leyɗe',
+    'monitoring.updated': 'Ɓeyduɗe',
+    'monitoring.status.good': 'Moƴƴi',
+    'monitoring.status.optimal': 'Ɓurɗo',
+    'monitoring.status.moderate': 'Laato',
+    'monitoring.status.low': 'Ɓaŋnguɗo',
+    'monitoring.status.high': 'Mawnɗo',
+    'monitoring.status.critical': 'Mawɗo',
+    'monitoring.status.bright': 'Ndaariɗo',
+    'monitoring.status.normal': 'Goonga',
+    'monitoring.status.dim': 'Suuɗo',
+    'monitoring.equipment.title': 'Toppu kuuɗe e kuuɗe',
+    'monitoring.equipment.irrigationPump': 'Pompe Irrigasion',
+    'monitoring.equipment.fans': 'Ventilateerɗe',
+    'monitoring.equipment.lighting': 'Ndaariɗe',
+    'monitoring.mode.automatic': 'Wattinɗam',
+    'monitoring.mode.manual': 'Jokkondirɗam',
+    'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
   },
 };
 
