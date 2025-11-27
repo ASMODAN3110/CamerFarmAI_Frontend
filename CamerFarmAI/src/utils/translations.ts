@@ -86,10 +86,24 @@ export type TranslationKey =
   | 'plantations.createModal.next'
   | 'plantations.createModal.cancel'
   | 'plantations.createModal.submitting'
+  | 'plantations.createModal.cropTypeLabel'
+  | 'plantations.createModal.cropTypePlaceholder'
+  | 'plantations.createModal.latitudeLabel'
+  | 'plantations.createModal.latitudePlaceholder'
+  | 'plantations.createModal.longitudeLabel'
+  | 'plantations.createModal.longitudePlaceholder'
   | 'plantations.createModal.errors.nameRequired'
   | 'plantations.createModal.errors.areaRequired'
   | 'plantations.createModal.errors.areaInvalid'
   | 'plantations.createModal.errors.locationRequired'
+  | 'plantations.createModal.errors.latitudeInvalid'
+  | 'plantations.createModal.errors.longitudeInvalid'
+  | 'plantations.createModal.errors.coordinatesRequiredTogether'
+  | 'plantations.cropType'
+  | 'plantations.status'
+  | 'plantations.status.active'
+  | 'plantations.status.inactive'
+  | 'plantations.errors.fetchFailed'
   | 'notifications.title'
   | 'notifications.empty'
   | 'hero.heading'
@@ -344,10 +358,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.next': 'Suivant',
     'plantations.createModal.cancel': 'Annuler',
     'plantations.createModal.submitting': 'Création...',
+    'plantations.createModal.cropTypeLabel': 'Type de culture',
+    'plantations.createModal.cropTypePlaceholder': 'Ex: Manioc, cacao...',
     'plantations.createModal.errors.nameRequired': 'Le nom de la plantation est requis',
     'plantations.createModal.errors.areaRequired': 'La superficie est requise',
     'plantations.createModal.errors.areaInvalid': 'La superficie doit être un nombre valide',
     'plantations.createModal.errors.locationRequired': 'La localisation est requise',
+    'plantations.cropType': 'Culture',
+    'plantations.status': 'Statut',
+    'plantations.status.active': 'Active',
+    'plantations.status.inactive': 'Inactive',
+    'plantations.errors.fetchFailed': 'Impossible de charger les plantations. Les données affichées peuvent être obsolètes.',
     'profile.back': 'Retour',
     'profile.welcome': 'Bienvenue, {name}',
     'profile.loading': 'Chargement du profil...',
@@ -503,10 +524,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.next': 'Next',
     'plantations.createModal.cancel': 'Cancel',
     'plantations.createModal.submitting': 'Creating...',
+    'plantations.createModal.cropTypeLabel': 'Crop type',
+    'plantations.createModal.cropTypePlaceholder': 'e.g. Cassava, cocoa...',
     'plantations.createModal.errors.nameRequired': 'Plantation name is required',
     'plantations.createModal.errors.areaRequired': 'Area is required',
     'plantations.createModal.errors.areaInvalid': 'Area must be a valid number',
     'plantations.createModal.errors.locationRequired': 'Location is required',
+    'plantations.cropType': 'Crop',
+    'plantations.status': 'Status',
+    'plantations.status.active': 'Active',
+    'plantations.status.inactive': 'Inactive',
+    'plantations.errors.fetchFailed': 'Unable to load plantations. Displayed data may be outdated.',
     'graphs.title': 'DASHBOARD',
     'graphs.welcome.title': 'Welcome to your Smart Farming dashboard.',
     'graphs.welcome.description': 'View real-time data from your sensors to better understand the state of your plots and optimize your interventions.',
@@ -697,10 +725,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.next': 'Jokku',
     'plantations.createModal.cancel': 'Dirtu',
     'plantations.createModal.submitting': 'Waɗaade...',
+    'plantations.createModal.cropTypeLabel': 'Fannu ngesa',
+    'plantations.createModal.cropTypePlaceholder': 'Eduu: Maniok, kakao...',
     'plantations.createModal.errors.nameRequired': 'Innde nguurndam ina tawaa',
     'plantations.createModal.errors.areaRequired': 'Leyɗe ina tawaa',
     'plantations.createModal.errors.areaInvalid': 'Leyɗe ina tawaa limoore goonga',
     'plantations.createModal.errors.locationRequired': 'Nokkuure ina tawaa',
+    'plantations.cropType': 'Fannu ngesa',
+    'plantations.status': 'Ngonka',
+    'plantations.status.active': 'Gollowo',
+    'plantations.status.inactive': 'Woppete',
+    'plantations.errors.fetchFailed': 'Waawaa nattude nguurndam. Keɓe njiyataa waawaa heddude.',
     'graphs.title': 'DASHBOARD',
     'graphs.welcome.title': 'Aɗa naatii e jokkondiral maa Smart Farming.',
     'graphs.welcome.description': 'Yiylaade keɓe waktu goonga e jokkondirɗe maɓɓe ngam ɓeyduɗe faamugol nokkuure maɓɓe e ɓeyduɗe tontinɗe maɓɓe.',

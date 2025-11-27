@@ -12,6 +12,7 @@ interface CreatePlantationModalProps {
     name: string;
     area: string;
     location: string;
+    cropType: string;
   }) => void;
 }
 
@@ -25,6 +26,7 @@ export function CreatePlantationModal({
     name: '',
     area: '',
     location: '',
+    cropType: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +77,12 @@ export function CreatePlantationModal({
         await onSubmit(formData);
       }
       // Reset form and close modal on success
-      setFormData({ name: '', area: '', location: '' });
+      setFormData({
+        name: '',
+        area: '',
+        location: '',
+        cropType: '',
+      });
       setErrors({});
       onClose();
     } catch (error) {
@@ -86,7 +93,12 @@ export function CreatePlantationModal({
   };
 
   const handleCancel = () => {
-    setFormData({ name: '', area: '', location: '' });
+    setFormData({
+      name: '',
+      area: '',
+      location: '',
+      cropType: '',
+    });
     setErrors({});
     onClose();
   };
@@ -127,6 +139,14 @@ export function CreatePlantationModal({
           placeholder={t('plantations.createModal.locationPlaceholder')}
           error={errors.location}
           required
+        />
+
+        <FormField
+          label={t('plantations.createModal.cropTypeLabel')}
+          type="text"
+          value={formData.cropType}
+          onChange={(e) => handleChange('cropType', e.target.value)}
+          placeholder={t('plantations.createModal.cropTypePlaceholder')}
         />
 
         <div className={styles.createPlantationModal__actions}>

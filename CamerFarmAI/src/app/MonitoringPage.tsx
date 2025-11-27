@@ -423,10 +423,11 @@ export function MonitoringPage() {
   // Configuration de la navbar
   const monitoringNavItems = [
     { label: t('nav.home'), href: '/' },
+    { label: t('nav.plantations'), href: '/plantations' },
     { label: t('nav.monitoring'), href: '/monitoring' },
     { label: t('nav.graphs'), href: '/graphs' },
-    { label: t('nav.support'), href: '/support' },
     { label: t('nav.ai'), href: '/ai' },
+    { label: t('nav.support'), href: '/support' },
   ];
 
   // Simuler la mise à jour des données en temps réel
