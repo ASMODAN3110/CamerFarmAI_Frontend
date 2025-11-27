@@ -13,6 +13,15 @@
   min-height: 60vh;
 }
 
+.listPlantationsPage__error {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: var(--color-danger);
+  font-weight: var(--font-weight-medium);
+}
+
 .listPlantationsPage__loading {
   display: flex;
   align-items: center;
@@ -234,6 +243,27 @@
 .listPlantationsPage__cardInfo svg {
   color: var(--color-primary);
   flex-shrink: 0;
+}
+
+.listPlantationsPage__statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: var(--border-radius-full);
+  text-transform: capitalize;
+}
+
+.listPlantationsPage__statusBadgeActive {
+  background: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+}
+
+.listPlantationsPage__statusBadgeInactive {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ef6c00;
 }
 
 .listPlantationsPage__cardFooter {

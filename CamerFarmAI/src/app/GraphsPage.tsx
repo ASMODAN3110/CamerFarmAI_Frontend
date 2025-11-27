@@ -101,10 +101,11 @@ export function GraphsPage() {
   // Configuration de la navbar pour la page des graphiques
   const graphsNavItems = [
     { label: t('nav.home'), href: '/' },
+    { label: t('nav.plantations'), href: '/plantations' },
     { label: t('nav.monitoring'), href: '/monitoring' },
     { label: t('nav.graphs'), href: '/graphs' },
-    { label: t('nav.support'), href: '/support' },
     { label: t('nav.ai'), href: '/ai' },
+    { label: t('nav.support'), href: '/support' },
   ];
 
   const handleApplyFilter = () => {

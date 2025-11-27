@@ -39,11 +39,11 @@ const authenticatedNavItemsConfig: Array<{
   href: string 
 }> = [
   { key: 'nav.home', href: '/' },
+  { key: 'nav.plantations', href: '/plantations' },
   { key: 'nav.monitoring', href: '/monitoring' },
   { key: 'nav.graphs', href: '/graphs' },
-  { key: 'nav.plantations', href: '/plantations' },
-  { key: 'nav.support', href: '/support' },
   { key: 'nav.ai', href: '/ai' },
+  { key: 'nav.support', href: '/support' },
 ];
 
 export function Header({ 

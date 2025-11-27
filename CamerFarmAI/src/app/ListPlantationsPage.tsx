@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
@@ -8,22 +8,15 @@ import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
 import { CreatePlantationModal } from '@/components/ui/CreatePlantationModal/CreatePlantationModal';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { FaPlus, FaLeaf, FaMapMarkerAlt, FaCalendarAlt, FaChevronRight } from 'react-icons/fa';
+import { FaPlus, FaLeaf, FaMapMarkerAlt, FaCalendarAlt, FaChevronRight, FaSeedling } from 'react-icons/fa';
+import { plantationService, type Plantation } from '@/services/plantationService';
 import styles from './ListPlantationsPage.module.css';
-
-interface Plantation {
-  id: string;
-  name: string;
-  location: string;
-  createdAt: string;
-  area?: number;
-  status?: 'active' | 'inactive';
-}
 
 export function ListPlantationsPage() {
   const { t } = useTranslation();
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { ref: emptyStateRef, isVisible: isEmptyStateVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: listRef } = useScrollAnimation({ threshold: 0.1 });
@@ -31,36 +24,40 @@ export function ListPlantationsPage() {
   // Configuration de la navbar pour la page des plantations
   const plantationsNavItems = [
     { label: t('nav.home'), href: '/' },
+    { label: t('nav.plantations'), href: '/plantations' },
     { label: t('nav.monitoring'), href: '/monitoring' },
     { label: t('nav.graphs'), href: '/graphs' },
-    { label: t('nav.support'), href: '/support' },
     { label: t('nav.ai'), href: '/ai' },
+    { label: t('nav.support'), href: '/support' },
   ];
 
-  // Charger les plantations (simulation)
+  const formatDate = useMemo(
+    () => (value: string) => {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString();
+    },
+    []
+  );
+
+  // Charger les plantations depuis l'API
   useEffect(() => {
     const loadPlantations = async () => {
       setIsLoading(true);
-      // TODO: Appeler le service pour récupérer les plantations
-      // const data = await plantationService.getAll();
-      
-      // Charger depuis localStorage pour persister les plantations
-      const savedPlantations = localStorage.getItem('plantations');
-      if (savedPlantations) {
-        try {
-          const parsed = JSON.parse(savedPlantations);
-          setPlantations(parsed);
-        } catch (error) {
-          console.error('Error parsing saved plantations:', error);
-        }
+      try {
+        const data = await plantationService.getAll();
+        setPlantations(data);
+        setFetchError(null);
+      } catch (error) {
+        console.error('Error fetching plantations:', error);
+        setFetchError(t('plantations.errors.fetchFailed'));
+        setPlantations([]);
+      } finally {
+        setIsLoading(false);
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setIsLoading(false);
     };
 
     loadPlantations();
-  }, []);
+  }, [t]);
 
   const handleCreatePlantation = () => {
     setIsModalOpen(true);
@@ -74,26 +71,21 @@ export function ListPlantationsPage() {
     name: string;
     area: string;
     location: string;
+    cropType: string;
   }) => {
-    // TODO: Appeler le service pour créer la plantation
-    // const newPlantation = await plantationService.create(data);
-    
-    // Simulation temporaire
-    const newPlantation: Plantation = {
-      id: Date.now().toString(),
-      name: data.name,
-      location: data.location,
-      createdAt: new Date().toLocaleDateString(),
-      area: parseFloat(data.area),
-      status: 'active',
+    const payload = {
+      name: data.name.trim(),
+      location: data.location.trim(),
+      area: Number(data.area),
+      cropType: data.cropType.trim() || undefined,
     };
 
-    const updatedPlantations = [...plantations, newPlantation];
-    setPlantations(updatedPlantations);
-    
-    // Sauvegarder dans localStorage
-    localStorage.setItem('plantations', JSON.stringify(updatedPlantations));
-    
+    const newPlantation = await plantationService.create(payload);
+
+    setPlantations((prev) => {
+      return [...prev, newPlantation];
+    });
+
     setIsModalOpen(false);
   };
 
@@ -124,6 +116,11 @@ export function ListPlantationsPage() {
       />
       <main className={styles.listPlantationsPage}>
         <div className={styles.listPlantationsPage__container}>
+          {fetchError && (
+            <div className={styles.listPlantationsPage__error}>
+              {fetchError}
+            </div>
+          )}
           {plantations.length === 0 ? (
             <div
               ref={emptyStateRef as React.RefObject<HTMLDivElement>}
@@ -193,11 +190,30 @@ export function ListPlantationsPage() {
                       </div>
                       <div className={styles.listPlantationsPage__cardInfo}>
                         <Icon icon={FaCalendarAlt} size={16} />
-                        <span>{plantation.createdAt}</span>
+                        <span>{formatDate(plantation.createdAt)}</span>
                       </div>
                       {plantation.area && (
                         <div className={styles.listPlantationsPage__cardInfo}>
                           <span>{t('plantations.area')}: {plantation.area} ha</span>
+                        </div>
+                      )}
+                      {plantation.cropType && (
+                        <div className={styles.listPlantationsPage__cardInfo}>
+                          <Icon icon={FaSeedling} size={16} />
+                          <span>{t('plantations.cropType')}: {plantation.cropType}</span>
+                        </div>
+                      )}
+                      {plantation.status && (
+                        <div className={styles.listPlantationsPage__cardInfo}>
+                          <span
+                            className={`${styles.listPlantationsPage__statusBadge} ${
+                              plantation.status === 'active'
+                                ? styles.listPlantationsPage__statusBadgeActive
+                                : styles.listPlantationsPage__statusBadgeInactive
+                            }`}
+                          >
+                            {t('plantations.status')}: {t(`plantations.status.${plantation.status}` as const)}
+                          </span>
                         </div>
                       )}
                     </div>
