@@ -2,6 +2,54 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 2rem;
+  position: relative;
+}
+
+/* Bouton de retour */
+.backButton {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.backButton:hover {
+  background-color: #fff;
+  transform: translateX(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #667eea;
+}
+
+.backIcon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.backButton:hover .backIcon {
+  transform: translateX(-3px);
+}
+
+.backText {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .backText {
+    display: inline;
+  }
 }
 
 .loading {
@@ -30,6 +78,7 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 2rem;
+  margin-top: 4rem; /* Espace pour le bouton de retour */
 }
 
 .headerLeft {
