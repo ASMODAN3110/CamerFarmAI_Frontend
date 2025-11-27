@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { Button } from '@/components/ui/Button/Button';
-import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaArrowLeft } from 'react-icons/fa';
 import styles from './ProfilePage.module.css';
 
 export function ProfilePage() {
@@ -88,19 +89,19 @@ export function ProfilePage() {
 
   const getCurrentDate = () => {
     const date = new Date();
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    const currentLang = user?.language || 'fr';
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'short', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    };
+    return date.toLocaleDateString(currentLang === 'ff' ? 'fr' : currentLang, options);
   };
 
   const getRoleLabel = (role: string) => {
-    const roleMap: Record<string, string> = {
-      farmer: 'Agriculteur',
-      advisor: 'Conseiller',
-      admin: 'Administrateur',
-    };
-    return roleMap[role] || role;
+    const roleKey = `profile.role.${role}` as TranslationKey;
+    return t(roleKey) || role;
   };
 
   const handleChange = (field: string, value: string) => {
@@ -118,20 +119,20 @@ export function ProfilePage() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
+      newErrors.firstName = t('profile.errors.firstNameRequired');
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
+      newErrors.lastName = t('profile.errors.lastNameRequired');
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Le numéro de téléphone est requis';
+      newErrors.phone = t('profile.errors.phoneRequired');
     } else {
       // Validation basique du téléphone
       const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
       if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-        newErrors.phone = 'Le numéro de téléphone n\'est pas valide';
+        newErrors.phone = t('profile.errors.phoneInvalid');
       }
     }
 
@@ -182,7 +183,7 @@ export function ProfilePage() {
       const errorMessage = 
         error?.response?.data?.message || 
         error?.response?.data?.error ||
-        'Erreur lors de la mise à jour du profil';
+        t('profile.errors.updateFailed');
       
       console.error('❌ Erreur lors de la sauvegarde:', error);
       setErrors({
@@ -226,12 +227,12 @@ export function ProfilePage() {
 
     // Validation du fichier
     if (!file.type.startsWith('image/')) {
-      setErrors({ general: 'Veuillez sélectionner une image valide' });
+      setErrors({ general: t('profile.errors.invalidImage') });
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB max
-      setErrors({ general: 'L\'image ne doit pas dépasser 5MB' });
+      setErrors({ general: t('profile.errors.imageSizeExceeded') });
       return;
     }
 
@@ -252,7 +253,7 @@ export function ProfilePage() {
         })
         .catch((error: any) => {
           setErrors({
-            general: error?.response?.data?.message || 'Erreur lors de l\'upload de la photo',
+            general: error?.response?.data?.message || t('profile.errors.uploadFailed'),
           });
           setImagePreview(null);
         })
@@ -272,9 +273,9 @@ export function ProfilePage() {
       <div className={styles.profilePage}>
         <div className={styles.loading}>
           <div className={styles.loadingSpinner}>⏳</div>
-          <p>Chargement du profil...</p>
+          <p>{t('profile.loading')}</p>
           <p style={{ fontSize: '0.9rem', color: '#999', marginTop: '1rem' }}>
-            Si le chargement prend trop de temps, vérifiez la console pour les erreurs.
+            {t('profile.loadingHint')}
           </p>
         </div>
       </div>
@@ -293,17 +294,25 @@ export function ProfilePage() {
     id: user.id,
   });
 
-  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Utilisateur';
+  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || t('profile.welcome', { name: '' }).replace(', ', '');
   
   // Afficher un message de débogage si les données sont vides
   const hasEmptyData = !user.firstName && !user.lastName && !user.phone;
 
   return (
     <div className={styles.profilePage}>
+      {/* Bouton de retour */}
+      <Link to="/" className={styles.backButton} aria-label={t('profile.back')}>
+        <FaArrowLeft className={styles.backIcon} />
+        <span className={styles.backText}>{t('profile.back')}</span>
+      </Link>
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h1 className={styles.welcomeTitle}>Bienvenue, {user.firstName || 'Utilisateur'}</h1>
+          <h1 className={styles.welcomeTitle}>
+            {t('profile.welcome').replace('{name}', user.firstName || '')}
+          </h1>
           <p className={styles.welcomeDate}>{getCurrentDate()}</p>
         </div>
       </div>
@@ -330,7 +339,7 @@ export function ProfilePage() {
                   ) : (
                     <>
                       <FaCamera size={24} />
-                      <span>Changer</span>
+                      <span>{t('profile.changePhoto')}</span>
                     </>
                   )}
                 </div>
@@ -354,12 +363,12 @@ export function ProfilePage() {
                   {user.phone}
                 </>
               ) : (
-                'Aucun téléphone'
+                t('profile.noPhone')
               )}
             </p>
             {user.role && (
               <p className={styles.profileRole}>
-                Rôle: {getRoleLabel(user.role)}
+                {t('profile.roleLabel')}: {getRoleLabel(user.role)}
               </p>
             )}
           </div>
@@ -370,7 +379,7 @@ export function ProfilePage() {
                 onClick={() => setIsEditing(true)}
                 className={styles.editButton}
               >
-                <FaEdit /> Modifier
+                <FaEdit /> {t('profile.editButton')}
               </Button>
             ) : (
               <div className={styles.editActions}>
@@ -380,7 +389,7 @@ export function ProfilePage() {
                   disabled={isSaving}
                   className={styles.saveButton}
                 >
-                  <FaSave /> {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+                  <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
                 </Button>
                 <Button
                   variant="secondary"
@@ -388,7 +397,7 @@ export function ProfilePage() {
                   disabled={isSaving}
                   className={styles.cancelButton}
                 >
-                  <FaTimes /> Annuler
+                  <FaTimes /> {t('profile.cancelButton')}
                 </Button>
               </div>
             )}
@@ -433,22 +442,22 @@ export function ProfilePage() {
           <div className={styles.formGrid}>
             {/* Left Column */}
             <div className={styles.formColumn}>
-              <FormField
-                type="text"
-                name="firstName"
-                label="Prénom"
-                placeholder="Votre prénom"
+                <FormField
+                  type="text"
+                  name="firstName"
+                  label={t('profile.firstNameLabel')}
+                  placeholder={t('profile.firstNamePlaceholder')}
                 value={formData.firstName}
                 onChange={(e) => handleChange('firstName', e.target.value)}
                 error={errors.firstName}
                 disabled={!isEditing}
               />
 
-              <FormField
-                type="text"
-                name="lastName"
-                label="Nom"
-                placeholder="Votre nom"
+                <FormField
+                  type="text"
+                  name="lastName"
+                  label={t('profile.lastNameLabel')}
+                  placeholder={t('profile.lastNamePlaceholder')}
                 value={formData.lastName}
                 onChange={(e) => handleChange('lastName', e.target.value)}
                 error={errors.lastName}
@@ -457,7 +466,7 @@ export function ProfilePage() {
 
               <div className={styles.selectField}>
                 <label className={styles.selectLabel}>
-                  <FaGlobe /> Langue
+                  <FaGlobe /> {t('profile.languageLabel')}
                 </label>
                 <select
                   className={styles.select}
@@ -465,24 +474,24 @@ export function ProfilePage() {
                   onChange={(e) => handleChange('language', e.target.value)}
                   disabled={!isEditing}
                 >
-                  <option value="fr">Français</option>
-                  <option value="en">English</option>
-                  <option value="ff">Fulfulde</option>
+                  <option value="fr">{t('language.fr')}</option>
+                  <option value="en">{t('language.en')}</option>
+                  <option value="ff">{t('language.ff')}</option>
                 </select>
               </div>
 
               <div className={styles.emailSection}>
                 <label className={styles.emailSectionLabel}>
-                  <FaEnvelope /> Mon adresse email
+                  <FaEnvelope /> {t('profile.emailLabel')}
                 </label>
                 <div className={styles.emailList}>
                   <div className={styles.emailItem}>
                     <FaEnvelope className={styles.emailIcon} />
                     <div className={styles.emailInfo}>
                       <span className={styles.emailValue}>
-                        {formData.email || 'Aucune adresse email'}
+                        {formData.email || t('profile.noEmail')}
                       </span>
-                      <span className={styles.emailDate}>Non configuré</span>
+                      <span className={styles.emailDate}>{t('profile.notConfigured')}</span>
                     </div>
                   </div>
                   {isEditing && (
@@ -490,9 +499,9 @@ export function ProfilePage() {
                       variant="primary"
                       size="sm"
                       className={styles.addEmailButton}
-                    >
-                      + Ajouter une adresse email
-                    </Button>
+                      >
+                        + {t('profile.addEmail')}
+                      </Button>
                   )}
                 </div>
               </div>
@@ -501,16 +510,16 @@ export function ProfilePage() {
             {/* Right Column */}
             <div className={styles.formColumn}>
               <div className={styles.infoField}>
-                <label className={styles.infoLabel}>Rôle</label>
+                <label className={styles.infoLabel}>{t('profile.roleLabel')}</label>
                 <div className={styles.infoValue}>{getRoleLabel(user.role)}</div>
-                <p className={styles.infoHint}>Le rôle ne peut pas être modifié</p>
+                <p className={styles.infoHint}>{t('profile.roleHint')}</p>
               </div>
 
               <FormField
                 type="tel"
                 name="phone"
-                label="Téléphone"
-                placeholder={user?.phone || "Votre numéro de téléphone"}
+                label={t('profile.phoneLabel')}
+                placeholder={user?.phone || t('profile.phonePlaceholder')}
                 value={formData.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 error={errors.phone}
@@ -518,9 +527,9 @@ export function ProfilePage() {
               />
 
               <div className={styles.infoField}>
-                <label className={styles.infoLabel}>ID Utilisateur</label>
+                <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
                 <div className={styles.infoValue}>{user.id}</div>
-                <p className={styles.infoHint}>Identifiant unique</p>
+                <p className={styles.infoHint}>{t('profile.idHint')}</p>
               </div>
             </div>
           </div>

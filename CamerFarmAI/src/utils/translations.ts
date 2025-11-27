@@ -152,7 +152,47 @@ export type TranslationKey =
   | 'monitoring.equipment.lighting'
   | 'monitoring.mode.automatic'
   | 'monitoring.mode.manual'
-  | 'monitoring.mode.automaticInfo';
+  | 'monitoring.mode.automaticInfo'
+  | 'profile.back'
+  | 'profile.welcome'
+  | 'profile.loading'
+  | 'profile.loadingHint'
+  | 'profile.changePhoto'
+  | 'profile.noPhone'
+  | 'profile.roleLabel'
+  | 'profile.editButton'
+  | 'profile.saveButton'
+  | 'profile.saving'
+  | 'profile.cancelButton'
+  | 'profile.firstNameLabel'
+  | 'profile.firstNamePlaceholder'
+  | 'profile.lastNameLabel'
+  | 'profile.lastNamePlaceholder'
+  | 'profile.languageLabel'
+  | 'profile.emailLabel'
+  | 'profile.noEmail'
+  | 'profile.notConfigured'
+  | 'profile.addEmail'
+  | 'profile.roleHint'
+  | 'profile.phoneLabel'
+  | 'profile.phonePlaceholder'
+  | 'profile.idLabel'
+  | 'profile.idHint'
+  | 'profile.errors.firstNameRequired'
+  | 'profile.errors.lastNameRequired'
+  | 'profile.errors.phoneRequired'
+  | 'profile.errors.phoneInvalid'
+  | 'profile.errors.invalidImage'
+  | 'profile.errors.imageSizeExceeded'
+  | 'profile.errors.uploadFailed'
+  | 'profile.errors.updateFailed'
+  | 'profile.role.farmer'
+  | 'profile.role.advisor'
+  | 'profile.role.admin'
+  | 'profile.role.technician'
+  | 'language.fr'
+  | 'language.en'
+  | 'language.ff';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -308,6 +348,46 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.areaRequired': 'La superficie est requise',
     'plantations.createModal.errors.areaInvalid': 'La superficie doit être un nombre valide',
     'plantations.createModal.errors.locationRequired': 'La localisation est requise',
+    'profile.back': 'Retour',
+    'profile.welcome': 'Bienvenue, {name}',
+    'profile.loading': 'Chargement du profil...',
+    'profile.loadingHint': 'Si le chargement prend trop de temps, vérifiez la console pour les erreurs.',
+    'profile.changePhoto': 'Changer',
+    'profile.noPhone': 'Aucun téléphone',
+    'profile.roleLabel': 'Rôle',
+    'profile.editButton': 'Modifier',
+    'profile.saveButton': 'Enregistrer',
+    'profile.saving': 'Enregistrement...',
+    'profile.cancelButton': 'Annuler',
+    'profile.firstNameLabel': 'Prénom',
+    'profile.firstNamePlaceholder': 'Votre prénom',
+    'profile.lastNameLabel': 'Nom',
+    'profile.lastNamePlaceholder': 'Votre nom',
+    'profile.languageLabel': 'Langue',
+    'profile.emailLabel': 'Mon adresse email',
+    'profile.noEmail': 'Aucune adresse email',
+    'profile.notConfigured': 'Non configuré',
+    'profile.addEmail': 'Ajouter une adresse email',
+    'profile.roleHint': 'Le rôle ne peut pas être modifié',
+    'profile.phoneLabel': 'Téléphone',
+    'profile.phonePlaceholder': 'Votre numéro de téléphone',
+    'profile.idLabel': 'ID Utilisateur',
+    'profile.idHint': 'Identifiant unique',
+    'profile.errors.firstNameRequired': 'Le prénom est requis',
+    'profile.errors.lastNameRequired': 'Le nom est requis',
+    'profile.errors.phoneRequired': 'Le numéro de téléphone est requis',
+    'profile.errors.phoneInvalid': 'Le numéro de téléphone n\'est pas valide',
+    'profile.errors.invalidImage': 'Veuillez sélectionner une image valide',
+    'profile.errors.imageSizeExceeded': 'L\'image ne doit pas dépasser 5MB',
+    'profile.errors.uploadFailed': 'Erreur lors de l\'upload de la photo',
+    'profile.errors.updateFailed': 'Erreur lors de la mise à jour du profil',
+    'profile.role.farmer': 'Agriculteur',
+    'profile.role.advisor': 'Conseiller',
+    'profile.role.admin': 'Administrateur',
+    'profile.role.technician': 'Technicien',
+    'language.fr': 'Français',
+    'language.en': 'English',
+    'language.ff': 'Fulfulde',
   },
   en: {
     'nav.home': 'Home',
@@ -462,6 +542,46 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automatic': 'Automatic',
     'monitoring.mode.manual': 'Manual',
     'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
+    'profile.back': 'Back',
+    'profile.welcome': 'Welcome, {name}',
+    'profile.loading': 'Loading profile...',
+    'profile.loadingHint': 'If loading takes too long, check the console for errors.',
+    'profile.changePhoto': 'Change',
+    'profile.noPhone': 'No phone',
+    'profile.roleLabel': 'Role',
+    'profile.editButton': 'Edit',
+    'profile.saveButton': 'Save',
+    'profile.saving': 'Saving...',
+    'profile.cancelButton': 'Cancel',
+    'profile.firstNameLabel': 'First Name',
+    'profile.firstNamePlaceholder': 'Your first name',
+    'profile.lastNameLabel': 'Last Name',
+    'profile.lastNamePlaceholder': 'Your last name',
+    'profile.languageLabel': 'Language',
+    'profile.emailLabel': 'My email address',
+    'profile.noEmail': 'No email address',
+    'profile.notConfigured': 'Not configured',
+    'profile.addEmail': 'Add email address',
+    'profile.roleHint': 'Role cannot be modified',
+    'profile.phoneLabel': 'Phone',
+    'profile.phonePlaceholder': 'Your phone number',
+    'profile.idLabel': 'User ID',
+    'profile.idHint': 'Unique identifier',
+    'profile.errors.firstNameRequired': 'First name is required',
+    'profile.errors.lastNameRequired': 'Last name is required',
+    'profile.errors.phoneRequired': 'Phone number is required',
+    'profile.errors.phoneInvalid': 'Phone number is invalid',
+    'profile.errors.invalidImage': 'Please select a valid image',
+    'profile.errors.imageSizeExceeded': 'Image must not exceed 5MB',
+    'profile.errors.uploadFailed': 'Error uploading photo',
+    'profile.errors.updateFailed': 'Error updating profile',
+    'profile.role.farmer': 'Farmer',
+    'profile.role.advisor': 'Advisor',
+    'profile.role.admin': 'Administrator',
+    'profile.role.technician': 'Technician',
+    'language.fr': 'Français',
+    'language.en': 'English',
+    'language.ff': 'Fulfulde',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -616,6 +736,46 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automatic': 'Wattinɗam',
     'monitoring.mode.manual': 'Jokkondirɗam',
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
+    'profile.back': 'Rutto',
+    'profile.welcome': 'Aɗa naatii, {name}',
+    'profile.loading': 'Jokkondir jokkondiral...',
+    'profile.loadingHint': 'Si jokkondiral ina ɗaɓɓa, ɓaŋngu konsool ngam koɗɗe Ɓaawɗe.',
+    'profile.changePhoto': 'Waylu',
+    'profile.noPhone': 'Alaa tel',
+    'profile.roleLabel': 'Nokkuure',
+    'profile.editButton': 'Waylu',
+    'profile.saveButton': 'Danndu',
+    'profile.saving': 'Danndude...',
+    'profile.cancelButton': 'Dirtu',
+    'profile.firstNameLabel': 'Innde fuɗɗo',
+    'profile.firstNamePlaceholder': 'Innde fuɗɗo maa',
+    'profile.lastNameLabel': 'Innde',
+    'profile.lastNamePlaceholder': 'Innde maa',
+    'profile.languageLabel': 'Ɗemngal',
+    'profile.emailLabel': 'Nder email am',
+    'profile.noEmail': 'Alaa nder email',
+    'profile.notConfigured': 'Njaatondiraani',
+    'profile.addEmail': '+ Ɓeydu nder email',
+    'profile.roleHint': 'Nokkuure waawaa waylude',
+    'profile.phoneLabel': 'Tel',
+    'profile.phonePlaceholder': 'Nder tel maa',
+    'profile.idLabel': 'ID Kuutoro',
+    'profile.idHint': 'Yiytude goonga',
+    'profile.errors.firstNameRequired': 'Innde fuɗɗo ina tawaa',
+    'profile.errors.lastNameRequired': 'Innde ina tawaa',
+    'profile.errors.phoneRequired': 'Nder tel ina tawaa',
+    'profile.errors.phoneInvalid': 'Nder tel fotaani',
+    'profile.errors.invalidImage': 'Toro limoore goonga',
+    'profile.errors.imageSizeExceeded': 'Limoore ina tawaa 5MB ɓuri',
+    'profile.errors.uploadFailed': 'Koɗɗe Ɓaawɗe ngam naatnude foto',
+    'profile.errors.updateFailed': 'Koɗɗe Ɓaawɗe ngam ɓeydugol jokkondiral',
+    'profile.role.farmer': 'Ngaynaajo',
+    'profile.role.advisor': 'Tontinoowo',
+    'profile.role.admin': 'Toppitoowo',
+    'profile.role.technician': 'Kuutowo',
+    'language.fr': 'Faransinkoore',
+    'language.en': 'Inngilinkoore',
+    'language.ff': 'Fulfulde',
   },
 };
 
