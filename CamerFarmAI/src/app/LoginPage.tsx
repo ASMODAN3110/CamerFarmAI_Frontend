@@ -81,7 +81,8 @@ export function LoginPage() {
 
     try {
       await login(email, password);
-      // Redirection après connexion réussie
+      // Redirection après connexion réussie vers la page d'accueil
+      // L'utilisateur peut ensuite accéder à son profil via le menu
       navigate('/', { replace: true });
     } catch (error: any) {
       // Afficher le message d'erreur détaillé du backend

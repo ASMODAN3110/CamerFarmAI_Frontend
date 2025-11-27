@@ -7,6 +7,7 @@ import { SignUpPage } from './app/SignUpPage';
 import { ListPlantationsPage } from './app/ListPlantationsPage';
 import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
+import { ProfilePage } from './app/ProfilePage';
 
 function App() {
   return (
@@ -37,6 +38,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MonitoringPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             } 
           />

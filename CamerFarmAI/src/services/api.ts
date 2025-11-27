@@ -10,6 +10,25 @@ const api = axios.create({
 // Mode debug (actif en développement)
 const DEBUG = import.meta.env.DEV;
 
+// Variable pour suivre si un refresh est en cours
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 // Ajout auto du Bearer token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
@@ -64,7 +83,22 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Si un refresh est déjà en cours, mettre la requête en queue
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       if (DEBUG) {
         console.log('🔄 Token expired, attempting refresh...');
@@ -77,27 +111,45 @@ api.interceptors.response.use(
           { withCredentials: true }
         );
 
-        localStorage.setItem('accessToken', data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        const newToken = data.accessToken || data.data?.accessToken;
+        localStorage.setItem('accessToken', newToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         if (DEBUG) {
           console.log('✅ Token refreshed successfully, retrying original request');
         }
 
+        processQueue(null, newToken);
+        isRefreshing = false;
+
         return api(originalRequest); // retry la requête initiale
       } catch (refreshError: any) {
-        // Refresh échoué → déconnexion forcée
+        isRefreshing = false;
+        processQueue(refreshError, null);
+
+        // Refresh échoué → déconnexion forcée uniquement si c'est une erreur d'authentification
         if (DEBUG) {
           console.error('❌ Token refresh failed:', {
             status: refreshError.response?.status,
             message: refreshError.message,
             data: refreshError.response?.data
           });
-          console.log('🚪 Redirecting to login...');
         }
         
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        // Ne déconnecter que si c'est une erreur d'authentification (401, 403)
+        // Pour les erreurs réseau, on peut laisser l'utilisateur réessayer
+        if (refreshError?.response?.status === 401 || refreshError?.response?.status === 403) {
+          if (DEBUG) {
+            console.log('🚪 Erreur d\'authentification, déconnexion forcée');
+          }
+          localStorage.removeItem('accessToken');
+          window.location.href = '/login';
+        } else {
+          if (DEBUG) {
+            console.log('⚠️ Erreur non-authentification lors du refresh, conservation de la session');
+          }
+        }
+        
         return Promise.reject(refreshError);
       }
     }
