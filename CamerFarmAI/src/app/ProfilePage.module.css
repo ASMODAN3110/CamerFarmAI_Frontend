@@ -1,0 +1,420 @@
+.profilePage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  gap: 1rem;
+}
+
+.loading p {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0;
+}
+
+.loadingSpinner {
+  font-size: 3rem;
+  animation: spin 1s linear infinite;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.welcomeTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcomeDate {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Content */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Profile Section */
+.profileSection {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.profileImageContainer {
+  flex-shrink: 0;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.profileImageEditable {
+  cursor: pointer;
+}
+
+.profileImageEditable:hover {
+  transform: scale(1.05);
+}
+
+.profileImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
+}
+
+.profileImageEditable:hover .profileImageOverlay {
+  opacity: 1;
+}
+
+.profileImageOverlay span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.uploadingSpinner {
+  font-size: 1.5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fileInput {
+  display: none;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.profileName {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: white;
+}
+
+.profileEmail {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.5rem 0 0 0;
+  display: flex;
+  align-items: center;
+}
+
+.profileRole {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+}
+
+.profileActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.editButton {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.editButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.editActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.saveButton {
+  background: white;
+  color: #667eea;
+}
+
+.cancelButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.saveButton:hover,
+.cancelButton:hover {
+  transform: translateY(-2px);
+}
+
+/* Form Section */
+.formSection {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.errorMessage {
+  background: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #fcc;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Select Field */
+.selectField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selectLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.select {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+/* Email Section */
+.emailSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emailSectionLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emailList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emailItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.emailIcon {
+  color: #667eea;
+  font-size: 1.2rem;
+}
+
+.emailInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.emailValue {
+  font-weight: 500;
+  color: #333;
+}
+
+.emailDate {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.addEmailButton {
+  align-self: flex-start;
+}
+
+/* Info Field */
+.infoField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.infoValue {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+.infoHint {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profilePage {
+    padding: 1rem;
+  }
+
+  .welcomeTitle {
+    font-size: 1.8rem;
+  }
+
+  .profileSection {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .profileActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .editActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
