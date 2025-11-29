@@ -54,14 +54,21 @@ export type TranslationKey =
   | 'signup.backToHome'
   | 'signup.showPassword'
   | 'signup.hidePassword'
+  | 'signup.passwordRequirements'
   | 'signup.errors.lastNameRequired'
   | 'signup.errors.firstNameRequired'
   | 'signup.errors.emailRequired'
   | 'signup.errors.emailInvalid'
+  | 'signup.errors.emailExists'
   | 'signup.errors.phoneRequired'
   | 'signup.errors.phoneInvalid'
+  | 'signup.errors.phoneExists'
   | 'signup.errors.passwordRequired'
   | 'signup.errors.passwordMinLength'
+  | 'signup.errors.passwordUppercase'
+  | 'signup.errors.passwordLowercase'
+  | 'signup.errors.passwordNumber'
+  | 'signup.errors.passwordSpecial'
   | 'signup.errors.confirmPasswordRequired'
   | 'signup.errors.passwordsMismatch'
   | 'signup.errors.signupFailed'
@@ -289,14 +296,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.backToHome': 'Retour à l\'accueil',
     'signup.showPassword': 'Afficher le mot de passe',
     'signup.hidePassword': 'Masquer le mot de passe',
+    'signup.passwordRequirements': 'Exigences du mot de passe :',
     'signup.errors.lastNameRequired': 'Le nom est requis',
     'signup.errors.firstNameRequired': 'Le prénom est requis',
     'signup.errors.emailRequired': 'L\'adresse email est requise',
     'signup.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'signup.errors.emailExists': 'Cet email est déjà utilisé',
     'signup.errors.phoneRequired': 'Le numéro de téléphone est requis',
     'signup.errors.phoneInvalid': 'Le numéro de téléphone n\'est pas valide',
+    'signup.errors.phoneExists': 'Ce numéro de téléphone est déjà utilisé',
     'signup.errors.passwordRequired': 'Le mot de passe est requis',
-    'signup.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 6 caractères',
+    'signup.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 8 caractères',
+    'signup.errors.passwordUppercase': 'Le mot de passe doit contenir au moins une lettre majuscule',
+    'signup.errors.passwordLowercase': 'Le mot de passe doit contenir au moins une lettre minuscule',
+    'signup.errors.passwordNumber': 'Le mot de passe doit contenir au moins un nombre',
+    'signup.errors.passwordSpecial': 'Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*(),.?":{}|<>)',
     'signup.errors.confirmPasswordRequired': 'La confirmation du mot de passe est requise',
     'signup.errors.passwordsMismatch': 'Les mots de passe ne correspondent pas',
     'signup.errors.signupFailed': 'Échec de l\'inscription. Veuillez réessayer.',
@@ -523,14 +537,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.backToHome': 'Back to home',
     'signup.showPassword': 'Show password',
     'signup.hidePassword': 'Hide password',
+    'signup.passwordRequirements': 'Password requirements:',
     'signup.errors.lastNameRequired': 'Last name is required',
     'signup.errors.firstNameRequired': 'First name is required',
     'signup.errors.emailRequired': 'Email address is required',
     'signup.errors.emailInvalid': 'Email address is invalid',
+    'signup.errors.emailExists': 'This email is already in use',
     'signup.errors.phoneRequired': 'Phone number is required',
     'signup.errors.phoneInvalid': 'Phone number is invalid',
+    'signup.errors.phoneExists': 'This phone number is already in use',
     'signup.errors.passwordRequired': 'Password is required',
-    'signup.errors.passwordMinLength': 'Password must be at least 6 characters',
+    'signup.errors.passwordMinLength': 'Password must be at least 8 characters',
+    'signup.errors.passwordUppercase': 'Password must contain at least one uppercase letter',
+    'signup.errors.passwordLowercase': 'Password must contain at least one lowercase letter',
+    'signup.errors.passwordNumber': 'Password must contain at least one number',
+    'signup.errors.passwordSpecial': 'Password must contain at least one special character (!@#$%^&*(),.?":{}|<>)',
     'signup.errors.confirmPasswordRequired': 'Password confirmation is required',
     'signup.errors.passwordsMismatch': 'Passwords do not match',
     'signup.errors.signupFailed': 'Sign up failed. Please try again.',
@@ -757,14 +778,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.backToHome': 'Rutto fuɗɗo',
     'signup.showPassword': 'Hollu finnde',
     'signup.hidePassword': 'Suuɗu finnde',
+    'signup.passwordRequirements': 'Cifooji finnde:',
     'signup.errors.lastNameRequired': 'Innde ina tawaa',
     'signup.errors.firstNameRequired': 'Innde fuɗɗo ina tawaa',
     'signup.errors.emailRequired': 'Nder email ina tawaa',
     'signup.errors.emailInvalid': 'Nder email fotaani',
+    'signup.errors.emailExists': 'Nder email ngol no njahii no',
     'signup.errors.phoneRequired': 'Nder tel ina tawaa',
     'signup.errors.phoneInvalid': 'Nder tel fotaani',
+    'signup.errors.phoneExists': 'Nder tel ngol no njahii no',
     'signup.errors.passwordRequired': 'Finnde ina tawaa',
-    'signup.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 6 ɓuri',
+    'signup.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 8 ɓuri',
+    'signup.errors.passwordUppercase': 'Finnde ina tawaa harfe mawnude gooto ɓuri',
+    'signup.errors.passwordLowercase': 'Finnde ina tawaa harfe ɓelɗe gooto ɓuri',
+    'signup.errors.passwordNumber': 'Finnde ina tawaa limoore gooto ɓuri',
+    'signup.errors.passwordSpecial': 'Finnde ina tawaa maande gooto ɓuri (!@#$%^&*(),.?":{}|<>)',
     'signup.errors.confirmPasswordRequired': 'Fedduɗe finnde ina tawaa',
     'signup.errors.passwordsMismatch': 'Finnde ɗe njaatondiraani',
     'signup.errors.signupFailed': 'Winndito Ɓaawtaani. Ɗaɓɓu yeewto.',
