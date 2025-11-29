@@ -597,29 +597,38 @@ export function MonitoringPage() {
             co2Level: co2Reading?.value,
           });
 
-          // Déterminer quels capteurs sont disponibles (uniquement ceux avec des lectures)
-          const hasTemperature = tempReading != null && tempReading.value != null;
-          const hasSoilMoisture = soilReading != null && soilReading.value != null;
-          const hasCo2Level = co2Reading != null && co2Reading.value != null;
-          const hasLuminosity = lumReading != null && lumReading.value != null;
-          const hasWaterLevel = waterReading != null && waterReading.value != null;
+          // Déterminer quels capteurs sont disponibles (basé sur leur présence dans sensors, pas seulement sur les lectures)
+          // Vérifier si un capteur de chaque type existe dans le tableau sensors
+          const hasTemperatureSensor = plantationData.sensors.some((s: Sensor) => s.type === 'temperature');
+          const hasSoilMoistureSensor = plantationData.sensors.some((s: Sensor) => s.type === 'soilMoisture');
+          const hasCo2LevelSensor = plantationData.sensors.some((s: Sensor) => s.type === 'co2Level');
+          const hasLuminositySensor = plantationData.sensors.some((s: Sensor) => s.type === 'luminosity');
+          const hasWaterLevelSensor = plantationData.sensors.some((s: Sensor) => s.type === 'waterLevel');
 
           // Debug: afficher les données détectées
           console.log('📊 Capteurs détectés:', {
-            temperature: hasTemperature,
-            soilMoisture: hasSoilMoisture,
-            co2Level: hasCo2Level,
-            luminosity: hasLuminosity,
-            waterLevel: hasWaterLevel,
-            sensors: plantationData.sensors.map((s: Sensor) => ({ type: s.type, status: s.status, hasReading: !!sensorMap.get(s.type) }))
+            sensors: plantationData.sensors.map((s: Sensor) => ({ 
+              id: s.id,
+              type: s.type, 
+              status: s.status, 
+              hasReading: !!sensorMap.get(s.type),
+              latestReading: s.latestReading 
+            })),
+            hasTemperatureSensor,
+            hasSoilMoistureSensor,
+            hasCo2LevelSensor,
+            hasLuminositySensor,
+            hasWaterLevelSensor,
+            tempReading: tempReading ? { value: tempReading.value, timestamp: tempReading.timestamp } : null,
+            soilReading: soilReading ? { value: soilReading.value, timestamp: soilReading.timestamp } : null,
           });
 
           setAvailableSensors({
-            temperature: hasTemperature,
-            soilHumidity: hasSoilMoisture,
-            co2: hasCo2Level,
-            luminosity: hasLuminosity,
-            waterLevel: hasWaterLevel,
+            temperature: hasTemperatureSensor,
+            soilHumidity: hasSoilMoistureSensor,
+            co2: hasCo2LevelSensor,
+            luminosity: hasLuminositySensor,
+            waterLevel: hasWaterLevelSensor,
           });
         } else {
           // Aucun capteur affecté
@@ -810,17 +819,13 @@ export function MonitoringPage() {
                   isActive={getSensorStatus('waterLevel')}
                 />
               )}
-              {plantationId && !plantation?.hasSensors && (
-                <div className={styles.monitoringPage__noSensors}>
-                  <p>{t('monitoring.noSensors')}</p>
-                </div>
-              )}
-              {plantationId && plantation?.hasSensors && 
-               !availableSensors.temperature && 
-               !availableSensors.soilHumidity && 
-               !availableSensors.co2 && 
-               !availableSensors.luminosity && 
-               !availableSensors.waterLevel && (
+              {plantationId && 
+               (!plantation?.hasSensors || 
+                (!availableSensors.temperature && 
+                 !availableSensors.soilHumidity && 
+                 !availableSensors.co2 && 
+                 !availableSensors.luminosity && 
+                 !availableSensors.waterLevel)) && (
                 <div className={styles.monitoringPage__noSensors}>
                   <p>{t('monitoring.noSensors')}</p>
                 </div>

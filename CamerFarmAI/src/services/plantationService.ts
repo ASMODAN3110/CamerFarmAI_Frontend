@@ -102,9 +102,39 @@ const normalizeActuator = (data: any): Actuator => {
 };
 
 const normalizePlantation = (data: any): Plantation => {
-  // Normaliser les capteurs
+  // Créer une map des latestReadings par sensorId et sensorType
+  const latestReadingsMap = new Map<string, SensorReading>();
+  if (Array.isArray(data.latestReadings)) {
+    data.latestReadings.forEach((item: any) => {
+      if (item.latestReading && item.latestReading !== null) {
+        // Mapper par sensorId (priorité)
+        if (item.sensorId) {
+          latestReadingsMap.set(item.sensorId, normalizeSensorReading(item.latestReading));
+        }
+        // Mapper aussi par sensorType pour compatibilité
+        if (item.sensorType) {
+          latestReadingsMap.set(item.sensorType, normalizeSensorReading(item.latestReading));
+        }
+      }
+    });
+  }
+
+  // Normaliser les capteurs et associer les latestReadings
   const sensors = Array.isArray(data.sensors) 
-    ? data.sensors.map(normalizeSensor)
+    ? data.sensors.map((sensorData: any) => {
+        const normalized = normalizeSensor(sensorData);
+        // Si le capteur n'a pas de latestReading mais qu'il existe dans latestReadingsMap
+        if (!normalized.latestReading) {
+          const readingById = latestReadingsMap.get(normalized.id);
+          const readingByType = latestReadingsMap.get(normalized.type);
+          if (readingById) {
+            normalized.latestReading = readingById;
+          } else if (readingByType) {
+            normalized.latestReading = readingByType;
+          }
+        }
+        return normalized;
+      })
     : undefined;
 
   // Normaliser les actionneurs
@@ -119,6 +149,9 @@ const normalizePlantation = (data: any): Plantation => {
     actuatorsCount: actuators?.length || 0,
     hasSensors: data.hasSensors,
     hasActuators: data.hasActuators,
+    latestReadingsCount: data.latestReadings?.length || 0,
+    sensorsRaw: data.sensors,
+    sensorsNormalized: sensors?.map(s => ({ id: s.id, type: s.type, status: s.status, hasLatestReading: !!s.latestReading })),
     actuatorsRaw: data.actuators,
     actuatorsNormalized: actuators
   });

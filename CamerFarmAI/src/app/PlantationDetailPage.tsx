@@ -53,6 +53,15 @@ export function PlantationDetailPage() {
       setError(null);
       try {
         const data = await plantationService.getById(id);
+        console.log('📋 PlantationDetailPage - Données reçues:', {
+          id: data.id,
+          name: data.name,
+          hasSensors: data.hasSensors,
+          sensorsCount: data.sensors?.length || 0,
+          sensors: data.sensors,
+          hasActuators: data.hasActuators,
+          actuatorsCount: data.actuators?.length || 0,
+        });
         setPlantation(data);
       } catch (err) {
         console.error('Error fetching plantation:', err);
@@ -172,13 +181,26 @@ export function PlantationDetailPage() {
           </Card>
 
           {/* Section capteurs */}
-          {plantation.hasSensors && plantation.sensors && plantation.sensors.length > 0 ? (
+          {(() => {
+            // Afficher les capteurs s'ils existent, même si hasSensors est false
+            const hasSensorsArray = plantation.sensors && Array.isArray(plantation.sensors) && plantation.sensors.length > 0;
+            const shouldShowSensors = hasSensorsArray;
+            console.log('🔍 PlantationDetailPage - Condition d\'affichage capteurs:', {
+              hasSensors: plantation.hasSensors,
+              sensorsExists: !!plantation.sensors,
+              sensorsIsArray: Array.isArray(plantation.sensors),
+              sensorsLength: plantation.sensors?.length || 0,
+              shouldShowSensors,
+              sensors: plantation.sensors,
+            });
+            return shouldShowSensors;
+          })() ? (
             <>
               <div className={styles.plantationDetailPage__sectionHeader}>
                 <h2 className={styles.plantationDetailPage__sectionTitle}>
-                  {t('plantations.detail.sensors.title')} ({plantation.sensors.filter((s: Sensor) => s.latestReading != null).length})
+                  {t('plantations.detail.sensors.title')} ({plantation.sensors?.length || 0})
                 </h2>
-                {plantation.hasSensors && (
+                {plantation.sensors && plantation.sensors.length > 0 && (
                   <div className={styles.plantationDetailPage__actionButtons}>
                     <Link
                       to={`/monitoring?plantationId=${plantation.id}`}
@@ -196,11 +218,8 @@ export function PlantationDetailPage() {
                 )}
               </div>
 
-              {plantation.sensors.filter((sensor: Sensor) => sensor.latestReading != null).length > 0 ? (
-                <div className={styles.plantationDetailPage__sensorsGrid}>
-                  {plantation.sensors
-                    .filter((sensor: Sensor) => sensor.latestReading != null) // Filtrer les capteurs sans lecture
-                    .map((sensor: Sensor) => {
+              <div className={styles.plantationDetailPage__sensorsGrid}>
+                {plantation.sensors.map((sensor: Sensor) => {
                   const latestValue = sensor.latestReading?.value;
                   const getSensorLabel = (type: string) => {
                     const labels: Record<string, string> = {
@@ -275,13 +294,8 @@ export function PlantationDetailPage() {
                       )}
                     </Card>
                   );
-                  })}
-                </div>
-              ) : (
-                <Card className={styles.plantationDetailPage__emptyState}>
-                  <p>{t('plantations.detail.sensors.noSensorsMessage')}</p>
-                </Card>
-              )}
+                })}
+              </div>
             </>
           ) : (
             <Card className={styles.plantationDetailPage__emptyState}>
