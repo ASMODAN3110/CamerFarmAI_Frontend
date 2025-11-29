@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { plantationService, type Sensor, type Actuator, type SensorReading, type SensorType } from '@/services/plantationService';
 import {
   FaTint,
   FaSun,
@@ -12,8 +14,11 @@ import {
   FaWind,
   FaThermometerHalf,
   FaCheckCircle,
+  FaTimesCircle,
   FaRobot,
   FaHandPointer,
+  FaArrowLeft,
+  FaCircle,
 } from 'react-icons/fa';
 import styles from './MonitoringPage.module.css';
 
@@ -23,6 +28,7 @@ interface SensorData {
   co2: number;
   luminosity: number;
   waterLevel: number;
+  co2Level?: number;
 }
 
 interface EquipmentState {
@@ -32,7 +38,7 @@ interface EquipmentState {
 }
 
 // Widget de température avec jauge semi-circulaire
-function TemperatureWidget({ value, updatedAt }: { value: number; updatedAt: string }) {
+function TemperatureWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
   const min = -10;
   const max = 50;
@@ -45,6 +51,9 @@ function TemperatureWidget({ value, updatedAt }: { value: number; updatedAt: str
         <div className={styles.monitoringPage__widgetTitle}>
           <Icon icon={FaThermometerHalf} size={20} />
           {t('monitoring.sensors.temperature')}
+          <div className={`${styles.monitoringPage__statusIndicator} ${isActive ? styles.monitoringPage__statusIndicatorActive : styles.monitoringPage__statusIndicatorInactive}`}>
+            <FaCircle size={8} />
+          </div>
         </div>
         <div className={styles.monitoringPage__widgetUpdated}>
           {t('monitoring.updated')}: {updatedAt}
@@ -117,7 +126,7 @@ function TemperatureWidget({ value, updatedAt }: { value: number; updatedAt: str
 }
 
 // Widget d'humidité du sol avec barre de progression horizontale
-function SoilHumidityWidget({ value, updatedAt }: { value: number; updatedAt: string }) {
+function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
   const getStatus = () => {
     if (value >= 50 && value <= 70) return { text: t('monitoring.status.optimal'), color: '#10B981' };
@@ -132,6 +141,9 @@ function SoilHumidityWidget({ value, updatedAt }: { value: number; updatedAt: st
         <div className={styles.monitoringPage__widgetTitle}>
           <Icon icon={FaTint} size={20} />
           {t('monitoring.sensors.soilHumidity')}
+          <div className={`${styles.monitoringPage__statusIndicator} ${isActive ? styles.monitoringPage__statusIndicatorActive : styles.monitoringPage__statusIndicatorInactive}`}>
+            <FaCircle size={8} />
+          </div>
         </div>
         <div className={styles.monitoringPage__widgetUpdated}>
           {t('monitoring.updated')}: {updatedAt}
@@ -163,7 +175,7 @@ function SoilHumidityWidget({ value, updatedAt }: { value: number; updatedAt: st
 }
 
 // Widget de CO2 avec jauge semi-circulaire
-function CO2Widget({ value, updatedAt }: { value: number; updatedAt: string }) {
+function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
   const min = 0;
   const max = 2500;
@@ -189,6 +201,9 @@ function CO2Widget({ value, updatedAt }: { value: number; updatedAt: string }) {
         <div className={styles.monitoringPage__widgetTitle}>
           <Icon icon={FaWind} size={20} />
           {t('monitoring.sensors.co2')}
+          <div className={`${styles.monitoringPage__statusIndicator} ${isActive ? styles.monitoringPage__statusIndicatorActive : styles.monitoringPage__statusIndicatorInactive}`}>
+            <FaCircle size={8} />
+          </div>
         </div>
         <div className={styles.monitoringPage__widgetUpdated}>
           {t('monitoring.updated')}: {updatedAt}
@@ -269,7 +284,7 @@ function CO2Widget({ value, updatedAt }: { value: number; updatedAt: string }) {
 }
 
 // Widget de luminosité avec grande valeur numérique
-function LuminosityWidget({ value, updatedAt }: { value: number; updatedAt: string }) {
+function LuminosityWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
   const getStatus = () => {
     if (value >= 50000) return t('monitoring.status.bright');
@@ -283,6 +298,9 @@ function LuminosityWidget({ value, updatedAt }: { value: number; updatedAt: stri
         <div className={styles.monitoringPage__widgetTitle}>
           <Icon icon={FaSun} size={20} />
           {t('monitoring.sensors.luminosity')}
+          <div className={`${styles.monitoringPage__statusIndicator} ${isActive ? styles.monitoringPage__statusIndicatorActive : styles.monitoringPage__statusIndicatorInactive}`}>
+            <FaCircle size={8} />
+          </div>
         </div>
         <div className={styles.monitoringPage__widgetUpdated}>
           {t('monitoring.updated')}: {updatedAt}
@@ -302,7 +320,7 @@ function LuminosityWidget({ value, updatedAt }: { value: number; updatedAt: stri
 }
 
 // Widget de niveau d'eau avec barre de progression verticale
-function WaterLevelWidget({ value, updatedAt }: { value: number; updatedAt: string }) {
+function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
   const getStatus = () => {
     if (value >= 70) return { text: t('monitoring.status.good'), color: '#10B981' };
@@ -317,6 +335,9 @@ function WaterLevelWidget({ value, updatedAt }: { value: number; updatedAt: stri
         <div className={styles.monitoringPage__widgetTitle}>
           <Icon icon={FaTint} size={20} />
           {t('monitoring.sensors.waterLevel')}
+          <div className={`${styles.monitoringPage__statusIndicator} ${isActive ? styles.monitoringPage__statusIndicatorActive : styles.monitoringPage__statusIndicatorInactive}`}>
+            <FaCircle size={8} />
+          </div>
         </div>
         <div className={styles.monitoringPage__widgetUpdated}>
           {t('monitoring.updated')}: {updatedAt}
@@ -364,26 +385,41 @@ function EquipmentControlWidget({
   isOn,
   onToggle,
   disabled,
+  isActive,
+  offlineLabel,
 }: {
   title: string;
   icon: typeof FaTint;
   isOn: boolean;
   onToggle: () => void;
   disabled?: boolean;
+  isActive?: boolean;
+  offlineLabel?: string;
 }) {
   return (
     <div className={styles.monitoringPage__equipmentCard}>
       <div className={styles.monitoringPage__equipmentIcon}>
-        <Icon icon={FaCheckCircle} size={32} style={{ color: '#10B981' }} />
+        {isActive !== false ? (
+          <Icon icon={FaCheckCircle} size={32} className={isOn ? styles.monitoringPage__equipmentIconActive : styles.monitoringPage__equipmentIconInactive} />
+        ) : (
+          <Icon icon={FaTimesCircle} size={32} className={styles.monitoringPage__equipmentIconOffline} />
+        )}
       </div>
-      <h3 className={styles.monitoringPage__equipmentTitle}>{title}</h3>
+      <h3 className={styles.monitoringPage__equipmentTitle}>
+        {title}
+        {isActive === false && offlineLabel && (
+          <span className={styles.monitoringPage__equipmentStatusBadge}>
+            {offlineLabel}
+          </span>
+        )}
+      </h3>
       <div className={styles.monitoringPage__equipmentControls}>
         <button
           className={`${styles.monitoringPage__equipmentButton} ${
             isOn ? styles.monitoringPage__equipmentButtonActive : ''
           }`}
           onClick={onToggle}
-          disabled={disabled}
+          disabled={disabled || isActive === false}
         >
           ON
         </button>
@@ -392,7 +428,7 @@ function EquipmentControlWidget({
             !isOn ? styles.monitoringPage__equipmentButtonOff : ''
           }`}
           onClick={onToggle}
-          disabled={disabled}
+          disabled={disabled || isActive === false}
         >
           OFF
         </button>
@@ -403,6 +439,9 @@ function EquipmentControlWidget({
 
 export function MonitoringPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const plantationId = searchParams.get('plantationId');
   const [sensorData, setSensorData] = useState<SensorData>({
     temperature: 25.1,
     soilHumidity: 58,
@@ -410,15 +449,217 @@ export function MonitoringPage() {
     luminosity: 70290,
     waterLevel: 79,
   });
-  const [equipmentState, setEquipmentState] = useState<EquipmentState>({
-    irrigationPump: true,
-    fans: true,
-    lighting: true,
+  const [sensors, setSensors] = useState<Sensor[]>([]);
+  const [actuators, setActuators] = useState<Actuator[]>([]);
+  const [plantation, setPlantation] = useState<any>(null);
+  const [availableSensors, setAvailableSensors] = useState<{
+    temperature: boolean;
+    soilHumidity: boolean;
+    co2: boolean;
+    luminosity: boolean;
+    waterLevel: boolean;
+  }>({
+    temperature: false,
+    soilHumidity: false,
+    co2: false,
+    luminosity: false,
+    waterLevel: false,
   });
+  const [equipmentState, setEquipmentState] = useState<EquipmentState>({
+    irrigationPump: false,
+    fans: false,
+    lighting: false,
+  });
+
+  // Mettre à jour l'état des équipements depuis les actionneurs
+  useEffect(() => {
+    if (actuators.length > 0) {
+      const newState: EquipmentState = {
+        irrigationPump: false,
+        fans: false,
+        lighting: false,
+      };
+
+      actuators.forEach((actuator) => {
+        const isActive = actuator.status === 'active' || actuator.isOn === true;
+        const type = (actuator.type || '').toLowerCase();
+        const name = (actuator.name || '').toLowerCase();
+        
+        // Le backend utilise exactement "pump", "fan", "light" comme types
+        if (type === 'pump' || type.includes('pump') || type.includes('irrigation') || name.includes('pompe') || name.includes('irrigation')) {
+          newState.irrigationPump = isActive;
+        } else if (type === 'fan' || type.includes('fan') || name.includes('ventilat')) {
+          newState.fans = isActive;
+        } else if (type === 'light' || type.includes('light') || name.includes('lumiere') || name.includes('eclairage')) {
+          newState.lighting = isActive;
+        }
+      });
+
+      console.log('🔧 État des équipements mis à jour:', newState);
+      setEquipmentState(newState);
+    } else {
+      // Réinitialiser l'état si aucun actionneur
+      setEquipmentState({
+        irrigationPump: false,
+        fans: false,
+        lighting: false,
+      });
+    }
+  }, [actuators]);
   const [isAutomaticMode, setIsAutomaticMode] = useState(true);
   const [updatedAt, setUpdatedAt] = useState('17:19:04');
   const { ref: sensorsRef, isVisible: isSensorsVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: equipmentRef, isVisible: isEquipmentVisible } = useScrollAnimation({ threshold: 0.1 });
+
+  // Charger les capteurs de la plantation si plantationId est présent
+  useEffect(() => {
+    const loadSensors = async () => {
+      if (!plantationId) {
+        // Si pas de plantationId, afficher tous les capteurs par défaut (mode démo)
+        setAvailableSensors({
+          temperature: true,
+          soilHumidity: true,
+          co2: true,
+          luminosity: true,
+          waterLevel: true,
+        });
+        return;
+      }
+      try {
+        const plantationData = await plantationService.getById(plantationId);
+        setPlantation(plantationData);
+        
+        // Charger les actionneurs
+        console.log('🔧 Données plantation reçues:', {
+          hasActuators: plantationData.hasActuators,
+          actuators: plantationData.actuators,
+          actuatorsIsArray: Array.isArray(plantationData.actuators),
+          actuatorsLength: plantationData.actuators?.length
+        });
+        
+        if (plantationData.actuators && Array.isArray(plantationData.actuators) && plantationData.actuators.length > 0) {
+          // Les actionneurs sont déjà normalisés par plantationService.getById
+          setActuators(plantationData.actuators);
+          console.log('✅ Actionneurs chargés:', plantationData.actuators.length, plantationData.actuators.map((a: Actuator) => ({ 
+            id: a.id, 
+            type: a.type, 
+            name: a.name, 
+            status: a.status 
+          })));
+        } else {
+          setActuators([]);
+          console.log('⚠️ Aucun actionneur trouvé. hasActuators:', plantationData.hasActuators, 'actuators:', plantationData.actuators);
+        }
+
+        if (plantationData.hasSensors && plantationData.sensors && plantationData.sensors.length > 0) {
+          setSensors(plantationData.sensors);
+          
+          // Extraire les dernières lectures depuis latestReadings ou depuis les capteurs
+          const sensorMap = new Map<string, SensorReading>();
+          
+          // D'abord, utiliser latestReadings si disponible (format backend)
+          if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
+            (plantationData as any).latestReadings.forEach((item: any) => {
+              if (item.latestReading && item.sensorType) {
+                sensorMap.set(item.sensorType, item.latestReading);
+              }
+            });
+          }
+          
+          // Sinon, utiliser les lectures des capteurs individuels
+          plantationData.sensors.forEach((sensor: Sensor) => {
+            if (!sensorMap.has(sensor.type)) {
+              if (sensor.latestReading) {
+                sensorMap.set(sensor.type, sensor.latestReading);
+              } else if (sensor.readings && sensor.readings.length > 0) {
+                // Prendre la lecture la plus récente
+                const sortedReadings = [...sensor.readings].sort((a, b) => 
+                  new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                );
+                sensorMap.set(sensor.type, sortedReadings[0]);
+              }
+            }
+          });
+
+          // Mettre à jour les données avec les dernières valeurs des capteurs
+          const tempReading = sensorMap.get('temperature');
+          const soilReading = sensorMap.get('soilMoisture');
+          const co2Reading = sensorMap.get('co2Level');
+          const lumReading = sensorMap.get('luminosity');
+          const waterReading = sensorMap.get('waterLevel');
+
+          setSensorData({
+            temperature: tempReading?.value ?? 25.1,
+            soilHumidity: soilReading?.value ?? 58,
+            co2: co2Reading?.value ?? 531,
+            luminosity: lumReading?.value ?? 70290,
+            waterLevel: waterReading?.value ?? 79,
+            co2Level: co2Reading?.value,
+          });
+
+          // Déterminer quels capteurs sont disponibles (basé sur leur présence dans sensors, pas seulement sur les lectures)
+          // Vérifier si un capteur de chaque type existe dans le tableau sensors
+          const hasTemperatureSensor = plantationData.sensors.some((s: Sensor) => s.type === 'temperature');
+          const hasSoilMoistureSensor = plantationData.sensors.some((s: Sensor) => s.type === 'soilMoisture');
+          const hasCo2LevelSensor = plantationData.sensors.some((s: Sensor) => s.type === 'co2Level');
+          const hasLuminositySensor = plantationData.sensors.some((s: Sensor) => s.type === 'luminosity');
+          const hasWaterLevelSensor = plantationData.sensors.some((s: Sensor) => s.type === 'waterLevel');
+
+          // Debug: afficher les données détectées
+          console.log('📊 Capteurs détectés:', {
+            sensors: plantationData.sensors.map((s: Sensor) => ({ 
+              id: s.id,
+              type: s.type, 
+              status: s.status, 
+              hasReading: !!sensorMap.get(s.type),
+              latestReading: s.latestReading 
+            })),
+            hasTemperatureSensor,
+            hasSoilMoistureSensor,
+            hasCo2LevelSensor,
+            hasLuminositySensor,
+            hasWaterLevelSensor,
+            tempReading: tempReading ? { value: tempReading.value, timestamp: tempReading.timestamp } : null,
+            soilReading: soilReading ? { value: soilReading.value, timestamp: soilReading.timestamp } : null,
+          });
+
+          setAvailableSensors({
+            temperature: hasTemperatureSensor,
+            soilHumidity: hasSoilMoistureSensor,
+            co2: hasCo2LevelSensor,
+            luminosity: hasLuminositySensor,
+            waterLevel: hasWaterLevelSensor,
+          });
+        } else {
+          // Aucun capteur affecté
+          setAvailableSensors({
+            temperature: false,
+            soilHumidity: false,
+            co2: false,
+            luminosity: false,
+            waterLevel: false,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading sensors:', error);
+        setAvailableSensors({
+          temperature: false,
+          soilHumidity: false,
+          co2: false,
+          luminosity: false,
+          waterLevel: false,
+        });
+      }
+    };
+    loadSensors();
+  }, [plantationId]);
+
+  // Fonction pour déterminer si un capteur est actif
+  const getSensorStatus = (sensorType: 'temperature' | 'soilHumidity' | 'co2' | 'luminosity' | 'waterLevel'): boolean => {
+    if (sensors.length === 0) return true; // Par défaut actif si pas de données
+    // Vérifier si au moins un capteur est actif
+    return sensors.some(sensor => sensor.status === 'active');
+  };
 
   // Configuration de la navbar
   const monitoringNavItems = [
@@ -430,25 +671,80 @@ export function MonitoringPage() {
     { label: t('nav.support'), href: '/support' },
   ];
 
-  // Simuler la mise à jour des données en temps réel
+  // Mettre à jour les données en temps réel uniquement si des capteurs sont disponibles
   useEffect(() => {
+    if (!plantationId || !plantation?.hasSensors) return;
+    
     const interval = setInterval(() => {
       const now = new Date();
       const timeString = now.toTimeString().slice(0, 8);
       setUpdatedAt(timeString);
 
-      // Simuler des variations de données
-      setSensorData((prev) => ({
-        temperature: Math.max(15, Math.min(35, prev.temperature + (Math.random() - 0.5) * 0.5)),
-        soilHumidity: Math.max(30, Math.min(80, prev.soilHumidity + (Math.random() - 0.5) * 2)),
-        co2: Math.max(300, Math.min(800, prev.co2 + (Math.random() - 0.5) * 20)),
-        luminosity: Math.max(10000, Math.min(100000, prev.luminosity + (Math.random() - 0.5) * 1000)),
-        waterLevel: Math.max(40, Math.min(100, prev.waterLevel + (Math.random() - 0.5) * 1)),
-      }));
+      // Recharger les dernières données depuis l'API
+      const refreshData = async () => {
+        try {
+          const plantationData = await plantationService.getById(plantationId);
+          if (plantationData.sensors && plantationData.sensors.length > 0) {
+            // Extraire les dernières lectures de chaque type de capteur
+            const sensorMap = new Map<string, SensorReading>();
+            plantationData.sensors.forEach((sensor: Sensor) => {
+              if (sensor.latestReading) {
+                sensorMap.set(sensor.type, sensor.latestReading);
+              } else if (sensor.readings && sensor.readings.length > 0) {
+                const sortedReadings = [...sensor.readings].sort((a, b) => 
+                  new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                );
+                sensorMap.set(sensor.type, sortedReadings[0]);
+              }
+            });
+
+            // D'abord, utiliser latestReadings si disponible (format backend)
+            if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
+              (plantationData as any).latestReadings.forEach((item: any) => {
+                if (item.latestReading && item.sensorType) {
+                  sensorMap.set(item.sensorType, item.latestReading);
+                }
+              });
+            }
+            
+            // Sinon, utiliser les lectures des capteurs individuels
+            plantationData.sensors.forEach((sensor: Sensor) => {
+              if (!sensorMap.has(sensor.type)) {
+                if (sensor.latestReading) {
+                  sensorMap.set(sensor.type, sensor.latestReading);
+                } else if (sensor.readings && sensor.readings.length > 0) {
+                  const sortedReadings = [...sensor.readings].sort((a, b) => 
+                    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                  );
+                  sensorMap.set(sensor.type, sortedReadings[0]);
+                }
+              }
+            });
+
+            const tempReading = sensorMap.get('temperature');
+            const soilReading = sensorMap.get('soilMoisture');
+            const co2Reading = sensorMap.get('co2Level');
+            const lumReading = sensorMap.get('luminosity');
+            const waterReading = sensorMap.get('waterLevel');
+
+            setSensorData((prev) => ({
+              temperature: availableSensors.temperature && tempReading ? tempReading.value : prev.temperature,
+              soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : prev.soilHumidity,
+              co2: availableSensors.co2 && co2Reading ? co2Reading.value : prev.co2,
+              luminosity: availableSensors.luminosity && lumReading ? lumReading.value : prev.luminosity,
+              waterLevel: availableSensors.waterLevel && waterReading ? waterReading.value : prev.waterLevel,
+              co2Level: co2Reading?.value,
+            }));
+          }
+        } catch (error) {
+          console.error('Error refreshing sensor data:', error);
+        }
+      };
+      refreshData();
     }, 5000); // Mise à jour toutes les 5 secondes
 
     return () => clearInterval(interval);
-  }, []);
+  }, [plantationId, plantation?.hasSensors, availableSensors]);
 
   const handleEquipmentToggle = (equipment: keyof EquipmentState) => {
     setEquipmentState((prev) => ({
@@ -466,6 +762,17 @@ export function MonitoringPage() {
       />
       <main className={styles.monitoringPage}>
         <div className={styles.monitoringPage__container}>
+          {plantationId && (
+            <div className={styles.monitoringPage__header}>
+              <Button
+                variant="secondary"
+                onClick={() => navigate(`/plantations/${plantationId}`)}
+                className={styles.monitoringPage__backButton}
+              >
+                <FaArrowLeft /> {t('plantations.detail.backToList')}
+              </Button>
+            </div>
+          )}
           {/* Section des capteurs */}
           <div className={styles.monitoringPage__section}>
             <h2 className={styles.monitoringPage__sectionTitle}>
@@ -477,76 +784,191 @@ export function MonitoringPage() {
                 isSensorsVisible ? styles.monitoringPage__sensorsGridVisible : ''
               }`}
             >
-              <TemperatureWidget value={sensorData.temperature} updatedAt={updatedAt} />
-              <SoilHumidityWidget value={sensorData.soilHumidity} updatedAt={updatedAt} />
-              <CO2Widget value={sensorData.co2} updatedAt={updatedAt} />
-              <LuminosityWidget value={sensorData.luminosity} updatedAt={updatedAt} />
-              <WaterLevelWidget value={sensorData.waterLevel} updatedAt={updatedAt} />
+              {availableSensors.temperature && (
+                <TemperatureWidget 
+                  value={sensorData.temperature} 
+                  updatedAt={updatedAt} 
+                  isActive={getSensorStatus('temperature')}
+                />
+              )}
+              {availableSensors.soilHumidity && (
+                <SoilHumidityWidget 
+                  value={sensorData.soilHumidity} 
+                  updatedAt={updatedAt} 
+                  isActive={getSensorStatus('soilHumidity')}
+                />
+              )}
+              {availableSensors.co2 && (
+                <CO2Widget 
+                  value={sensorData.co2} 
+                  updatedAt={updatedAt} 
+                  isActive={getSensorStatus('co2')}
+                />
+              )}
+              {availableSensors.luminosity && (
+                <LuminosityWidget 
+                  value={sensorData.luminosity} 
+                  updatedAt={updatedAt} 
+                  isActive={getSensorStatus('luminosity')}
+                />
+              )}
+              {availableSensors.waterLevel && (
+                <WaterLevelWidget 
+                  value={sensorData.waterLevel} 
+                  updatedAt={updatedAt} 
+                  isActive={getSensorStatus('waterLevel')}
+                />
+              )}
+              {plantationId && 
+               (!plantation?.hasSensors || 
+                (!availableSensors.temperature && 
+                 !availableSensors.soilHumidity && 
+                 !availableSensors.co2 && 
+                 !availableSensors.luminosity && 
+                 !availableSensors.waterLevel)) && (
+                <div className={styles.monitoringPage__noSensors}>
+                  <p>{t('monitoring.noSensors')}</p>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Section de contrôle des équipements */}
-          <div className={styles.monitoringPage__section}>
-            <div className={styles.monitoringPage__sectionHeader}>
-              <h2 className={styles.monitoringPage__sectionTitle}>
-                {t('monitoring.equipment.title')}
-              </h2>
-              <div className={styles.monitoringPage__modeToggle}>
-                <button
-                  className={`${styles.monitoringPage__modeButton} ${
-                    isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
-                  }`}
-                  onClick={() => setIsAutomaticMode(true)}
-                >
-                  <Icon icon={FaRobot} size={18} />
-                  <span>{t('monitoring.mode.automatic')}</span>
-                </button>
-                <button
-                  className={`${styles.monitoringPage__modeButton} ${
-                    !isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
-                  }`}
-                  onClick={() => setIsAutomaticMode(false)}
-                >
-                  <Icon icon={FaHandPointer} size={18} />
-                  <span>{t('monitoring.mode.manual')}</span>
-                </button>
+          {actuators && actuators.length > 0 && (
+            <div className={styles.monitoringPage__section}>
+              <div className={styles.monitoringPage__sectionHeader}>
+                <h2 className={styles.monitoringPage__sectionTitle}>
+                  {t('monitoring.equipment.title')}
+                </h2>
+                <div className={styles.monitoringPage__modeToggle}>
+                  <button
+                    className={`${styles.monitoringPage__modeButton} ${
+                      isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
+                    }`}
+                    onClick={() => setIsAutomaticMode(true)}
+                  >
+                    <Icon icon={FaRobot} size={18} />
+                    <span>{t('monitoring.mode.automatic')}</span>
+                  </button>
+                  <button
+                    className={`${styles.monitoringPage__modeButton} ${
+                      !isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
+                    }`}
+                    onClick={() => setIsAutomaticMode(false)}
+                  >
+                    <Icon icon={FaHandPointer} size={18} />
+                    <span>{t('monitoring.mode.manual')}</span>
+                  </button>
+                </div>
+              </div>
+              {isAutomaticMode && (
+                <div className={styles.monitoringPage__modeInfo}>
+                  <Icon icon={FaRobot} size={16} />
+                  <span>{t('monitoring.mode.automaticInfo')}</span>
+                </div>
+              )}
+              <div
+                ref={equipmentRef as React.RefObject<HTMLDivElement>}
+                className={`${styles.monitoringPage__equipmentGrid} ${
+                  (isEquipmentVisible || actuators.length > 0) ? styles.monitoringPage__equipmentGridVisible : ''
+                }`}
+              >
+                {(() => {
+                  // Trouver les actionneurs correspondants (uniquement ceux qui existent en base de données)
+                  // Le backend retourne des types exacts : "pump", "fan", "light"
+                  console.log('🔍 Recherche d\'actionneurs dans:', actuators);
+                  
+                  const pumpActuator = actuators.find(a => {
+                    const type = (a.type || '').toLowerCase();
+                    // Le backend utilise exactement "pump" comme type
+                    return type === 'pump' || 
+                           type.includes('pump') || 
+                           type.includes('irrigation') || 
+                           (a.name || '').toLowerCase().includes('pompe') ||
+                           (a.name || '').toLowerCase().includes('irrigation');
+                  });
+                  
+                  const fanActuator = actuators.find(a => {
+                    const type = (a.type || '').toLowerCase();
+                    // Le backend utilise exactement "fan" comme type
+                    return type === 'fan' || 
+                           type.includes('fan') || 
+                           (a.name || '').toLowerCase().includes('ventilat');
+                  });
+                  
+                  const lightActuator = actuators.find(a => {
+                    const type = (a.type || '').toLowerCase();
+                    // Le backend utilise exactement "light" comme type
+                    return type === 'light' || 
+                           type.includes('light') || 
+                           (a.name || '').toLowerCase().includes('lumiere') ||
+                           (a.name || '').toLowerCase().includes('eclairage');
+                  });
+                  
+                  console.log('🔍 Actionneurs trouvés:', { 
+                    pump: pumpActuator ? { id: pumpActuator.id, type: pumpActuator.type, name: pumpActuator.name, status: pumpActuator.status } : null,
+                    fan: fanActuator ? { id: fanActuator.id, type: fanActuator.type, name: fanActuator.name, status: fanActuator.status } : null,
+                    light: lightActuator ? { id: lightActuator.id, type: lightActuator.type, name: lightActuator.name, status: lightActuator.status } : null
+                  });
+
+                  // Ne rien afficher si aucun actionneur n'est disponible
+                  if (!pumpActuator && !fanActuator && !lightActuator) {
+                    console.log('⚠️ Aucun actionneur disponible, affichage du message "noActuators"');
+                    return (
+                      <div className={styles.monitoringPage__noSensors}>
+                        <p>{t('monitoring.equipment.noActuators')}</p>
+                      </div>
+                    );
+                  }
+
+                  console.log('✅ Rendu des widgets d\'équipement:', {
+                    renderPump: !!pumpActuator,
+                    renderFan: !!fanActuator,
+                    renderLight: !!lightActuator,
+                    equipmentState
+                  });
+
+                  return (
+                    <>
+                      {pumpActuator && (
+                        <EquipmentControlWidget
+                          title={t('monitoring.equipment.irrigationPump')}
+                          icon={FaTint}
+                          isOn={equipmentState.irrigationPump}
+                          onToggle={() => handleEquipmentToggle('irrigationPump')}
+                          disabled={isAutomaticMode}
+                          isActive={pumpActuator.status !== 'offline'}
+                          offlineLabel={pumpActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                        />
+                      )}
+                      {fanActuator && (
+                        <EquipmentControlWidget
+                          title={t('monitoring.equipment.fans')}
+                          icon={FaWind}
+                          isOn={equipmentState.fans}
+                          onToggle={() => handleEquipmentToggle('fans')}
+                          disabled={isAutomaticMode}
+                          isActive={fanActuator.status !== 'offline'}
+                          offlineLabel={fanActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                        />
+                      )}
+                      {lightActuator && (
+                        <EquipmentControlWidget
+                          title={t('monitoring.equipment.lighting')}
+                          icon={FaSun}
+                          isOn={equipmentState.lighting}
+                          onToggle={() => handleEquipmentToggle('lighting')}
+                          disabled={isAutomaticMode}
+                          isActive={lightActuator.status !== 'offline'}
+                          offlineLabel={lightActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                        />
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
-            {isAutomaticMode && (
-              <div className={styles.monitoringPage__modeInfo}>
-                <Icon icon={FaRobot} size={16} />
-                <span>{t('monitoring.mode.automaticInfo')}</span>
-              </div>
-            )}
-            <div
-              ref={equipmentRef as React.RefObject<HTMLDivElement>}
-              className={`${styles.monitoringPage__equipmentGrid} ${
-                isEquipmentVisible ? styles.monitoringPage__equipmentGridVisible : ''
-              }`}
-            >
-              <EquipmentControlWidget
-                title={t('monitoring.equipment.irrigationPump')}
-                icon={FaTint}
-                isOn={equipmentState.irrigationPump}
-                onToggle={() => handleEquipmentToggle('irrigationPump')}
-                disabled={isAutomaticMode}
-              />
-              <EquipmentControlWidget
-                title={t('monitoring.equipment.fans')}
-                icon={FaWind}
-                isOn={equipmentState.fans}
-                onToggle={() => handleEquipmentToggle('fans')}
-                disabled={isAutomaticMode}
-              />
-              <EquipmentControlWidget
-                title={t('monitoring.equipment.lighting')}
-                icon={FaSun}
-                isOn={equipmentState.lighting}
-                onToggle={() => handleEquipmentToggle('lighting')}
-                disabled={isAutomaticMode}
-              />
-            </div>
-          </div>
+          )}
         </div>
       </main>
       <Footer />

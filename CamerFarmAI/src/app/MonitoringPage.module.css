@@ -4,6 +4,18 @@
   padding: var(--spacing-4xl) var(--spacing-lg);
 }
 
+.monitoringPage__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.monitoringPage__backButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .monitoringPage__container {
   max-width: 1400px;
   margin: 0 auto;
@@ -81,6 +93,21 @@
   color: var(--color-text);
 }
 
+.monitoringPage__noSensors {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--spacing-4xl);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-lg);
+  border: 2px dashed var(--color-gray-300);
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
+}
+
+.monitoringPage__noSensors p {
+  margin: 0;
+}
+
 .monitoringPage__sensorsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -123,6 +150,40 @@
   gap: var(--spacing-sm);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
+  position: relative;
+}
+
+.monitoringPage__statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.monitoringPage__statusIndicatorActive {
+  color: #10B981;
+}
+
+.monitoringPage__statusIndicatorActive svg {
+  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.6));
+}
+
+.monitoringPage__statusIndicatorInactive {
+  color: #ef4444;
+  animation: none;
+}
+
+.monitoringPage__statusIndicatorInactive svg {
+  opacity: 0.5;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
   color: var(--color-text);
 }
 
@@ -344,10 +405,34 @@
   box-shadow: var(--shadow-lg);
 }
 
+.monitoringPage__equipmentIconActive {
+  color: #10B981;
+}
+
+.monitoringPage__equipmentIconInactive {
+  color: #6b7280;
+}
+
+.monitoringPage__equipmentIconOffline {
+  color: #ef4444;
+  opacity: 0.5;
+}
+
 .monitoringPage__equipmentIcon {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.monitoringPage__equipmentStatusBadge {
+  display: inline-block;
+  margin-left: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
 
 .monitoringPage__equipmentTitle {

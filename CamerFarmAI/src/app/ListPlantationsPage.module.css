@@ -245,27 +245,6 @@
   flex-shrink: 0;
 }
 
-.listPlantationsPage__statusBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-2xs) var(--spacing-sm);
-  border-radius: var(--border-radius-full);
-  text-transform: capitalize;
-}
-
-.listPlantationsPage__statusBadgeActive {
-  background: rgba(76, 175, 80, 0.15);
-  color: #2e7d32;
-}
-
-.listPlantationsPage__statusBadgeInactive {
-  background: rgba(255, 152, 0, 0.15);
-  color: #ef6c00;
-}
-
 .listPlantationsPage__cardFooter {
   display: flex;
   justify-content: flex-end;
