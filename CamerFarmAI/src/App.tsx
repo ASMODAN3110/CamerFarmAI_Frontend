@@ -5,6 +5,7 @@ import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';
 import { ListPlantationsPage } from './app/ListPlantationsPage';
+import { PlantationDetailPage } from './app/PlantationDetailPage';
 import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
 import { ProfilePage } from './app/ProfilePage';
@@ -22,6 +23,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ListPlantationsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/plantations/:id" 
+            element={
+              <ProtectedRoute>
+                <PlantationDetailPage />
               </ProtectedRoute>
             } 
           />

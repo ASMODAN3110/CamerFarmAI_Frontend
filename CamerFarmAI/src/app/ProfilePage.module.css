@@ -1,101 +1,40 @@
 .profilePage {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
+  min-height: calc(100vh - 90px);
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  padding: var(--spacing-4xl) var(--spacing-lg);
   position: relative;
 }
 
-/* Bouton de retour */
-.backButton {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 50px;
-  text-decoration: none;
-  color: #333;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+.profileContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.backButton:hover {
-  background-color: #fff;
-  transform: translateX(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: #667eea;
+.loadingCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(27, 94, 32, 0.12);
+  border: 1px solid rgba(46, 125, 50, 0.1);
 }
 
-.backIcon {
+.loadingCard p {
+  margin: 0.75rem 0;
+  color: #2e7d32;
   font-size: 1rem;
-  transition: transform 0.3s ease;
 }
 
-.backButton:hover .backIcon {
-  transform: translateX(-3px);
-}
-
-.backText {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .backText {
-    display: inline;
-  }
-}
-
-.loading {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-  gap: 1rem;
-}
-
-.loading p {
-  font-size: 1.2rem;
-  color: #666;
-  margin: 0;
+.loadingHint {
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
 .loadingSpinner {
   font-size: 3rem;
   animation: spin 1s linear infinite;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  margin-top: 4rem; /* Espace pour le bouton de retour */
-}
-
-.headerLeft {
-  flex: 1;
-}
-
-.welcomeTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
-}
-
-.welcomeDate {
-  font-size: 1rem;
-  color: #666;
-  margin: 0;
+  color: #43a047;
 }
 
 /* Content */
@@ -106,16 +45,15 @@
 
 /* Profile Section */
 .profileSection {
-  background: white;
-  border-radius: 16px;
+  border-radius: 24px;
   padding: 2.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 35px 80px rgba(27, 94, 32, 0.18);
   display: flex;
   align-items: center;
   gap: 2rem;
   position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, rgba(46, 125, 50, 0.97) 0%, rgba(129, 199, 132, 0.95) 100%);
   color: white;
 }
 
@@ -196,8 +134,23 @@
   flex: 1;
 }
 
+.profileRoleBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  margin-bottom: 0.75rem;
+}
+
 .profileName {
-  font-size: 2rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 700;
   margin: 0 0 0.5rem 0;
   color: white;
@@ -211,6 +164,10 @@
   align-items: center;
 }
 
+.profileEmailIcon {
+  margin-right: 0.5rem;
+}
+
 .profileRole {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
@@ -221,25 +178,26 @@
 .profileActions {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-.editButton {
-  background: white;
-  color: #667eea;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
+.editButton,
+.saveButton,
+.cancelButton {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: none;
+  text-transform: none;
 }
 
 .editButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(27, 94, 32, 0.25);
 }
 
 .editActions {
@@ -247,33 +205,10 @@
   gap: 1rem;
 }
 
-.saveButton,
 .cancelButton {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: none;
-  transition: transform 0.2s;
-}
-
-.saveButton {
-  background: white;
-  color: #667eea;
-}
-
-.cancelButton {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.saveButton:hover,
-.cancelButton:hover {
-  transform: translateY(-2px);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
 }
 
 /* Form Section */
@@ -281,7 +216,8 @@
   background: white;
   border-radius: 16px;
   padding: 2.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 25px 60px rgba(27, 94, 32, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.08);
 }
 
 .errorMessage {
@@ -370,13 +306,13 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: #f3f9f3;
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  border: 1px solid rgba(76, 175, 80, 0.15);
 }
 
 .emailIcon {
-  color: #667eea;
+  color: #2e7d32;
   font-size: 1.2rem;
 }
 
@@ -416,8 +352,8 @@
 
 .infoValue {
   padding: 0.75rem;
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background: #f3f9f3;
+  border: 1px solid rgba(76, 175, 80, 0.15);
   border-radius: 8px;
   color: #333;
   font-weight: 500;
@@ -432,11 +368,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .profilePage {
-    padding: 1rem;
-  }
-
-  .welcomeTitle {
-    font-size: 1.8rem;
+    padding: var(--spacing-2xl) var(--spacing-md);
   }
 
   .profileSection {

@@ -100,10 +100,28 @@ export type TranslationKey =
   | 'plantations.createModal.errors.longitudeInvalid'
   | 'plantations.createModal.errors.coordinatesRequiredTogether'
   | 'plantations.cropType'
-  | 'plantations.status'
-  | 'plantations.status.active'
-  | 'plantations.status.inactive'
   | 'plantations.errors.fetchFailed'
+  | 'plantations.detail.loading'
+  | 'plantations.detail.backToList'
+  | 'plantations.detail.createdAt'
+  | 'plantations.detail.monitoring'
+  | 'plantations.detail.graphs'
+  | 'plantations.detail.sensors.title'
+  | 'plantations.detail.sensors.active'
+  | 'plantations.detail.sensors.inactive'
+  | 'plantations.detail.sensors.temperature'
+  | 'plantations.detail.sensors.humidity'
+  | 'plantations.detail.sensors.soilMoisture'
+  | 'plantations.detail.sensors.co2Level'
+  | 'plantations.detail.sensors.waterLevel'
+  | 'plantations.detail.sensors.luminosity'
+  | 'plantations.detail.sensors.lastUpdate'
+  | 'plantations.detail.sensors.noSensors'
+  | 'plantations.detail.sensors.noSensorsMessage'
+  | 'plantations.detail.sensors.noData'
+  | 'plantations.detail.errors.invalidId'
+  | 'plantations.detail.errors.fetchFailed'
+  | 'plantations.detail.errors.notFound'
   | 'notifications.title'
   | 'notifications.empty'
   | 'hero.heading'
@@ -138,12 +156,16 @@ export type TranslationKey =
   | 'graphs.welcome.hint'
   | 'graphs.sensors.humidity'
   | 'graphs.sensors.temperature'
+  | 'graphs.sensors.soilMoisture'
   | 'graphs.sensors.luminosity'
   | 'graphs.sensors.co2'
+  | 'graphs.sensors.waterLevel'
   | 'graphs.dateFrom'
   | 'graphs.dateTo'
   | 'graphs.applyFilter'
   | 'graphs.chart.title'
+  | 'graphs.loading'
+  | 'graphs.empty'
   | 'monitoring.sensors.title'
   | 'monitoring.sensors.temperature'
   | 'monitoring.sensors.soilHumidity'
@@ -164,10 +186,14 @@ export type TranslationKey =
   | 'monitoring.equipment.irrigationPump'
   | 'monitoring.equipment.fans'
   | 'monitoring.equipment.lighting'
+  | 'monitoring.equipment.offline'
+  | 'monitoring.equipment.noActuators'
   | 'monitoring.mode.automatic'
   | 'monitoring.mode.manual'
   | 'monitoring.mode.automaticInfo'
+  | 'monitoring.noSensors'
   | 'profile.back'
+  | 'profile.pageLabel'
   | 'profile.welcome'
   | 'profile.loading'
   | 'profile.loadingHint'
@@ -314,17 +340,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.slogan.line1': 'Modernisez vos cultures, automatisez vos tâches et améliorez vos récoltes',
     'plantations.slogan.line2': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
     'graphs.title': 'DASHBOARD',
-    'graphs.welcome.title': 'Bienvenue sur votre tableau de bord Smart Farming.',
+    'graphs.welcome.title': 'Bienvenue sur votre tableau de bord CamerFarm AI.',
     'graphs.welcome.description': 'Visualisez en temps réel les données de vos capteurs pour mieux comprendre l\'état de vos parcelles et optimiser vos interventions.',
     'graphs.welcome.hint': 'Utilisez les boutons ci-dessous pour filtrer les types de capteurs (Humidité, température, CO₂, etc.)',
-    'graphs.sensors.humidity': 'Capteur Humidité du sol',
+    'graphs.sensors.humidity': 'Capteur Humidité',
     'graphs.sensors.temperature': 'Capteur Température ambiante',
+    'graphs.sensors.soilMoisture': 'Capteur Humidité du sol',
     'graphs.sensors.luminosity': 'Capteur de luminosité',
     'graphs.sensors.co2': 'Capteur de CO2',
+    'graphs.sensors.waterLevel': 'Niveau d\'eau',
     'graphs.dateFrom': 'Du',
     'graphs.dateTo': 'Au',
     'graphs.applyFilter': 'Appliquer Filtre',
     'graphs.chart.title': 'Évolution',
+    'graphs.loading': 'Chargement des données des capteurs...',
+    'graphs.empty': 'Aucune donnée de capteur disponible pour cette période.',
     'monitoring.sensors.title': 'Valeurs des capteurs en temps réel',
     'monitoring.sensors.temperature': 'Température',
     'monitoring.sensors.soilHumidity': 'Humidité du sol',
@@ -345,9 +375,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.irrigationPump': 'Pompe d\'irrigation',
     'monitoring.equipment.fans': 'Ventilateurs',
     'monitoring.equipment.lighting': 'Éclairage',
+    'monitoring.equipment.offline': 'Hors ligne',
+    'monitoring.equipment.noActuators': 'Aucun actionneur n\'est actuellement installé dans ce champ.',
     'monitoring.mode.automatic': 'Automatique',
     'monitoring.mode.manual': 'Manuel',
     'monitoring.mode.automaticInfo': 'Mode automatique activé : Les équipements sont contrôlés automatiquement selon les données des capteurs.',
+    'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
@@ -360,16 +393,42 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.submitting': 'Création...',
     'plantations.createModal.cropTypeLabel': 'Type de culture',
     'plantations.createModal.cropTypePlaceholder': 'Ex: Manioc, cacao...',
+    'plantations.createModal.latitudeLabel': 'Latitude',
+    'plantations.createModal.latitudePlaceholder': 'Entrer la latitude',
+    'plantations.createModal.longitudeLabel': 'Longitude',
+    'plantations.createModal.longitudePlaceholder': 'Entrer la longitude',
     'plantations.createModal.errors.nameRequired': 'Le nom de la plantation est requis',
     'plantations.createModal.errors.areaRequired': 'La superficie est requise',
     'plantations.createModal.errors.areaInvalid': 'La superficie doit être un nombre valide',
     'plantations.createModal.errors.locationRequired': 'La localisation est requise',
+    'plantations.createModal.errors.latitudeInvalid': 'La latitude n\'est pas valide',
+    'plantations.createModal.errors.longitudeInvalid': 'La longitude n\'est pas valide',
+    'plantations.createModal.errors.coordinatesRequiredTogether': 'La latitude et la longitude doivent être fournies ensemble',
     'plantations.cropType': 'Culture',
-    'plantations.status': 'Statut',
-    'plantations.status.active': 'Active',
-    'plantations.status.inactive': 'Inactive',
     'plantations.errors.fetchFailed': 'Impossible de charger les plantations. Les données affichées peuvent être obsolètes.',
+    'plantations.detail.loading': 'Chargement de la plantation...',
+    'plantations.detail.backToList': 'Retour à la liste',
+    'plantations.detail.createdAt': 'Créée le',
+    'plantations.detail.monitoring': 'Monitoring',
+    'plantations.detail.graphs': 'Graphiques',
+    'plantations.detail.sensors.title': 'Capteurs',
+    'plantations.detail.sensors.active': 'Actif',
+    'plantations.detail.sensors.inactive': 'Inactif',
+    'plantations.detail.sensors.temperature': 'Température',
+    'plantations.detail.sensors.humidity': 'Humidité',
+    'plantations.detail.sensors.soilMoisture': 'Humidité du sol',
+    'plantations.detail.sensors.co2Level': 'Niveau CO₂',
+    'plantations.detail.sensors.waterLevel': 'Niveau d\'eau',
+    'plantations.detail.sensors.luminosity': 'Luminosité',
+    'plantations.detail.sensors.lastUpdate': 'Dernière mise à jour',
+    'plantations.detail.sensors.noSensors': 'Aucun capteur installé',
+    'plantations.detail.sensors.noData': 'Aucune donnée',
+    'plantations.detail.sensors.noSensorsMessage': 'Cette plantation n\'a pas encore de capteurs installés. Installez des capteurs pour accéder au monitoring.',
+    'plantations.detail.errors.invalidId': 'ID de plantation invalide',
+    'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
+    'plantations.detail.errors.notFound': 'Plantation non trouvée',
     'profile.back': 'Retour',
+    'profile.pageLabel': 'Profil utilisateur',
     'profile.welcome': 'Bienvenue, {name}',
     'profile.loading': 'Chargement du profil...',
     'profile.loadingHint': 'Si le chargement prend trop de temps, vérifiez la console pour les erreurs.',
@@ -526,27 +585,56 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.submitting': 'Creating...',
     'plantations.createModal.cropTypeLabel': 'Crop type',
     'plantations.createModal.cropTypePlaceholder': 'e.g. Cassava, cocoa...',
+    'plantations.createModal.latitudeLabel': 'Latitude',
+    'plantations.createModal.latitudePlaceholder': 'Enter latitude',
+    'plantations.createModal.longitudeLabel': 'Longitude',
+    'plantations.createModal.longitudePlaceholder': 'Enter longitude',
     'plantations.createModal.errors.nameRequired': 'Plantation name is required',
+    'plantations.createModal.errors.latitudeInvalid': 'Latitude is invalid',
+    'plantations.createModal.errors.longitudeInvalid': 'Longitude is invalid',
+    'plantations.createModal.errors.coordinatesRequiredTogether': 'Latitude and longitude must be provided together',
     'plantations.createModal.errors.areaRequired': 'Area is required',
     'plantations.createModal.errors.areaInvalid': 'Area must be a valid number',
     'plantations.createModal.errors.locationRequired': 'Location is required',
     'plantations.cropType': 'Crop',
-    'plantations.status': 'Status',
-    'plantations.status.active': 'Active',
-    'plantations.status.inactive': 'Inactive',
     'plantations.errors.fetchFailed': 'Unable to load plantations. Displayed data may be outdated.',
+    'plantations.detail.loading': 'Loading plantation...',
+    'plantations.detail.backToList': 'Back to list',
+    'plantations.detail.createdAt': 'Created on',
+    'plantations.detail.monitoring': 'Monitoring',
+    'plantations.detail.graphs': 'Graphs',
+    'plantations.detail.sensors.title': 'Sensors',
+    'plantations.detail.sensors.active': 'Active',
+    'plantations.detail.sensors.inactive': 'Inactive',
+    'plantations.detail.sensors.temperature': 'Temperature',
+    'plantations.detail.sensors.humidity': 'Humidity',
+    'plantations.detail.sensors.soilMoisture': 'Soil Moisture',
+    'plantations.detail.sensors.co2Level': 'CO₂ Level',
+    'plantations.detail.sensors.waterLevel': 'Water Level',
+    'plantations.detail.sensors.luminosity': 'Luminosity',
+    'plantations.detail.sensors.lastUpdate': 'Last update',
+    'plantations.detail.sensors.noSensors': 'No sensors installed',
+    'plantations.detail.sensors.noData': 'No data',
+    'plantations.detail.sensors.noSensorsMessage': 'This plantation does not have any sensors installed yet. Install sensors to access monitoring.',
+    'plantations.detail.errors.invalidId': 'Invalid plantation ID',
+    'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
+    'plantations.detail.errors.notFound': 'Plantation not found',
     'graphs.title': 'DASHBOARD',
-    'graphs.welcome.title': 'Welcome to your Smart Farming dashboard.',
+    'graphs.welcome.title': 'Welcome to your CamerFarm AI dashboard.',
     'graphs.welcome.description': 'View real-time data from your sensors to better understand the state of your plots and optimize your interventions.',
     'graphs.welcome.hint': 'Use the buttons below to filter sensor types (Humidity, temperature, CO₂, etc.)',
-    'graphs.sensors.humidity': 'Soil Humidity Sensor',
+    'graphs.sensors.humidity': 'Humidity Sensor',
     'graphs.sensors.temperature': 'Ambient Temperature Sensor',
+    'graphs.sensors.soilMoisture': 'Soil Moisture Sensor',
     'graphs.sensors.luminosity': 'Luminosity Sensor',
     'graphs.sensors.co2': 'CO2 Sensor',
+    'graphs.sensors.waterLevel': 'Water Level',
     'graphs.dateFrom': 'From',
     'graphs.dateTo': 'To',
     'graphs.applyFilter': 'Apply Filter',
     'graphs.chart.title': 'Evolution',
+    'graphs.loading': 'Loading sensor data...',
+    'graphs.empty': 'No sensor data available for this period.',
     'monitoring.sensors.title': 'Real-time sensor values',
     'monitoring.sensors.temperature': 'Temperature',
     'monitoring.sensors.soilHumidity': 'Soil Humidity',
@@ -567,10 +655,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.irrigationPump': 'Irrigation Pump',
     'monitoring.equipment.fans': 'Fans',
     'monitoring.equipment.lighting': 'Lighting',
+    'monitoring.equipment.offline': 'Offline',
+    'monitoring.equipment.noActuators': 'No actuators are currently installed in this field.',
     'monitoring.mode.automatic': 'Automatic',
     'monitoring.mode.manual': 'Manual',
     'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
+    'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
     'profile.back': 'Back',
+    'profile.pageLabel': 'User profile',
     'profile.welcome': 'Welcome, {name}',
     'profile.loading': 'Loading profile...',
     'profile.loadingHint': 'If loading takes too long, check the console for errors.',
@@ -727,27 +819,56 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.submitting': 'Waɗaade...',
     'plantations.createModal.cropTypeLabel': 'Fannu ngesa',
     'plantations.createModal.cropTypePlaceholder': 'Eduu: Maniok, kakao...',
+    'plantations.createModal.latitudeLabel': 'Latitude',
+    'plantations.createModal.latitudePlaceholder': 'Naatu latitude',
+    'plantations.createModal.longitudeLabel': 'Longitude',
+    'plantations.createModal.longitudePlaceholder': 'Naatu longitude',
     'plantations.createModal.errors.nameRequired': 'Innde nguurndam ina tawaa',
     'plantations.createModal.errors.areaRequired': 'Leyɗe ina tawaa',
     'plantations.createModal.errors.areaInvalid': 'Leyɗe ina tawaa limoore goonga',
     'plantations.createModal.errors.locationRequired': 'Nokkuure ina tawaa',
+    'plantations.createModal.errors.latitudeInvalid': 'Latitude fotaani',
+    'plantations.createModal.errors.longitudeInvalid': 'Longitude fotaani',
+    'plantations.createModal.errors.coordinatesRequiredTogether': 'Latitude e longitude ina tawaa e nder goɗɗe',
     'plantations.cropType': 'Fannu ngesa',
-    'plantations.status': 'Ngonka',
-    'plantations.status.active': 'Gollowo',
-    'plantations.status.inactive': 'Woppete',
     'plantations.errors.fetchFailed': 'Waawaa nattude nguurndam. Keɓe njiyataa waawaa heddude.',
+    'plantations.detail.loading': 'Jokkondir nguurndam...',
+    'plantations.detail.backToList': 'Ruttoo e njiylol',
+    'plantations.detail.createdAt': 'Waɗaaɗe',
+    'plantations.detail.monitoring': 'Jokkondiral',
+    'plantations.detail.graphs': 'Jagol',
+    'plantations.detail.sensors.title': 'Jokkondirɗe',
+    'plantations.detail.sensors.active': 'Jokkondirɗo',
+    'plantations.detail.sensors.inactive': 'Alaa jokkondirɗo',
+    'plantations.detail.sensors.temperature': 'Temperatuur',
+    'plantations.detail.sensors.humidity': 'Ɓuɓɓe',
+    'plantations.detail.sensors.soilMoisture': 'Ɓuɓɓe leyɗe',
+    'plantations.detail.sensors.co2Level': 'Ndaari CO₂',
+    'plantations.detail.sensors.waterLevel': 'Ndaari ndiyam',
+    'plantations.detail.sensors.luminosity': 'Ngesa',
+    'plantations.detail.sensors.lastUpdate': 'Ndenndol sakkitiingo',
+    'plantations.detail.sensors.noSensors': 'Alaa jokkondirɗe nattaaɗe',
+    'plantations.detail.sensors.noData': 'Alaa keɓe',
+    'plantations.detail.sensors.noSensorsMessage': 'Nguurndam ngal alaa jokkondirɗe nattaaɗe jooni. Natt jokkondirɗe ngam naatde e jokkondiral.',
+    'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
+    'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
+    'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
     'graphs.title': 'DASHBOARD',
-    'graphs.welcome.title': 'Aɗa naatii e jokkondiral maa Smart Farming.',
+    'graphs.welcome.title': 'Aɗa naatii e jokkondiral maa CamerFarm AI.',
     'graphs.welcome.description': 'Yiylaade keɓe waktu goonga e jokkondirɗe maɓɓe ngam ɓeyduɗe faamugol nokkuure maɓɓe e ɓeyduɗe tontinɗe maɓɓe.',
     'graphs.welcome.hint': 'Kuutoraade kuuɗe ɗoo les ngam ɓaŋnguɗe nokkuure jokkondirɗe (Ɓuɓɓe, temperatuur, CO₂, e koɗɗe goɗɗe)',
-    'graphs.sensors.humidity': 'Jokkondiral Ɓuɓɓe Leyɗe',
+    'graphs.sensors.humidity': 'Jokkondiral Ɓuɓɓe',
     'graphs.sensors.temperature': 'Jokkondiral Temperatuur',
+    'graphs.sensors.soilMoisture': 'Jokkondiral Ɓuɓɓe Leyɗe',
     'graphs.sensors.luminosity': 'Jokkondiral Ndaariɗe',
     'graphs.sensors.co2': 'Jokkondiral CO2',
+    'graphs.sensors.waterLevel': 'Ndaari ndiyam',
     'graphs.dateFrom': 'Fuɗɗo',
     'graphs.dateTo': 'Gila',
     'graphs.applyFilter': 'Naatu ɓaŋnguɗe',
     'graphs.chart.title': 'Ɓeydugol',
+    'graphs.loading': 'Jokkondir keɓe jokkondirɗe...',
+    'graphs.empty': 'Alaa keɓe jokkondirɗe njiyataa ngam nokkuure ngal.',
     'monitoring.sensors.title': 'Keɓe jokkondirɗe waktu goonga',
     'monitoring.sensors.temperature': 'Temperatuur',
     'monitoring.sensors.soilHumidity': 'Ɓuɓɓe Leyɗe',
@@ -768,10 +889,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.irrigationPump': 'Pompe Irrigasion',
     'monitoring.equipment.fans': 'Ventilateerɗe',
     'monitoring.equipment.lighting': 'Ndaariɗe',
+    'monitoring.equipment.offline': 'Alaa jokkondirɗo',
+    'monitoring.equipment.noActuators': 'Alaa toppuɗe nattaaɗe e nguurndam ngal jooni.',
     'monitoring.mode.automatic': 'Wattinɗam',
     'monitoring.mode.manual': 'Jokkondirɗam',
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
+    'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'profile.back': 'Rutto',
+    'profile.pageLabel': 'Jokkondiral kuutoro',
     'profile.welcome': 'Aɗa naatii, {name}',
     'profile.loading': 'Jokkondir jokkondiral...',
     'profile.loadingHint': 'Si jokkondiral ina ɗaɓɓa, ɓaŋngu konsool ngam koɗɗe Ɓaawɗe.',

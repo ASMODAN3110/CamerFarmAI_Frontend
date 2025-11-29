@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
@@ -35,13 +35,11 @@ const defaultNavItemsConfig: Array<{ key: 'nav.home' | 'nav.support'; href: stri
 ];
 
 const authenticatedNavItemsConfig: Array<{ 
-  key: 'nav.home' | 'nav.monitoring' | 'nav.graphs' | 'nav.plantations' | 'nav.support' | 'nav.ai'; 
+  key: 'nav.home' | 'nav.plantations' | 'nav.support' | 'nav.ai'; 
   href: string 
 }> = [
   { key: 'nav.home', href: '/' },
   { key: 'nav.plantations', href: '/plantations' },
-  { key: 'nav.monitoring', href: '/monitoring' },
-  { key: 'nav.graphs', href: '/graphs' },
   { key: 'nav.ai', href: '/ai' },
   { key: 'nav.support', href: '/support' },
 ];
@@ -281,10 +279,20 @@ export function Header({
             </div>
           ) : (
             <div className={styles.header__mobileAuthButtons}>
-              <Button variant="primary" size="md" href="/login" onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  variant="primary"
+                  size="md"
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                 {t('auth.login')}
               </Button>
-              <Button variant="primary" size="md" href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  variant="primary"
+                  size="md"
+                  href="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                 {t('auth.signup')}
               </Button>
             </div>

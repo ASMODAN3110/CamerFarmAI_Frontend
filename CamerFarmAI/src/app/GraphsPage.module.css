@@ -12,6 +12,18 @@
   gap: var(--spacing-2xl);
 }
 
+.graphsPage__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.graphsPage__backButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .graphsPage__titleSection {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--color-white);
@@ -58,6 +70,20 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-light);
   margin: 0;
+}
+
+.graphsPage__loadingMessage {
+  font-size: var(--font-size-base);
+  color: var(--color-primary);
+  margin: var(--spacing-md) 0 0 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.graphsPage__emptyMessage {
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  margin: var(--spacing-md) 0 0 0;
+  font-style: italic;
 }
 
 .graphsPage__sensorFilters {

@@ -1,11 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { Button } from '@/components/ui/Button/Button';
-import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaArrowLeft } from 'react-icons/fa';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
+import type { TranslationKey } from '@/utils/translations';
 import styles from './ProfilePage.module.css';
 
 export function ProfilePage() {
@@ -27,6 +30,18 @@ export function ProfilePage() {
     language: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const profileNavItems = useMemo(
+    () => [
+      { label: t('nav.home'), href: '/' },
+      { label: t('nav.plantations'), href: '/plantations' },
+      { label: t('nav.monitoring'), href: '/monitoring' },
+      { label: t('nav.graphs'), href: '/graphs' },
+      { label: t('nav.ai'), href: '/ai' },
+      { label: t('nav.support'), href: '/support' },
+    ],
+    [t]
+  );
 
   // Charger les données utilisateur au montage du composant seulement si pas déjà chargé
   useEffect(() => {
@@ -86,18 +101,6 @@ export function ProfilePage() {
       console.log('⚠️ Aucun utilisateur trouvé dans le store');
     }
   }, [user]);
-
-  const getCurrentDate = () => {
-    const date = new Date();
-    const currentLang = user?.language || 'fr';
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'short', 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
-    };
-    return date.toLocaleDateString(currentLang === 'ff' ? 'fr' : currentLang, options);
-  };
 
   const getRoleLabel = (role: string) => {
     const roleKey = `profile.role.${role}` as TranslationKey;
@@ -267,275 +270,197 @@ export function ProfilePage() {
     reader.readAsDataURL(file);
   };
 
-  // Afficher un état de chargement si l'utilisateur n'est pas encore chargé
-  if (!user) {
-    return (
-      <div className={styles.profilePage}>
-        <div className={styles.loading}>
+  const renderContent = () => {
+    if (!user) {
+      return (
+        <div className={styles.loadingCard}>
           <div className={styles.loadingSpinner}>⏳</div>
           <p>{t('profile.loading')}</p>
-          <p style={{ fontSize: '0.9rem', color: '#999', marginTop: '1rem' }}>
-            {t('profile.loadingHint')}
-          </p>
+          <p className={styles.loadingHint}>{t('profile.loadingHint')}</p>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // Debug: afficher les données dans la console
-  console.log('👤 Utilisateur actuel dans ProfilePage:', user);
-  console.log('📋 Données du formulaire:', formData);
-  console.log('🔍 Vérification des champs:', {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phone: user.phone,
-    language: user.language,
-    role: user.role,
-    id: user.id,
-  });
+    const fallbackName = t('profile.welcome').replace('{name}', '').replace(/,\s*$/, '').trim();
+    const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || fallbackName;
 
-  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || t('profile.welcome', { name: '' }).replace(', ', '');
-  
-  // Afficher un message de débogage si les données sont vides
-  const hasEmptyData = !user.firstName && !user.lastName && !user.phone;
-
-  return (
-    <div className={styles.profilePage}>
-      {/* Bouton de retour */}
-      <Link to="/" className={styles.backButton} aria-label={t('profile.back')}>
-        <FaArrowLeft className={styles.backIcon} />
-        <span className={styles.backText}>{t('profile.back')}</span>
-      </Link>
-
-      {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <h1 className={styles.welcomeTitle}>
-            {t('profile.welcome').replace('{name}', user.firstName || '')}
-          </h1>
-          <p className={styles.welcomeDate}>{getCurrentDate()}</p>
-        </div>
-      </div>
-
-      {/* Main Content */}
+    return (
       <div className={styles.content}>
-        {/* Profile Section */}
-        <div className={styles.profileSection}>
-          <div className={styles.profileImageContainer}>
-            <div 
-              className={`${styles.profileImage} ${isEditing ? styles.profileImageEditable : ''}`}
-              onClick={handleImageClick}
-              style={{
-                backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              {!imagePreview && !profileImage && <FaUser size={60} />}
-              {isEditing && (
-                <div className={styles.profileImageOverlay}>
-                  {isUploading ? (
-                    <div className={styles.uploadingSpinner}>⏳</div>
-                  ) : (
-                    <>
-                      <FaCamera size={24} />
-                      <span>{t('profile.changePhoto')}</span>
-                    </>
-                  )}
+          <div className={styles.profileSection}>
+            <div className={styles.profileImageContainer}>
+              <div
+                className={`${styles.profileImage} ${isEditing ? styles.profileImageEditable : ''}`}
+                onClick={handleImageClick}
+                style={{
+                  backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {!imagePreview && !profileImage && <FaUser size={60} />}
+                {isEditing && (
+                  <div className={styles.profileImageOverlay}>
+                    {isUploading ? (
+                      <div className={styles.uploadingSpinner}>⏳</div>
+                    ) : (
+                      <>
+                        <FaCamera size={24} />
+                        <span>{t('profile.changePhoto')}</span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className={styles.fileInput}
+                disabled={!isEditing || isUploading}
+              />
+            </div>
+            <div className={styles.profileInfo}>
+              <p className={styles.profileRoleBadge}>{getRoleLabel(user.role)}</p>
+              <h2 className={styles.profileName}>{fullName}</h2>
+              <p className={styles.profileEmail}>
+                {user.phone ? (
+                  <>
+                    <FaPhone size={14} className={styles.profileEmailIcon} />
+                    {user.phone}
+                  </>
+                ) : (
+                  t('profile.noPhone')
+                )}
+              </p>
+              {user.email && (
+                <p className={styles.profileEmail}>
+                  <FaEnvelope size={14} className={styles.profileEmailIcon} />
+                  {user.email}
+                </p>
+              )}
+            </div>
+            <div className={styles.profileActions}>
+              {!isEditing ? (
+                <Button variant="primary" onClick={() => setIsEditing(true)} className={styles.editButton}>
+                  <FaEdit /> {t('profile.editButton')}
+                </Button>
+              ) : (
+                <div className={styles.editActions}>
+                  <Button variant="primary" onClick={handleSave} disabled={isSaving} className={styles.saveButton}>
+                    <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
+                  </Button>
+                  <Button variant="secondary" onClick={handleCancel} disabled={isSaving} className={styles.cancelButton}>
+                    <FaTimes /> {t('profile.cancelButton')}
+                  </Button>
                 </div>
               )}
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className={styles.fileInput}
-              disabled={!isEditing || isUploading}
-            />
           </div>
-          <div className={styles.profileInfo}>
-            <h2 className={styles.profileName}>{fullName}</h2>
-            <p className={styles.profileEmail}>
-              {user.phone ? (
-                <>
-                  <FaPhone size={14} style={{ marginRight: '0.5rem' }} />
-                  {user.phone}
-                </>
-              ) : (
-                t('profile.noPhone')
-              )}
-            </p>
-            {user.role && (
-              <p className={styles.profileRole}>
-                {t('profile.roleLabel')}: {getRoleLabel(user.role)}
-              </p>
-            )}
-          </div>
-          <div className={styles.profileActions}>
-            {!isEditing ? (
-              <Button
-                variant="primary"
-                onClick={() => setIsEditing(true)}
-                className={styles.editButton}
-              >
-                <FaEdit /> {t('profile.editButton')}
-              </Button>
-            ) : (
-              <div className={styles.editActions}>
-                <Button
-                  variant="primary"
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className={styles.saveButton}
-                >
-                  <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={handleCancel}
-                  disabled={isSaving}
-                  className={styles.cancelButton}
-                >
-                  <FaTimes /> {t('profile.cancelButton')}
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Form Section */}
-        <div className={styles.formSection}>
-          {errors.general && (
-            <div className={styles.errorMessage}>{errors.general}</div>
-          )}
+          <div className={styles.formSection}>
+            {errors.general && <div className={styles.errorMessage}>{errors.general}</div>}
 
-          {/* Message de débogage temporaire */}
-          {hasEmptyData && (
-            <div style={{ 
-              background: '#fff3cd', 
-              border: '1px solid #ffc107', 
-              padding: '1rem', 
-              borderRadius: '8px', 
-              marginBottom: '1rem',
-              fontSize: '0.9rem'
-            }}>
-              <strong>⚠️ Debug:</strong> Les données utilisateur semblent vides. 
-              Vérifiez la console pour voir ce qui est retourné par l'API.
-              <details style={{ marginTop: '0.5rem' }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>Afficher les données brutes</summary>
-                <pre style={{ 
-                  background: '#f8f9fa', 
-                  padding: '0.5rem', 
-                  borderRadius: '4px', 
-                  marginTop: '0.5rem',
-                  fontSize: '0.85rem',
-                  overflow: 'auto',
-                  maxHeight: '200px'
-                }}>
-                  {JSON.stringify({ user, formData }, null, 2)}
-                </pre>
-              </details>
-            </div>
-          )}
-
-          <div className={styles.formGrid}>
-            {/* Left Column */}
-            <div className={styles.formColumn}>
+            <div className={styles.formGrid}>
+              <div className={styles.formColumn}>
                 <FormField
                   type="text"
                   name="firstName"
                   label={t('profile.firstNameLabel')}
                   placeholder={t('profile.firstNamePlaceholder')}
-                value={formData.firstName}
-                onChange={(e) => handleChange('firstName', e.target.value)}
-                error={errors.firstName}
-                disabled={!isEditing}
-              />
+                  value={formData.firstName}
+                  onChange={(e) => handleChange('firstName', e.target.value)}
+                  error={errors.firstName}
+                  disabled={!isEditing}
+                />
 
                 <FormField
                   type="text"
                   name="lastName"
                   label={t('profile.lastNameLabel')}
                   placeholder={t('profile.lastNamePlaceholder')}
-                value={formData.lastName}
-                onChange={(e) => handleChange('lastName', e.target.value)}
-                error={errors.lastName}
-                disabled={!isEditing}
-              />
-
-              <div className={styles.selectField}>
-                <label className={styles.selectLabel}>
-                  <FaGlobe /> {t('profile.languageLabel')}
-                </label>
-                <select
-                  className={styles.select}
-                  value={formData.language}
-                  onChange={(e) => handleChange('language', e.target.value)}
+                  value={formData.lastName}
+                  onChange={(e) => handleChange('lastName', e.target.value)}
+                  error={errors.lastName}
                   disabled={!isEditing}
-                >
-                  <option value="fr">{t('language.fr')}</option>
-                  <option value="en">{t('language.en')}</option>
-                  <option value="ff">{t('language.ff')}</option>
-                </select>
-              </div>
+                />
 
-              <div className={styles.emailSection}>
-                <label className={styles.emailSectionLabel}>
-                  <FaEnvelope /> {t('profile.emailLabel')}
-                </label>
-                <div className={styles.emailList}>
-                  <div className={styles.emailItem}>
-                    <FaEnvelope className={styles.emailIcon} />
-                    <div className={styles.emailInfo}>
-                      <span className={styles.emailValue}>
-                        {formData.email || t('profile.noEmail')}
-                      </span>
-                      <span className={styles.emailDate}>{t('profile.notConfigured')}</span>
+                <div className={styles.selectField}>
+                  <label className={styles.selectLabel}>
+                    <FaGlobe /> {t('profile.languageLabel')}
+                  </label>
+                  <select
+                    className={styles.select}
+                    value={formData.language}
+                    onChange={(e) => handleChange('language', e.target.value)}
+                    disabled={!isEditing}
+                  >
+                    <option value="fr">{t('language.fr')}</option>
+                    <option value="en">{t('language.en')}</option>
+                    <option value="ff">{t('language.ff')}</option>
+                  </select>
+                </div>
+
+                <div className={styles.emailSection}>
+                  <label className={styles.emailSectionLabel}>
+                    <FaEnvelope /> {t('profile.emailLabel')}
+                  </label>
+                  <div className={styles.emailList}>
+                    <div className={styles.emailItem}>
+                      <FaEnvelope className={styles.emailIcon} />
+                      <div className={styles.emailInfo}>
+                        <span className={styles.emailValue}>{formData.email || t('profile.noEmail')}</span>
+                        <span className={styles.emailDate}>{t('profile.notConfigured')}</span>
+                      </div>
                     </div>
-                  </div>
-                  {isEditing && (
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      className={styles.addEmailButton}
-                      >
+                    {isEditing && (
+                      <Button variant="ghost" size="sm" className={styles.addEmailButton}>
                         + {t('profile.addEmail')}
                       </Button>
-                  )}
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.formColumn}>
+                <div className={styles.infoField}>
+                  <label className={styles.infoLabel}>{t('profile.roleLabel')}</label>
+                  <div className={styles.infoValue}>{getRoleLabel(user.role)}</div>
+                  <p className={styles.infoHint}>{t('profile.roleHint')}</p>
+                </div>
+
+                <FormField
+                  type="tel"
+                  name="phone"
+                  label={t('profile.phoneLabel')}
+                  placeholder={user?.phone || t('profile.phonePlaceholder')}
+                  value={formData.phone}
+                  onChange={(e) => handleChange('phone', e.target.value)}
+                  error={errors.phone}
+                  disabled={!isEditing}
+                />
+
+                <div className={styles.infoField}>
+                  <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
+                  <div className={styles.infoValue}>{user.id}</div>
+                  <p className={styles.infoHint}>{t('profile.idHint')}</p>
                 </div>
               </div>
             </div>
-
-            {/* Right Column */}
-            <div className={styles.formColumn}>
-              <div className={styles.infoField}>
-                <label className={styles.infoLabel}>{t('profile.roleLabel')}</label>
-                <div className={styles.infoValue}>{getRoleLabel(user.role)}</div>
-                <p className={styles.infoHint}>{t('profile.roleHint')}</p>
-              </div>
-
-              <FormField
-                type="tel"
-                name="phone"
-                label={t('profile.phoneLabel')}
-                placeholder={user?.phone || t('profile.phonePlaceholder')}
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                error={errors.phone}
-                disabled={!isEditing}
-              />
-
-              <div className={styles.infoField}>
-                <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
-                <div className={styles.infoValue}>{user.id}</div>
-                <p className={styles.infoHint}>{t('profile.idHint')}</p>
-              </div>
-            </div>
           </div>
-        </div>
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <>
+      <Header navItems={profileNavItems} currentPath="/profile" showAuthIcons />
+      <main className={styles.profilePage}>
+        <div className={styles.profileContainer}>{renderContent()}</div>
+      </main>
+      <Footer />
+      <FloatingButton href="/support" position="bottom-right" aria-label={t('floatingButton.ariaLabel')} />
+    </>
   );
 }
 

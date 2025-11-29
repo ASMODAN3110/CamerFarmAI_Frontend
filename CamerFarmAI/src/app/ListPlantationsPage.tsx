@@ -25,8 +25,6 @@ export function ListPlantationsPage() {
   const plantationsNavItems = [
     { label: t('nav.home'), href: '/' },
     { label: t('nav.plantations'), href: '/plantations' },
-    { label: t('nav.monitoring'), href: '/monitoring' },
-    { label: t('nav.graphs'), href: '/graphs' },
     { label: t('nav.ai'), href: '/ai' },
     { label: t('nav.support'), href: '/support' },
   ];
@@ -47,7 +45,7 @@ export function ListPlantationsPage() {
         const data = await plantationService.getAll();
         setPlantations(data);
         setFetchError(null);
-      } catch (error) {
+        } catch (error) {
         console.error('Error fetching plantations:', error);
         setFetchError(t('plantations.errors.fetchFailed'));
         setPlantations([]);
@@ -85,7 +83,7 @@ export function ListPlantationsPage() {
     setPlantations((prev) => {
       return [...prev, newPlantation];
     });
-
+    
     setIsModalOpen(false);
   };
 
@@ -201,19 +199,6 @@ export function ListPlantationsPage() {
                         <div className={styles.listPlantationsPage__cardInfo}>
                           <Icon icon={FaSeedling} size={16} />
                           <span>{t('plantations.cropType')}: {plantation.cropType}</span>
-                        </div>
-                      )}
-                      {plantation.status && (
-                        <div className={styles.listPlantationsPage__cardInfo}>
-                          <span
-                            className={`${styles.listPlantationsPage__statusBadge} ${
-                              plantation.status === 'active'
-                                ? styles.listPlantationsPage__statusBadgeActive
-                                : styles.listPlantationsPage__statusBadgeInactive
-                            }`}
-                          >
-                            {t('plantations.status')}: {t(`plantations.status.${plantation.status}` as const)}
-                          </span>
                         </div>
                       )}
                     </div>
