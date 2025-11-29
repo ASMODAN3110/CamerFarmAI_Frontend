@@ -40,10 +40,52 @@ interface EquipmentState {
 // Widget de température avec jauge semi-circulaire
 function TemperatureWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
-  const min = -10;
+  const min = 0;
   const max = 50;
-  const percentage = ((value - min) / (max - min)) * 100;
-  const angle = (percentage / 100) * 180 - 90; // -90 à 90 degrés
+  
+  // S'assurer que la valeur est dans les limites
+  const clampedValue = Math.max(min, Math.min(max, value));
+  
+  // Calculate progress (0 to 1)
+  const progress = (clampedValue - min) / (max - min);
+  
+  // Calculate green color variation in clockwise direction (left to right for 0-50 range)
+  // Green hue is 120°, we vary saturation and lightness to create gradient
+  // From light green (0°C) to darker green (50°C) in clockwise direction
+  const greenHue = 120; // Green color
+  const saturation = 60 + progress * 40; // 60% to 100% saturation (darker green as temp increases)
+  const lightness = 70 - progress * 20; // 70% to 50% lightness (darker as temp increases)
+  const strokeColor = `hsl(${greenHue}, ${saturation}%, ${lightness}%)`;
+  
+  // Debug: log color values
+  if (import.meta.env.DEV) {
+    console.log('🌡️ TemperatureWidget Color:', {
+      value: clampedValue,
+      progress: progress.toFixed(3),
+      saturation: saturation.toFixed(1) + '%',
+      lightness: lightness.toFixed(1) + '%',
+      strokeColor
+    });
+  }
+  
+  // Calculate arc length for dasharray (π * r for semi-circle)
+  // Using larger radius for bigger gauge (like CO2)
+  const arcRadius = 100; // Increased from 80 to 100 for larger gauge
+  const arcLength = Math.PI * arcRadius; // ~314.16
+  
+  // Needle rotation: -180° (left) to 0° (right) - 180° total, horizontal
+  // For a horizontal arc oriented downward, the needle should point to the exact position on the arc
+  const needleAngle = -180 + progress * 180; // Angle on the arc
+  const needleAngleRad = (needleAngle * Math.PI) / 180;
+  
+  // Calculate the exact point on the arc (radius 100) where the needle should point
+  const needleLength = 85; // Length of the needle (slightly less than radius)
+  const needleEndX = arcRadius * Math.cos(needleAngleRad);
+  const needleEndY = arcRadius * Math.sin(needleAngleRad);
+  
+  // Scale the needle to be slightly shorter than the arc radius
+  const scaledNeedleX = (needleLength / arcRadius) * needleEndX;
+  const scaledNeedleY = (needleLength / arcRadius) * needleEndY;
 
   return (
     <div className={styles.monitoringPage__widget}>
@@ -60,65 +102,101 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
         </div>
       </div>
       <div className={styles.monitoringPage__gaugeContainer}>
-        <svg
-          className={styles.monitoringPage__gauge}
-          viewBox="0 0 200 120"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Arc de fond */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke="#e5e7eb"
-            strokeWidth="12"
-          />
-          {/* Arc de valeur */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke="#10B981"
-            strokeWidth="12"
-            strokeDasharray={`${(percentage / 100) * 251.2} 251.2`}
-            strokeLinecap="round"
-            transform="rotate(0 100 100)"
-          />
-          {/* Marqueurs */}
-          {[-10, 0, 10, 20, 30, 40, 50].map((mark, index) => {
-            const markAngle = ((mark - min) / (max - min)) * 180 - 90;
-            const rad = (markAngle * Math.PI) / 180;
-            const x1 = 100 + 80 * Math.cos(rad);
-            const y1 = 100 - 80 * Math.sin(rad);
-            const x2 = 100 + 92 * Math.cos(rad);
-            const y2 = 100 - 92 * Math.sin(rad);
-            return (
-              <g key={mark}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#6b7280" strokeWidth="2" />
-                <text
-                  x={100 + 105 * Math.cos(rad)}
-                  y={100 - 105 * Math.sin(rad)}
-                  textAnchor="middle"
-                  fontSize="10"
-                  fill="#6b7280"
-                >
-                  {mark}
-                </text>
-              </g>
-            );
-          })}
-          {/* Aiguille */}
-          <line
-            x1="100"
-            y1="100"
-            x2={100 + 70 * Math.cos((angle * Math.PI) / 180)}
-            y2={100 - 70 * Math.sin((angle * Math.PI) / 180)}
-            stroke="#10B981"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <circle cx="100" cy="100" r="6" fill="#10B981" />
-        </svg>
-        <div className={styles.monitoringPage__gaugeValue}>
-          {value.toFixed(1)}°C
+        <div className={styles.monitoringPage__gaugeWrapper}>
+          <svg
+            className={styles.monitoringPage__gauge}
+            viewBox="-120 -120 240 240"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Gradient definition for green variation (left to right, clockwise) */}
+            <defs>
+              <linearGradient id="greenGradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
+                <stop offset="0%" stopColor="hsl(120, 60%, 70%)" stopOpacity="1" />
+                <stop offset="100%" stopColor="hsl(120, 100%, 50%)" stopOpacity="1" />
+              </linearGradient>
+            </defs>
+            {/* Background track - 180° horizontal arc from left to right (oriented downward) */}
+            <path
+              d="M -100 0 A 100 100 0 0 1 100 0"
+              fill="none"
+              strokeWidth="16"
+              stroke="rgba(209, 250, 229, 0.3)"
+              strokeLinecap="round"
+            />
+            {/* Colored progress arc with gradient - full arc with gradient, then use dasharray to show progress */}
+            <path
+              d="M -100 0 A 100 100 0 0 1 100 0"
+              fill="none"
+              strokeWidth="16"
+              stroke="url(#greenGradient)"
+              strokeLinecap="round"
+              strokeDasharray={`${progress * arcLength} ${arcLength}`}
+              strokeDashoffset="0"
+            />
+            {/* Tick marks - 6 marks for 0, 10, 20, 30, 40, 50 over 180° horizontal (left to right) */}
+            {Array.from({ length: 6 }).map((_, i) => {
+              const tickValue = min + (i * (max - min)) / 5; // 0, 10, 20, 30, 40, 50
+              // Calculate angle for each tick: 0-50 maps to -180° (left) to 0° (right) - 180° total, horizontal
+              const tickProgress = (tickValue - min) / (max - min);
+              const tickAngle = -180 + tickProgress * 180; // -180° (left) to 0° (right)
+              const x1 = 85 * Math.cos((tickAngle * Math.PI) / 180);
+              const y1 = 85 * Math.sin((tickAngle * Math.PI) / 180);
+              const x2 = 100 * Math.cos((tickAngle * Math.PI) / 180);
+              const y2 = 100 * Math.sin((tickAngle * Math.PI) / 180);
+              const tickX = 115 * Math.cos((tickAngle * Math.PI) / 180);
+              const tickY = 115 * Math.sin((tickAngle * Math.PI) / 180);
+              
+              return (
+                <g key={i}>
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="rgba(16, 185, 129, 0.7)"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={tickX}
+                    y={tickY}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#6b7280"
+                    fontSize="10"
+                  >
+                    {Math.round(tickValue)}
+                  </text>
+                </g>
+              );
+            })}
+            {/* Needle - points to exact position on arc for current temperature value */}
+            <line
+              x1="0"
+              y1="0"
+              x2={scaledNeedleX}
+              y2={scaledNeedleY}
+              stroke="#10b981"
+              strokeWidth="4"
+              strokeLinecap="round"
+              className={styles.monitoringPage__needle}
+            />
+            {/* Center circle */}
+            <circle
+              cx="0"
+              cy="0"
+              r="10"
+              fill="#d1fae5"
+              stroke="#10b981"
+              strokeWidth="3"
+            />
+          </svg>
+          {/* Value display */}
+          <div className={styles.monitoringPage__gaugeValueDisplay}>
+            <span className={styles.monitoringPage__gaugeValueNumber}>
+              {clampedValue.toFixed(1)}
+            </span>
+            <span className={styles.monitoringPage__gaugeValueUnit}>°C</span>
+          </div>
         </div>
       </div>
     </div>
@@ -179,19 +257,28 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
   const { t } = useTranslation();
   const min = 0;
   const max = 2500;
-  const percentage = (value / max) * 100;
+  // S'assurer que la valeur est dans les limites
+  const clampedValue = Math.max(min, Math.min(max, value));
+  const percentage = (clampedValue / max) * 100;
+  
+  // Calcul de l'angle de l'aiguille : -90° (gauche) à +90° (droite) pour un arc de 180°
   const angle = (percentage / 100) * 180 - 90;
+  
+  // Calcul de la longueur de l'arc (π * r pour un demi-cercle)
+  const arcLength = Math.PI * 80; // ~251.33
+  // Pour remplir de gauche à droite, on utilise strokeDasharray avec la longueur visible
+  const visibleLength = (percentage / 100) * arcLength;
 
   const getColor = () => {
-    if (value <= 625) return '#10B981'; // Green
-    if (value <= 1250) return '#f59e0b'; // Orange
+    if (clampedValue <= 625) return '#10B981'; // Green
+    if (clampedValue <= 1250) return '#f59e0b'; // Orange
     return '#ef4444'; // Red
   };
 
   const color = getColor();
   const getStatus = () => {
-    if (value <= 625) return t('monitoring.status.good');
-    if (value <= 1250) return t('monitoring.status.moderate');
+    if (clampedValue <= 625) return t('monitoring.status.good');
+    if (clampedValue <= 1250) return t('monitoring.status.moderate');
     return t('monitoring.status.critical');
   };
 
@@ -215,26 +302,47 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
           viewBox="0 0 200 120"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Arc vert (0-625) */}
+          {/* Arc de fond */}
+          <path
+            d="M 20 100 A 80 80 0 0 1 180 100"
+            fill="none"
+            stroke="#e5e7eb"
+            strokeWidth="12"
+          />
+          {/* Segments colorés de fond */}
+          {/* Vert (0-625) */}
           <path
             d="M 20 100 A 80 80 0 0 1 100 20"
             fill="none"
             stroke="#10B981"
             strokeWidth="12"
+            opacity="0.2"
           />
-          {/* Arc orange (625-1250) */}
+          {/* Orange (625-1250) */}
           <path
             d="M 100 20 A 80 80 0 0 1 150 60"
             fill="none"
             stroke="#f59e0b"
             strokeWidth="12"
+            opacity="0.2"
           />
-          {/* Arc rouge (1250-2500) */}
+          {/* Rouge (1250-2500) */}
           <path
             d="M 150 60 A 80 80 0 0 1 180 100"
             fill="none"
             stroke="#ef4444"
             strokeWidth="12"
+            opacity="0.2"
+          />
+          {/* Arc de valeur - se remplit de gauche à droite */}
+          <path
+            d="M 20 100 A 80 80 0 0 1 180 100"
+            fill="none"
+            stroke={color}
+            strokeWidth="12"
+            strokeDasharray={`${visibleLength} ${arcLength}`}
+            strokeDashoffset={0}
+            strokeLinecap="round"
           />
           {/* Marqueurs */}
           {[0, 625, 1250, 1875, 2500].map((mark) => {
@@ -260,20 +368,30 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
               </g>
             );
           })}
-          {/* Aiguille */}
-          <line
-            x1="100"
-            y1="100"
-            x2={100 + 70 * Math.cos((angle * Math.PI) / 180)}
-            y2={100 - 70 * Math.sin((angle * Math.PI) / 180)}
-            stroke={color}
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <circle cx="100" cy="100" r="6" fill={color} />
+          {/* Aiguille avec transition */}
+          <g 
+            className={styles.monitoringPage__needle}
+            style={{ 
+              transform: `rotate(${angle}deg)`, 
+              transformOrigin: "100px 100px" 
+            }}
+          >
+            <line
+              x1="100"
+              y1="100"
+              x2="100"
+              y2="30"
+              stroke={color}
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <circle cx="100" cy="100" r="6" fill={color} />
+          </g>
+          {/* Cercle central */}
+          <circle cx="100" cy="100" r="8" fill="#ffffff" stroke={color} strokeWidth="2" />
         </svg>
         <div className={styles.monitoringPage__gaugeValue} style={{ color }}>
-          {value} ppm
+          {clampedValue.toFixed(2)} ppm
         </div>
         <div className={styles.monitoringPage__gaugeStatus} style={{ color }}>
           {getStatus()}
@@ -588,14 +706,21 @@ export function MonitoringPage() {
           const lumReading = sensorMap.get('luminosity');
           const waterReading = sensorMap.get('waterLevel');
 
-          setSensorData({
+          const newSensorData = {
             temperature: tempReading?.value ?? 25.1,
             soilHumidity: soilReading?.value ?? 58,
             co2: co2Reading?.value ?? 531,
             luminosity: lumReading?.value ?? 70290,
             waterLevel: waterReading?.value ?? 79,
             co2Level: co2Reading?.value,
-          });
+          };
+          
+          // Debug: afficher les nouvelles valeurs
+          if (import.meta.env.DEV) {
+            console.log('📊 Nouvelles valeurs capteurs:', newSensorData);
+          }
+          
+          setSensorData(newSensorData);
 
           // Déterminer quels capteurs sont disponibles (basé sur leur présence dans sensors, pas seulement sur les lectures)
           // Vérifier si un capteur de chaque type existe dans le tableau sensors
@@ -785,6 +910,7 @@ export function MonitoringPage() {
             >
               {availableSensors.temperature && (
                 <TemperatureWidget 
+                  key={`temp-${sensorData.temperature}-${updatedAt}`}
                   value={sensorData.temperature} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('temperature')}
@@ -792,6 +918,7 @@ export function MonitoringPage() {
               )}
               {availableSensors.soilHumidity && (
                 <SoilHumidityWidget 
+                  key={`soil-${sensorData.soilHumidity}-${updatedAt}`}
                   value={sensorData.soilHumidity} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('soilHumidity')}
@@ -799,7 +926,8 @@ export function MonitoringPage() {
               )}
               {availableSensors.co2 && (
                 <CO2Widget 
-                  value={sensorData.co2} 
+                  key={`co2-${sensorData.co2}-${updatedAt}`}
+                  value={sensorData.co2}
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('co2')}
                 />

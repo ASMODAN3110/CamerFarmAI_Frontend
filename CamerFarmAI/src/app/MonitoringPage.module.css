@@ -184,7 +184,6 @@
   50% {
     opacity: 0.7;
   }
-  color: var(--color-text);
 }
 
 .monitoringPage__widgetUpdated {
@@ -197,20 +196,49 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-md);
+}
+
+.monitoringPage__gaugeWrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .monitoringPage__gauge {
   width: 100%;
-  max-width: 300px;
-  height: auto;
+  height: 100%;
 }
 
-.monitoringPage__gaugeValue {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+.monitoringPage__needle {
+  transition: transform 0.5s ease-out;
+}
+
+.monitoringPage__gaugeValueDisplay {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
   text-align: center;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.monitoringPage__gaugeValueNumber {
+  font-size: 36px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.monitoringPage__gaugeValueUnit {
+  font-size: 24px;
+  color: #047857;
 }
 
 .monitoringPage__gaugeStatus {
