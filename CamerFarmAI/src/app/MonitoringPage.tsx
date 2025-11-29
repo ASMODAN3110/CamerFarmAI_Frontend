@@ -49,25 +49,6 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
   // Calculate progress (0 to 1)
   const progress = (clampedValue - min) / (max - min);
   
-  // Calculate green color variation in clockwise direction (left to right for 0-50 range)
-  // Green hue is 120°, we vary saturation and lightness to create gradient
-  // From light green (0°C) to darker green (50°C) in clockwise direction
-  const greenHue = 120; // Green color
-  const saturation = 60 + progress * 40; // 60% to 100% saturation (darker green as temp increases)
-  const lightness = 70 - progress * 20; // 70% to 50% lightness (darker as temp increases)
-  const strokeColor = `hsl(${greenHue}, ${saturation}%, ${lightness}%)`;
-  
-  // Debug: log color values
-  if (import.meta.env.DEV) {
-    console.log('🌡️ TemperatureWidget Color:', {
-      value: clampedValue,
-      progress: progress.toFixed(3),
-      saturation: saturation.toFixed(1) + '%',
-      lightness: lightness.toFixed(1) + '%',
-      strokeColor
-    });
-  }
-  
   // Calculate arc length for dasharray (π * r for semi-circle)
   // Using larger radius for bigger gauge (like CO2)
   const arcRadius = 100; // Increased from 80 to 100 for larger gauge
@@ -108,11 +89,12 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
             viewBox="-120 -120 240 240"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Gradient definition for green variation (left to right, clockwise) */}
+            {/* Gradient definition for temperature color variation: green (0°C) -> yellow (25°C) -> red (50°C) */}
             <defs>
-              <linearGradient id="greenGradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
-                <stop offset="0%" stopColor="hsl(120, 60%, 70%)" stopOpacity="1" />
-                <stop offset="100%" stopColor="hsl(120, 100%, 50%)" stopOpacity="1" />
+              <linearGradient id="temperatureGradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
+                <stop offset="0%" stopColor="hsl(120, 80%, 60%)" stopOpacity="1" /> {/* Green at 0°C */}
+                <stop offset="50%" stopColor="hsl(60, 90%, 55%)" stopOpacity="1" /> {/* Yellow at 25°C */}
+                <stop offset="100%" stopColor="hsl(0, 90%, 55%)" stopOpacity="1" /> {/* Red at 50°C */}
               </linearGradient>
             </defs>
             {/* Background track - 180° horizontal arc from left to right (oriented downward) */}
@@ -128,7 +110,7 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
               d="M -100 0 A 100 100 0 0 1 100 0"
               fill="none"
               strokeWidth="16"
-              stroke="url(#greenGradient)"
+              stroke="url(#temperatureGradient)"
               strokeLinecap="round"
               strokeDasharray={`${progress * arcLength} ${arcLength}`}
               strokeDashoffset="0"
@@ -203,13 +185,15 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
   );
 }
 
-// Widget d'humidité du sol avec barre de progression horizontale
+// Widget d'humidité du sol avec barre de progression horizontale améliorée
 function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
+  
+  // Determine status based on humidity level (inspired by reference component)
   const getStatus = () => {
-    if (value >= 50 && value <= 70) return { text: t('monitoring.status.optimal'), color: '#10B981' };
-    if (value < 50) return { text: t('monitoring.status.low'), color: '#ef4444' };
-    return { text: t('monitoring.status.high'), color: '#f59e0b' };
+    if (value < 30) return { text: t('monitoring.status.low'), color: '#eab308', bgColor: '#eab308' };
+    if (value < 60) return { text: t('monitoring.status.optimal'), color: '#22c55e', bgColor: '#22c55e' };
+    return { text: t('monitoring.status.high'), color: '#3b82f6', bgColor: '#3b82f6' };
   };
   const status = getStatus();
 
@@ -228,24 +212,87 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: numb
         </div>
       </div>
       <div className={styles.monitoringPage__humidityContainer}>
-        <div className={styles.monitoringPage__humidityValue}>{value}%</div>
-        <div className={styles.monitoringPage__humidityStatus} style={{ color: status.color }}>
-          {status.text}
+        {/* Value and status badge */}
+        <div className={styles.monitoringPage__humidityHeader}>
+          <span className={styles.monitoringPage__humidityValueLarge}>
+            <span>{Math.round(value)}</span>
+            <span className={styles.monitoringPage__humidityValueUnit}>%</span>
+          </span>
+          <div
+            className={styles.monitoringPage__humidityStatusBadge}
+            style={{ backgroundColor: status.bgColor }}
+          >
+            {status.text}
+          </div>
         </div>
-        <div className={styles.monitoringPage__progressBar}>
-          <div className={styles.monitoringPage__progressBarTrack}>
+        
+        {/* Progress bar with water drops pattern */}
+        <div className={styles.monitoringPage__progressBarEnhanced}>
+          {/* Gradient definition for humidity color variation: green (0%) -> yellow (50%) -> red (100%) */}
+          <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+            <defs>
+              <linearGradient id="humidityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="hsl(0, 90%, 55%)" stopOpacity="1" /> {/* Red at 0% (dry) */}
+                <stop offset="50%" stopColor="hsl(60, 90%, 55%)" stopOpacity="1" /> {/* Yellow at 50% */}
+                <stop offset="100%" stopColor="hsl(120, 80%, 60%)" stopOpacity="1" /> {/* Green at 100% (wet) */}
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          {/* Water drops background pattern */}
+          <div className={styles.monitoringPage__waterDropsPattern}>
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Icon key={i} icon={FaTint} size={12} className={styles.monitoringPage__waterDropIcon} />
+            ))}
+          </div>
+          
+          {/* Progress bar track */}
+          <div className={styles.monitoringPage__progressBarTrackEnhanced}>
+            {/* Progress bar fill with gradient */}
             <div
-              className={styles.monitoringPage__progressBarFill}
-              style={{ width: `${value}%`, backgroundColor: status.color }}
-            />
+              className={styles.monitoringPage__progressBarFillEnhanced}
+              style={{ 
+                width: `${value}%`,
+                background: 'linear-gradient(to right, hsl(0, 90%, 55%), hsl(60, 90%, 55%), hsl(120, 80%, 60%))'
+              }}
+            >
+              {/* Water bubbles */}
+              <div className={styles.monitoringPage__waterBubbles}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={styles.monitoringPage__waterBubble}
+                    style={{
+                      width: `${10 + Math.random() * 10}px`,
+                      height: `${10 + Math.random() * 10}px`,
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Measurement markers */}
+            <div className={styles.monitoringPage__progressBarMarkers}>
+              {[0, 25, 50, 75, 100].map((mark) => (
+                <div
+                  key={mark}
+                  className={styles.monitoringPage__progressBarMarker}
+                  style={{ left: `${mark}%` }}
+                />
+              ))}
+            </div>
           </div>
-          <div className={styles.monitoringPage__progressBarLabels}>
-            <span>0%</span>
-            <span>25%</span>
-            <span>50%</span>
-            <span>75%</span>
-            <span>100%</span>
-          </div>
+        </div>
+        
+        {/* Labels */}
+        <div className={styles.monitoringPage__progressBarLabelsEnhanced}>
+          <span>0%</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>100%</span>
         </div>
       </div>
     </div>
@@ -257,30 +304,60 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
   const { t } = useTranslation();
   const min = 0;
   const max = 2500;
-  // S'assurer que la valeur est dans les limites
+  
+  // CO2 levels thresholds (in ppm) - inspired by reference component
+  const thresholds = {
+    good: 800,
+    moderate: 1200,
+    poor: 1500,
+    dangerous: 2000,
+  };
+  
+  // S'assurer que la valeur est strictement dans les limites [0, 2500]
   const clampedValue = Math.max(min, Math.min(max, value));
-  const percentage = (clampedValue / max) * 100;
   
-  // Calcul de l'angle de l'aiguille : -90° (gauche) à +90° (droite) pour un arc de 180°
-  const angle = (percentage / 100) * 180 - 90;
+  // Calcul du pourcentage de progression (0 à 1) - comme la température
+  const progress = (clampedValue - min) / (max - min);
   
-  // Calcul de la longueur de l'arc (π * r pour un demi-cercle)
-  const arcLength = Math.PI * 80; // ~251.33
-  // Pour remplir de gauche à droite, on utilise strokeDasharray avec la longueur visible
-  const visibleLength = (percentage / 100) * arcLength;
+  // Calculate arc length for dasharray (π * r for semi-circle)
+  // Using larger radius for bigger gauge (like temperature)
+  const arcRadius = 100; // Same as temperature gauge
+  const arcLength = Math.PI * arcRadius; // ~314.16
+  
+  // Needle rotation: -180° (left) to 0° (right) - 180° total, horizontal
+  // For a horizontal arc oriented downward, the needle should point to the exact position on the arc
+  const needleAngle = -180 + progress * 180; // Angle on the arc
+  const needleAngleRad = (needleAngle * Math.PI) / 180;
+  
+  // Calculate the exact point on the arc (radius 100) where the needle should point
+  const needleLength = 85; // Length of the needle (slightly less than radius)
+  const needleEndX = arcRadius * Math.cos(needleAngleRad);
+  const needleEndY = arcRadius * Math.sin(needleAngleRad);
+  
+  // Scale the needle to be slightly shorter than the arc radius
+  const scaledNeedleX = (needleLength / arcRadius) * needleEndX;
+  const scaledNeedleY = (needleLength / arcRadius) * needleEndY;
 
-  const getColor = () => {
-    if (clampedValue <= 625) return '#10B981'; // Green
-    if (clampedValue <= 1250) return '#f59e0b'; // Orange
+  // Color based on CO2 level
+  const getColor = (co2Level: number) => {
+    if (co2Level <= thresholds.good) return '#22c55e'; // Green
+    if (co2Level <= thresholds.moderate) return '#84cc16'; // Lime
+    if (co2Level <= thresholds.poor) return '#eab308'; // Yellow
+    if (co2Level <= thresholds.dangerous) return '#f97316'; // Orange
     return '#ef4444'; // Red
   };
 
-  const color = getColor();
-  const getStatus = () => {
-    if (clampedValue <= 625) return t('monitoring.status.good');
-    if (clampedValue <= 1250) return t('monitoring.status.moderate');
-    return t('monitoring.status.critical');
+  // Get status based on CO2 level
+  const getStatus = (co2Level: number) => {
+    if (co2Level <= thresholds.good) return { label: t('monitoring.status.good'), color: '#22c55e' };
+    if (co2Level <= thresholds.moderate) return { label: t('monitoring.status.moderate'), color: '#84cc16' };
+    if (co2Level <= thresholds.poor) return { label: t('monitoring.status.moderate'), color: '#eab308' };
+    if (co2Level <= thresholds.dangerous) return { label: t('monitoring.status.critical'), color: '#f97316' };
+    return { label: t('monitoring.status.critical'), color: '#ef4444' };
   };
+
+  const color = getColor(clampedValue);
+  const status = getStatus(clampedValue);
 
   return (
     <div className={styles.monitoringPage__widget}>
@@ -297,117 +374,152 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
         </div>
       </div>
       <div className={styles.monitoringPage__gaugeContainer}>
-        <svg
-          className={styles.monitoringPage__gauge}
-          viewBox="0 0 200 120"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Arc de fond */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke="#e5e7eb"
-            strokeWidth="12"
-          />
-          {/* Segments colorés de fond */}
-          {/* Vert (0-625) */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 100 20"
-            fill="none"
-            stroke="#10B981"
-            strokeWidth="12"
-            opacity="0.2"
-          />
-          {/* Orange (625-1250) */}
-          <path
-            d="M 100 20 A 80 80 0 0 1 150 60"
-            fill="none"
-            stroke="#f59e0b"
-            strokeWidth="12"
-            opacity="0.2"
-          />
-          {/* Rouge (1250-2500) */}
-          <path
-            d="M 150 60 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke="#ef4444"
-            strokeWidth="12"
-            opacity="0.2"
-          />
-          {/* Arc de valeur - se remplit de gauche à droite */}
-          <path
-            d="M 20 100 A 80 80 0 0 1 180 100"
-            fill="none"
-            stroke={color}
-            strokeWidth="12"
-            strokeDasharray={`${visibleLength} ${arcLength}`}
-            strokeDashoffset={0}
-            strokeLinecap="round"
-          />
-          {/* Marqueurs */}
-          {[0, 625, 1250, 1875, 2500].map((mark) => {
-            const markPercentage = (mark / max) * 100;
-            const markAngle = (markPercentage / 100) * 180 - 90;
-            const rad = (markAngle * Math.PI) / 180;
-            const x1 = 100 + 80 * Math.cos(rad);
-            const y1 = 100 - 80 * Math.sin(rad);
-            const x2 = 100 + 92 * Math.cos(rad);
-            const y2 = 100 - 92 * Math.sin(rad);
-            return (
-              <g key={mark}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#6b7280" strokeWidth="2" />
-                <text
-                  x={100 + 105 * Math.cos(rad)}
-                  y={100 - 105 * Math.sin(rad)}
-                  textAnchor="middle"
-                  fontSize="10"
-                  fill="#6b7280"
-                >
-                  {mark}
-                </text>
-              </g>
-            );
-          })}
-          {/* Aiguille avec transition */}
-          <g 
-            className={styles.monitoringPage__needle}
-            style={{ 
-              transform: `rotate(${angle}deg)`, 
-              transformOrigin: "100px 100px" 
-            }}
+        <div className={styles.monitoringPage__gaugeWrapper}>
+          <svg
+            className={styles.monitoringPage__gauge}
+            viewBox="-120 -120 240 240"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="100"
-              y1="100"
-              x2="100"
-              y2="30"
-              stroke={color}
-              strokeWidth="3"
+            {/* Gradient definition for CO2 color variation: green -> lime -> yellow -> orange -> red */}
+            <defs>
+              <linearGradient id="co2Gradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity="1" /> {/* Green at 0 ppm */}
+                <stop offset="30%" stopColor="#84cc16" stopOpacity="1" /> {/* Lime */}
+                <stop offset="50%" stopColor="#eab308" stopOpacity="1" /> {/* Yellow */}
+                <stop offset="70%" stopColor="#f97316" stopOpacity="1" /> {/* Orange */}
+                <stop offset="100%" stopColor="#ef4444" stopOpacity="1" /> {/* Red at 2500 ppm */}
+              </linearGradient>
+            </defs>
+            
+            {/* Background track - 180° horizontal arc from left to right (oriented downward) */}
+            <path
+              d="M -100 0 A 100 100 0 0 1 100 0"
+              fill="none"
+              strokeWidth="16"
+              stroke="rgba(209, 250, 229, 0.3)"
               strokeLinecap="round"
             />
-            <circle cx="100" cy="100" r="6" fill={color} />
-          </g>
-          {/* Cercle central */}
-          <circle cx="100" cy="100" r="8" fill="#ffffff" stroke={color} strokeWidth="2" />
-        </svg>
-        <div className={styles.monitoringPage__gaugeValue} style={{ color }}>
-          {clampedValue.toFixed(2)} ppm
+            
+            {/* Colored progress arc with gradient - full arc with gradient, then use dasharray to show progress */}
+            <path
+              d="M -100 0 A 100 100 0 0 1 100 0"
+              fill="none"
+              strokeWidth="16"
+              stroke="url(#co2Gradient)"
+              strokeLinecap="round"
+              strokeDasharray={`${progress * arcLength} ${arcLength}`}
+              strokeDashoffset="0"
+            />
+            
+            {/* Tick marks - 6 marks for 0, 500, 1000, 1500, 2000, 2500 over 180° horizontal (left to right) */}
+            {Array.from({ length: 6 }).map((_, i) => {
+              const tickValue = min + (i * (max - min)) / 5; // 0, 500, 1000, 1500, 2000, 2500
+              // Calculate angle for each tick: 0-2500 maps to -180° (left) to 0° (right) - 180° total, horizontal
+              const tickProgress = (tickValue - min) / (max - min);
+              const tickAngle = -180 + tickProgress * 180; // -180° (left) to 0° (right)
+              const x1 = 85 * Math.cos((tickAngle * Math.PI) / 180);
+              const y1 = 85 * Math.sin((tickAngle * Math.PI) / 180);
+              const x2 = 100 * Math.cos((tickAngle * Math.PI) / 180);
+              const y2 = 100 * Math.sin((tickAngle * Math.PI) / 180);
+              
+              // Adjust text position based on angle to ensure visibility
+              // For the last tick (2500), position it further out and adjust anchor
+              const isLastTick = i === 5;
+              const textRadius = isLastTick ? 125 : 115; // Further out for 2500
+              const tickX = textRadius * Math.cos((tickAngle * Math.PI) / 180);
+              const tickY = textRadius * Math.sin((tickAngle * Math.PI) / 180);
+              
+              return (
+                <g key={i}>
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="rgba(16, 185, 129, 0.7)"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={tickX}
+                    y={tickY}
+                    textAnchor={isLastTick ? "end" : "middle"}
+                    dominantBaseline="middle"
+                    fill="#6b7280"
+                    fontSize="10"
+                    fontWeight={isLastTick ? "600" : "400"}
+                  >
+                    {Math.round(tickValue)}
+                  </text>
+                </g>
+              );
+            })}
+            
+            {/* Needle - points to exact position on arc for current CO2 value */}
+            <line
+              x1="0"
+              y1="0"
+              x2={scaledNeedleX}
+              y2={scaledNeedleY}
+              stroke="#10b981"
+              strokeWidth="4"
+              strokeLinecap="round"
+              className={styles.monitoringPage__needle}
+            />
+            
+            {/* Center circle */}
+            <circle
+              cx="0"
+              cy="0"
+              r="10"
+              fill="#d1fae5"
+              stroke="#10b981"
+              strokeWidth="3"
+            />
+          </svg>
+          
+          {/* Value display */}
+          <div className={styles.monitoringPage__gaugeValueDisplay}>
+            <span className={styles.monitoringPage__gaugeValueNumber} style={{ color }}>
+              {Math.round(clampedValue)}
+            </span>
+            <span className={styles.monitoringPage__gaugeValueUnit}>ppm</span>
+          </div>
         </div>
-        <div className={styles.monitoringPage__gaugeStatus} style={{ color }}>
-          {getStatus()}
+        
+        {/* Status display */}
+        <div className={styles.monitoringPage__gaugeStatus} style={{ color: status.color }}>
+          {status.label}
         </div>
       </div>
     </div>
   );
 }
 
-// Widget de luminosité avec grande valeur numérique
+// Widget de luminosité avec effet de glow et rayons de soleil
 function LuminosityWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
-  const getStatus = () => {
-    if (value >= 50000) return t('monitoring.status.bright');
-    if (value >= 20000) return t('monitoring.status.normal');
-    return t('monitoring.status.dim');
+  const maxValue = 100000; // Max value for lux
+  
+  // Normalize value (0-100%)
+  const normalizedValue = (value / maxValue) * 100;
+  
+  // Static values for glow and background based on normalized value
+  const glowOpacity = normalizedValue < 50 ? 0.1 + (normalizedValue / 50) * 0.2 : 0.3 + ((normalizedValue - 50) / 50) * 0.2;
+  const glowSize = normalizedValue < 50 ? (normalizedValue / 50) * 20 : 20 + ((normalizedValue - 50) / 50) * 20;
+  const glowColor = normalizedValue < 50 
+    ? `rgba(16, 185, 129, ${0.3 + (normalizedValue / 50) * 0.3})` 
+    : `rgba(16, 185, 129, ${0.6 + ((normalizedValue - 50) / 50) * 0.3})`;
+  const backgroundOpacity = 0.8 - (normalizedValue / 100) * 0.4;
+  const backgroundColor = `rgba(209, 250, 229, ${backgroundOpacity})`; // Green-tinted light background
+
+  // Get text description based on light level
+  const getLightDescription = (level: number) => {
+    const normalized = (level / maxValue) * 100;
+    if (normalized < 20) return t('monitoring.status.dim');
+    if (normalized < 40) return t('monitoring.status.dim');
+    if (normalized < 60) return t('monitoring.status.normal');
+    if (normalized < 80) return t('monitoring.status.bright');
+    return t('monitoring.status.bright');
   };
 
   return (
@@ -424,28 +536,123 @@ function LuminosityWidget({ value, updatedAt, isActive = true }: { value: number
           {t('monitoring.updated')}: {updatedAt}
         </div>
       </div>
-      <div className={styles.monitoringPage__luminosityContainer}>
-        <div className={styles.monitoringPage__luminosityIcon}>
-          <Icon icon={FaSun} size={64} />
+      <div 
+        className={styles.monitoringPage__luminosityContainer}
+        style={{ backgroundColor }}
+      >
+        {/* Multiple glow layers for depth */}
+        <div
+          className={styles.monitoringPage__luminosityGlow}
+          style={{
+            opacity: glowOpacity,
+            boxShadow: `0 0 ${glowSize}px ${glowColor}`,
+            background: glowColor,
+          }}
+        />
+        <div
+          className={styles.monitoringPage__luminosityGlowSecondary}
+          style={{
+            opacity: glowOpacity * 0.5,
+            boxShadow: `0 0 ${glowSize * 1.5}px ${glowColor}`,
+            background: glowColor,
+          }}
+        />
+        
+        {/* Light particles */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div
+            key={i}
+            className={styles.monitoringPage__luminosityParticle}
+            style={{
+              left: `${20 + (i * 7) % 60}%`,
+              top: `${15 + (i * 11) % 70}%`,
+              animationDelay: `${i * 0.2}s`,
+              opacity: normalizedValue > 30 ? 0.3 + (normalizedValue / 100) * 0.4 : 0,
+            }}
+          />
+        ))}
+        
+        <div className={styles.monitoringPage__luminosityContent}>
+          {/* Sun icon with animated rays */}
+          <div className={styles.monitoringPage__luminosityIconWrapper}>
+            <div
+              className={styles.monitoringPage__luminosityIconContainer}
+              style={{
+                filter: `drop-shadow(0 0 ${8 + (normalizedValue / 100) * 12}px ${glowColor})`,
+              }}
+            >
+              <Icon 
+                icon={FaSun} 
+                size={64} 
+                className={styles.monitoringPage__luminosityIconLarge}
+              />
+            </div>
+            {/* Animated rays */}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className={styles.monitoringPage__luminosityRay}
+                style={{
+                  height: `${15 + (normalizedValue / 100) * 15}px`,
+                  transform: `rotate(${i * 45}deg) translateY(-35px)`,
+                  opacity: 0.2 + (normalizedValue / 100) * 0.5,
+                  animationDelay: `${i * 0.1}s`,
+                }}
+              />
+            ))}
+            {/* Outer rays for high luminosity */}
+            {normalizedValue > 60 && Array.from({ length: 16 }).map((_, i) => (
+              <div
+                key={`outer-${i}`}
+                className={styles.monitoringPage__luminosityRayOuter}
+                style={{
+                  height: `${8 + ((normalizedValue - 60) / 40) * 8}px`,
+                  transform: `rotate(${i * 22.5}deg) translateY(-45px)`,
+                  opacity: ((normalizedValue - 60) / 40) * 0.3,
+                  animationDelay: `${i * 0.05}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Value display */}
+          <div className={styles.monitoringPage__luminosityValueWrapper}>
+            <span 
+              className={styles.monitoringPage__luminosityValue}
+              style={{
+                textShadow: `0 0 ${8 + (normalizedValue / 100) * 12}px ${glowColor}`,
+              }}
+            >
+              {value.toLocaleString('fr-FR')}
+            </span>
+            <span className={styles.monitoringPage__luminosityUnit}>lux</span>
+            <div 
+              className={styles.monitoringPage__luminosityStatus}
+              style={{
+                color: normalizedValue > 60 ? '#047857' : normalizedValue > 30 ? '#059669' : '#6b7280',
+              }}
+            >
+              {getLightDescription(value)}
+            </div>
+          </div>
         </div>
-        <div className={styles.monitoringPage__luminosityValue}>
-          {value.toLocaleString('fr-FR')} <span className={styles.monitoringPage__luminosityUnit}>lux</span>
-        </div>
-        <div className={styles.monitoringPage__luminosityStatus}>{getStatus()}</div>
       </div>
     </div>
   );
 }
 
-// Widget de niveau d'eau avec barre de progression verticale
+// Widget de niveau d'eau avec réservoir 3D
 function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number; updatedAt: string; isActive?: boolean }) {
   const { t } = useTranslation();
-  const getStatus = () => {
-    if (value >= 70) return { text: t('monitoring.status.good'), color: '#10B981' };
-    if (value >= 40) return { text: t('monitoring.status.moderate'), color: '#f59e0b' };
-    return { text: t('monitoring.status.low'), color: '#ef4444' };
+  
+  const getStatus = (level: number) => {
+    if (level < 20) return { label: t('monitoring.status.low'), color: '#ef4444' };
+    if (level < 40) return { label: t('monitoring.status.moderate'), color: '#f59e0b' };
+    return { label: t('monitoring.status.good'), color: '#10B981' };
   };
-  const status = getStatus();
+  
+  const status = getStatus(value);
+  const clampedValue = Math.max(0, Math.min(100, value));
 
   return (
     <div className={styles.monitoringPage__widget}>
@@ -462,34 +669,78 @@ function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number
         </div>
       </div>
       <div className={styles.monitoringPage__waterLevelContainer}>
-        <div className={styles.monitoringPage__verticalProgressBar}>
-          <div className={styles.monitoringPage__verticalProgressBarTrack}>
+        <div className={styles.monitoringPage__waterTankWrapper}>
+          {/* Tank container */}
+          <div className={styles.monitoringPage__waterTank}>
+            {/* Water level with gradient: red (0%) -> yellow (50%) -> green (100%) */}
             <div
-              className={styles.monitoringPage__verticalProgressBarFill}
-              style={{
-                height: `${value}%`,
-                background: `linear-gradient(to top, ${status.color}, ${status.color}dd)`,
+              className={styles.monitoringPage__waterLevel}
+              style={{ 
+                height: `${clampedValue}%`,
+                background: 'linear-gradient(to top, hsl(0, 90%, 55%), hsl(60, 90%, 55%), hsl(120, 80%, 60%))'
               }}
-            />
-            <div
-              className={styles.monitoringPage__verticalProgressBarIndicator}
-              style={{ bottom: `${value}%` }}
-            />
+            >
+              {/* Surface water layer with multiple ripples */}
+              <div className={styles.monitoringPage__waterLayerSurface}>
+                <div className={styles.monitoringPage__waterRipple} />
+                <div className={styles.monitoringPage__waterRipple2} />
+                <div className={styles.monitoringPage__waterRipple3} />
+              </div>
+              
+              {/* Water bubbles rising */}
+              {clampedValue > 10 && Array.from({ length: Math.min(Math.floor(clampedValue / 15), 8) }).map((_, i) => (
+                <div
+                  key={i}
+                  className={styles.monitoringPage__waterBubble}
+                  style={{
+                    left: `${10 + (i * 23) % 80}%`,
+                    bottom: `${5 + (i * 17) % (clampedValue - 10)}%`,
+                    animationDelay: `${i * 0.3}s`,
+                    width: `${4 + (i % 3)}px`,
+                    height: `${4 + (i % 3)}px`,
+                  }}
+                />
+              ))}
+              
+              {/* Light reflection on water surface */}
+              <div className={styles.monitoringPage__waterReflection} />
+            </div>
+            
+            {/* Level markers */}
+            <div className={styles.monitoringPage__waterMarkers}>
+              {[0, 20, 40, 60, 80, 100].reverse().map((mark) => (
+                <div key={mark} className={styles.monitoringPage__waterMarker}>
+                  <span className={styles.monitoringPage__waterMarkerLabel}>{mark}%</span>
+                  <div className={styles.monitoringPage__waterMarkerLine} />
+                </div>
+              ))}
+            </div>
+            
+            {/* Tank cap with shine effect */}
+            <div className={styles.monitoringPage__waterTankCap}>
+              <div className={styles.monitoringPage__waterCapShine} />
+            </div>
+            
+            {/* Glass reflection effect */}
+            <div className={styles.monitoringPage__waterGlassReflection} />
           </div>
-          <div className={styles.monitoringPage__verticalProgressBarLabels}>
-            <span>100%</span>
-            <span>80%</span>
-            <span>60%</span>
-            <span>40%</span>
-            <span>20%</span>
-            <span>0%</span>
+          
+          {/* Pipe with water flow indicator */}
+          <div className={styles.monitoringPage__waterPipe}>
+            {clampedValue > 20 && (
+              <div className={styles.monitoringPage__waterFlow} />
+            )}
           </div>
         </div>
-        <div className={styles.monitoringPage__waterLevelValue} style={{ color: status.color }}>
-          {value}%
-        </div>
-        <div className={styles.monitoringPage__waterLevelStatus} style={{ color: status.color }}>
-          {status.text}
+        
+        {/* Value and status display */}
+        <div className={styles.monitoringPage__waterLevelDisplay}>
+          <span className={styles.monitoringPage__waterLevelValue}>
+            {Math.round(clampedValue)}%
+          </span>
+          <span className={styles.monitoringPage__waterLevelStatus} style={{ color: status.color }}>
+            {status.label}
+          </span>
         </div>
       </div>
     </div>

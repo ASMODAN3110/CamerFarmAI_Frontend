@@ -251,7 +251,39 @@
 .monitoringPage__humidityContainer {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-lg);
+  height: 100%;
+  justify-content: center;
+}
+
+.monitoringPage__humidityHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-md);
+}
+
+.monitoringPage__humidityValueLarge {
+  font-size: 48px;
+  font-weight: 700;
+  color: #065f46;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.monitoringPage__humidityValueUnit {
+  font-size: 32px;
+  color: #047857;
+}
+
+.monitoringPage__humidityStatusBadge {
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
 }
 
 .monitoringPage__humidityValue {
@@ -297,42 +329,279 @@
   padding: 0 var(--spacing-xs);
 }
 
+/* Enhanced progress bar styles */
+.monitoringPage__progressBarEnhanced {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  background-color: #dcfce7;
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+}
+
+.monitoringPage__waterDropsPattern {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.monitoringPage__waterDropIcon {
+  color: #22c55e;
+}
+
+.monitoringPage__progressBarTrackEnhanced {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.monitoringPage__progressBarFillEnhanced {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: var(--border-radius-full);
+  transition: width 0.5s ease-out;
+  overflow: hidden;
+  /* Gradient will be applied inline: red (0%) -> yellow (50%) -> green (100%) */
+}
+
+.monitoringPage__waterBubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.monitoringPage__waterBubble {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+.monitoringPage__progressBarMarkers {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.monitoringPage__progressBarMarker {
+  width: 2px;
+  height: 8px;
+  background-color: rgba(34, 197, 94, 0.7);
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.monitoringPage__progressBarLabelsEnhanced {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #047857;
+  padding: 0 4px;
+  margin-top: 4px;
+}
+
 /* Widget de luminosité */
 .monitoringPage__luminosityContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
+  padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  min-height: 280px;
 }
 
-.monitoringPage__luminosityIcon {
-  color: var(--color-primary);
-  opacity: 0.8;
+.monitoringPage__luminosityGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.monitoringPage__luminosityGlowSecondary {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 4s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.monitoringPage__luminosityParticle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(16, 185, 129, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleFloat 4s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.monitoringPage__luminosityContent {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+}
+
+.monitoringPage__luminosityIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  animation: sunRotate 20s linear infinite;
+}
+
+@keyframes sunRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.monitoringPage__luminosityIconContainer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.monitoringPage__luminosityIconLarge {
+  color: #fbbf24;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.monitoringPage__luminosityRay {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to top, rgba(251, 191, 36, 0.6), rgba(16, 185, 129, 0.4));
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin-left: -1px;
+  margin-top: -10px;
+  transform-origin: center bottom;
+  pointer-events: none;
+  animation: rayPulse 2s ease-in-out infinite;
+}
+
+.monitoringPage__luminosityRayOuter {
+  position: absolute;
+  width: 1.5px;
+  background: linear-gradient(to top, rgba(251, 191, 36, 0.4), rgba(16, 185, 129, 0.2));
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin-left: -0.75px;
+  margin-top: -10px;
+  transform-origin: center bottom;
+  pointer-events: none;
+  animation: rayPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes rayPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scaleY(1.1);
+  }
+}
+
+.monitoringPage__luminosityValueWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  text-align: center;
 }
 
 .monitoringPage__luminosityValue {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  text-align: center;
-  display: flex;
-  align-items: baseline;
-  gap: var(--spacing-xs);
+  font-size: 36px;
+  font-weight: 700;
+  color: #065f46;
+  line-height: 1;
+  transition: all 0.3s ease;
 }
 
 .monitoringPage__luminosityUnit {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-light);
+  font-size: 24px;
+  font-weight: 400;
+  color: #047857;
+  margin-left: 4px;
 }
 
 .monitoringPage__luminosityStatus {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
+  margin-top: var(--spacing-sm);
+  transition: color 0.3s ease;
 }
 
 /* Widget de niveau d'eau */
@@ -340,65 +609,300 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  min-height: 300px;
 }
 
-.monitoringPage__verticalProgressBar {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  height: 200px;
-}
-
-.monitoringPage__verticalProgressBarTrack {
-  width: 40px;
-  height: 100%;
-  background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-full);
+.monitoringPage__waterTankWrapper {
   position: relative;
+  width: 128px;
+  height: 256px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.monitoringPage__waterTank {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15));
+  border: 4px solid rgba(16, 185, 129, 0.7);
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
-.monitoringPage__verticalProgressBarFill {
+.monitoringPage__waterLevel {
   position: absolute;
   bottom: 0;
-  width: 100%;
-  border-radius: var(--border-radius-full);
-  transition: height 0.5s ease;
+  left: 0;
+  right: 0;
+  transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  /* Gradient will be applied inline: red (0%) -> yellow (50%) -> green (100%) */
 }
 
-.monitoringPage__verticalProgressBarIndicator {
+.monitoringPage__waterLayerSurface {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 4px;
-  background-color: var(--color-white);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--border-radius-full);
-  transition: bottom 0.5s ease;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 1;
+  pointer-events: none;
 }
 
-.monitoringPage__verticalProgressBarLabels {
+.monitoringPage__waterRipple {
+  position: absolute;
+  top: 0;
+  left: -10%;
+  right: -10%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: ripple 3s ease-in-out infinite;
+}
+
+.monitoringPage__waterRipple2 {
+  position: absolute;
+  top: 2px;
+  left: -5%;
+  right: -5%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: ripple2 2.5s ease-in-out infinite;
+}
+
+.monitoringPage__waterRipple3 {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: ripple3 2s ease-in-out infinite;
+}
+
+@keyframes ripple {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scaleX(0.8) translateY(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scaleX(1.2) translateY(-1px);
+  }
+}
+
+@keyframes ripple2 {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleX(0.9) translateY(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scaleX(1.1) translateY(-0.5px);
+  }
+}
+
+@keyframes ripple3 {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scaleX(1) translateY(0);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scaleX(1.05) translateY(-0.3px);
+  }
+}
+
+.monitoringPage__waterBubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  animation: bubbleRise 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bubbleRise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(1.2);
+  }
+}
+
+.monitoringPage__waterReflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.monitoringPage__waterMarkers {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 8px;
+  width: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 8px 0;
+  text-align: right;
+}
+
+.monitoringPage__waterMarker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.monitoringPage__waterMarkerLabel {
+  font-size: 8px;
+  color: #047857;
+  margin-right: 4px;
+}
+
+.monitoringPage__waterMarkerLine {
+  height: 2px;
+  width: 8px;
+  background-color: rgba(16, 185, 129, 0.8);
+}
+
+.monitoringPage__waterTankCap {
+  position: absolute;
+  top: -12px;
+  left: 25%;
+  right: 25%;
+  height: 12px;
+  background: linear-gradient(to right, #34d399, #10b981);
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.monitoringPage__waterCapShine {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
   height: 100%;
-  font-size: var(--font-size-xs);
-  color: var(--color-text-light);
-  padding: var(--spacing-xs) 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+.monitoringPage__waterGlassReflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.monitoringPage__waterPipe {
+  position: absolute;
+  right: -16px;
+  top: 32px;
+  width: 16px;
+  height: 40px;
+  background: linear-gradient(to bottom, #34d399, #10b981);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.monitoringPage__waterFlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(16, 185, 129, 0.8),
+    rgba(5, 150, 105, 0.6)
+  );
+  animation: waterFlow 1.5s ease-in-out infinite;
+}
+
+@keyframes waterFlow {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.monitoringPage__waterLevelDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  text-align: center;
 }
 
 .monitoringPage__waterLevelValue {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #065f46;
+  line-height: 1;
 }
 
 .monitoringPage__waterLevelStatus {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Section de contrôle des équipements */
