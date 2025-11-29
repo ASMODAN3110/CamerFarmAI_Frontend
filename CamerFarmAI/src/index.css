@@ -49,6 +49,13 @@ button {
 button:hover {
   border-color: #646cff;
 }
+
+/* Assurer que le contenu des boutons reste visible au hover */
+button:hover *,
+a:hover * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

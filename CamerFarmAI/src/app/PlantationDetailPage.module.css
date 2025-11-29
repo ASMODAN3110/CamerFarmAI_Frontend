@@ -151,12 +151,29 @@
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  position: relative;
+  overflow: visible;
 }
 
 .plantationDetailPage__monitoringButtonLink:hover {
   background: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  color: white;
+}
+
+.plantationDetailPage__monitoringButtonLink svg,
+.plantationDetailPage__monitoringButtonLink * {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+}
+
+.plantationDetailPage__monitoringButtonLink:hover svg,
+.plantationDetailPage__monitoringButtonLink:hover * {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Sensors Grid */

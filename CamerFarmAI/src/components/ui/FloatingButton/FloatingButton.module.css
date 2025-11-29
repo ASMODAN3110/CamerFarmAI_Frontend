@@ -15,12 +15,30 @@
   z-index: var(--z-index-fixed);
   text-decoration: none;
   padding: 0;
+  overflow: visible;
 }
 
 .floatingButton:hover {
   background-color: var(--color-primary-dark);
   transform: scale(1.1);
   box-shadow: var(--shadow-xl);
+  color: var(--color-white);
+}
+
+.floatingButton *,
+.floatingButton svg,
+.floatingButton__icon {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+}
+
+.floatingButton:hover *,
+.floatingButton:hover svg,
+.floatingButton:hover .floatingButton__icon {
+  opacity: 1;
+  visibility: visible;
 }
 
 .floatingButton:active {
@@ -36,6 +54,10 @@
   width: 28px;
   height: 28px;
   fill: currentColor;
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Positions */
