@@ -26,13 +26,15 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 
 ### Monitoring en temps réel
 - **Tableau de bord** : Visualisation en temps réel des données des capteurs
-- **Capteurs supportés** :
-  - Température
-  - Humidité du sol
-  - Niveau de CO₂
-  - Niveau d'eau
-  - Luminosité
+- **Capteurs supportés** avec jauges interactives :
+  - **Température** : Jauge semi-circulaire horizontale (0-50°C) avec dégradé vert-jaune-rouge et aiguille animée
+  - **Humidité du sol** : Barre de progression avec dégradé rouge-jaune-vert, bulles animées et indicateur de statut
+  - **Niveau de CO₂** : Jauge semi-circulaire horizontale (0-2500 ppm) avec dégradé vert-lime-jaune-orange-rouge et seuils de qualité
+  - **Niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles remontantes, ondes de surface et indicateur de flux
+  - **Luminosité** : Widget avec effet de glow dynamique, soleil rotatif avec rayons animés, particules de lumière flottantes
 - **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif ou inactif
+- **Animations fluides** : Transitions et animations pour tous les widgets de capteurs
+- **Dégradés de couleur** : Indicateurs visuels de couleur selon les valeurs (rouge = danger, jaune = attention, vert = optimal)
 - **Contrôle des équipements** :
   - Pompe d'irrigation
   - Ventilateurs
@@ -41,6 +43,7 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
   - Mode automatique (contrôlé par l'IA)
   - Mode manuel (contrôle utilisateur)
 - **Affichage conditionnel** : Seuls les capteurs et actionneurs assignés à la plantation sont affichés
+- **Mise à jour automatique** : Rafraîchissement des données toutes les 5 secondes
 
 ### Graphiques et statistiques
 - **Graphiques interactifs** : Visualisation de l'évolution des données des capteurs
@@ -270,7 +273,14 @@ Le fichier `src/services/api.ts` configure Axios avec :
 - **CSS Modules** : Styles modulaires par composant
 - **CSS Variables** : Variables CSS pour les thèmes
 - **Responsive Design** : Design adaptatif mobile/desktop
-- **Animations** : Animations au scroll pour améliorer l'UX
+- **Animations** : 
+  - Animations au scroll pour améliorer l'UX
+  - Animations de jauges (rotation d'aiguilles, pulsations, ondes)
+  - Effets de glow et particules pour la luminosité
+  - Bulles et ondes pour le niveau d'eau
+  - Transitions fluides pour tous les widgets
+- **Dégradés de couleur** : Dégradés dynamiques pour les indicateurs visuels
+- **Effets 3D** : Réservoir d'eau avec effet de profondeur et reflets
 
 ## 🌍 Internationalisation
 
@@ -364,6 +374,20 @@ En mode développement, les logs API sont automatiquement activés :
 ### Navigation contextuelle
 - Bouton de retour sur les pages Monitoring et Graphs pour revenir aux détails de la plantation
 - Navigation basée sur `plantationId` dans les paramètres de requête
+
+### Jauges interactives
+- **Jauge de température** : Arc horizontal de 180° avec dégradé vert-jaune-rouge, aiguille pointant exactement sur la valeur
+- **Jauge de CO₂** : Arc horizontal de 180° avec dégradé multi-couleurs et seuils de qualité (Good, Moderate, Poor, Warning, Dangerous)
+- **Jauge d'humidité du sol** : Barre de progression avec dégradé rouge-jaune-vert, bulles animées et indicateur de statut
+- **Jauge de niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles remontantes, ondes multiples, reflets et indicateur de flux
+- **Widget de luminosité** : Effet de glow dynamique, soleil rotatif avec rayons animés, particules de lumière flottantes
+
+### Seuils et statuts
+- **Température** : 0-50°C avec dégradé de couleur
+- **CO₂** : 0-2500 ppm avec seuils (800=Good, 1200=Moderate, 1500=Poor, 2000=Dangerous)
+- **Humidité du sol** : 0-100% avec statuts (Low, Optimal, High)
+- **Niveau d'eau** : 0-100% avec statuts (Low, Warning, Good)
+- **Luminosité** : 0-100000 lux avec descriptions (Dark, Dim, Moderate, Bright, Very Bright)
 
 ## 📄 Licence
 

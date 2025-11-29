@@ -43,6 +43,11 @@
 ### Visualisation de données
 - **recharts** : `^3.5.0` - Bibliothèque de graphiques React
 
+### Animations et effets visuels
+- **CSS Animations** : Animations natives CSS pour les jauges et widgets
+- **SVG** : Graphiques vectoriels pour les jauges semi-circulaires
+- **Gradients** : Dégradés de couleur dynamiques pour les indicateurs visuels
+
 ## 🛠️ Dépendances de développement
 
 ### Build et bundling
@@ -184,6 +189,12 @@ test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec V
 - L'API doit être accessible à l'URL configurée dans `.env`
 - Les CORS doivent être configurés pour accepter les requêtes du frontend
 
+### Jauges et widgets
+- Les jauges utilisent SVG pour un rendu vectoriel de haute qualité
+- Les animations CSS sont utilisées pour les effets visuels (ondes, bulles, glow)
+- Les dégradés de couleur sont calculés dynamiquement selon les valeurs des capteurs
+- Les transitions sont optimisées avec `cubic-bezier` pour des animations fluides
+
 ## 🐛 Résolution de problèmes
 
 ### Erreur "Node version not supported"
@@ -202,7 +213,29 @@ test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec V
 - Vérifier l'URL dans `.env`
 - Vérifier les CORS côté backend
 
+## 🎨 Fonctionnalités visuelles
+
+### Jauges interactives
+- **Jauge de température** : Arc SVG horizontal de 180° (0-50°C) avec dégradé vert-jaune-rouge
+- **Jauge de CO₂** : Arc SVG horizontal de 180° (0-2500 ppm) avec dégradé multi-couleurs
+- **Jauge d'humidité du sol** : Barre de progression avec dégradé rouge-jaune-vert et bulles animées
+- **Jauge de niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles et ondes
+- **Widget de luminosité** : Effet de glow dynamique avec soleil rotatif et particules
+
+### Animations CSS
+- Animations de pulsation pour les effets de glow
+- Animations de rotation pour les éléments rotatifs
+- Animations de flottement pour les particules et bulles
+- Animations d'ondes pour les surfaces d'eau
+- Transitions fluides pour les changements de valeurs
+
+### Dégradés de couleur
+- Dégradés HSL pour des transitions de couleur fluides
+- Dégradés linéaires SVG pour les arcs de jauges
+- Dégradés CSS pour les barres de progression
+- Calculs dynamiques basés sur les valeurs normalisées
+
 ---
 
-**Dernière mise à jour** : Novembre 2025
+**Dernière mise à jour** : Décembre 2025
 
