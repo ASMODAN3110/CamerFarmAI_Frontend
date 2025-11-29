@@ -292,6 +292,44 @@
   color: var(--color-primary);
 }
 
+.signUpPage__passwordRequirements {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: rgba(16, 185, 129, 0.05);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.signUpPage__passwordRequirementsTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.signUpPage__passwordRequirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.signUpPage__passwordRequirementsList li {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: color 0.2s ease;
+}
+
+.signUpPage__requirementMet {
+  color: var(--color-success) !important;
+  font-weight: var(--font-weight-medium);
+}
+
 .signUpPage__submitButton {
   width: 100%;
   margin-top: var(--spacing-md);

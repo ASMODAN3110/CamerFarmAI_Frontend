@@ -29,6 +29,13 @@ export function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [passwordValidation, setPasswordValidation] = useState({
+    minLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSpecial: false,
+  });
   const { ref: formRef, isVisible: isFormVisible } = useScrollAnimation({ threshold: 0.1 });
 
   // Images de fond pour le carousel
@@ -65,8 +72,46 @@ export function SignUpPage() {
     return phoneRegex.test(phone.replace(/\s/g, ''));
   };
 
+  const validatePassword = (password: string): string[] => {
+    const errors: string[] = [];
+    
+    if (password.length < 8) {
+      errors.push(t('signup.errors.passwordMinLength'));
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push(t('signup.errors.passwordUppercase'));
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      errors.push(t('signup.errors.passwordLowercase'));
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      errors.push(t('signup.errors.passwordNumber'));
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push(t('signup.errors.passwordSpecial'));
+    }
+    
+    return errors;
+  };
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    
+    // Validation en temps réel du mot de passe
+    if (field === 'password') {
+      setPasswordValidation({
+        minLength: value.length >= 8,
+        hasUppercase: /[A-Z]/.test(value),
+        hasLowercase: /[a-z]/.test(value),
+        hasNumber: /[0-9]/.test(value),
+        hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(value),
+      });
+    }
+    
     // Effacer l'erreur du champ modifié
     if (errors[field]) {
       setErrors((prev) => {
@@ -106,8 +151,12 @@ export function SignUpPage() {
 
     if (!formData.password.trim()) {
       newErrors.password = t('signup.errors.passwordRequired');
-    } else if (formData.password.length < 6) {
-      newErrors.password = t('signup.errors.passwordMinLength');
+    } else {
+      const passwordErrors = validatePassword(formData.password);
+      if (passwordErrors.length > 0) {
+        // Afficher toutes les erreurs de validation du mot de passe
+        newErrors.password = passwordErrors.join('. ');
+      }
     }
 
     if (!formData.confirmPassword.trim()) {
@@ -136,11 +185,145 @@ export function SignUpPage() {
       // Redirection après inscription réussie
       navigate('/login', { replace: true });
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || t('signup.errors.signupFailed') || 'Échec de l\'inscription';
-      setErrors({ 
-        phone: errorMessage,
-        email: errorMessage,
+      console.error('❌ Erreur lors de l\'inscription:', error);
+      console.error('📦 Détails de l\'erreur:', {
+        status: error?.response?.status,
+        data: error?.response?.data,
+        message: error?.response?.data?.message,
+        errors: error?.response?.data?.errors
       });
+      
+      // Gérer les erreurs de validation du backend
+      const backendErrors = error?.response?.data?.errors || [];
+      const newErrors: Record<string, string> = {};
+      
+      // Extraire les erreurs du backend et les mapper aux champs du formulaire
+      if (Array.isArray(backendErrors)) {
+        backendErrors.forEach((err: any) => {
+          if (err.path && err.msg) {
+            const field = err.path;
+            // Si le champ a déjà une erreur, concaténer les messages
+            if (newErrors[field]) {
+              newErrors[field] += '. ' + err.msg;
+            } else {
+              newErrors[field] = err.msg;
+            }
+          }
+        });
+      }
+      
+      // Gérer les erreurs spécifiques (email/phone déjà existant)
+      let errorMessage = error?.response?.data?.message || error?.response?.data?.error || '';
+      const statusCode = error?.response?.status;
+      
+      // Détecter et remplacer les messages techniques de base de données
+      const lowerMessage = errorMessage.toLowerCase();
+      
+      // Détecter les erreurs de contrainte unique (clé dupliquée)
+      // Ces messages proviennent généralement de PostgreSQL
+      const isDuplicateKeyError = lowerMessage.includes('clé dupliquée') || 
+                                   lowerMessage.includes('contrainte unique') || 
+                                   lowerMessage.includes('unique constraint') ||
+                                   lowerMessage.includes('duplicate key') ||
+                                   lowerMessage.includes('uq_') ||
+                                   lowerMessage.includes('violates unique constraint');
+      
+      if (isDuplicateKeyError) {
+        // Essayer de déterminer quel champ est concerné
+        // 1. Vérifier dans le message d'erreur
+        // 2. Vérifier dans le nom de la contrainte
+        // 3. Vérifier dans les données envoyées (formData)
+        
+        // Extraire le nom de la contrainte si présent
+        const constraintMatch = errorMessage.match(/«\s*([^»]+)\s*»/) || 
+                               errorMessage.match(/constraint\s+['"]?([^'"]+)['"]?/i) ||
+                               errorMessage.match(/uq_[\w]+/i) ||
+                               errorMessage.match(/(uq_\w+)/i);
+        
+        const constraintName = constraintMatch ? (constraintMatch[1] || constraintMatch[0]) : '';
+        
+        // Combiner le message et le nom de la contrainte pour l'analyse
+        const fullErrorText = (errorMessage + ' ' + constraintName).toLowerCase();
+        
+        // Détecter le champ concerné
+        let detectedField: 'email' | 'phone' | null = null;
+        
+        if (fullErrorText.includes('email') || fullErrorText.includes('courriel') || fullErrorText.includes('e-mail')) {
+          detectedField = 'email';
+        } else if (fullErrorText.includes('phone') || fullErrorText.includes('téléphone') || fullErrorText.includes('telephone') || fullErrorText.includes('numéro')) {
+          detectedField = 'phone';
+        } else {
+          // Si on ne peut pas déterminer, vérifier les données du formulaire
+          // Si les deux champs sont remplis, on suppose que c'est l'email (plus courant)
+          // Sinon, on vérifie quel champ a été rempli
+          if (formData.email && formData.phone) {
+            detectedField = 'email'; // Par défaut, email
+          } else if (formData.email) {
+            detectedField = 'email';
+          } else if (formData.phone) {
+            detectedField = 'phone';
+          } else {
+            detectedField = 'email'; // Par défaut
+          }
+        }
+        
+        // Afficher le message d'erreur approprié
+        if (detectedField === 'email') {
+          newErrors.email = t('signup.errors.emailExists');
+        } else if (detectedField === 'phone') {
+          newErrors.phone = t('signup.errors.phoneExists');
+        }
+      }
+      // Si aucune erreur spécifique n'a été extraite des erreurs de validation
+      else if (Object.keys(newErrors).length === 0) {
+        // Vérifier le code de statut et le message pour déterminer le type d'erreur
+        
+        // Erreur 409 (Conflict) = ressource déjà existante
+        if (statusCode === 409) {
+          // Détecter si c'est l'email ou le téléphone
+          if (lowerMessage.includes('email') || lowerMessage.includes('courriel') || lowerMessage.includes('e-mail')) {
+            newErrors.email = errorMessage || t('signup.errors.emailExists');
+          } else if (lowerMessage.includes('téléphone') || lowerMessage.includes('phone') || lowerMessage.includes('numéro') || lowerMessage.includes('telephone')) {
+            newErrors.phone = errorMessage || t('signup.errors.phoneExists');
+          } else {
+            // Si on ne peut pas déterminer, essayer de détecter dans les erreurs
+            const hasEmailError = backendErrors.some((err: any) => 
+              err.path === 'email' || (err.msg && err.msg.toLowerCase().includes('email'))
+            );
+            const hasPhoneError = backendErrors.some((err: any) => 
+              err.path === 'phone' || (err.msg && err.msg.toLowerCase().includes('phone') || err.msg.toLowerCase().includes('téléphone'))
+            );
+            
+            if (hasEmailError) {
+              newErrors.email = errorMessage || t('signup.errors.emailExists');
+            } else if (hasPhoneError) {
+              newErrors.phone = errorMessage || t('signup.errors.phoneExists');
+            } else {
+              // Par défaut, mettre sur email si le message contient "déjà" ou "existe"
+              if (lowerMessage.includes('déjà') || lowerMessage.includes('existe') || lowerMessage.includes('already') || lowerMessage.includes('exists')) {
+                newErrors.email = errorMessage || t('signup.errors.emailExists');
+              } else {
+                newErrors.email = errorMessage || t('signup.errors.signupFailed');
+              }
+            }
+          }
+        } else if (errorMessage) {
+          // Pour les autres erreurs, utiliser le message du backend
+          // Essayer de détecter le champ concerné
+          if (lowerMessage.includes('email') || lowerMessage.includes('courriel')) {
+            newErrors.email = errorMessage;
+          } else if (lowerMessage.includes('téléphone') || lowerMessage.includes('phone') || lowerMessage.includes('numéro')) {
+            newErrors.phone = errorMessage;
+          } else {
+            newErrors.email = errorMessage;
+          }
+        } else {
+          // Message d'erreur générique
+          newErrors.email = t('signup.errors.signupFailed');
+        }
+      }
+      
+      setErrors(newErrors);
     } finally {
       setIsSubmitting(false);
     }
@@ -274,6 +457,31 @@ export function SignUpPage() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+            {/* Indicateurs de validation du mot de passe */}
+            {formData.password && (
+              <div className={styles.signUpPage__passwordRequirements}>
+                <p className={styles.signUpPage__passwordRequirementsTitle}>
+                  {t('signup.passwordRequirements')}
+                </p>
+                <ul className={styles.signUpPage__passwordRequirementsList}>
+                  <li className={passwordValidation.minLength ? styles.signUpPage__requirementMet : ''}>
+                    {passwordValidation.minLength ? '✓' : '○'} {t('signup.errors.passwordMinLength')}
+                  </li>
+                  <li className={passwordValidation.hasUppercase ? styles.signUpPage__requirementMet : ''}>
+                    {passwordValidation.hasUppercase ? '✓' : '○'} {t('signup.errors.passwordUppercase')}
+                  </li>
+                  <li className={passwordValidation.hasLowercase ? styles.signUpPage__requirementMet : ''}>
+                    {passwordValidation.hasLowercase ? '✓' : '○'} {t('signup.errors.passwordLowercase')}
+                  </li>
+                  <li className={passwordValidation.hasNumber ? styles.signUpPage__requirementMet : ''}>
+                    {passwordValidation.hasNumber ? '✓' : '○'} {t('signup.errors.passwordNumber')}
+                  </li>
+                  <li className={passwordValidation.hasSpecial ? styles.signUpPage__requirementMet : ''}>
+                    {passwordValidation.hasSpecial ? '✓' : '○'} {t('signup.errors.passwordSpecial')}
+                  </li>
+                </ul>
+              </div>
+            )}
 
             <div className={styles.signUpPage__passwordWrapper}>
               <FormField
