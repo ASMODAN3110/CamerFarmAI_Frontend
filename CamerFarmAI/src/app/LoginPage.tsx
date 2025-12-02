@@ -5,6 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -109,6 +110,7 @@ export function LoginPage() {
 
   return (
     <main className={styles.loginPage}>
+      <Background3D />
       {/* Images de fond en carousel */}
       <div className={styles.loginPage__background}>
         {backgroundImages.map((image, index) => (

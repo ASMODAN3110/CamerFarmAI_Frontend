@@ -8,6 +8,7 @@ import { BenefitsBlock } from '@/components/blocks/BenefitsBlock';
 import type { BenefitItem } from '@/components/blocks/BenefitsBlock';
 import { CTABlock } from '@/components/blocks/CTABlock';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import { 
   FaBolt,
@@ -56,6 +57,7 @@ export function HomePage() {
 
   return (
     <>
+      <Background3D />
       <Header currentPath="/" />
       <main>
         <HeroBlock 

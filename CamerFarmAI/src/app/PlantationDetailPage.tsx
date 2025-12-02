@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Card } from '@/components/ui/Card/Card';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   FaLeaf,
@@ -88,6 +89,7 @@ export function PlantationDetailPage() {
   if (isLoading) {
     return (
       <>
+        <Background3D />
         <Header navItems={detailNavItems} currentPath={`/plantations/${id}`} showAuthIcons />
         <main className={styles.plantationDetailPage}>
           <div className={styles.plantationDetailPage__loading}>
@@ -102,6 +104,7 @@ export function PlantationDetailPage() {
   if (error || !plantation) {
     return (
       <>
+        <Background3D />
         <Header navItems={detailNavItems} currentPath={`/plantations/${id}`} showAuthIcons />
         <main className={styles.plantationDetailPage}>
           <div className={styles.plantationDetailPage__error}>
@@ -118,6 +121,7 @@ export function PlantationDetailPage() {
 
   return (
     <>
+      <Background3D />
       <Header navItems={detailNavItems} currentPath={`/plantations/${id}`} showAuthIcons />
       <main className={styles.plantationDetailPage}>
         <div className={styles.plantationDetailPage__container}>
@@ -219,7 +223,7 @@ export function PlantationDetailPage() {
               </div>
 
               <div className={styles.plantationDetailPage__sensorsGrid}>
-                {plantation.sensors.map((sensor: Sensor) => {
+                {plantation.sensors?.map((sensor: Sensor) => {
                   const latestValue = sensor.latestReading?.value;
                   const getSensorLabel = (type: string) => {
                     const labels: Record<string, string> = {

@@ -5,6 +5,7 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -331,6 +332,7 @@ export function SignUpPage() {
 
   return (
     <main className={styles.signUpPage}>
+      <Background3D />
       {/* Images de fond en carousel */}
       <div className={styles.signUpPage__background}>
         {backgroundImages.map((image, index) => (
