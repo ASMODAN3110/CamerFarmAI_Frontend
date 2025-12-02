@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
 import type { TranslationKey } from '@/utils/translations';
 import styles from './ProfilePage.module.css';
@@ -452,6 +453,7 @@ export function ProfilePage() {
 
   return (
     <>
+      <Background3D />
       <Header navItems={profileNavItems} currentPath="/profile" showAuthIcons />
       <main className={styles.profilePage}>
         <div className={styles.profileContainer}>{renderContent()}</div>

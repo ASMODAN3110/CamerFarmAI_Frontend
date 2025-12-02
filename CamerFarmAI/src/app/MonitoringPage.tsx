@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading, type SensorType } from '@/services/plantationService';
@@ -1130,6 +1131,7 @@ export function MonitoringPage() {
 
   return (
     <>
+      <Background3D />
       <Header
         navItems={monitoringNavItems}
         currentPath="/monitoring"

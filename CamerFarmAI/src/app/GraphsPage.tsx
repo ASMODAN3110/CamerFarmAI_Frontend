@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type SensorReading } from '@/services/plantationService';
@@ -119,7 +120,7 @@ export function GraphsPage() {
               co2Level: sensorType === 'co2Level' ? reading.value : undefined,
               waterLevel: sensorType === 'waterLevel' ? reading.value : undefined,
               luminosity: sensorType === 'luminosity' ? reading.value : undefined,
-            });
+    });
           } else {
             const existing = groupedByTimestamp.get(normalizedTimestamp)!;
             if (sensorType === 'temperature') existing.temperature = reading.value;
@@ -322,6 +323,7 @@ export function GraphsPage() {
 
   return (
     <>
+      <Background3D />
       <Header
         navItems={graphsNavItems}
         currentPath="/graphs"
@@ -388,36 +390,36 @@ export function GraphsPage() {
 
           {/* Sensor Filter Buttons */}
           {plantationId && sensors.length > 0 && (
-            <div className={styles.graphsPage__sensorFilters}>
-              {sensors.map((sensor) => (
-                <button
-                  key={sensor.id}
-                  onClick={() => setSelectedSensor(sensor.id)}
-                  className={`${styles.graphsPage__sensorButton} ${
-                    selectedSensor === sensor.id
-                      ? `${sensor.bgColor} ${styles.graphsPage__sensorButtonActive}`
-                      : styles.graphsPage__sensorButtonInactive
-                  }`}
-                  style={
-                    selectedSensor === sensor.id
-                      ? {
-                          borderColor: sensor.color,
-                        }
-                      : undefined
-                  }
-                >
-                  <Icon icon={sensor.icon} size={20} />
-                  <span className={styles.graphsPage__sensorButtonLabel}>
-                    {sensor.label}
-                  </span>
-                </button>
-              ))}
-            </div>
+          <div className={styles.graphsPage__sensorFilters}>
+            {sensors.map((sensor) => (
+              <button
+                key={sensor.id}
+                onClick={() => setSelectedSensor(sensor.id)}
+                className={`${styles.graphsPage__sensorButton} ${
+                  selectedSensor === sensor.id
+                    ? `${sensor.bgColor} ${styles.graphsPage__sensorButtonActive}`
+                    : styles.graphsPage__sensorButtonInactive
+                }`}
+                style={
+                  selectedSensor === sensor.id
+                    ? {
+                        borderColor: sensor.color,
+                      }
+                    : undefined
+                }
+              >
+                <Icon icon={sensor.icon} size={20} />
+                <span className={styles.graphsPage__sensorButtonLabel}>
+                  {sensor.label}
+                </span>
+              </button>
+            ))}
+          </div>
           )}
 
           {/* Date Range Section */}
           {plantationId && (
-            <div className={styles.graphsPage__dateRangeSection}>
+          <div className={styles.graphsPage__dateRangeSection}>
             <div className={styles.graphsPage__dateInputs}>
               <div className={styles.graphsPage__dateInput}>
                 <label className={styles.graphsPage__dateLabel}>
@@ -452,7 +454,7 @@ export function GraphsPage() {
           </div>
           )}
 
-           {/* Chart Section */}
+          {/* Chart Section */}
            {!plantationId ? (
              <div className={styles.graphsPage__chartSection}>
                <p className={styles.graphsPage__emptyMessage}>
@@ -466,15 +468,15 @@ export function GraphsPage() {
                </p>
              </div>
            ) : sensors.length > 0 ? (
-             <div
-               ref={chartRef as React.RefObject<HTMLDivElement>}
-               className={`${styles.graphsPage__chartSection} ${
+          <div
+            ref={chartRef as React.RefObject<HTMLDivElement>}
+            className={`${styles.graphsPage__chartSection} ${
                  (isChartVisible || chartData.length > 0) ? styles.graphsPage__chartSectionVisible : ''
-               }`}
-             >
-               <h3 className={styles.graphsPage__chartTitle}>
-                 {t('graphs.chart.title')} - {activeSensor.label}
-               </h3>
+            }`}
+          >
+            <h3 className={styles.graphsPage__chartTitle}>
+              {t('graphs.chart.title')} - {activeSensor.label}
+            </h3>
                {(() => {
                  if (chartData.length > 0) {
                    console.log('📊 GraphsPage: Affichage du graphique avec', chartData.length, 'points de données');
@@ -487,30 +489,30 @@ export function GraphsPage() {
                      allDataKeys: chartData[0] ? Object.keys(chartData[0]) : []
                    });
                    return (
-                 <div className={styles.graphsPage__chartContainer}>
-                   <ResponsiveContainer width="100%" height={400}>
+            <div className={styles.graphsPage__chartContainer}>
+              <ResponsiveContainer width="100%" height={400}>
                      <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 60 }}>
-                     <defs>
-                       <linearGradient
-                         id={`colorGradient-${activeSensor.id}`}
-                         x1="0"
-                         y1="0"
-                         x2="0"
-                         y2="1"
-                       >
-                         <stop
-                           offset="5%"
-                           stopColor={activeSensor.color}
-                           stopOpacity={0.3}
-                         />
-                         <stop
-                           offset="95%"
-                           stopColor={activeSensor.color}
-                           stopOpacity={0}
-                         />
-                       </linearGradient>
-                     </defs>
-                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <defs>
+                    <linearGradient
+                      id={`colorGradient-${activeSensor.id}`}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor={activeSensor.color}
+                        stopOpacity={0.3}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={activeSensor.color}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                      <XAxis 
                        dataKey="date" 
                        stroke="#9ca3af"
@@ -518,30 +520,30 @@ export function GraphsPage() {
                        textAnchor="end"
                        height={60}
                      />
-                     <YAxis stroke="#9ca3af" />
-                     <Tooltip
-                       contentStyle={{
-                         backgroundColor: '#fff',
-                         border: `2px solid ${activeSensor.color}`,
-                         borderRadius: '8px',
-                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                       }}
+                  <YAxis stroke="#9ca3af" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: `2px solid ${activeSensor.color}`,
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    }}
                        cursor={{ stroke: activeSensor.color, strokeWidth: 2 }}
-                     />
-                     <Area
-                       type="monotone"
+                  />
+                  <Area
+                    type="monotone"
                        dataKey={activeSensor.dataKey}
-                       stroke={activeSensor.color}
-                       strokeWidth={3}
-                       fill={`url(#colorGradient-${activeSensor.id})`}
-                       isAnimationActive={true}
-                       animationDuration={1500}
+                    stroke={activeSensor.color}
+                    strokeWidth={3}
+                    fill={`url(#colorGradient-${activeSensor.id})`}
+                    isAnimationActive={true}
+                    animationDuration={1500}
                        connectNulls={false}
                        dot={false}
-                     />
-                   </AreaChart>
-                 </ResponsiveContainer>
-               </div>
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
                    );
                  } else {
                    console.log('📊 GraphsPage: chartData est vide, affichage du message d\'erreur');
@@ -565,7 +567,7 @@ export function GraphsPage() {
                <p className={styles.graphsPage__emptyMessage}>
                  Aucun capteur avec des données disponibles pour cette plantation.
                </p>
-             </div>
+          </div>
            )}
         </div>
       </main>
