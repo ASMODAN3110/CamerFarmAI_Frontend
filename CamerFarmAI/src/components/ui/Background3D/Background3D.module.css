@@ -1,0 +1,30 @@
+.background3D {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.35;
+  pointer-events: none;
+  overflow: hidden;
+  filter: blur(0.5px);
+  will-change: transform;
+}
+
+.background3D canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .background3D {
+    opacity: 0.25;
+    filter: blur(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background3D {
+    opacity: 0.1;
+  }
+}
+

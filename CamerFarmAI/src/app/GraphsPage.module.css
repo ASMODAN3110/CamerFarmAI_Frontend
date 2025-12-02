@@ -1,7 +1,9 @@
 .graphsPage {
   min-height: calc(100vh - 90px);
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.7) 0%, rgba(220, 252, 231, 0.7) 100%);
   padding: var(--spacing-4xl) var(--spacing-lg);
+  position: relative;
+  z-index: 1;
 }
 
 .graphsPage__container {

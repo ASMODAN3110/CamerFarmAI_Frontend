@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Card } from '@/components/ui/Card/Card';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { CreatePlantationModal } from '@/components/ui/CreatePlantationModal/CreatePlantationModal';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -90,6 +91,7 @@ export function ListPlantationsPage() {
   if (isLoading) {
     return (
       <>
+        <Background3D />
         <Header 
           navItems={plantationsNavItems}
           currentPath="/plantations"
@@ -107,6 +109,7 @@ export function ListPlantationsPage() {
 
   return (
     <>
+      <Background3D />
       <Header 
         navItems={plantationsNavItems}
         currentPath="/plantations"
