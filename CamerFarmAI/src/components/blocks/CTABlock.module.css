@@ -111,9 +111,10 @@
 }
 
 .cta__button:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.2);
-  background: var(--color-gray-100);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+  background: var(--color-white);
+  color: var(--color-primary-dark);
 }
 
 .cta__button:hover::before {
@@ -121,7 +122,7 @@
 }
 
 .cta__button:active {
-  transform: translateY(-1px) scale(1);
+  transform: scale(0.95);
 }
 
 @keyframes fadeInUp {

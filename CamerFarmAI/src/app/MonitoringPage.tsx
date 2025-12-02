@@ -84,11 +84,11 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
       </div>
       <div className={styles.monitoringPage__gaugeContainer}>
         <div className={styles.monitoringPage__gaugeWrapper}>
-          <svg
-            className={styles.monitoringPage__gauge}
+        <svg
+          className={styles.monitoringPage__gauge}
             viewBox="-120 -120 240 240"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          xmlns="http://www.w3.org/2000/svg"
+        >
             {/* Gradient definition for temperature color variation: green (0°C) -> yellow (25°C) -> red (50°C) */}
             <defs>
               <linearGradient id="temperatureGradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
@@ -98,23 +98,23 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
               </linearGradient>
             </defs>
             {/* Background track - 180° horizontal arc from left to right (oriented downward) */}
-            <path
+          <path
               d="M -100 0 A 100 100 0 0 1 100 0"
-              fill="none"
+            fill="none"
               strokeWidth="16"
               stroke="rgba(209, 250, 229, 0.3)"
               strokeLinecap="round"
-            />
+          />
             {/* Colored progress arc with gradient - full arc with gradient, then use dasharray to show progress */}
-            <path
+          <path
               d="M -100 0 A 100 100 0 0 1 100 0"
-              fill="none"
+            fill="none"
               strokeWidth="16"
               stroke="url(#temperatureGradient)"
-              strokeLinecap="round"
+            strokeLinecap="round"
               strokeDasharray={`${progress * arcLength} ${arcLength}`}
               strokeDashoffset="0"
-            />
+          />
             {/* Tick marks - 6 marks for 0, 10, 20, 30, 40, 50 over 180° horizontal (left to right) */}
             {Array.from({ length: 6 }).map((_, i) => {
               const tickValue = min + (i * (max - min)) / 5; // 0, 10, 20, 30, 40, 50
@@ -128,7 +128,7 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
               const tickX = 115 * Math.cos((tickAngle * Math.PI) / 180);
               const tickY = 115 * Math.sin((tickAngle * Math.PI) / 180);
               
-              return (
+            return (
                 <g key={i}>
                   <line
                     x1={x1}
@@ -138,30 +138,30 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
                     stroke="rgba(16, 185, 129, 0.7)"
                     strokeWidth="2"
                   />
-                  <text
+                <text
                     x={tickX}
                     y={tickY}
-                    textAnchor="middle"
+                  textAnchor="middle"
                     dominantBaseline="middle"
-                    fill="#6b7280"
+                  fill="#6b7280"
                     fontSize="10"
-                  >
+                >
                     {Math.round(tickValue)}
-                  </text>
-                </g>
-              );
-            })}
+                </text>
+              </g>
+            );
+          })}
             {/* Needle - points to exact position on arc for current temperature value */}
-            <line
+          <line
               x1="0"
               y1="0"
               x2={scaledNeedleX}
               y2={scaledNeedleY}
               stroke="#10b981"
               strokeWidth="4"
-              strokeLinecap="round"
+            strokeLinecap="round"
               className={styles.monitoringPage__needle}
-            />
+          />
             {/* Center circle */}
             <circle
               cx="0"
@@ -171,7 +171,7 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
               stroke="#10b981"
               strokeWidth="3"
             />
-          </svg>
+        </svg>
           {/* Value display */}
           <div className={styles.monitoringPage__gaugeValueDisplay}>
             <span className={styles.monitoringPage__gaugeValueNumber}>
@@ -222,8 +222,8 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: numb
             className={styles.monitoringPage__humidityStatusBadge}
             style={{ backgroundColor: status.bgColor }}
           >
-            {status.text}
-          </div>
+          {status.text}
+        </div>
         </div>
         
         {/* Progress bar with water drops pattern */}
@@ -268,9 +268,9 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: numb
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
-                  />
+            />
                 ))}
-              </div>
+          </div>
             </div>
             
             {/* Measurement markers */}
@@ -288,11 +288,11 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: numb
         
         {/* Labels */}
         <div className={styles.monitoringPage__progressBarLabelsEnhanced}>
-          <span>0%</span>
-          <span>25%</span>
-          <span>50%</span>
-          <span>75%</span>
-          <span>100%</span>
+            <span>0%</span>
+            <span>25%</span>
+            <span>50%</span>
+            <span>75%</span>
+            <span>100%</span>
         </div>
       </div>
     </div>
@@ -375,11 +375,11 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
       </div>
       <div className={styles.monitoringPage__gaugeContainer}>
         <div className={styles.monitoringPage__gaugeWrapper}>
-          <svg
-            className={styles.monitoringPage__gauge}
+        <svg
+          className={styles.monitoringPage__gauge}
             viewBox="-120 -120 240 240"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          xmlns="http://www.w3.org/2000/svg"
+        >
             {/* Gradient definition for CO2 color variation: green -> lime -> yellow -> orange -> red */}
             <defs>
               <linearGradient id="co2Gradient" gradientUnits="userSpaceOnUse" x1="-100" y1="0" x2="100" y2="0">
@@ -392,24 +392,24 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
             </defs>
             
             {/* Background track - 180° horizontal arc from left to right (oriented downward) */}
-            <path
+          <path
               d="M -100 0 A 100 100 0 0 1 100 0"
-              fill="none"
+            fill="none"
               strokeWidth="16"
               stroke="rgba(209, 250, 229, 0.3)"
               strokeLinecap="round"
-            />
+          />
             
             {/* Colored progress arc with gradient - full arc with gradient, then use dasharray to show progress */}
-            <path
+          <path
               d="M -100 0 A 100 100 0 0 1 100 0"
-              fill="none"
+            fill="none"
               strokeWidth="16"
               stroke="url(#co2Gradient)"
               strokeLinecap="round"
               strokeDasharray={`${progress * arcLength} ${arcLength}`}
               strokeDashoffset="0"
-            />
+          />
             
             {/* Tick marks - 6 marks for 0, 500, 1000, 1500, 2000, 2500 over 180° horizontal (left to right) */}
             {Array.from({ length: 6 }).map((_, i) => {
@@ -429,7 +429,7 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
               const tickX = textRadius * Math.cos((tickAngle * Math.PI) / 180);
               const tickY = textRadius * Math.sin((tickAngle * Math.PI) / 180);
               
-              return (
+            return (
                 <g key={i}>
                   <line
                     x1={x1}
@@ -439,32 +439,32 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
                     stroke="rgba(16, 185, 129, 0.7)"
                     strokeWidth="2"
                   />
-                  <text
+                <text
                     x={tickX}
                     y={tickY}
                     textAnchor={isLastTick ? "end" : "middle"}
                     dominantBaseline="middle"
-                    fill="#6b7280"
+                  fill="#6b7280"
                     fontSize="10"
                     fontWeight={isLastTick ? "600" : "400"}
-                  >
+                >
                     {Math.round(tickValue)}
-                  </text>
-                </g>
-              );
-            })}
+                </text>
+              </g>
+            );
+          })}
             
             {/* Needle - points to exact position on arc for current CO2 value */}
-            <line
+          <line
               x1="0"
               y1="0"
               x2={scaledNeedleX}
               y2={scaledNeedleY}
               stroke="#10b981"
               strokeWidth="4"
-              strokeLinecap="round"
+            strokeLinecap="round"
               className={styles.monitoringPage__needle}
-            />
+          />
             
             {/* Center circle */}
             <circle
@@ -475,7 +475,7 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
               stroke="#10b981"
               strokeWidth="3"
             />
-          </svg>
+        </svg>
           
           {/* Value display */}
           <div className={styles.monitoringPage__gaugeValueDisplay}>
@@ -483,7 +483,7 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
               {Math.round(clampedValue)}
             </span>
             <span className={styles.monitoringPage__gaugeValueUnit}>ppm</span>
-          </div>
+        </div>
         </div>
         
         {/* Status display */}
@@ -586,7 +586,7 @@ function LuminosityWidget({ value, updatedAt, isActive = true }: { value: number
                 size={64} 
                 className={styles.monitoringPage__luminosityIconLarge}
               />
-            </div>
+        </div>
             {/* Animated rays */}
             {Array.from({ length: 8 }).map((_, i) => (
               <div
@@ -613,7 +613,7 @@ function LuminosityWidget({ value, updatedAt, isActive = true }: { value: number
                 }}
               />
             ))}
-          </div>
+        </div>
 
           {/* Value display */}
           <div className={styles.monitoringPage__luminosityValueWrapper}>
@@ -675,7 +675,7 @@ function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number
             {/* Water level with gradient: red (0%) -> yellow (50%) -> green (100%) */}
             <div
               className={styles.monitoringPage__waterLevel}
-              style={{ 
+              style={{
                 height: `${clampedValue}%`,
                 background: 'linear-gradient(to top, hsl(0, 90%, 55%), hsl(60, 90%, 55%), hsl(120, 80%, 60%))'
               }}
@@ -699,12 +699,12 @@ function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number
                     width: `${4 + (i % 3)}px`,
                     height: `${4 + (i % 3)}px`,
                   }}
-                />
+            />
               ))}
               
               {/* Light reflection on water surface */}
               <div className={styles.monitoringPage__waterReflection} />
-            </div>
+          </div>
             
             {/* Level markers */}
             <div className={styles.monitoringPage__waterMarkers}>
@@ -712,14 +712,14 @@ function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number
                 <div key={mark} className={styles.monitoringPage__waterMarker}>
                   <span className={styles.monitoringPage__waterMarkerLabel}>{mark}%</span>
                   <div className={styles.monitoringPage__waterMarkerLine} />
-                </div>
+          </div>
               ))}
-            </div>
+        </div>
             
             {/* Tank cap with shine effect */}
             <div className={styles.monitoringPage__waterTankCap}>
               <div className={styles.monitoringPage__waterCapShine} />
-            </div>
+        </div>
             
             {/* Glass reflection effect */}
             <div className={styles.monitoringPage__waterGlassReflection} />
@@ -872,7 +872,7 @@ export function MonitoringPage() {
         irrigationPump: false,
         fans: false,
         lighting: false,
-      });
+  });
     }
   }, [actuators]);
   const [isAutomaticMode, setIsAutomaticMode] = useState(true);
@@ -1102,7 +1102,7 @@ export function MonitoringPage() {
             const lumReading = sensorMap.get('luminosity');
             const waterReading = sensorMap.get('waterLevel');
 
-            setSensorData((prev) => ({
+      setSensorData((prev) => ({
               temperature: availableSensors.temperature && tempReading ? tempReading.value : prev.temperature,
               soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : prev.soilHumidity,
               co2: availableSensors.co2 && co2Reading ? co2Reading.value : prev.co2,
@@ -1213,44 +1213,44 @@ export function MonitoringPage() {
 
           {/* Section de contrôle des équipements */}
           {actuators && actuators.length > 0 && (
-            <div className={styles.monitoringPage__section}>
-              <div className={styles.monitoringPage__sectionHeader}>
-                <h2 className={styles.monitoringPage__sectionTitle}>
-                  {t('monitoring.equipment.title')}
-                </h2>
-                <div className={styles.monitoringPage__modeToggle}>
-                  <button
-                    className={`${styles.monitoringPage__modeButton} ${
-                      isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
-                    }`}
-                    onClick={() => setIsAutomaticMode(true)}
-                  >
-                    <Icon icon={FaRobot} size={18} />
-                    <span>{t('monitoring.mode.automatic')}</span>
-                  </button>
-                  <button
-                    className={`${styles.monitoringPage__modeButton} ${
-                      !isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
-                    }`}
-                    onClick={() => setIsAutomaticMode(false)}
-                  >
-                    <Icon icon={FaHandPointer} size={18} />
-                    <span>{t('monitoring.mode.manual')}</span>
-                  </button>
-                </div>
+          <div className={styles.monitoringPage__section}>
+            <div className={styles.monitoringPage__sectionHeader}>
+              <h2 className={styles.monitoringPage__sectionTitle}>
+                {t('monitoring.equipment.title')}
+              </h2>
+              <div className={styles.monitoringPage__modeToggle}>
+                <button
+                  className={`${styles.monitoringPage__modeButton} ${
+                    isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
+                  }`}
+                  onClick={() => setIsAutomaticMode(true)}
+                >
+                  <Icon icon={FaRobot} size={18} />
+                  <span>{t('monitoring.mode.automatic')}</span>
+                </button>
+                <button
+                  className={`${styles.monitoringPage__modeButton} ${
+                    !isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
+                  }`}
+                  onClick={() => setIsAutomaticMode(false)}
+                >
+                  <Icon icon={FaHandPointer} size={18} />
+                  <span>{t('monitoring.mode.manual')}</span>
+                </button>
               </div>
-              {isAutomaticMode && (
-                <div className={styles.monitoringPage__modeInfo}>
-                  <Icon icon={FaRobot} size={16} />
-                  <span>{t('monitoring.mode.automaticInfo')}</span>
-                </div>
-              )}
-              <div
-                ref={equipmentRef as React.RefObject<HTMLDivElement>}
-                className={`${styles.monitoringPage__equipmentGrid} ${
+            </div>
+            {isAutomaticMode && (
+              <div className={styles.monitoringPage__modeInfo}>
+                <Icon icon={FaRobot} size={16} />
+                <span>{t('monitoring.mode.automaticInfo')}</span>
+              </div>
+            )}
+            <div
+              ref={equipmentRef as React.RefObject<HTMLDivElement>}
+              className={`${styles.monitoringPage__equipmentGrid} ${
                   (isEquipmentVisible || actuators.length > 0) ? styles.monitoringPage__equipmentGridVisible : ''
-                }`}
-              >
+              }`}
+            >
                 {(() => {
                   // Trouver les actionneurs correspondants (uniquement ceux qui existent en base de données)
                   // Le backend retourne des types exacts : "pump", "fan", "light"
@@ -1309,43 +1309,43 @@ export function MonitoringPage() {
                   return (
                     <>
                       {pumpActuator && (
-                        <EquipmentControlWidget
-                          title={t('monitoring.equipment.irrigationPump')}
-                          icon={FaTint}
-                          isOn={equipmentState.irrigationPump}
-                          onToggle={() => handleEquipmentToggle('irrigationPump')}
-                          disabled={isAutomaticMode}
+              <EquipmentControlWidget
+                title={t('monitoring.equipment.irrigationPump')}
+                icon={FaTint}
+                isOn={equipmentState.irrigationPump}
+                onToggle={() => handleEquipmentToggle('irrigationPump')}
+                disabled={isAutomaticMode}
                           isActive={pumpActuator.status !== 'offline'}
                           offlineLabel={pumpActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
-                        />
+              />
                       )}
                       {fanActuator && (
-                        <EquipmentControlWidget
-                          title={t('monitoring.equipment.fans')}
-                          icon={FaWind}
-                          isOn={equipmentState.fans}
-                          onToggle={() => handleEquipmentToggle('fans')}
-                          disabled={isAutomaticMode}
+              <EquipmentControlWidget
+                title={t('monitoring.equipment.fans')}
+                icon={FaWind}
+                isOn={equipmentState.fans}
+                onToggle={() => handleEquipmentToggle('fans')}
+                disabled={isAutomaticMode}
                           isActive={fanActuator.status !== 'offline'}
                           offlineLabel={fanActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
-                        />
+              />
                       )}
                       {lightActuator && (
-                        <EquipmentControlWidget
-                          title={t('monitoring.equipment.lighting')}
-                          icon={FaSun}
-                          isOn={equipmentState.lighting}
-                          onToggle={() => handleEquipmentToggle('lighting')}
-                          disabled={isAutomaticMode}
+              <EquipmentControlWidget
+                title={t('monitoring.equipment.lighting')}
+                icon={FaSun}
+                isOn={equipmentState.lighting}
+                onToggle={() => handleEquipmentToggle('lighting')}
+                disabled={isAutomaticMode}
                           isActive={lightActuator.status !== 'offline'}
                           offlineLabel={lightActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
-                        />
+              />
                       )}
                     </>
                   );
                 })()}
-              </div>
             </div>
+          </div>
           )}
         </div>
       </main>
