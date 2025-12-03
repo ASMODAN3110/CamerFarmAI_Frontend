@@ -7,7 +7,7 @@ import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitc
 import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
-import logoIcon from '@/assets/logo.ico';
+import logoIcon from '@/assets/logo.png';
 import styles from './Header.module.css';
 
 interface NavItem {
