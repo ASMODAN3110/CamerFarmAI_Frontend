@@ -2,7 +2,9 @@
 import { api } from './api';
 
 export interface LoginResponse {
-  accessToken: string;
+  accessToken?: string;
+  requires2FA?: boolean;
+  temporaryToken?: string;
   user?: {
     id: string;
     phone: string;
@@ -13,6 +15,8 @@ export interface LoginResponse {
   };
   // Le backend peut aussi retourner {success: true, data: {...}}
   data?: {
+    requires2FA?: boolean;
+    temporaryToken?: string;
     user?: {
       id: string;
       phone: string;
@@ -23,6 +27,23 @@ export interface LoginResponse {
     };
     accessToken?: string;
   };
+}
+
+export interface TwoFactorSecretResponse {
+  secret: string;
+  qrCodeUrl: string;
+}
+
+export interface User {
+  id: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  role: 'farmer' | 'advisor' | 'admin';
+  language: string;
+  email?: string;
+  avatarUrl?: string | null;
+  twoFactorEnabled?: boolean;
 }
 
 export const authService = {
@@ -36,8 +57,19 @@ export const authService = {
     return api.post('/auth/login', { email: normalizedEmail, password }).then((res) => {
       console.log('🔐 Réponse complète de /auth/login:', res.data);
       
+      const responseData = res.data.data || res.data;
+      
+      // Si 2FA est requis, retourner les informations nécessaires
+      if (responseData.requires2FA) {
+        console.log('🔐 2FA requis, temporaryToken reçu');
+        return {
+          requires2FA: true,
+          temporaryToken: responseData.temporaryToken,
+        };
+      }
+      
       // Extraire le token (peut être dans res.data.accessToken ou res.data.data.accessToken)
-      const accessToken = res.data.accessToken || res.data.data?.accessToken;
+      const accessToken = responseData.accessToken || res.data.accessToken;
       
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
@@ -46,7 +78,54 @@ export const authService = {
         console.warn('⚠️ Aucun token trouvé dans la réponse de login');
       }
       
-      return res.data;
+      return {
+        accessToken,
+        user: responseData.user,
+      };
+    });
+  },
+
+  verifyTwoFactorLogin: (temporaryToken: string, twoFactorCode: string): Promise<LoginResponse> => {
+    return api.post('/auth/login/verify-2fa', {
+      temporaryToken,
+      twoFactorCode,
+    }).then((res) => {
+      console.log('🔐 Réponse complète de /auth/login/verify-2fa:', res.data);
+      
+      const responseData = res.data.data || res.data;
+      const accessToken = responseData.accessToken || res.data.accessToken;
+      
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        console.log('✅ Token sauvegardé dans localStorage après vérification 2FA');
+      }
+      
+      return {
+        accessToken,
+        user: responseData.user,
+      };
+    });
+  },
+
+  generateTwoFactorSecret: (): Promise<TwoFactorSecretResponse> => {
+    return api.get('/auth/2fa/generate').then((res) => {
+      const responseData = res.data.data || res.data;
+      return {
+        secret: responseData.secret,
+        qrCodeUrl: responseData.qrCodeUrl,
+      };
+    });
+  },
+
+  enableTwoFactor: (token: string): Promise<void> => {
+    return api.post('/auth/2fa/enable', { token }).then(() => {
+      console.log('✅ 2FA activé avec succès');
+    });
+  },
+
+  disableTwoFactor: (token: string): Promise<void> => {
+    return api.post('/auth/2fa/disable', { token }).then(() => {
+      console.log('✅ 2FA désactivé avec succès');
     });
   },
 
@@ -83,7 +162,7 @@ export const authService = {
       
       // Normaliser les noms de propriétés (snake_case -> camelCase)
       if (userData && typeof userData === 'object') {
-        const normalized = {
+        const normalized: User = {
           id: userData.id || userData._id || '',
           firstName: userData.firstName || userData.first_name || '',
           lastName: userData.lastName || userData.last_name || '',
@@ -92,9 +171,10 @@ export const authService = {
           language: userData.language || 'fr',
           email: userData.email || '',
           avatarUrl: userData.avatarUrl || userData.avatar_url || null,
+          twoFactorEnabled: userData.twoFactorEnabled || userData.two_factor_enabled || false,
         };
         console.log('🔄 Données normalisées:', normalized);
-        console.log('✅ ID final normalisé:', normalized.id, 'Rôle:', normalized.role);
+        console.log('✅ ID final normalisé:', normalized.id, 'Rôle:', normalized.role, '2FA:', normalized.twoFactorEnabled);
         return normalized;
       }
       
