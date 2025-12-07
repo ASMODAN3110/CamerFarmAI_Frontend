@@ -204,8 +204,15 @@
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.graphsPage__applyButton {
+.graphsPage__filterButtons {
+  display: flex;
+  gap: var(--spacing-md);
   margin-top: var(--spacing-sm);
+}
+
+.graphsPage__applyButton,
+.graphsPage__resetButton {
+  min-width: 120px;
 }
 
 @media (min-width: 640px) {
