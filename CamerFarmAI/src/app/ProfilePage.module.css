@@ -360,6 +360,66 @@
   font-weight: 500;
 }
 
+.twoFactorSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 2px solid rgba(40, 167, 69, 0.2);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+}
+
+.twoFactorLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.twoFactorContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.twoFactorStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.twoFactorStatusIcon {
+  color: var(--color-primary);
+  font-size: 1.2em;
+}
+
+.twoFactorStatusIconInactive {
+  color: var(--color-gray-500);
+  font-size: 1.2em;
+}
+
+.twoFactorStatusText {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.twoFactorDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.twoFactorButton {
+  align-self: flex-start;
+}
+
 .infoHint {
   font-size: 0.85rem;
   color: #666;

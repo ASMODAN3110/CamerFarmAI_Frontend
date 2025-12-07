@@ -8,7 +8,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
-import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaShieldAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { TwoFactorModal } from '@/components/ui/TwoFactorModal/TwoFactorModal';
 import type { TranslationKey } from '@/utils/translations';
 import styles from './ProfilePage.module.css';
 
@@ -31,6 +32,8 @@ export function ProfilePage() {
     language: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isTwoFactorModalOpen, setIsTwoFactorModalOpen] = useState(false);
+  const [twoFactorMode, setTwoFactorMode] = useState<'enable' | 'disable'>('enable');
 
   const profileNavItems = useMemo(
     () => [
@@ -444,6 +447,47 @@ export function ProfilePage() {
                   <div className={styles.infoValue}>{user.id}</div>
                   <p className={styles.infoHint}>{t('profile.idHint')}</p>
                 </div>
+
+                <div className={styles.twoFactorSection}>
+                  <label className={styles.twoFactorLabel}>
+                    <FaShieldAlt /> {t('profile.twoFactor.title')}
+                  </label>
+                  <div className={styles.twoFactorContent}>
+                    <div className={styles.twoFactorStatus}>
+                      {(user as any).twoFactorEnabled ? (
+                        <>
+                          <FaCheckCircle className={styles.twoFactorStatusIcon} />
+                          <span className={styles.twoFactorStatusText}>
+                            {t('profile.twoFactor.enabled')}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <FaTimesCircle className={styles.twoFactorStatusIconInactive} />
+                          <span className={styles.twoFactorStatusText}>
+                            {t('profile.twoFactor.disabled')}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <p className={styles.twoFactorDescription}>
+                      {t('profile.twoFactor.description')}
+                    </p>
+                    <Button
+                      variant={(user as any).twoFactorEnabled ? 'secondary' : 'primary'}
+                      size="sm"
+                      onClick={() => {
+                        setTwoFactorMode((user as any).twoFactorEnabled ? 'disable' : 'enable');
+                        setIsTwoFactorModalOpen(true);
+                      }}
+                      className={styles.twoFactorButton}
+                    >
+                      {(user as any).twoFactorEnabled
+                        ? t('profile.twoFactor.disableButton')
+                        : t('profile.twoFactor.enableButton')}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -460,6 +504,14 @@ export function ProfilePage() {
       </main>
       <Footer />
       <FloatingButton href="/support" position="bottom-right" aria-label={t('floatingButton.ariaLabel')} />
+      <TwoFactorModal
+        isOpen={isTwoFactorModalOpen}
+        onClose={() => setIsTwoFactorModalOpen(false)}
+        mode={twoFactorMode}
+        onSuccess={() => {
+          setIsTwoFactorModalOpen(false);
+        }}
+      />
     </>
   );
 }
