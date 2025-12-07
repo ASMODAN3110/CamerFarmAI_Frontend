@@ -181,6 +181,7 @@ export type TranslationKey =
   | 'graphs.dateFrom'
   | 'graphs.dateTo'
   | 'graphs.applyFilter'
+  | 'graphs.resetFilter'
   | 'graphs.chart.title'
   | 'graphs.loading'
   | 'graphs.empty'
@@ -386,6 +387,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'Du',
     'graphs.dateTo': 'Au',
     'graphs.applyFilter': 'Appliquer Filtre',
+    'graphs.resetFilter': 'Réinitialiser',
     'graphs.chart.title': 'Évolution',
     'graphs.loading': 'Chargement des données des capteurs...',
     'graphs.empty': 'Aucune donnée de capteur disponible pour cette période.',
@@ -690,6 +692,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'From',
     'graphs.dateTo': 'To',
     'graphs.applyFilter': 'Apply Filter',
+    'graphs.resetFilter': 'Reset',
     'graphs.chart.title': 'Evolution',
     'graphs.loading': 'Loading sensor data...',
     'graphs.empty': 'No sensor data available for this period.',
@@ -944,6 +947,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'Fuɗɗo',
     'graphs.dateTo': 'Gila',
     'graphs.applyFilter': 'Naatu ɓaŋnguɗe',
+    'graphs.resetFilter': 'Fuɗɗitin',
     'graphs.chart.title': 'Ɓeydugol',
     'graphs.loading': 'Jokkondir keɓe jokkondirɗe...',
     'graphs.empty': 'Alaa keɓe jokkondirɗe njiyataa ngam nokkuure ngal.',

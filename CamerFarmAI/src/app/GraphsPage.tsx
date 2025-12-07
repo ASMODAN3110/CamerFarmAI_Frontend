@@ -53,6 +53,10 @@ export function GraphsPage() {
   const navigate = useNavigate();
   const plantationId = searchParams.get('plantationId');
   const [selectedSensor, setSelectedSensor] = useState<string>('');
+  // États pour les valeurs des champs (temporaires, non appliquées)
+  const [dateFromInput, setDateFromInput] = useState('');
+  const [dateToInput, setDateToInput] = useState('');
+  // États pour les valeurs appliquées (utilisées pour le filtrage)
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [sensorsData, setSensorsData] = useState<any[]>([]);
@@ -315,10 +319,19 @@ export function GraphsPage() {
   ];
 
   const handleApplyFilter = () => {
-    // Le filtrage est déjà géré automatiquement dans le useMemo de chartData
-    // Cette fonction peut être utilisée pour d'autres actions si nécessaire
-    // Le graphique se mettra à jour automatiquement grâce au useMemo
-    console.log('Filter applied:', { dateFrom, dateTo, sensor: selectedSensor });
+    // Appliquer les filtres en copiant les valeurs des champs vers les valeurs appliquées
+    setDateFrom(dateFromInput);
+    setDateTo(dateToInput);
+    console.log('Filter applied:', { dateFrom: dateFromInput, dateTo: dateToInput, sensor: selectedSensor });
+  };
+
+  const handleResetFilter = () => {
+    // Réinitialiser les filtres
+    setDateFromInput('');
+    setDateToInput('');
+    setDateFrom('');
+    setDateTo('');
+    console.log('Filter reset');
   };
 
   return (
@@ -427,8 +440,8 @@ export function GraphsPage() {
                 </label>
                 <input
                   type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
+                  value={dateFromInput}
+                  onChange={(e) => setDateFromInput(e.target.value)}
                   className={styles.graphsPage__dateInputField}
                 />
               </div>
@@ -438,19 +451,30 @@ export function GraphsPage() {
                 </label>
                 <input
                   type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
+                  value={dateToInput}
+                  onChange={(e) => setDateToInput(e.target.value)}
                   className={styles.graphsPage__dateInputField}
                 />
               </div>
             </div>
-            <Button
-              variant="primary"
-              onClick={handleApplyFilter}
-              className={styles.graphsPage__applyButton}
-            >
-              {t('graphs.applyFilter')}
-            </Button>
+            <div className={styles.graphsPage__filterButtons}>
+              <Button
+                variant="primary"
+                onClick={handleApplyFilter}
+                className={styles.graphsPage__applyButton}
+              >
+                {t('graphs.applyFilter')}
+              </Button>
+              {(dateFromInput || dateToInput || dateFrom || dateTo) && (
+                <Button
+                  variant="secondary"
+                  onClick={handleResetFilter}
+                  className={styles.graphsPage__resetButton}
+                >
+                  {t('graphs.resetFilter')}
+                </Button>
+              )}
+            </div>
           </div>
           )}
 
