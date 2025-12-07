@@ -9,7 +9,11 @@ const languages = [
   { code: 'ff' as const, label: 'Fulfulde', flag: '🇨🇲' },
 ];
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  variant?: 'default' | 'light';
+}
+
+export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps = {}) {
   const { language, changeLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -37,10 +41,14 @@ export function LanguageSwitcher() {
     setIsOpen(false);
   };
 
+  const buttonClass = variant === 'light' 
+    ? `${styles.languageSwitcher__button} ${styles.languageSwitcher__buttonLight}`
+    : styles.languageSwitcher__button;
+
   return (
     <div className={styles.languageSwitcher} ref={dropdownRef}>
       <button
-        className={styles.languageSwitcher__button}
+        className={buttonClass}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Changer de langue"
         aria-expanded={isOpen}

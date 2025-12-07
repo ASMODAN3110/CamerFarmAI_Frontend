@@ -10,7 +10,7 @@ import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import logoIcon from '@/assets/logo.ico';
+import logoIcon from '@/assets/logo.png';
 import styles from './SignUpPage.module.css';
 
 export function SignUpPage() {
@@ -38,6 +38,7 @@ export function SignUpPage() {
     hasSpecial: false,
   });
   const { ref: formRef, isVisible: isFormVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { ref: textRef, isVisible: isTextVisible } = useScrollAnimation({ threshold: 0.1 });
 
   // Images de fond pour le carousel
   const backgroundImages = [
@@ -356,7 +357,7 @@ export function SignUpPage() {
 
       {/* Sélecteur de langue en haut à droite */}
       <div className={styles.signUpPage__languageSwitcher}>
-        <LanguageSwitcher />
+        <LanguageSwitcher variant="light" />
       </div>
 
       <div className={styles.signUpPage__container}>
@@ -364,22 +365,6 @@ export function SignUpPage() {
           ref={formRef as React.RefObject<HTMLDivElement>}
           className={`${styles.signUpPage__formWrapper} ${isFormVisible ? styles.signUpPage__formWrapperVisible : ''}`}
         >
-          <div className={styles.signUpPage__logoSection}>
-            <div className={styles.signUpPage__logoContainer}>
-              <div className={styles.signUpPage__logoOrbit}>
-                <span className={styles.signUpPage__logoParticle} />
-                <span className={`${styles.signUpPage__logoParticle} ${styles.signUpPage__logoParticle2}`} />
-                <span className={`${styles.signUpPage__logoParticle} ${styles.signUpPage__logoParticle3}`} />
-              </div>
-              <img 
-                src={logoIcon} 
-                alt="CamerFarm AI" 
-                className={styles.signUpPage__logo}
-              />
-            </div>
-            <h1 className={styles.signUpPage__logoText}>CAMERFARM AI</h1>
-          </div>
-
           <form className={styles.signUpPage__form} onSubmit={handleSubmit}>
             <h2 className={styles.signUpPage__title}>{t('signup.title')}</h2>
 
@@ -528,6 +513,39 @@ export function SignUpPage() {
               </p>
             </div>
           </form>
+        </div>
+
+        <div 
+          ref={textRef as React.RefObject<HTMLDivElement>}
+          className={`${styles.signUpPage__rightSection} ${isTextVisible ? styles.signUpPage__rightSectionVisible : ''}`}
+        >
+          <div className={styles.signUpPage__logoSection}>
+            <div className={styles.signUpPage__logoContainer}>
+              <div className={styles.signUpPage__logoOrbit}>
+                <span className={styles.signUpPage__logoParticle} />
+                <span className={`${styles.signUpPage__logoParticle} ${styles.signUpPage__logoParticle2}`} />
+                <span className={`${styles.signUpPage__logoParticle} ${styles.signUpPage__logoParticle3}`} />
+              </div>
+              <img 
+                src={logoIcon} 
+                alt="CamerFarm AI" 
+                className={styles.signUpPage__logo}
+              />
+            </div>
+            <h1 className={styles.signUpPage__logoText}>CAMERFARM AI</h1>
+          </div>
+
+          <div className={styles.signUpPage__motivationalText}>
+            <p className={styles.signUpPage__motivationalLine}>
+              {t('login.motivational.line1')}
+            </p>
+            <p className={styles.signUpPage__motivationalLine}>
+              {t('login.motivational.line2')}
+            </p>
+            <p className={styles.signUpPage__motivationalLine}>
+              {t('login.motivational.line3')}
+            </p>
+          </div>
         </div>
       </div>
     </main>

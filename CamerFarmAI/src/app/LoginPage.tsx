@@ -9,7 +9,7 @@ import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import logoIcon from '@/assets/logo.ico';
+import logoIcon from '@/assets/logo.png';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
@@ -134,7 +134,7 @@ export function LoginPage() {
 
       {/* Sélecteur de langue en haut à droite */}
       <div className={styles.loginPage__languageSwitcher}>
-        <LanguageSwitcher />
+        <LanguageSwitcher variant="light" />
       </div>
 
       <div className={styles.loginPage__container}>
@@ -142,22 +142,6 @@ export function LoginPage() {
             ref={formRef as React.RefObject<HTMLDivElement>}
             className={`${styles.loginPage__formWrapper} ${isFormVisible ? styles.loginPage__formWrapperVisible : ''}`}
           >
-            <div className={styles.loginPage__logoSection}>
-              <div className={styles.loginPage__logoContainer}>
-                <div className={styles.loginPage__logoOrbit}>
-                  <span className={styles.loginPage__logoParticle} />
-                  <span className={`${styles.loginPage__logoParticle} ${styles.loginPage__logoParticle2}`} />
-                  <span className={`${styles.loginPage__logoParticle} ${styles.loginPage__logoParticle3}`} />
-                </div>
-                <img 
-                  src={logoIcon} 
-                  alt="CamerFarm AI" 
-                  className={styles.loginPage__logo}
-                />
-              </div>
-              <h1 className={styles.loginPage__logoText}>CAMERFARM AI</h1>
-            </div>
-
             <form className={styles.loginPage__form} onSubmit={handleSubmit}>
               <h2 className={styles.loginPage__title}>{t('login.title')}</h2>
 
@@ -213,17 +197,35 @@ export function LoginPage() {
 
           <div 
             ref={textRef as React.RefObject<HTMLDivElement>}
-            className={`${styles.loginPage__motivationalText} ${isTextVisible ? styles.loginPage__motivationalTextVisible : ''}`}
+            className={`${styles.loginPage__rightSection} ${isTextVisible ? styles.loginPage__rightSectionVisible : ''}`}
           >
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line1')}
-            </p>
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line2')}
-            </p>
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line3')}
-            </p>
+            <div className={styles.loginPage__logoSection}>
+              <div className={styles.loginPage__logoContainer}>
+                <div className={styles.loginPage__logoOrbit}>
+                  <span className={styles.loginPage__logoParticle} />
+                  <span className={`${styles.loginPage__logoParticle} ${styles.loginPage__logoParticle2}`} />
+                  <span className={`${styles.loginPage__logoParticle} ${styles.loginPage__logoParticle3}`} />
+                </div>
+                <img 
+                  src={logoIcon} 
+                  alt="CamerFarm AI" 
+                  className={styles.loginPage__logo}
+                />
+              </div>
+              <h1 className={styles.loginPage__logoText}>CAMERFARM AI</h1>
+            </div>
+
+            <div className={styles.loginPage__motivationalText}>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line1')}
+              </p>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line2')}
+              </p>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line3')}
+              </p>
+            </div>
           </div>
       </div>
     </main>

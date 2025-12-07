@@ -131,6 +131,13 @@ export type TranslationKey =
   | 'plantations.detail.errors.notFound'
   | 'notifications.title'
   | 'notifications.empty'
+  | 'notifications.loading'
+  | 'notifications.noDescription'
+  | 'notifications.justNow'
+  | 'notifications.minutesAgo'
+  | 'notifications.hoursAgo'
+  | 'notifications.daysAgo'
+  | 'notifications.delete'
   | 'hero.heading'
   | 'features.automation.title'
   | 'features.automation.description'
@@ -195,9 +202,11 @@ export type TranslationKey =
   | 'monitoring.equipment.lighting'
   | 'monitoring.equipment.offline'
   | 'monitoring.equipment.noActuators'
+  | 'monitoring.equipment.updateError'
   | 'monitoring.mode.automatic'
   | 'monitoring.mode.manual'
   | 'monitoring.mode.automaticInfo'
+  | 'monitoring.mode.updateError'
   | 'monitoring.noSensors'
   | 'profile.back'
   | 'profile.pageLabel'
@@ -316,7 +325,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Échec de l\'inscription. Veuillez réessayer.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'Aucune notification',
-    'hero.heading': 'CamerFarm AI Connecte Les Producteurs À Leurs Terres Grâce À L\'IoT, Offrant Un Suivi Précis Des Cultures Et La Détection Rapide Des Maladies Grâce À L\'Intelligence Artificielle Pour Transformer Durablement L\'agriculture Camerounaise.',
+    'notifications.loading': 'Chargement...',
+    'notifications.noDescription': 'Notification',
+    'notifications.justNow': 'À l\'instant',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'j',
+    'notifications.delete': 'Supprimer',
+    'hero.heading': 'Tous ensemble pour une <span class="hero__highlight">agriculture intelligente</span>, <span class="hero__highlight">connectée</span> et <span class="hero__highlight">automatisée</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Gérez Votre Irrigation, Ventilation Et Eclairage Sans Effort. Notre Système Autonome, Alimenté Par Energie Solaire, Garantit Que Les Taches Essentielles S\'exécutent Meme En Cas De Coupure De Courant.',
     'features.ai.title': 'AI Intégré',
@@ -324,7 +340,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'features.realtime.title': 'Suivi En Temps Réel',
     'features.realtime.description': 'Visualisez Les Conditions Critiques De Votre Champ À Distance : Humidité Du Sol, Température, CO2 Et Niveau D\'eau. Recevez Des Alertes En Temps Réel Pour Anticiper Les Risques Climatiques Et Les Anomalies.',
     'benefits.yield.title': 'Augmenter le rendement des produits',
-    'benefits.energy.title': 'Réduire la consommation d\'énergie par acre',
+    'benefits.energy.title': 'Réduire la consommation d\'énergie',
     'benefits.water.title': 'Economiser la consommation d\'eau',
     'intelligent.title': 'Agriculture intelligente face au climat, basée sur les données',
     'intelligent.description': 'En utilisant les données en temps réel comme un coup de pouce supplémentaire, les agriculteurs et les horticulteurs fusionnent le monde physique avec les outils numériques pour lutter contre les problèmes quotidiens et améliorer leur productivité.',
@@ -391,9 +407,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Éclairage',
     'monitoring.equipment.offline': 'Hors ligne',
     'monitoring.equipment.noActuators': 'Aucun actionneur n\'est actuellement installé dans ce champ.',
+    'monitoring.equipment.updateError': 'Erreur lors de la mise à jour de l\'équipement. Veuillez réessayer.',
     'monitoring.mode.automatic': 'Automatique',
     'monitoring.mode.manual': 'Manuel',
     'monitoring.mode.automaticInfo': 'Mode automatique activé : Les équipements sont contrôlés automatiquement selon les données des capteurs.',
+    'monitoring.mode.updateError': 'Erreur lors de la mise à jour du mode. Veuillez réessayer.',
     'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
@@ -557,6 +575,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Sign up failed. Please try again.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'No notifications',
+    'notifications.loading': 'Loading...',
+    'notifications.noDescription': 'Notification',
+    'notifications.justNow': 'Just now',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'd',
+    'notifications.delete': 'Delete',
     'hero.heading': 'CamerFarm AI Connects Producers To Their Land Through IoT, Offering Precise Crop Monitoring And Rapid Disease Detection Through Artificial Intelligence To Sustainably Transform Cameroonian Agriculture.',
     'features.automation.title': 'Automation',
     'features.automation.description': 'Manage Your Irrigation, Ventilation And Lighting Effortlessly. Our Autonomous System, Powered By Solar Energy, Ensures That Essential Tasks Are Executed Even In Case Of Power Outage.',
@@ -678,9 +703,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Lighting',
     'monitoring.equipment.offline': 'Offline',
     'monitoring.equipment.noActuators': 'No actuators are currently installed in this field.',
+    'monitoring.equipment.updateError': 'Error updating equipment. Please try again.',
     'monitoring.mode.automatic': 'Automatic',
     'monitoring.mode.manual': 'Manual',
     'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
+    'monitoring.mode.updateError': 'Error updating mode. Please try again.',
     'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
     'profile.back': 'Back',
     'profile.pageLabel': 'User profile',
@@ -798,6 +825,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Winndito Ɓaawtaani. Ɗaɓɓu yeewto.',
     'notifications.title': 'Tindinɗe',
     'notifications.empty': 'Alaa tindinɗe',
+    'notifications.loading': 'Nawtude...',
+    'notifications.noDescription': 'Tindinɗe',
+    'notifications.justNow': 'Haŋki',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'ñal',
+    'notifications.delete': 'Momtu',
     'hero.heading': 'CamerFarm AI Haɓɓanaa Ngaynaaɓe e Leyɗe Maɓɓe Ngam IoT, Hokki Jokkondiral Goonga e Yiytude Baawɗe Caggal ɓaawo Ngam Aamde Ngaari Ngam Waylude Ngaynaaɗe Kameruun.',
     'features.automation.title': 'Wattinde',
     'features.automation.description': 'Toppu Irrigasion, Ventilation e Ndaariɗe Hakkunde. Siistem Amen Eɗen, Jokkondirɗam e Njeewi Njeewi, Feddanaa Ko Tawaa Koɗɗe Mawɗe Waɗataa Hatta Si Njeewi Njeewi Ɓaawtaa.',
@@ -919,9 +953,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Ndaariɗe',
     'monitoring.equipment.offline': 'Alaa jokkondirɗo',
     'monitoring.equipment.noActuators': 'Alaa toppuɗe nattaaɗe e nguurndam ngal jooni.',
+    'monitoring.equipment.updateError': 'Firde e huutoreede toppu. Tiiɗno yeewto.',
     'monitoring.mode.automatic': 'Wattinɗam',
     'monitoring.mode.manual': 'Jokkondirɗam',
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
+    'monitoring.mode.updateError': 'Firde e huutoreede wattinɗam. Tiiɗno yeewto.',
     'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'profile.back': 'Rutto',
     'profile.pageLabel': 'Jokkondiral kuutoro',

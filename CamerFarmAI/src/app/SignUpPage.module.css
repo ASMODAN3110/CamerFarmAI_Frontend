@@ -59,22 +59,26 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--border-radius-full);
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--color-white);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .signUpPage__backButton:hover {
-  background-color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.2);
   transform: translateX(-5px);
   box-shadow: var(--shadow-lg);
-  color: var(--color-primary);
+  color: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .signUpPage__backIcon {
@@ -104,18 +108,21 @@
 }
 
 .signUpPage__container {
-  max-width: 600px;
+  max-width: 1200px;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4xl);
   align-items: center;
   position: relative;
   z-index: 2;
 }
 
 .signUpPage__formWrapper {
-  width: 100%;
-  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2xl);
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -126,12 +133,27 @@
   transform: translateY(0);
 }
 
+.signUpPage__rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3xl);
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.signUpPage__rightSectionVisible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .signUpPage__logoSection {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
   animation: logoSectionFadeIn 0.8s ease-out 0.2s both;
 }
 
@@ -219,22 +241,31 @@
 
 .signUpPage__form {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  max-width: 500px;
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-3xl);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   animation: formSlideIn 0.8s ease-out 0.8s both;
-  backdrop-filter: blur(16px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signUpPage__form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .signUpPage__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 0 0 var(--spacing-lg) 0;
   text-transform: uppercase;
@@ -349,7 +380,8 @@
 
 .signUpPage__loginText {
   font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0;
 }
 
@@ -363,6 +395,57 @@
 .signUpPage__link:hover {
   color: var(--color-primary-dark);
   text-decoration: underline;
+}
+
+.signUpPage__motivationalText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  color: var(--color-white);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.signUpPage__motivationalLine {
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+  animation: motivationalFadeIn 0.6s ease-out both;
+}
+
+.signUpPage__motivationalLine:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.signUpPage__motivationalLine:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.signUpPage__motivationalLine:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.signUpPage__motivationalLine:last-child {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes motivationalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.signUpPage__form label {
+  color: var(--color-white) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Animations */
@@ -473,6 +556,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .signUpPage__container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  .signUpPage__rightSection {
+    order: -1;
   }
 }
 
