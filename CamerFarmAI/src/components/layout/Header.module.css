@@ -245,6 +245,39 @@
   font-size: var(--font-size-sm);
 }
 
+.header__emailStats {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-top: 1px solid var(--color-gray-200);
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.header__emailStatsLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-light);
+}
+
+.header__emailStatsCount {
+  font-size: var(--font-size-xs);
+}
+
+.header__emailStatsNumber {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.header__emailStatsEmpty {
+  color: var(--color-gray-500);
+  font-style: italic;
+}
+
 .header__profileDropdown {
   min-width: 200px;
   overflow: hidden;

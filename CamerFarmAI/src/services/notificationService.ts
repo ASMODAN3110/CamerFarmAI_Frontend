@@ -1,6 +1,6 @@
 import { api } from './api';
 
-export type NotificationChannel = 'web' | 'email' | 'sms';
+export type NotificationChannel = 'web' | 'email' | 'whatsapp';
 export type NotificationStatus = 'EN_ATTENTE' | 'ENVOYEE' | 'ERREUR';
 
 export interface NotificationEvent {
@@ -9,6 +9,8 @@ export interface NotificationEvent {
   description: string;
   date: string;
   plantationId?: string; // ID de la plantation (peut être présent directement dans l'événement)
+  sensorId?: string | null; // ID du capteur (selon la documentation API)
+  actuatorId?: string | null; // ID de l'actionneur (selon la documentation API)
   sensor?: {
     id: string;
     type: string;
@@ -45,20 +47,22 @@ export interface NotificationStats {
   parCanal?: {
     web?: number;
     email?: number;
-    sms?: number;
+    whatsapp?: number;
   };
 }
 
 const normalizeNotification = (data: any): Notification => {
-  // Normaliser le statut depuis le backend (EN_ATTENTE, ENVOYEE, ERREUR)
-  const statutRaw = String(data.statut || '').toUpperCase().trim();
+  // Normaliser le statut depuis le backend
+  // Le backend peut retourner: "envoyee", "en_attente", "erreur" (minuscules)
+  // ou "ENVOYEE", "EN_ATTENTE", "ERREUR" (majuscules)
+  const statutRaw = String(data.statut || '').toLowerCase().trim();
   let statut: NotificationStatus = 'EN_ATTENTE';
   
-  if (statutRaw === 'ENVOYEE' || statutRaw === 'ENVOYÉE' || statutRaw === 'SENT') {
+  if (statutRaw === 'envoyee' || statutRaw === 'envoyée' || statutRaw === 'sent' || statutRaw === 'envoi') {
     statut = 'ENVOYEE';
-  } else if (statutRaw === 'ERREUR' || statutRaw === 'ERROR' || statutRaw === 'FAILED') {
+  } else if (statutRaw === 'erreur' || statutRaw === 'error' || statutRaw === 'failed' || statutRaw === 'echec') {
     statut = 'ERREUR';
-  } else if (statutRaw === 'EN_ATTENTE' || statutRaw === 'PENDING' || statutRaw === '') {
+  } else if (statutRaw === 'en_attente' || statutRaw === 'pending' || statutRaw === 'attente' || statutRaw === '') {
     statut = 'EN_ATTENTE';
   }
   
@@ -72,9 +76,20 @@ const normalizeNotification = (data: any): Notification => {
     });
   }
   
+  // Normaliser le canal (backend peut retourner 'email', 'web', 'whatsapp')
+  const canalRaw = String(data.canal || 'web').toLowerCase().trim();
+  let canal: NotificationChannel = 'web';
+  if (canalRaw === 'email') {
+    canal = 'email';
+  } else if (canalRaw === 'whatsapp' || canalRaw === 'whatsapp') {
+    canal = 'whatsapp';
+  } else {
+    canal = 'web';
+  }
+  
   return {
     id: data.id,
-    canal: data.canal || 'web',
+    canal,
     statut,
     eventId: data.eventId,
     userId: data.userId,
@@ -92,8 +107,10 @@ const normalizeNotification = (data: any): Notification => {
       description: data.event.description,
       date: data.event.date,
       plantationId: data.event.plantationId, // Inclure plantationId si présent dans l'événement brut
-      sensor: data.event.sensor,
-      actuator: data.event.actuator,
+      sensorId: data.event.sensorId || null, // ID du capteur (selon la documentation API)
+      actuatorId: data.event.actuatorId || null, // ID de l'actionneur (selon la documentation API)
+      sensor: data.event.sensor || null,
+      actuator: data.event.actuator || null,
     } : undefined,
   };
 };
@@ -137,9 +154,24 @@ export const notificationService = {
   },
 
   /**
-   * Récupère les statistiques des notifications de l'utilisateur
+   * Récupère uniquement les notifications email de l'utilisateur connecté
    */
-  async getStats(): Promise<NotificationStats> {
+  async getAllEmail(): Promise<Notification[]> {
+    const allNotifications = await this.getAll();
+    // Filtrer uniquement les notifications email et trier par date décroissante
+    const emailNotifications = allNotifications
+      .filter(notif => notif.canal === 'email')
+      .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
+    
+    return emailNotifications;
+  },
+
+  /**
+   * Récupère les statistiques des notifications de l'utilisateur
+   * Calcule aussi les stats à partir des notifications réelles pour plus de précision
+   * @param allNotifications - Optionnel: notifications déjà chargées pour éviter un appel API supplémentaire
+   */
+  async getStats(allNotifications?: Notification[]): Promise<NotificationStats> {
     try {
       const res = await api.get('/notifications/stats');
       const data = res.data?.data || res.data;
@@ -149,6 +181,29 @@ export const notificationService = {
       const nonLues = data.nonLues || data.non_lues || 0;
       const lues = data.lues || total - nonLues;
       
+      // Calculer les stats réelles à partir des notifications pour plus de précision
+      // (les stats du backend peuvent ne pas être à jour, notamment parCanal)
+      let realStats = {
+        web: 0,
+        email: 0,
+        whatsapp: 0,
+      };
+      
+      try {
+        // Utiliser les notifications fournies ou les récupérer
+        const notifications = allNotifications || await this.getAll();
+        realStats = {
+          web: notifications.filter(n => n.canal === 'web').length,
+          email: notifications.filter(n => n.canal === 'email').length,
+          whatsapp: notifications.filter(n => n.canal === 'whatsapp').length,
+        };
+      } catch (err) {
+        // Si erreur, utiliser les stats du backend
+        if (import.meta.env.DEV) {
+          console.warn('⚠️ Impossible de calculer les stats réelles, utilisation des stats du backend');
+        }
+      }
+      
       return {
         total,
         envoyees,
@@ -156,7 +211,12 @@ export const notificationService = {
         erreurs: data.erreurs || data.erreur || 0,
         nonLues,
         lues,
-        parCanal: data.parCanal || data.par_canal,
+        parCanal: {
+          // Utiliser les stats réelles si disponibles, sinon celles du backend
+          web: realStats.web || data.parCanal?.web || data.par_canal?.web || 0,
+          email: realStats.email || data.parCanal?.email || data.par_canal?.email || 0,
+          whatsapp: realStats.whatsapp || data.parCanal?.whatsapp || data.par_canal?.whatsapp || 0,
+        },
       };
     } catch (error) {
       // En cas d'erreur, retourner des stats vides
@@ -192,6 +252,7 @@ export const notificationService = {
 
   /**
    * Marque une notification comme lue
+   * Utilise PATCH selon la documentation API
    */
   async markAsRead(id: string): Promise<Notification> {
     try {

@@ -1,8 +1,22 @@
 
 import axios from 'axios';
 
+// En développement, utiliser le proxy Vite pour éviter les problèmes CORS
+// En production, utiliser l'URL complète du backend
+const getBaseURL = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // En développement, utiliser le proxy Vite
+  if (import.meta.env.DEV) {
+    return '/api/v1';
+  }
+  // En production, utiliser l'URL complète
+  return 'http://localhost:3000/api/v1';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
+  baseURL: getBaseURL(),
   timeout: 30000,
   withCredentials: true, // ← INDISPENSABLE : envoie automatiquement le cookie refreshToken
 });
@@ -72,14 +86,28 @@ api.interceptors.response.use(
 
     // Log pour erreur
     if (DEBUG) {
-      console.error('❌ API Response Error:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        message: error.message,
-        responseData: error.response?.data,
-        requestData: error.config?.data
-      });
+      // Détecter les erreurs CORS spécifiquement
+      const isCorsError = error.message === 'Network Error' && !error.response;
+      const isNetworkError = error.code === 'ERR_NETWORK' || error.code === 'ERR_FAILED';
+      
+      if (isCorsError || isNetworkError) {
+        console.error('❌ CORS/Network Error:', {
+          message: error.message,
+          code: error.code,
+          url: error.config?.url,
+          fullURL: `${error.config?.baseURL}${error.config?.url}`,
+          suggestion: 'Vérifiez que le backend est démarré et que CORS est configuré correctement. Le proxy Vite devrait contourner ce problème en développement.'
+        });
+      } else {
+        console.error('❌ API Response Error:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          url: error.config?.url,
+          message: error.message,
+          responseData: error.response?.data,
+          requestData: error.config?.data
+        });
+      }
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -105,8 +133,14 @@ api.interceptors.response.use(
       }
 
       try {
+        const refreshURL = import.meta.env.VITE_API_URL 
+          ? `${import.meta.env.VITE_API_URL}/auth/refresh`
+          : import.meta.env.DEV 
+            ? '/api/v1/auth/refresh'
+            : 'http://localhost:3000/api/v1/auth/refresh';
+        
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/refresh`,
+          refreshURL,
           {},
           { withCredentials: true }
         );
