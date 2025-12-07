@@ -9,7 +9,7 @@ import { PlantationDetailPage } from './app/PlantationDetailPage';
 import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
 import { ProfilePage } from './app/ProfilePage';
-
+import { ChatboxPage } from './app/ChatboxPage';
 function App() {
   return (
     <AuthProvider>
@@ -49,6 +49,13 @@ function App() {
                 <MonitoringPage />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/ia" 
+            element={
+            
+              <ChatboxPage />
+              } 
           />
           <Route 
             path="/profile" 
