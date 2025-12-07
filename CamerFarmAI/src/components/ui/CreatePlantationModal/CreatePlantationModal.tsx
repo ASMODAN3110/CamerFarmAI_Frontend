@@ -4,6 +4,7 @@ import { FormField } from '@/components/ui/FormField/FormField';
 import { Button } from '@/components/ui/Button/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import styles from './CreatePlantationModal.module.css';
+import formFieldStyles from '@/components/ui/FormField/FormField.module.css';
 
 interface CreatePlantationModalProps {
   isOpen: boolean;
@@ -25,11 +26,23 @@ export function CreatePlantationModal({
   const [formData, setFormData] = useState({
     name: '',
     area: '',
+    areaUnit: 'm2',
     location: '',
     cropType: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Conversion des unités en m²
+  const convertToSquareMeters = (value: number, unit: string): number => {
+    const conversions: Record<string, number> = {
+      m2: 1,
+      ha: 10000,
+      acre: 4046.86,
+      km2: 1000000,
+    };
+    return value * (conversions[unit] || 1);
+  };
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -74,12 +87,21 @@ export function CreatePlantationModal({
     setIsSubmitting(true);
     try {
       if (onSubmit) {
-        await onSubmit(formData);
+        // Convertir la superficie en m² avant l'envoi
+        const areaInSquareMeters = convertToSquareMeters(
+          Number(formData.area),
+          formData.areaUnit
+        );
+        await onSubmit({
+          ...formData,
+          area: areaInSquareMeters.toString(),
+        });
       }
       // Reset form and close modal on success
       setFormData({
         name: '',
         area: '',
+        areaUnit: 'm2',
         location: '',
         cropType: '',
       });
@@ -96,6 +118,7 @@ export function CreatePlantationModal({
     setFormData({
       name: '',
       area: '',
+      areaUnit: 'm2',
       location: '',
       cropType: '',
     });
@@ -121,15 +144,34 @@ export function CreatePlantationModal({
           required
         />
 
-        <FormField
-          label={t('plantations.createModal.areaLabel')}
-          type="text"
-          value={formData.area}
-          onChange={(e) => handleChange('area', e.target.value)}
-          placeholder={t('plantations.createModal.areaPlaceholder')}
-          error={errors.area}
-          required
-        />
+        <div className={styles.createPlantationModal__areaField}>
+          <label className={styles.createPlantationModal__areaLabel}>
+            {t('plantations.createModal.areaLabel')}
+            <span className={formFieldStyles.formField__required}> *</span>
+          </label>
+          <div className={styles.createPlantationModal__areaInputGroup}>
+            <FormField
+              type="text"
+              value={formData.area}
+              onChange={(e) => handleChange('area', e.target.value)}
+              placeholder={t('plantations.createModal.areaPlaceholder')}
+              className={styles.createPlantationModal__areaInput}
+            />
+            <select
+              value={formData.areaUnit}
+              onChange={(e) => handleChange('areaUnit', e.target.value)}
+              className={styles.createPlantationModal__areaUnitSelect}
+            >
+              <option value="m2">{t('plantations.createModal.areaUnit.m2')}</option>
+              <option value="ha">{t('plantations.createModal.areaUnit.ha')}</option>
+              <option value="acre">{t('plantations.createModal.areaUnit.acre')}</option>
+              <option value="km2">{t('plantations.createModal.areaUnit.km2')}</option>
+            </select>
+          </div>
+          {errors.area && (
+            <span className={styles.createPlantationModal__areaError}>{errors.area}</span>
+          )}
+        </div>
 
         <FormField
           label={t('plantations.createModal.locationLabel')}
