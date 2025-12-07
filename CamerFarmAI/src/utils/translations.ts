@@ -88,6 +88,10 @@ export type TranslationKey =
   | 'plantations.createModal.namePlaceholder'
   | 'plantations.createModal.areaLabel'
   | 'plantations.createModal.areaPlaceholder'
+  | 'plantations.createModal.areaUnit.m2'
+  | 'plantations.createModal.areaUnit.ha'
+  | 'plantations.createModal.areaUnit.acre'
+  | 'plantations.createModal.areaUnit.km2'
   | 'plantations.createModal.locationLabel'
   | 'plantations.createModal.locationPlaceholder'
   | 'plantations.createModal.next'
@@ -418,6 +422,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
     'plantations.createModal.areaLabel': 'Superficie de plantation',
     'plantations.createModal.areaPlaceholder': 'Entrer la superficie de votre plantation',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Localisation',
     'plantations.createModal.locationPlaceholder': 'Entrer la zone de votre plantation',
     'plantations.createModal.next': 'Suivant',
@@ -624,6 +632,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.namePlaceholder': 'Enter the name of your plantation',
     'plantations.createModal.areaLabel': 'Plantation area',
     'plantations.createModal.areaPlaceholder': 'Enter the area of your plantation',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Location',
     'plantations.createModal.locationPlaceholder': 'Enter the zone of your plantation',
     'plantations.createModal.next': 'Next',
@@ -874,6 +886,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.namePlaceholder': 'Naatu innde nguurndam maa',
     'plantations.createModal.areaLabel': 'Leyɗe nguurndam',
     'plantations.createModal.areaPlaceholder': 'Naatu leyɗe nguurndam maa',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Nokkuure',
     'plantations.createModal.locationPlaceholder': 'Naatu nokkuure nguurndam maa',
     'plantations.createModal.next': 'Jokku',
