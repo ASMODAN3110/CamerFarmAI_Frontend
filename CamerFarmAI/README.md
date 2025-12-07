@@ -51,6 +51,14 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Sélection de capteurs** : Activation/désactivation de l'affichage de chaque type de capteur
 - **Données en temps réel** : Mise à jour automatique des graphiques
 
+### Système de notifications
+- **Notifications en temps réel** : Alertes et événements liés aux plantations et capteurs
+- **Gestion des notifications** : Marquer comme lue, supprimer, filtrer
+- **Statistiques** : Compteurs de notifications (total, envoyées, non lues, etc.)
+- **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
+- **Multi-canal** : Support des notifications web, email et SMS
+- **Affichage dans le header** : Badge avec compteur de notifications non lues
+
 ### Multilingue
 - Support de 3 langues : Français, English, Fulfulde
 - Changement de langue dynamique
@@ -121,14 +129,17 @@ src/
 │   ├── api.ts                    # Configuration Axios
 │   ├── authService.ts           # Service d'authentification
 │   ├── plantationService.ts     # Service de gestion des plantations
+│   ├── notificationService.ts  # Service de gestion des notifications
 │   ├── authProvider.tsx          # Provider d'authentification
 │   └── useAuthStore.ts          # Store Zustand pour l'auth
 ├── hooks/                        # Hooks personnalisés
 │   ├── useTranslation.ts        # Hook de traduction
 │   ├── useLanguage.ts           # Hook de langue
-│   └── useScrollAnimation.ts     # Hook d'animation au scroll
+│   ├── useScrollAnimation.ts     # Hook d'animation au scroll
+│   └── useNotifications.ts      # Hook de gestion des notifications
 ├── contexts/                     # Contextes React
-│   └── LanguageContext.tsx      # Contexte de langue
+│   ├── LanguageContext.tsx      # Contexte de langue
+│   └── NotificationContext.tsx  # Contexte de notifications
 ├── utils/                         # Utilitaires
 │   └── translations.ts           # Fichiers de traduction
 └── styles/                        # Styles globaux
@@ -197,6 +208,14 @@ Les routes protégées utilisent le composant `ProtectedRoute` :
 - `GET /plantations/:id/sensors` - Liste des capteurs d'une plantation
 - `GET /plantations/:id/actuators` - Liste des actionneurs d'une plantation
 - `GET /plantations/:id/sensors/:sensorId/readings` - Lectures d'un capteur
+
+### Endpoints des notifications
+- `GET /notifications/my` - Liste de toutes les notifications de l'utilisateur
+- `GET /notifications/my?unreadOnly=true` - Liste des notifications non lues uniquement
+- `GET /notifications/web` - Liste des notifications web uniquement
+- `GET /notifications/stats` - Statistiques des notifications
+- `PUT /notifications/:id/read` - Marquer une notification comme lue
+- `DELETE /notifications/:id` - Supprimer une notification
 
 ### Structure des données
 
@@ -267,6 +286,9 @@ Le fichier `src/services/api.ts` configure Axios avec :
 - **Axios** : Client HTTP
 - **React Icons** : Bibliothèque d'icônes
 - **Recharts** : Graphiques et visualisation de données
+- **Three.js** : Bibliothèque 3D pour WebGL
+- **React Three Fiber** : Renderer React pour Three.js
+- **React Three Drei** : Helpers et utilitaires pour React Three Fiber
 
 ## 🎨 Styles
 
@@ -403,4 +425,34 @@ Pour toute question ou problème, contactez l'équipe de développement.
 
 ---
 
-**Dernière mise à jour** : Novembre 2025
+## 🔔 Notifications
+
+### Fonctionnalités
+- **Affichage dans le header** : Badge avec compteur de notifications non lues
+- **Rafraîchissement automatique** : Mise à jour toutes les 45 secondes
+- **Gestion** : Marquer comme lue, supprimer, filtrer par statut
+- **Statistiques** : Compteurs de notifications (total, envoyées, en attente, erreurs, non lues, lues)
+- **Multi-canal** : Support des notifications web, email et SMS
+
+### Utilisation
+
+```typescript
+import { useNotifications } from '@/hooks/useNotifications';
+
+// Dans un composant
+const { notifications, stats, markAsRead, deleteNotification } = useNotifications({
+  autoRefresh: true,
+  refreshInterval: 45000,
+  unreadOnly: false
+});
+```
+
+### Types de notifications
+- Alertes de capteurs (température, humidité, CO₂, etc.)
+- Événements de plantation
+- Alertes d'actionneurs
+- Notifications système
+
+---
+
+**Dernière mise à jour** : Décembre 2025

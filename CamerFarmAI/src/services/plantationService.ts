@@ -53,6 +53,7 @@ export interface Plantation {
   ownerId?: string;
   createdAt: string;
   updatedAt: string;
+  mode?: 'automatic' | 'manual'; // Mode de contrôle de la plantation (valeurs en minuscules comme stockées en base)
   sensors?: Sensor[];
   actuators?: Actuator[];
   hasSensors?: boolean;
@@ -84,9 +85,9 @@ const normalizeActuator = (data: any): Actuator => {
   // Le backend retourne exactement "pump", "fan", "light" comme type
   const type = data.type || '';
   const name = data.name || '';
-  const status = data.status === 'active' || data.isOn === true ? 'active' : data.status === 'inactive' || data.isOn === false ? 'inactive' : 'offline';
+  const status: 'active' | 'inactive' | 'offline' = data.status === 'active' || data.isOn === true ? 'active' : data.status === 'inactive' || data.isOn === false ? 'inactive' : 'offline';
   
-  const normalized = {
+  const normalized: Actuator = {
     id: data.id,
     type: type, // Préserver le type exact du backend ("pump", "fan", "light")
     name: name, // Préserver le nom exact du backend
@@ -151,7 +152,7 @@ const normalizePlantation = (data: any): Plantation => {
     hasActuators: data.hasActuators,
     latestReadingsCount: data.latestReadings?.length || 0,
     sensorsRaw: data.sensors,
-    sensorsNormalized: sensors?.map(s => ({ id: s.id, type: s.type, status: s.status, hasLatestReading: !!s.latestReading })),
+    sensorsNormalized: sensors?.map((s: Sensor) => ({ id: s.id, type: s.type, status: s.status, hasLatestReading: !!s.latestReading })),
     actuatorsRaw: data.actuators,
     actuatorsNormalized: actuators
   });
@@ -165,6 +166,7 @@ const normalizePlantation = (data: any): Plantation => {
     ownerId: data.ownerId,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
+    mode: data.mode || 'automatic', // Mode de contrôle (automatic ou manual)
     sensors,
     actuators,
     hasSensors: data.hasSensors === true || (sensors && sensors.length > 0),
@@ -241,6 +243,58 @@ export const plantationService = {
     }
     
     return allReadings;
+  },
+
+  /**
+   * Met à jour le statut d'un actionneur
+   * @param plantationId - ID de la plantation
+   * @param actuatorId - ID de l'actionneur
+   * @param status - Nouveau statut ('active' ou 'inactive')
+   * @returns L'actionneur mis à jour
+   */
+  async updateActuator(
+    plantationId: string,
+    actuatorId: string,
+    status: 'active' | 'inactive'
+  ): Promise<Actuator> {
+    try {
+      const res = await api.patch(
+        `/plantations/${plantationId}/actuators/${actuatorId}`,
+        { status }
+      );
+      const data = res.data?.data || res.data;
+      return normalizeActuator(data);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'actionneur:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Met à jour le mode de contrôle d'une plantation (automatique ou manuel)
+   * @param plantationId - ID de la plantation
+   * @param mode - Nouveau mode ('automatic' ou 'manual' - valeurs attendues par le backend)
+   * @returns La plantation mise à jour
+   */
+  async updateControlMode(
+    plantationId: string,
+    mode: 'automatic' | 'manual'
+  ): Promise<Plantation> {
+    try {
+      // Le backend utilise PATCH /plantations/:id avec { mode } dans le payload
+      // Le backend attend les valeurs 'automatic' ou 'manual' (minuscules) comme stockées en base
+      await api.patch(
+        `/plantations/${plantationId}`,
+        { mode }
+      );
+      
+      // Recharger la plantation complète après la mise à jour
+      // car la réponse du PATCH peut ne contenir que le mode
+      return await this.getById(plantationId);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du mode de contrôle:', error);
+      throw error;
+    }
   },
 };
 

@@ -9,18 +9,22 @@ import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import logoIcon from '@/assets/logo.ico';
+import logoIcon from '@/assets/logo.png';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
   const { t } = useTranslation();
   const login = useAuthStore((s) => s.login);
+  const verifyTwoFactor = useAuthStore((s) => s.verifyTwoFactor);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; twoFactor?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [temporaryToken, setTemporaryToken] = useState<string | null>(null);
+  const [twoFactorCode, setTwoFactorCode] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { ref: formRef, isVisible: isFormVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: textRef, isVisible: isTextVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -81,7 +85,16 @@ export function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login(email, password);
+      const result = await login(email, password);
+      
+      // Si 2FA est requis, afficher le formulaire de vérification
+      if (result && 'requires2FA' in result && result.requires2FA && result.temporaryToken) {
+        setRequires2FA(true);
+        setTemporaryToken(result.temporaryToken);
+        setIsSubmitting(false);
+        return;
+      }
+      
       // Redirection après connexion réussie vers la page d'accueil
       // L'utilisateur peut ensuite accéder à son profil via le menu
       navigate('/', { replace: true });
@@ -103,6 +116,39 @@ export function LoginPage() {
       setErrors({ 
         email: errorMessage,
       });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleTwoFactorSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setErrors({});
+
+    if (!twoFactorCode.trim() || twoFactorCode.length !== 6 || !/^\d+$/.test(twoFactorCode)) {
+      setErrors({ twoFactor: t('login.errors.twoFactorInvalid') });
+      return;
+    }
+
+    if (!temporaryToken) {
+      setErrors({ twoFactor: t('login.errors.twoFactorTokenMissing') });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await verifyTwoFactor(temporaryToken, twoFactorCode);
+      navigate('/', { replace: true });
+    } catch (error: any) {
+      const errorMessage = 
+        error?.response?.data?.message || 
+        error?.response?.data?.error || 
+        error?.message || 
+        t('login.errors.twoFactorFailed') || 
+        'Code 2FA invalide';
+      
+      setErrors({ twoFactor: errorMessage });
     } finally {
       setIsSubmitting(false);
     }
@@ -134,13 +180,122 @@ export function LoginPage() {
 
       {/* Sélecteur de langue en haut à droite */}
       <div className={styles.loginPage__languageSwitcher}>
-        <LanguageSwitcher />
+        <LanguageSwitcher variant="light" />
       </div>
 
       <div className={styles.loginPage__container}>
           <div 
             ref={formRef as React.RefObject<HTMLDivElement>}
             className={`${styles.loginPage__formWrapper} ${isFormVisible ? styles.loginPage__formWrapperVisible : ''}`}
+          >
+            {!requires2FA ? (
+              <form className={styles.loginPage__form} onSubmit={handleSubmit}>
+                <h2 className={styles.loginPage__title}>{t('login.title')}</h2>
+
+                <FormField
+                  type="email"
+                  name="email"
+                  label={t('login.emailLabel')}
+                  placeholder={t('login.emailPlaceholder')}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={errors.email}
+                  required
+                  autoComplete="email"
+                  disabled={isSubmitting}
+                />
+
+                <FormField
+                  type="password"
+                  name="password"
+                  label={t('login.passwordLabel')}
+                  placeholder={t('login.passwordPlaceholder')}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={errors.password}
+                  required
+                  autoComplete="current-password"
+                  disabled={isSubmitting}
+                />
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  className={styles.loginPage__submitButton}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? t('login.submitting') : t('login.submitButton')}
+                </Button>
+
+                <div className={styles.loginPage__links}>
+                  <Link to="/forgot-password" className={styles.loginPage__link}>
+                    {t('login.forgotPassword')}
+                  </Link>
+                  <p className={styles.loginPage__signupText}>
+                    {t('login.noAccount')}{' '}
+                    <Link to="/signup" className={styles.loginPage__link}>
+                      {t('login.signupLink')}
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            ) : (
+              <form className={styles.loginPage__form} onSubmit={handleTwoFactorSubmit}>
+                <h2 className={styles.loginPage__title}>{t('login.twoFactorTitle')}</h2>
+                <p className={styles.loginPage__twoFactorDescription}>
+                  {t('login.twoFactorDescription')}
+                </p>
+
+                <FormField
+                  type="text"
+                  name="twoFactorCode"
+                  label={t('login.twoFactorCodeLabel')}
+                  placeholder={t('login.twoFactorCodePlaceholder')}
+                  value={twoFactorCode}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                    setTwoFactorCode(value);
+                  }}
+                  error={errors.twoFactor}
+                  required
+                  autoComplete="one-time-code"
+                  disabled={isSubmitting}
+                  maxLength={6}
+                />
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  className={styles.loginPage__submitButton}
+                  disabled={isSubmitting || twoFactorCode.length !== 6}
+                >
+                  {isSubmitting ? t('login.verifying') : t('login.verifyButton')}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="lg"
+                  className={styles.loginPage__backToLoginButton}
+                  onClick={() => {
+                    setRequires2FA(false);
+                    setTemporaryToken(null);
+                    setTwoFactorCode('');
+                    setErrors({});
+                  }}
+                  disabled={isSubmitting}
+                >
+                  {t('login.backToLogin')}
+                </Button>
+              </form>
+            )}
+          </div>
+
+          <div 
+            ref={textRef as React.RefObject<HTMLDivElement>}
+            className={`${styles.loginPage__rightSection} ${isTextVisible ? styles.loginPage__rightSectionVisible : ''}`}
           >
             <div className={styles.loginPage__logoSection}>
               <div className={styles.loginPage__logoContainer}>
@@ -158,72 +313,17 @@ export function LoginPage() {
               <h1 className={styles.loginPage__logoText}>CAMERFARM AI</h1>
             </div>
 
-            <form className={styles.loginPage__form} onSubmit={handleSubmit}>
-              <h2 className={styles.loginPage__title}>{t('login.title')}</h2>
-
-              <FormField
-                type="email"
-                name="email"
-                label={t('login.emailLabel')}
-                placeholder={t('login.emailPlaceholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={errors.email}
-                required
-                autoComplete="email"
-                disabled={isSubmitting}
-              />
-
-              <FormField
-                type="password"
-                name="password"
-                label={t('login.passwordLabel')}
-                placeholder={t('login.passwordPlaceholder')}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                error={errors.password}
-                required
-                autoComplete="current-password"
-                disabled={isSubmitting}
-              />
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className={styles.loginPage__submitButton}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? t('login.submitting') : t('login.submitButton')}
-              </Button>
-
-              <div className={styles.loginPage__links}>
-                <Link to="/forgot-password" className={styles.loginPage__link}>
-                  {t('login.forgotPassword')}
-                </Link>
-                <p className={styles.loginPage__signupText}>
-                  {t('login.noAccount')}{' '}
-                  <Link to="/signup" className={styles.loginPage__link}>
-                    {t('login.signupLink')}
-                  </Link>
-                </p>
-              </div>
-            </form>
-          </div>
-
-          <div 
-            ref={textRef as React.RefObject<HTMLDivElement>}
-            className={`${styles.loginPage__motivationalText} ${isTextVisible ? styles.loginPage__motivationalTextVisible : ''}`}
-          >
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line1')}
-            </p>
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line2')}
-            </p>
-            <p className={styles.loginPage__motivationalLine}>
-              {t('login.motivational.line3')}
-            </p>
+            <div className={styles.loginPage__motivationalText}>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line1')}
+              </p>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line2')}
+              </p>
+              <p className={styles.loginPage__motivationalLine}>
+                {t('login.motivational.line3')}
+              </p>
+            </div>
           </div>
       </div>
     </main>

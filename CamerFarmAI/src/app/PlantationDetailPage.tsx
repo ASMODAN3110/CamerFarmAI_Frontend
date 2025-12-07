@@ -86,6 +86,27 @@ export function PlantationDetailPage() {
     return date.toLocaleString();
   };
 
+  // Fonction pour formater la superficie (convertit de m² vers l'unité la plus appropriée)
+  const formatArea = (areaInSquareMeters: number) => {
+    if (!areaInSquareMeters || areaInSquareMeters === 0) return '0 m²';
+    
+    // Convertir en différentes unités
+    const km2 = areaInSquareMeters / 1000000;
+    const ha = areaInSquareMeters / 10000;
+    const acre = areaInSquareMeters / 4046.86;
+    
+    // Choisir l'unité la plus appropriée
+    if (km2 >= 1) {
+      return `${km2.toFixed(2)} km²`;
+    } else if (ha >= 1) {
+      return `${ha.toFixed(2)} ha`;
+    } else if (acre >= 1) {
+      return `${acre.toFixed(2)} acre`;
+    } else {
+      return `${areaInSquareMeters.toLocaleString()} m²`;
+    }
+  };
+
   if (isLoading) {
     return (
       <>
@@ -157,7 +178,7 @@ export function PlantationDetailPage() {
                     {t('plantations.area')}
                   </span>
                   <span className={styles.plantationDetailPage__infoValue}>
-                    {plantation.area} ha
+                    {formatArea(plantation.area)}
                   </span>
                 </div>
               )}

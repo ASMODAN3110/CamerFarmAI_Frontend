@@ -43,10 +43,16 @@
 ### Visualisation de données
 - **recharts** : `^3.5.0` - Bibliothèque de graphiques React
 
+### Graphiques 3D
+- **three** : `^0.169.0` - Bibliothèque 3D pour WebGL
+- **@react-three/fiber** : `^9.4.2` - Renderer React pour Three.js
+- **@react-three/drei** : `^10.7.7` - Helpers et utilitaires pour React Three Fiber
+
 ### Animations et effets visuels
 - **CSS Animations** : Animations natives CSS pour les jauges et widgets
 - **SVG** : Graphiques vectoriels pour les jauges semi-circulaires
 - **Gradients** : Dégradés de couleur dynamiques pour les indicateurs visuels
+- **3D Graphics** : Graphiques 3D avec Three.js pour les effets visuels avancés
 
 ## 🛠️ Dépendances de développement
 
@@ -96,12 +102,16 @@ VITE_API_URL=http://localhost:3000/api/v1
 
 ### Dependencies (Production)
 ```
+@react-three/drei: ^10.7.7
+@react-three/fiber: ^9.4.2
 axios: ^1.13.2
 react: ^19.2.0
 react-dom: ^19.2.0
 react-icons: ^5.3.0
+react-is: ^19.2.0
 react-router-dom: ^6.28.0
 recharts: ^3.5.0
+three: ^0.169.0
 zustand: ^5.0.8
 ```
 
@@ -111,6 +121,7 @@ zustand: ^5.0.8
 @types/node: ^24.10.1
 @types/react: ^19.2.5
 @types/react-dom: ^19.2.3
+@types/three: ^0.169.0
 @vitejs/plugin-react: ^5.1.1
 babel-plugin-react-compiler: ^1.0.0
 eslint: ^9.39.1
@@ -234,6 +245,30 @@ test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec V
 - Dégradés linéaires SVG pour les arcs de jauges
 - Dégradés CSS pour les barres de progression
 - Calculs dynamiques basés sur les valeurs normalisées
+
+---
+
+## 🔔 Système de notifications
+
+### Fonctionnalités
+- **Notifications en temps réel** : Système de notifications web pour les alertes et événements
+- **Gestion des notifications** : Marquer comme lue, supprimer, filtrer par statut
+- **Statistiques** : Compteurs de notifications (total, envoyées, en attente, erreurs, non lues, lues)
+- **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
+- **Multi-canal** : Support des notifications web, email et SMS
+
+### Services
+- **notificationService** : Service API pour la gestion des notifications
+- **NotificationContext** : Contexte React pour l'accès global aux notifications
+- **useNotifications** : Hook personnalisé pour utiliser les notifications dans les composants
+
+### Endpoints API
+- `GET /notifications/my` - Récupérer toutes les notifications de l'utilisateur
+- `GET /notifications/my?unreadOnly=true` - Récupérer uniquement les notifications non lues
+- `GET /notifications/web` - Récupérer uniquement les notifications web
+- `GET /notifications/stats` - Récupérer les statistiques des notifications
+- `PUT /notifications/:id/read` - Marquer une notification comme lue
+- `DELETE /notifications/:id` - Supprimer une notification
 
 ---
 

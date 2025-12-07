@@ -12,9 +12,11 @@ interface AuthState {
     language: string;
     email?: string;
     avatarUrl?: string | null;
+    twoFactorEnabled?: boolean;
   };
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ requires2FA?: boolean; temporaryToken?: string } | void>;
+  verifyTwoFactor: (temporaryToken: string, twoFactorCode: string) => Promise<void>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
 }
@@ -30,6 +32,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     
     const data = await authService.login(email, password);
     console.log('🔐 Données de connexion reçues:', data);
+    
+    // Si 2FA est requis, retourner les informations nécessaires
+    if (data.requires2FA && data.temporaryToken) {
+      console.log('🔐 2FA requis, retour des informations pour la vérification');
+      return {
+        requires2FA: true,
+        temporaryToken: data.temporaryToken,
+      };
+    }
     
     // Vérifier que le token est bien sauvegardé
     const savedToken = localStorage.getItem('accessToken');
@@ -101,6 +112,51 @@ export const useAuthStore = create<AuthState>((set) => ({
     } else {
       // Si pas de données utilisateur dans la réponse, charger depuis le serveur
       console.log('⚠️ Pas de données utilisateur dans la réponse de login, chargement depuis /auth/me...');
+      const loadUserFn = useAuthStore.getState().loadUser;
+      await loadUserFn();
+    }
+  },
+
+  verifyTwoFactor: async (temporaryToken, twoFactorCode) => {
+    console.log('🔐 Vérification du code 2FA...');
+    const data = await authService.verifyTwoFactorLogin(temporaryToken, twoFactorCode);
+    console.log('🔐 Données de vérification 2FA reçues:', data);
+    
+    // Vérifier que le token est bien sauvegardé
+    const savedToken = localStorage.getItem('accessToken');
+    if (!savedToken) {
+      console.error('❌ ERREUR: Token non sauvegardé après vérification 2FA!');
+      throw new Error('Token non sauvegardé après vérification 2FA');
+    }
+    console.log('✅ Token vérifié dans localStorage après vérification 2FA');
+    
+    // Normaliser les données utilisateur
+    let userData: any = data.user || data.data?.user || data.data;
+    
+    if (userData && typeof userData === 'object' && !('accessToken' in userData)) {
+      const normalized = {
+        id: userData.id || userData._id || '',
+        firstName: userData.firstName || userData.first_name || '',
+        lastName: userData.lastName || userData.last_name || '',
+        phone: userData.phone || '',
+        role: userData.role || 'farmer',
+        language: userData.language || 'fr',
+        email: userData.email || '',
+        avatarUrl: userData.avatarUrl || userData.avatar_url || null,
+        twoFactorEnabled: userData.twoFactorEnabled || userData.two_factor_enabled || false,
+      };
+      console.log('🔄 Données utilisateur normalisées après vérification 2FA:', normalized);
+      
+      set({ user: normalized, isAuthenticated: true });
+      
+      // Recharger les données depuis le serveur
+      try {
+        const loadUserFn = useAuthStore.getState().loadUser;
+        await loadUserFn();
+      } catch (error) {
+        console.warn('⚠️ Erreur lors du rechargement après vérification 2FA');
+      }
+    } else {
       const loadUserFn = useAuthStore.getState().loadUser;
       await loadUserFn();
     }

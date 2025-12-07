@@ -1,0 +1,79 @@
+.twoFactorModal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-md) 0;
+}
+
+.twoFactorModal__description {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+
+.twoFactorModal__qrContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--color-gray-100);
+  border-radius: var(--border-radius-md);
+}
+
+.twoFactorModal__qrCode {
+  width: 200px;
+  height: 200px;
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm);
+  background: var(--color-white);
+}
+
+.twoFactorModal__qrLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.twoFactorModal__codeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.twoFactorModal__codeDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0;
+  text-align: center;
+}
+
+.twoFactorModal__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+}
+
+.twoFactorModal__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+  .twoFactorModal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .twoFactorModal__actions button {
+    width: 100%;
+  }
+}
+

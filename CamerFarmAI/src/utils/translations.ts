@@ -31,6 +31,16 @@ export type TranslationKey =
   | 'login.errors.passwordRequired'
   | 'login.errors.passwordMinLength'
   | 'login.errors.loginFailed'
+  | 'login.errors.twoFactorInvalid'
+  | 'login.errors.twoFactorTokenMissing'
+  | 'login.errors.twoFactorFailed'
+  | 'login.twoFactorTitle'
+  | 'login.twoFactorDescription'
+  | 'login.twoFactorCodeLabel'
+  | 'login.twoFactorCodePlaceholder'
+  | 'login.verifyButton'
+  | 'login.verifying'
+  | 'login.backToLogin'
   | 'login.motivational.line1'
   | 'login.motivational.line2'
   | 'login.motivational.line3'
@@ -88,6 +98,10 @@ export type TranslationKey =
   | 'plantations.createModal.namePlaceholder'
   | 'plantations.createModal.areaLabel'
   | 'plantations.createModal.areaPlaceholder'
+  | 'plantations.createModal.areaUnit.m2'
+  | 'plantations.createModal.areaUnit.ha'
+  | 'plantations.createModal.areaUnit.acre'
+  | 'plantations.createModal.areaUnit.km2'
   | 'plantations.createModal.locationLabel'
   | 'plantations.createModal.locationPlaceholder'
   | 'plantations.createModal.next'
@@ -131,6 +145,13 @@ export type TranslationKey =
   | 'plantations.detail.errors.notFound'
   | 'notifications.title'
   | 'notifications.empty'
+  | 'notifications.loading'
+  | 'notifications.noDescription'
+  | 'notifications.justNow'
+  | 'notifications.minutesAgo'
+  | 'notifications.hoursAgo'
+  | 'notifications.daysAgo'
+  | 'notifications.delete'
   | 'hero.heading'
   | 'features.automation.title'
   | 'features.automation.description'
@@ -170,6 +191,7 @@ export type TranslationKey =
   | 'graphs.dateFrom'
   | 'graphs.dateTo'
   | 'graphs.applyFilter'
+  | 'graphs.resetFilter'
   | 'graphs.chart.title'
   | 'graphs.loading'
   | 'graphs.empty'
@@ -195,9 +217,11 @@ export type TranslationKey =
   | 'monitoring.equipment.lighting'
   | 'monitoring.equipment.offline'
   | 'monitoring.equipment.noActuators'
+  | 'monitoring.equipment.updateError'
   | 'monitoring.mode.automatic'
   | 'monitoring.mode.manual'
   | 'monitoring.mode.automaticInfo'
+  | 'monitoring.mode.updateError'
   | 'monitoring.noSensors'
   | 'profile.back'
   | 'profile.pageLabel'
@@ -225,6 +249,24 @@ export type TranslationKey =
   | 'profile.phonePlaceholder'
   | 'profile.idLabel'
   | 'profile.idHint'
+  | 'profile.twoFactor.title'
+  | 'profile.twoFactor.description'
+  | 'profile.twoFactor.enabled'
+  | 'profile.twoFactor.disabled'
+  | 'profile.twoFactor.enableButton'
+  | 'profile.twoFactor.disableButton'
+  | 'profile.twoFactor.setupTitle'
+  | 'profile.twoFactor.setupDescription'
+  | 'profile.twoFactor.scanQRCode'
+  | 'profile.twoFactor.enterCode'
+  | 'profile.twoFactor.codeLabel'
+  | 'profile.twoFactor.codePlaceholder'
+  | 'profile.twoFactor.activateButton'
+  | 'profile.twoFactor.deactivateButton'
+  | 'profile.twoFactor.disableTitle'
+  | 'profile.twoFactor.disableDescription'
+  | 'profile.twoFactor.success'
+  | 'profile.twoFactor.error'
   | 'profile.errors.firstNameRequired'
   | 'profile.errors.lastNameRequired'
   | 'profile.errors.phoneRequired'
@@ -273,6 +315,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.passwordRequired': 'Le mot de passe est requis',
     'login.errors.passwordMinLength': 'Le mot de passe doit contenir au moins 6 caractères',
     'login.errors.loginFailed': 'Échec de la connexion. Vérifiez vos identifiants.',
+    'login.errors.twoFactorInvalid': 'Le code doit contenir exactement 6 chiffres',
+    'login.errors.twoFactorTokenMissing': 'Token de vérification manquant',
+    'login.errors.twoFactorFailed': 'Code 2FA invalide. Veuillez réessayer.',
+    'login.twoFactorTitle': 'Authentification à deux facteurs',
+    'login.twoFactorDescription': 'Entrez le code à 6 chiffres généré par votre application d\'authentification',
+    'login.twoFactorCodeLabel': 'Code de vérification',
+    'login.twoFactorCodePlaceholder': '000000',
+    'login.verifyButton': 'Vérifier',
+    'login.verifying': 'Vérification...',
+    'login.backToLogin': 'Retour à la connexion',
     'login.motivational.line1': 'Modernisez vos cultures, automatisez',
     'login.motivational.line2': 'vos tâches et améliorez vos récoltes',
     'login.motivational.line3': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
@@ -316,7 +368,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Échec de l\'inscription. Veuillez réessayer.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'Aucune notification',
-    'hero.heading': 'CamerFarm AI Connecte Les Producteurs À Leurs Terres Grâce À L\'IoT, Offrant Un Suivi Précis Des Cultures Et La Détection Rapide Des Maladies Grâce À L\'Intelligence Artificielle Pour Transformer Durablement L\'agriculture Camerounaise.',
+    'notifications.loading': 'Chargement...',
+    'notifications.noDescription': 'Notification',
+    'notifications.justNow': 'À l\'instant',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'j',
+    'notifications.delete': 'Supprimer',
+    'hero.heading': 'Tous ensemble pour une <span class="hero__highlight">agriculture intelligente</span>, <span class="hero__highlight">connectée</span> et <span class="hero__highlight">automatisée</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Gérez Votre Irrigation, Ventilation Et Eclairage Sans Effort. Notre Système Autonome, Alimenté Par Energie Solaire, Garantit Que Les Taches Essentielles S\'exécutent Meme En Cas De Coupure De Courant.',
     'features.ai.title': 'AI Intégré',
@@ -324,7 +383,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'features.realtime.title': 'Suivi En Temps Réel',
     'features.realtime.description': 'Visualisez Les Conditions Critiques De Votre Champ À Distance : Humidité Du Sol, Température, CO2 Et Niveau D\'eau. Recevez Des Alertes En Temps Réel Pour Anticiper Les Risques Climatiques Et Les Anomalies.',
     'benefits.yield.title': 'Augmenter le rendement des produits',
-    'benefits.energy.title': 'Réduire la consommation d\'énergie par acre',
+    'benefits.energy.title': 'Réduire la consommation d\'énergie',
     'benefits.water.title': 'Economiser la consommation d\'eau',
     'intelligent.title': 'Agriculture intelligente face au climat, basée sur les données',
     'intelligent.description': 'En utilisant les données en temps réel comme un coup de pouce supplémentaire, les agriculteurs et les horticulteurs fusionnent le monde physique avec les outils numériques pour lutter contre les problèmes quotidiens et améliorer leur productivité.',
@@ -366,6 +425,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'Du',
     'graphs.dateTo': 'Au',
     'graphs.applyFilter': 'Appliquer Filtre',
+    'graphs.resetFilter': 'Réinitialiser',
     'graphs.chart.title': 'Évolution',
     'graphs.loading': 'Chargement des données des capteurs...',
     'graphs.empty': 'Aucune donnée de capteur disponible pour cette période.',
@@ -391,15 +451,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Éclairage',
     'monitoring.equipment.offline': 'Hors ligne',
     'monitoring.equipment.noActuators': 'Aucun actionneur n\'est actuellement installé dans ce champ.',
+    'monitoring.equipment.updateError': 'Erreur lors de la mise à jour de l\'équipement. Veuillez réessayer.',
     'monitoring.mode.automatic': 'Automatique',
     'monitoring.mode.manual': 'Manuel',
     'monitoring.mode.automaticInfo': 'Mode automatique activé : Les équipements sont contrôlés automatiquement selon les données des capteurs.',
+    'monitoring.mode.updateError': 'Erreur lors de la mise à jour du mode. Veuillez réessayer.',
     'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
     'plantations.createModal.areaLabel': 'Superficie de plantation',
     'plantations.createModal.areaPlaceholder': 'Entrer la superficie de votre plantation',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Localisation',
     'plantations.createModal.locationPlaceholder': 'Entrer la zone de votre plantation',
     'plantations.createModal.next': 'Suivant',
@@ -467,6 +533,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.phonePlaceholder': 'Votre numéro de téléphone',
     'profile.idLabel': 'ID Utilisateur',
     'profile.idHint': 'Identifiant unique',
+    'profile.twoFactor.title': 'Authentification à deux facteurs',
+    'profile.twoFactor.description': 'Sécurisez votre compte avec un code de vérification supplémentaire',
+    'profile.twoFactor.enabled': 'Activé',
+    'profile.twoFactor.disabled': 'Désactivé',
+    'profile.twoFactor.enableButton': 'Activer le 2FA',
+    'profile.twoFactor.disableButton': 'Désactiver le 2FA',
+    'profile.twoFactor.setupTitle': 'Configuration du 2FA',
+    'profile.twoFactor.setupDescription': 'Scannez le QR code avec votre application d\'authentification (Google Authenticator, Authy, etc.)',
+    'profile.twoFactor.scanQRCode': 'Scannez ce QR code',
+    'profile.twoFactor.enterCode': 'Entrez le code de vérification',
+    'profile.twoFactor.codeLabel': 'Code de vérification',
+    'profile.twoFactor.codePlaceholder': '000000',
+    'profile.twoFactor.activateButton': 'Activer',
+    'profile.twoFactor.deactivateButton': 'Désactiver',
+    'profile.twoFactor.disableTitle': 'Désactiver le 2FA',
+    'profile.twoFactor.disableDescription': 'Entrez votre code 2FA pour confirmer la désactivation',
+    'profile.twoFactor.success': '2FA activé avec succès',
+    'profile.twoFactor.error': 'Erreur lors de l\'activation du 2FA',
     'profile.errors.firstNameRequired': 'Le prénom est requis',
     'profile.errors.lastNameRequired': 'Le nom est requis',
     'profile.errors.phoneRequired': 'Le numéro de téléphone est requis',
@@ -514,6 +598,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.passwordRequired': 'Password is required',
     'login.errors.passwordMinLength': 'Password must be at least 6 characters',
     'login.errors.loginFailed': 'Login failed. Please check your credentials.',
+    'login.errors.twoFactorInvalid': 'The code must contain exactly 6 digits',
+    'login.errors.twoFactorTokenMissing': 'Verification token missing',
+    'login.errors.twoFactorFailed': 'Invalid 2FA code. Please try again.',
+    'login.twoFactorTitle': 'Two-Factor Authentication',
+    'login.twoFactorDescription': 'Enter the 6-digit code generated by your authentication app',
+    'login.twoFactorCodeLabel': 'Verification code',
+    'login.twoFactorCodePlaceholder': '000000',
+    'login.verifyButton': 'Verify',
+    'login.verifying': 'Verifying...',
+    'login.backToLogin': 'Back to login',
     'login.motivational.line1': 'Modernize your crops, automate',
     'login.motivational.line2': 'your tasks and improve your harvests',
     'login.motivational.line3': 'Connected and automated agriculture is the future',
@@ -557,6 +651,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Sign up failed. Please try again.',
     'notifications.title': 'Notifications',
     'notifications.empty': 'No notifications',
+    'notifications.loading': 'Loading...',
+    'notifications.noDescription': 'Notification',
+    'notifications.justNow': 'Just now',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'd',
+    'notifications.delete': 'Delete',
     'hero.heading': 'CamerFarm AI Connects Producers To Their Land Through IoT, Offering Precise Crop Monitoring And Rapid Disease Detection Through Artificial Intelligence To Sustainably Transform Cameroonian Agriculture.',
     'features.automation.title': 'Automation',
     'features.automation.description': 'Manage Your Irrigation, Ventilation And Lighting Effortlessly. Our Autonomous System, Powered By Solar Energy, Ensures That Essential Tasks Are Executed Even In Case Of Power Outage.',
@@ -599,6 +700,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.namePlaceholder': 'Enter the name of your plantation',
     'plantations.createModal.areaLabel': 'Plantation area',
     'plantations.createModal.areaPlaceholder': 'Enter the area of your plantation',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Location',
     'plantations.createModal.locationPlaceholder': 'Enter the zone of your plantation',
     'plantations.createModal.next': 'Next',
@@ -653,6 +758,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'From',
     'graphs.dateTo': 'To',
     'graphs.applyFilter': 'Apply Filter',
+    'graphs.resetFilter': 'Reset',
     'graphs.chart.title': 'Evolution',
     'graphs.loading': 'Loading sensor data...',
     'graphs.empty': 'No sensor data available for this period.',
@@ -678,9 +784,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Lighting',
     'monitoring.equipment.offline': 'Offline',
     'monitoring.equipment.noActuators': 'No actuators are currently installed in this field.',
+    'monitoring.equipment.updateError': 'Error updating equipment. Please try again.',
     'monitoring.mode.automatic': 'Automatic',
     'monitoring.mode.manual': 'Manual',
     'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
+    'monitoring.mode.updateError': 'Error updating mode. Please try again.',
     'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
     'profile.back': 'Back',
     'profile.pageLabel': 'User profile',
@@ -708,6 +816,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.phonePlaceholder': 'Your phone number',
     'profile.idLabel': 'User ID',
     'profile.idHint': 'Unique identifier',
+    'profile.twoFactor.title': 'Two-Factor Authentication',
+    'profile.twoFactor.description': 'Secure your account with an additional verification code',
+    'profile.twoFactor.enabled': 'Enabled',
+    'profile.twoFactor.disabled': 'Disabled',
+    'profile.twoFactor.enableButton': 'Enable 2FA',
+    'profile.twoFactor.disableButton': 'Disable 2FA',
+    'profile.twoFactor.setupTitle': '2FA Setup',
+    'profile.twoFactor.setupDescription': 'Scan the QR code with your authentication app (Google Authenticator, Authy, etc.)',
+    'profile.twoFactor.scanQRCode': 'Scan this QR code',
+    'profile.twoFactor.enterCode': 'Enter verification code',
+    'profile.twoFactor.codeLabel': 'Verification code',
+    'profile.twoFactor.codePlaceholder': '000000',
+    'profile.twoFactor.activateButton': 'Activate',
+    'profile.twoFactor.deactivateButton': 'Disable',
+    'profile.twoFactor.disableTitle': 'Disable 2FA',
+    'profile.twoFactor.disableDescription': 'Enter your 2FA code to confirm deactivation',
+    'profile.twoFactor.success': '2FA enabled successfully',
+    'profile.twoFactor.error': 'Error enabling 2FA',
     'profile.errors.firstNameRequired': 'First name is required',
     'profile.errors.lastNameRequired': 'Last name is required',
     'profile.errors.phoneRequired': 'Phone number is required',
@@ -755,6 +881,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.passwordRequired': 'Finnde ina tawaa',
     'login.errors.passwordMinLength': 'Finnde ina tawaa koɗɗe 6 ɓuri',
     'login.errors.loginFailed': 'Seŋo Ɓaawtaani. Ɗaɓɓu keɓe maɓɓe.',
+    'login.errors.twoFactorInvalid': 'Koode ina tawaa limoore 6 goonga',
+    'login.errors.twoFactorTokenMissing': 'Token jokkondirɗe ina ɓadii',
+    'login.errors.twoFactorFailed': 'Koode 2FA fotaani. Ɗaɓɓu ekkit.',
+    'login.twoFactorTitle': 'Jokkondirgol ɗiɗɓe',
+    'login.twoFactorDescription': 'Naatu koode limoore 6 ɗe jokkondirɗe app maa',
+    'login.twoFactorCodeLabel': 'Koode jokkondirgol',
+    'login.twoFactorCodePlaceholder': '000000',
+    'login.verifyButton': 'Jokkondir',
+    'login.verifying': 'Jokkondirgol...',
+    'login.backToLogin': 'Rutto seŋo',
     'login.motivational.line1': 'Ɓeyduɗe nguurndam maɓɓe, wattinde',
     'login.motivational.line2': 'koɗɗe maɓɓe e ɓeyduɗe alaaɗe maɓɓe',
     'login.motivational.line3': 'Ngaynaaɗe jokkondirɗam e wattinɗam ko koɗɗe jamaa',
@@ -798,6 +934,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.signupFailed': 'Winndito Ɓaawtaani. Ɗaɓɓu yeewto.',
     'notifications.title': 'Tindinɗe',
     'notifications.empty': 'Alaa tindinɗe',
+    'notifications.loading': 'Nawtude...',
+    'notifications.noDescription': 'Tindinɗe',
+    'notifications.justNow': 'Haŋki',
+    'notifications.minutesAgo': 'min',
+    'notifications.hoursAgo': 'h',
+    'notifications.daysAgo': 'ñal',
+    'notifications.delete': 'Momtu',
     'hero.heading': 'CamerFarm AI Haɓɓanaa Ngaynaaɓe e Leyɗe Maɓɓe Ngam IoT, Hokki Jokkondiral Goonga e Yiytude Baawɗe Caggal ɓaawo Ngam Aamde Ngaari Ngam Waylude Ngaynaaɗe Kameruun.',
     'features.automation.title': 'Wattinde',
     'features.automation.description': 'Toppu Irrigasion, Ventilation e Ndaariɗe Hakkunde. Siistem Amen Eɗen, Jokkondirɗam e Njeewi Njeewi, Feddanaa Ko Tawaa Koɗɗe Mawɗe Waɗataa Hatta Si Njeewi Njeewi Ɓaawtaa.',
@@ -840,6 +983,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.namePlaceholder': 'Naatu innde nguurndam maa',
     'plantations.createModal.areaLabel': 'Leyɗe nguurndam',
     'plantations.createModal.areaPlaceholder': 'Naatu leyɗe nguurndam maa',
+    'plantations.createModal.areaUnit.m2': 'm²',
+    'plantations.createModal.areaUnit.ha': 'ha',
+    'plantations.createModal.areaUnit.acre': 'acre',
+    'plantations.createModal.areaUnit.km2': 'km²',
     'plantations.createModal.locationLabel': 'Nokkuure',
     'plantations.createModal.locationPlaceholder': 'Naatu nokkuure nguurndam maa',
     'plantations.createModal.next': 'Jokku',
@@ -894,6 +1041,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateFrom': 'Fuɗɗo',
     'graphs.dateTo': 'Gila',
     'graphs.applyFilter': 'Naatu ɓaŋnguɗe',
+    'graphs.resetFilter': 'Fuɗɗitin',
     'graphs.chart.title': 'Ɓeydugol',
     'graphs.loading': 'Jokkondir keɓe jokkondirɗe...',
     'graphs.empty': 'Alaa keɓe jokkondirɗe njiyataa ngam nokkuure ngal.',
@@ -919,9 +1067,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.equipment.lighting': 'Ndaariɗe',
     'monitoring.equipment.offline': 'Alaa jokkondirɗo',
     'monitoring.equipment.noActuators': 'Alaa toppuɗe nattaaɗe e nguurndam ngal jooni.',
+    'monitoring.equipment.updateError': 'Firde e huutoreede toppu. Tiiɗno yeewto.',
     'monitoring.mode.automatic': 'Wattinɗam',
     'monitoring.mode.manual': 'Jokkondirɗam',
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
+    'monitoring.mode.updateError': 'Firde e huutoreede wattinɗam. Tiiɗno yeewto.',
     'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'profile.back': 'Rutto',
     'profile.pageLabel': 'Jokkondiral kuutoro',
@@ -949,6 +1099,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.phonePlaceholder': 'Nder tel maa',
     'profile.idLabel': 'ID Kuutoro',
     'profile.idHint': 'Yiytude goonga',
+    'profile.twoFactor.title': 'Jokkondirgol ɗiɗɓe',
+    'profile.twoFactor.description': 'Wonndu konte maa e koode jokkondirgol ɓeyngol',
+    'profile.twoFactor.enabled': 'Waɗɗaama',
+    'profile.twoFactor.disabled': 'Ɓaawtaama',
+    'profile.twoFactor.enableButton': 'Waɗɗu 2FA',
+    'profile.twoFactor.disableButton': 'Ɓaawtu 2FA',
+    'profile.twoFactor.setupTitle': 'Waɗɗugol 2FA',
+    'profile.twoFactor.setupDescription': 'Naatu QR code e app jokkondirgol maa (Google Authenticator, Authy, etc.)',
+    'profile.twoFactor.scanQRCode': 'Naatu QR code ngol',
+    'profile.twoFactor.enterCode': 'Naatu koode jokkondirgol',
+    'profile.twoFactor.codeLabel': 'Koode jokkondirgol',
+    'profile.twoFactor.codePlaceholder': '000000',
+    'profile.twoFactor.activateButton': 'Waɗɗu',
+    'profile.twoFactor.deactivateButton': 'Ɓaawtu',
+    'profile.twoFactor.disableTitle': 'Ɓaawtu 2FA',
+    'profile.twoFactor.disableDescription': 'Naatu koode 2FA maa ngam jokkondirgol ɓaawtagol',
+    'profile.twoFactor.success': '2FA waɗɗaama e moƴƴere',
+    'profile.twoFactor.error': 'Koɗɗe ngam waɗɗugol 2FA',
     'profile.errors.firstNameRequired': 'Innde fuɗɗo ina tawaa',
     'profile.errors.lastNameRequired': 'Innde ina tawaa',
     'profile.errors.phoneRequired': 'Nder tel ina tawaa',

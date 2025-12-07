@@ -49,7 +49,7 @@ export function HeroBlock({
       </div>
       <div className={styles.hero__overlay} />
       <div className={styles.hero__content}>
-        <h1 className={styles.hero__heading}>{heading}</h1>
+        <h1 className={styles.hero__heading} dangerouslySetInnerHTML={{ __html: heading }} />
       </div>
       {images.length > 1 && (
         <div className={styles.hero__indicators}>
