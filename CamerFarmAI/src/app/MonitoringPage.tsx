@@ -8,6 +8,7 @@ import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading, type SensorType } from '@/services/plantationService';
+import { useNotificationContext } from '@/contexts/NotificationContext';
 import {
   FaTint,
   FaSun,
@@ -812,6 +813,7 @@ export function MonitoringPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const plantationId = searchParams.get('plantationId');
+  const { refresh: refreshNotifications } = useNotificationContext();
   const [sensorData, setSensorData] = useState<SensorData>({
     temperature: 25.1,
     soilHumidity: 58,
@@ -876,6 +878,7 @@ export function MonitoringPage() {
   });
     }
   }, [actuators]);
+  // Initialiser le mode depuis la plantation si disponible, sinon par défaut automatique
   const [isAutomaticMode, setIsAutomaticMode] = useState(true);
   const [updatedAt, setUpdatedAt] = useState('17:19:04');
   const { ref: sensorsRef, isVisible: isSensorsVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -898,6 +901,11 @@ export function MonitoringPage() {
       try {
         const plantationData = await plantationService.getById(plantationId);
         setPlantation(plantationData);
+        
+        // Initialiser le mode depuis la plantation si disponible
+        if (plantationData.mode) {
+          setIsAutomaticMode(plantationData.mode === 'automatic');
+        }
         
         // Charger les actionneurs
         console.log('🔧 Données plantation reçues:', {
@@ -1122,11 +1130,142 @@ export function MonitoringPage() {
     return () => clearInterval(interval);
   }, [plantationId, plantation?.hasSensors, availableSensors]);
 
-  const handleEquipmentToggle = (equipment: keyof EquipmentState) => {
-    setEquipmentState((prev) => ({
-      ...prev,
-      [equipment]: !prev[equipment],
-    }));
+  const handleEquipmentToggle = async (equipment: keyof EquipmentState) => {
+    if (!plantationId) {
+      console.error('❌ Impossible de mettre à jour l\'actionneur: plantationId manquant');
+      return;
+    }
+
+    // Trouver l'actionneur correspondant à l'équipement
+    let actuator: Actuator | undefined;
+    const type = equipment === 'irrigationPump' ? 'pump' : equipment === 'fans' ? 'fan' : 'light';
+    
+    actuator = actuators.find(a => {
+      const actuatorType = (a.type || '').toLowerCase();
+      const actuatorName = (a.name || '').toLowerCase();
+      
+      if (equipment === 'irrigationPump') {
+        return actuatorType === 'pump' || 
+               actuatorType.includes('pump') || 
+               actuatorType.includes('irrigation') || 
+               actuatorName.includes('pompe') ||
+               actuatorName.includes('irrigation');
+      } else if (equipment === 'fans') {
+        return actuatorType === 'fan' || 
+               actuatorType.includes('fan') || 
+               actuatorName.includes('ventilat');
+      } else if (equipment === 'lighting') {
+        return actuatorType === 'light' || 
+               actuatorType.includes('light') || 
+               actuatorName.includes('lumiere') ||
+               actuatorName.includes('eclairage');
+      }
+      return false;
+    });
+
+    if (!actuator) {
+      console.error(`❌ Actionneur non trouvé pour l'équipement: ${equipment}`);
+      return;
+    }
+
+    // Déterminer le nouveau statut (inverse du statut actuel)
+    const currentStatus = actuator.status === 'active' || actuator.isOn === true;
+    const newStatus: 'active' | 'inactive' = currentStatus ? 'inactive' : 'active';
+
+    try {
+      // Mettre à jour l'état local immédiatement pour un feedback visuel rapide
+      setEquipmentState((prev) => ({
+        ...prev,
+        [equipment]: !prev[equipment],
+      }));
+
+      // Appeler l'API pour mettre à jour l'actionneur dans le backend
+      // Cela déclenchera la création d'un événement et l'envoi de notifications
+      const updatedActuator = await plantationService.updateActuator(
+        plantationId,
+        actuator.id,
+        newStatus
+      );
+
+      // Mettre à jour la liste des actionneurs avec la réponse du backend
+      setActuators((prev) =>
+        prev.map((a) => (a.id === actuator!.id ? updatedActuator : a))
+      );
+
+      console.log(`✅ Actionneur ${actuator.name} mis à jour: ${newStatus}`);
+      
+      // Rafraîchir les notifications pour afficher la nouvelle notification générée
+      // Attendre un peu pour laisser le temps au backend de créer l'événement et les notifications
+      setTimeout(async () => {
+        try {
+          await refreshNotifications();
+        } catch (refreshError) {
+          // Ne pas bloquer l'utilisateur si le rafraîchissement échoue
+          if (import.meta.env.DEV) {
+            console.warn('⚠️ Erreur lors du rafraîchissement des notifications:', refreshError);
+          }
+        }
+      }, 1000); // Attendre 1 seconde pour laisser le temps au backend
+    } catch (error) {
+      console.error(`❌ Erreur lors de la mise à jour de l'actionneur ${actuator.name}:`, error);
+      
+      // Revenir à l'état précédent en cas d'erreur
+      setEquipmentState((prev) => ({
+        ...prev,
+        [equipment]: !prev[equipment],
+      }));
+
+      // Optionnel: afficher un message d'erreur à l'utilisateur
+      alert(t('monitoring.equipment.updateError') || `Erreur lors de la mise à jour de ${equipment}`);
+    }
+  };
+
+  const handleModeChange = async (newMode: boolean) => {
+    if (!plantationId) {
+      console.error('❌ Impossible de mettre à jour le mode: plantationId manquant');
+      return;
+    }
+
+    // Le backend attend 'automatic' ou 'manual' (minuscules) comme stockées en base de données
+    const mode: 'automatic' | 'manual' = newMode ? 'automatic' : 'manual';
+    const previousMode = isAutomaticMode;
+
+    try {
+      // Mettre à jour l'état local immédiatement pour un feedback visuel rapide
+      setIsAutomaticMode(newMode);
+
+      // Appeler l'API pour mettre à jour le mode dans le backend
+      // Cela déclenchera la création d'un événement et l'envoi de notifications
+      const updatedPlantation = await plantationService.updateControlMode(plantationId, mode);
+
+      console.log(`✅ Mode de contrôle mis à jour: ${mode}`);
+      
+      // Mettre à jour l'état local avec la plantation mise à jour
+      if (updatedPlantation.mode) {
+        setIsAutomaticMode(updatedPlantation.mode === 'automatic');
+      }
+      
+      // Rafraîchir les notifications pour afficher la nouvelle notification générée
+      // Attendre un peu pour laisser le temps au backend de créer l'événement et les notifications
+      setTimeout(async () => {
+        try {
+          await refreshNotifications();
+        } catch (refreshError) {
+          // Ne pas bloquer l'utilisateur si le rafraîchissement échoue
+          if (import.meta.env.DEV) {
+            console.warn('⚠️ Erreur lors du rafraîchissement des notifications:', refreshError);
+          }
+        }
+      }, 1000); // Attendre 1 seconde pour laisser le temps au backend
+    } catch (error) {
+      console.error(`❌ Erreur lors de la mise à jour du mode de contrôle:`, error);
+      
+      // Revenir à l'état précédent en cas d'erreur
+      setIsAutomaticMode(previousMode);
+
+      // Afficher un message d'erreur à l'utilisateur
+      alert(t('monitoring.mode.updateError') || `Erreur lors de la mise à jour du mode. Veuillez réessayer.`);
+    }
   };
 
   return (
@@ -1225,7 +1364,7 @@ export function MonitoringPage() {
                   className={`${styles.monitoringPage__modeButton} ${
                     isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
                   }`}
-                  onClick={() => setIsAutomaticMode(true)}
+                  onClick={() => handleModeChange(true)}
                 >
                   <Icon icon={FaRobot} size={18} />
                   <span>{t('monitoring.mode.automatic')}</span>
@@ -1234,7 +1373,7 @@ export function MonitoringPage() {
                   className={`${styles.monitoringPage__modeButton} ${
                     !isAutomaticMode ? styles.monitoringPage__modeButtonActive : ''
                   }`}
-                  onClick={() => setIsAutomaticMode(false)}
+                  onClick={() => handleModeChange(false)}
                 >
                   <Icon icon={FaHandPointer} size={18} />
                   <span>{t('monitoring.mode.manual')}</span>

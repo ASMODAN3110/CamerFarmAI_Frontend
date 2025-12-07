@@ -59,22 +59,26 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--border-radius-full);
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--color-white);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .loginPage__backButton:hover {
-  background-color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.2);
   transform: translateX(-5px);
   box-shadow: var(--shadow-lg);
-  color: var(--color-primary);
+  color: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .loginPage__backIcon {
@@ -129,12 +133,27 @@
   transform: translateY(0);
 }
 
+.loginPage__rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3xl);
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.loginPage__rightSectionVisible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .loginPage__logoSection {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
   animation: logoSectionFadeIn 0.8s ease-out 0.2s both;
 }
 
@@ -306,8 +325,10 @@
 .loginPage__form {
   width: 100%;
   max-width: 450px;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-blue-light);
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-3xl);
   box-shadow: var(--shadow-lg);
@@ -321,6 +342,11 @@
 .loginPage__form:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.loginPage__form label {
+  color: var(--color-white) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes formSlideIn {
@@ -337,7 +363,8 @@
 .loginPage__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 0 0 var(--spacing-lg) 0;
   text-transform: uppercase;
@@ -424,7 +451,8 @@
 
 .loginPage__signupText {
   font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0;
   text-align: center;
 }
@@ -437,16 +465,8 @@
   color: var(--color-white);
   font-size: var(--font-size-lg);
   line-height: var(--line-height-relaxed);
-  text-align: right;
-  opacity: 0;
-  transform: translateX(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  text-align: center;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.loginPage__motivationalTextVisible {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 .loginPage__motivationalLine {
@@ -489,8 +509,7 @@
     gap: var(--spacing-2xl);
   }
 
-  .loginPage__motivationalText {
-    text-align: center;
+  .loginPage__rightSection {
     order: -1;
   }
 }

@@ -22,6 +22,27 @@
   border-color: var(--color-primary);
 }
 
+.languageSwitcher__buttonLight {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--color-white) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.languageSwitcher__buttonLight:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--color-white) !important;
+}
+
+.languageSwitcher__buttonLight .languageSwitcher__icon,
+.languageSwitcher__buttonLight .languageSwitcher__chevron,
+.languageSwitcher__buttonLight .languageSwitcher__current {
+  color: var(--color-white) !important;
+}
+
 .languageSwitcher__icon {
   font-size: 16px;
   color: var(--color-primary);

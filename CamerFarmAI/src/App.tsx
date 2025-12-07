@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './services/authProvider';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
@@ -13,7 +14,8 @@ import { ProfilePage } from './app/ProfilePage';
 function App() {
   return (
     <AuthProvider>
-    <BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -60,7 +62,8 @@ function App() {
           />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+        </BrowserRouter>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNotificationContext } from '@/contexts/NotificationContext';
+import { plantationService } from '@/services/plantationService';
+import type { Notification as AppNotification } from '@/services/notificationService';
 import logoIcon from '@/assets/logo.png';
 import styles from './Header.module.css';
 
@@ -14,12 +17,6 @@ interface NavItem {
   label: string;
   href: string;
   active?: boolean;
-}
-
-interface Notification {
-  id: number;
-  message: string;
-  time: string;
 }
 
 interface HeaderProps {
@@ -57,6 +54,14 @@ export function Header({
   const logout = useAuthStore((s) => s.logout);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  
+  // Utiliser le contexte de notifications
+  const {
+    notifications,
+    isLoading: isLoadingNotifications,
+    markAsRead,
+    deleteNotification,
+  } = useNotificationContext();
 
   // Détection mobile
   useEffect(() => {
@@ -66,8 +71,182 @@ export function Header({
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // Notifications d'exemple (à remplacer par de vraies données)
-  const notifications: Notification[] = [];
+  // Fonction pour formater la date relative
+  const formatRelativeTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) {
+      return t('notifications.justNow') || 'À l\'instant';
+    } else if (diffMins < 60) {
+      return `${diffMins} ${t('notifications.minutesAgo') || 'min'}`;
+    } else if (diffHours < 24) {
+      return `${diffHours} ${t('notifications.hoursAgo') || 'h'}`;
+    } else if (diffDays < 7) {
+      return `${diffDays} ${t('notifications.daysAgo') || 'j'}`;
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
+
+  // Supprimer une notification
+  const handleDelete = async (notificationId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Empêcher le clic de déclencher handleMarkAsRead
+    e.preventDefault(); // Empêcher tout comportement par défaut
+    
+    try {
+      if (import.meta.env.DEV) {
+        console.log('🖱️ Clic sur bouton de suppression pour notification:', notificationId);
+      }
+      
+      await deleteNotification(notificationId);
+      
+      if (import.meta.env.DEV) {
+        console.log('✅ Notification supprimée avec succès');
+      }
+    } catch (error) {
+      // Gestion d'erreur silencieuse en production, log en développement
+      if (import.meta.env.DEV) {
+        console.error('❌ Erreur lors de la suppression de la notification:', {
+          id: notificationId,
+          error,
+          message: error instanceof Error ? error.message : 'Erreur inconnue'
+        });
+      }
+      // L'erreur est déjà gérée dans le hook useNotifications qui recharge les notifications
+      // On ne fait rien de plus ici pour éviter de perturber l'UX
+    }
+  };
+
+  // Marquer une notification comme lue
+  const handleMarkAsRead = async (notificationId: string) => {
+    await markAsRead(notificationId);
+  };
+
+  // Cache pour les noms de plantations (évite les appels API répétés)
+  const [plantationNamesCache, setPlantationNamesCache] = useState<Map<string, string>>(new Map());
+
+  // Fonction pour récupérer le nom d'une plantation
+  const getPlantationName = async (plantationId: string): Promise<string> => {
+    // Vérifier le cache d'abord
+    if (plantationNamesCache.has(plantationId)) {
+      return plantationNamesCache.get(plantationId)!;
+    }
+
+    try {
+      const plantation = await plantationService.getById(plantationId);
+      const name = plantation.name || 'la plantation';
+      // Mettre en cache
+      setPlantationNamesCache(prev => new Map(prev).set(plantationId, name));
+      return name;
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.warn(`⚠️ Impossible de récupérer le nom de la plantation ${plantationId}:`, error);
+      }
+      return 'la plantation';
+    }
+  };
+
+  // Enrichir les notifications avec les noms de plantations
+  const [enrichedNotifications, setEnrichedNotifications] = useState<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    const enrichNotifications = async () => {
+      const newEnriched = new Map<string, string>();
+      
+      for (const notif of notifications) {
+        if (notif.event?.description) {
+          // Vérifier si la description contient "undefined" ou "la plantation"
+          const needsEnrichment = notif.event.description.includes('undefined') || 
+                                  notif.event.description.includes('"la plantation"');
+          
+          if (needsEnrichment) {
+            // Essayer de trouver le plantationId depuis l'événement
+            // 1. D'abord chercher directement dans l'événement (pour mode_changed)
+            // 2. Ensuite dans actuator.plantationId
+            // 3. Ensuite dans sensor.plantationId
+            let plantationId = (notif.event as any).plantationId || 
+                              notif.event.actuator?.plantationId || 
+                              notif.event.sensor?.plantationId;
+
+            if (import.meta.env.DEV) {
+              console.log('🔍 Recherche plantationId pour notification:', {
+                notificationId: notif.id,
+                eventType: notif.event.type,
+                plantationIdFound: plantationId,
+                event: notif.event
+              });
+            }
+
+            if (plantationId) {
+              try {
+                const plantationName = await getPlantationName(plantationId);
+                // Remplacer à la fois "undefined" et "la plantation"
+                let enhanced = notif.event.description.replace(/undefined/g, plantationName);
+                enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
+                newEnriched.set(notif.id, enhanced);
+              } catch (error) {
+                if (import.meta.env.DEV) {
+                  console.warn('⚠️ Erreur lors de la récupération du nom de plantation:', error);
+                }
+                // En cas d'erreur, garder la description originale
+                newEnriched.set(notif.id, notif.event.description);
+              }
+            } else {
+              // Si pas de plantationId trouvé, essayer de récupérer toutes les plantations
+              // et trouver celle qui correspond (pour mode_changed)
+              if (notif.event.type === 'mode_changed') {
+                try {
+                  const plantations = await plantationService.getAll();
+                  // Pour mode_changed, on prend la première plantation (ou on pourrait améliorer la logique)
+                  if (plantations.length > 0) {
+                    const plantationName = plantations[0].name;
+                    let enhanced = notif.event.description.replace(/undefined/g, plantationName);
+                    enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
+                    newEnriched.set(notif.id, enhanced);
+                  } else {
+                    newEnriched.set(notif.id, notif.event.description);
+                  }
+                } catch (error) {
+                  if (import.meta.env.DEV) {
+                    console.warn('⚠️ Erreur lors de la récupération des plantations:', error);
+                  }
+                  newEnriched.set(notif.id, notif.event.description);
+                }
+              } else {
+                // Pour les autres types d'événements, garder la description originale
+                newEnriched.set(notif.id, notif.event.description);
+              }
+            }
+          } else {
+            // Description normale, pas besoin d'enrichissement
+            newEnriched.set(notif.id, notif.event.description);
+          }
+        }
+      }
+      
+      setEnrichedNotifications(newEnriched);
+    };
+
+    if (notifications.length > 0) {
+      enrichNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notifications]);
+
+  // Fonction pour obtenir la description enrichie d'une notification
+  const getNotificationDescription = (notif: AppNotification): string => {
+    const enriched = enrichedNotifications.get(notif.id);
+    if (enriched) {
+      return enriched;
+    }
+    // Fallback vers la description originale ou un texte par défaut
+    return notif.event?.description || t('notifications.noDescription') || 'Notification';
+  };
 
   // Créer les items de navigation avec traductions
   let navItemsWithActive: NavItem[];
@@ -97,6 +276,11 @@ export function Header({
     setMobileMenuOpen(false);
     navigate('/');
   };
+
+  // Calculer le nombre de notifications web non lues
+  // Note: notifications contient déjà uniquement les notifications web (filtrées par getAllWeb dans useNotifications)
+  // On compte celles où isRead === false
+  const unreadWebCount = notifications.filter(notif => !notif.isRead).length;
 
   return (
     <header className={styles.header} role="banner">
@@ -134,8 +318,10 @@ export function Header({
                     aria-label="Notifications"
                   >
                     <Icon icon={FaBell} size={22} />
-                    {notifications.length > 0 && (
-                      <span className={styles.header__notificationBadge} />
+                    {unreadWebCount > 0 && (
+                      <span className={styles.header__notificationBadge}>
+                        {unreadWebCount > 99 ? '99+' : unreadWebCount}
+                      </span>
                     )}
                   </button>
                   <Dropdown
@@ -155,11 +341,37 @@ export function Header({
                         </button>
                       </div>
                       <div className={styles.header__notificationsList}>
-                        {notifications.length > 0 ? (
+                        {isLoadingNotifications ? (
+                          <div className={styles.header__notificationEmpty}>
+                            {t('notifications.loading') || 'Chargement...'}
+                          </div>
+                        ) : notifications.length > 0 ? (
                           notifications.map((notif) => (
-                            <div key={notif.id} className={styles.header__notificationItem}>
-                              <div className={styles.header__notificationMessage}>{notif.message}</div>
-                              <div className={styles.header__notificationTime}>{notif.time}</div>
+                            <div 
+                              key={notif.id} 
+                              className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
+                              onClick={() => {
+                                if (!notif.isRead) {
+                                  handleMarkAsRead(notif.id);
+                                }
+                              }}
+                            >
+                              <div className={styles.header__notificationContent}>
+                                <div className={styles.header__notificationMessage}>
+                                  {getNotificationDescription(notif)}
+                                </div>
+                                <div className={styles.header__notificationTime}>
+                                  {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
+                                </div>
+                              </div>
+                              <button
+                                className={styles.header__notificationDelete}
+                                onClick={(e) => handleDelete(notif.id, e)}
+                                aria-label={t('notifications.delete') || 'Supprimer la notification'}
+                                title={t('notifications.delete') || 'Supprimer'}
+                              >
+                                <Icon icon={FaTrash} size={14} />
+                              </button>
                             </div>
                           ))
                         ) : (
@@ -263,8 +475,10 @@ export function Header({
                 aria-label="Notifications"
               >
                 <Icon icon={FaBell} size={24} />
-                {notifications.length > 0 && (
-                  <span className={styles.header__notificationBadge} />
+                {unreadWebCount > 0 && (
+                  <span className={styles.header__notificationBadge}>
+                    {unreadWebCount > 99 ? '99+' : unreadWebCount}
+                  </span>
                 )}
               </button>
               <button
