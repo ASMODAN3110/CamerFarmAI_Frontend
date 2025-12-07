@@ -1,99 +1,103 @@
-
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Globe, Bell, LogOut } from "lucide-react";
-import styles from "./ChatboxPage.module.css";
+import { useState, useMemo } from 'react';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
+import { Button } from '@/components/ui/Button/Button';
+import { useTranslation } from '@/hooks/useTranslation';
+import { FaRobot, FaPaperPlane } from 'react-icons/fa';
+import styles from './ChatboxPage.module.css';
 
 export function ChatboxPage() {
-  const [langue, setLangue] = useState<"FR" | "EN" | "Fulfulde">("FR");
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const { t, language } = useTranslation();
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleQuestionSubmit = () => {
-    if (!question.trim()) return;
-    setAnswer(`(${langue}) Réponse IA simulée pour : "${question}"`);
-    setQuestion("");
+  const handleQuestionSubmit = async () => {
+    if (!question.trim() || isLoading) return;
+    
+    setIsLoading(true);
+    // Simuler une réponse IA (à remplacer par un appel API réel)
+    setTimeout(() => {
+      setAnswer(`(${language.toUpperCase()}) Réponse IA simulée pour : "${question}"`);
+      setQuestion('');
+      setIsLoading(false);
+    }, 1000);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleQuestionSubmit();
+    }
+  };
+
+  const navItems = useMemo(
+    () => [
+      { label: t('nav.home'), href: '/' },
+      { label: t('nav.plantations'), href: '/plantations' },
+      { label: t('nav.ai'), href: '/ai' },
+      { label: t('nav.support'), href: '/support' },
+    ],
+    [t]
+  );
+
   return (
-    <div className={styles.chatboxPage}>
-      {/* HEADER */}
-      <header className={styles.header}>
-        <div className={styles.headerContainer}>
-          <div className={styles.logo}>
-            <img src="/logo.png" alt="CamerFarm AI" className={styles.logoImg} />
-            <h1 className={styles.logoText}>CamerFarm AI</h1>
+    <>
+      <Background3D />
+      <Header navItems={navItems} currentPath="/ai" showAuthIcons />
+      <main className={styles.chatboxPage}>
+        <div className={styles.container}>
+          <div className={styles.headerSection}>
+            <div className={styles.iconWrapper}>
+              <FaRobot className={styles.aiIcon} />
+            </div>
+            <h1 className={styles.title}>Assistance Intelligente (IA)</h1>
+            <p className={styles.description}>
+              Posez vos questions sur l'agriculture, les plantations, les capteurs et obtenez des réponses intelligentes.
+            </p>
           </div>
 
-          {/* Navigation */}
-          <nav className={styles.nav}>
-            <Link to="/" className={styles.navLink}>Accueil</Link>
-            <Link to="/plantation" className={styles.navLink}>Plantation</Link>
-            <Link to="/ia" className={styles.navLinkActive}>IA</Link>
-            <Link to="/support" className={styles.navLink}>Support</Link>
-          </nav>
+          <section className={styles.chatSection}>
+            <div className={styles.chatContainer}>
+              {answer && (
+                <div className={styles.answerContainer}>
+                  <div className={styles.answerBubble}>
+                    <FaRobot className={styles.answerIcon} />
+                    <div className={styles.answerContent}>
+                      <p className={styles.answerText}>{answer}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-          {/* Actions */}
-          <div className={styles.actions}>
-            <button
-              onClick={() => {
-                // ➤ Cycle entre FR → EN → Fulfulde → FR
-                const nextLang =
-                  langue === "FR" ? "EN" :
-                  langue === "EN" ? "Fulfulde" :
-                  "FR";
-                setLangue(nextLang);
-              }}
-              className={styles.langButton}
-            >
-              <Globe className={styles.icon} />
-              {langue === "FR"
-                ? "🇫🇷 FR"
-                : langue === "EN"
-                ? "🇬🇧 EN"
-                : "🇨🇲 Fulfulde"}
-            </button>
-
-            <button className={styles.notificationButton}>
-              <Bell className={styles.icon} />
-              <span className={styles.notificationCount}>2</span>
-            </button>
-
-            <button className={styles.logoutButton}>
-              <LogOut className={styles.icon} />
-              Déconnexion
-            </button>
-          </div>
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  placeholder="Posez votre question sur l'agriculture..."
+                  className={styles.chatInput}
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isLoading}
+                />
+                <Button
+                  onClick={handleQuestionSubmit}
+                  disabled={!question.trim() || isLoading}
+                  className={styles.sendButton}
+                  variant="primary"
+                >
+                  <FaPaperPlane className={styles.sendIcon} />
+                  {isLoading ? 'Envoi...' : 'Envoyer'}
+                </Button>
+              </div>
+            </div>
+          </section>
         </div>
-      </header>
-
-      {/* CONTENU PRINCIPAL */}
-      <main className={styles.main}>
-        <h2 className={styles.title}>Assistance Intelligente (IA)</h2>
-
-        <section className={styles.chatSection}>
-          <h3 className={styles.subtitle}>Chat avec l’IA</h3>
-          <div className={styles.chatInputContainer}>
-            <input
-              type="text"
-              placeholder="Posez votre question..."
-              className={styles.chatInput}
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-            <button onClick={handleQuestionSubmit} className={styles.chatButton}>
-              Envoyer
-            </button>
-          </div>
-          {answer && <p className={styles.chatAnswer}>{answer}</p>}
-        </section>
       </main>
-
-      {/* FOOTER */}
-      <footer className={styles.footer}>
-        <p>CamerFarm — Propulsé par l’intelligence agricole</p>
-      </footer>
-    </div>
+      <Footer />
+      <FloatingButton href="/support" position="bottom-right" aria-label={t('floatingButton.ariaLabel')} />
+    </>
   );
 }

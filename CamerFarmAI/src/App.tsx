@@ -74,7 +74,7 @@ function App() {
               } 
             />
             <Route 
-              path="/ia" 
+              path="/ai" 
               element={
                 <ProtectedRoute>
                   <ChatboxPage />
