@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash, FaEnvelope } from 'react-icons/fa';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotificationContext } from '@/contexts/NotificationContext';
@@ -58,6 +58,7 @@ export function Header({
   // Utiliser le contexte de notifications
   const {
     notifications,
+    stats,
     isLoading: isLoadingNotifications,
     markAsRead,
     deleteNotification,
@@ -154,78 +155,95 @@ export function Header({
   // Enrichir les notifications avec les noms de plantations
   const [enrichedNotifications, setEnrichedNotifications] = useState<Map<string, string>>(new Map());
 
+  // Cache pour toutes les plantations (évite les appels répétés)
+  const [allPlantationsCache, setAllPlantationsCache] = useState<Map<string, string>>(new Map());
+  const [allPlantationsLoaded, setAllPlantationsLoaded] = useState(false);
+
   useEffect(() => {
     const enrichNotifications = async () => {
       const newEnriched = new Map<string, string>();
       
+      // Identifier les notifications qui ont besoin d'enrichissement
+      const notificationsToEnrich = notifications.filter(notif => 
+        notif.event?.description && 
+        (notif.event.description.includes('undefined') || 
+         notif.event.description.includes('"la plantation"'))
+      );
+
+      if (notificationsToEnrich.length === 0) {
+        // Aucune notification à enrichir, utiliser les descriptions originales
+        notifications.forEach(notif => {
+          newEnriched.set(notif.id, notif.event?.description || '');
+        });
+        setEnrichedNotifications(newEnriched);
+        return;
+      }
+
+      // Charger toutes les plantations une seule fois si nécessaire
+      if (!allPlantationsLoaded && notificationsToEnrich.some(n => 
+        n.event &&
+        !n.event.actuator?.plantationId && 
+        !n.event.sensor?.plantationId && 
+        !(n.event as any).plantationId
+      )) {
+        try {
+          const plantations = await plantationService.getAll();
+          const newCache = new Map<string, string>();
+          plantations.forEach(p => {
+            newCache.set(p.id, p.name);
+            // Mettre aussi dans le cache des noms
+            setPlantationNamesCache(prev => new Map(prev).set(p.id, p.name));
+          });
+          setAllPlantationsCache(newCache);
+          setAllPlantationsLoaded(true);
+        } catch (error) {
+          if (import.meta.env.DEV) {
+            console.warn('⚠️ Erreur lors de la récupération des plantations:', error);
+          }
+        }
+      }
+
+      // Enrichir chaque notification
       for (const notif of notifications) {
         if (notif.event?.description) {
-          // Vérifier si la description contient "undefined" ou "la plantation"
           const needsEnrichment = notif.event.description.includes('undefined') || 
                                   notif.event.description.includes('"la plantation"');
           
           if (needsEnrichment) {
             // Essayer de trouver le plantationId depuis l'événement
-            // 1. D'abord chercher directement dans l'événement (pour mode_changed)
-            // 2. Ensuite dans actuator.plantationId
-            // 3. Ensuite dans sensor.plantationId
             let plantationId = (notif.event as any).plantationId || 
                               notif.event.actuator?.plantationId || 
                               notif.event.sensor?.plantationId;
 
-            if (import.meta.env.DEV) {
-              console.log('🔍 Recherche plantationId pour notification:', {
-                notificationId: notif.id,
-                eventType: notif.event.type,
-                plantationIdFound: plantationId,
-                event: notif.event
-              });
-            }
+            let plantationName: string | null = null;
 
             if (plantationId) {
-              try {
-                const plantationName = await getPlantationName(plantationId);
-                // Remplacer à la fois "undefined" et "la plantation"
-                let enhanced = notif.event.description.replace(/undefined/g, plantationName);
-                enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
-                newEnriched.set(notif.id, enhanced);
-              } catch (error) {
-                if (import.meta.env.DEV) {
-                  console.warn('⚠️ Erreur lors de la récupération du nom de plantation:', error);
-                }
-                // En cas d'erreur, garder la description originale
-                newEnriched.set(notif.id, notif.event.description);
-              }
-            } else {
-              // Si pas de plantationId trouvé, essayer de récupérer toutes les plantations
-              // et trouver celle qui correspond (pour mode_changed)
-              if (notif.event.type === 'mode_changed') {
-                try {
-                  const plantations = await plantationService.getAll();
-                  // Pour mode_changed, on prend la première plantation (ou on pourrait améliorer la logique)
-                  if (plantations.length > 0) {
-                    const plantationName = plantations[0].name;
-                    let enhanced = notif.event.description.replace(/undefined/g, plantationName);
-                    enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
-                    newEnriched.set(notif.id, enhanced);
-                  } else {
-                    newEnriched.set(notif.id, notif.event.description);
-                  }
-                } catch (error) {
-                  if (import.meta.env.DEV) {
-                    console.warn('⚠️ Erreur lors de la récupération des plantations:', error);
-                  }
-                  newEnriched.set(notif.id, notif.event.description);
-                }
+              // Utiliser le cache si disponible
+              if (allPlantationsCache.has(plantationId)) {
+                plantationName = allPlantationsCache.get(plantationId)!;
               } else {
-                // Pour les autres types d'événements, garder la description originale
-                newEnriched.set(notif.id, notif.event.description);
+                // Sinon, récupérer via getPlantationName (qui utilise aussi un cache)
+                plantationName = await getPlantationName(plantationId);
+                // Mettre à jour le cache
+                setAllPlantationsCache(prev => new Map(prev).set(plantationId!, plantationName!));
               }
+            } else if (notif.event.type === 'mode_changed' && allPlantationsCache.size > 0) {
+              // Pour mode_changed sans plantationId, utiliser la première plantation du cache
+              plantationName = Array.from(allPlantationsCache.values())[0];
+            }
+
+            if (plantationName) {
+              let enhanced = notif.event.description.replace(/undefined/g, plantationName);
+              enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
+              newEnriched.set(notif.id, enhanced);
+            } else {
+              newEnriched.set(notif.id, notif.event.description);
             }
           } else {
-            // Description normale, pas besoin d'enrichissement
             newEnriched.set(notif.id, notif.event.description);
           }
+        } else {
+          newEnriched.set(notif.id, notif.event?.description || '');
         }
       }
       
@@ -346,34 +364,55 @@ export function Header({
                             {t('notifications.loading') || 'Chargement...'}
                           </div>
                         ) : notifications.length > 0 ? (
-                          notifications.map((notif) => (
-                            <div 
-                              key={notif.id} 
-                              className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
-                              onClick={() => {
-                                if (!notif.isRead) {
-                                  handleMarkAsRead(notif.id);
-                                }
-                              }}
-                            >
-                              <div className={styles.header__notificationContent}>
-                                <div className={styles.header__notificationMessage}>
-                                  {getNotificationDescription(notif)}
+                          <>
+                            {notifications.map((notif) => (
+                              <div 
+                                key={notif.id} 
+                                className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
+                                onClick={() => {
+                                  if (!notif.isRead) {
+                                    handleMarkAsRead(notif.id);
+                                  }
+                                }}
+                              >
+                                <div className={styles.header__notificationContent}>
+                                  <div className={styles.header__notificationMessage}>
+                                    {getNotificationDescription(notif)}
+                                  </div>
+                                  <div className={styles.header__notificationTime}>
+                                    {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
+                                  </div>
                                 </div>
-                                <div className={styles.header__notificationTime}>
-                                  {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
+                                <button
+                                  className={styles.header__notificationDelete}
+                                  onClick={(e) => handleDelete(notif.id, e)}
+                                  aria-label={t('notifications.delete') || 'Supprimer la notification'}
+                                  title={t('notifications.delete') || 'Supprimer'}
+                                >
+                                  <Icon icon={FaTrash} size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            {stats && stats.parCanal && stats.parCanal.email !== undefined && (
+                              <div className={styles.header__emailStats}>
+                                <div className={styles.header__emailStatsLabel}>
+                                  <Icon icon={FaEnvelope} size={14} />
+                                  <span>{t('profile.emailNotifications.title')}</span>
+                                </div>
+                                <div className={styles.header__emailStatsCount}>
+                                  {stats.parCanal.email > 0 ? (
+                                    <span className={styles.header__emailStatsNumber}>
+                                      {stats.parCanal.email} {t('notifications.sent') || 'envoyées'}
+                                    </span>
+                                  ) : (
+                                    <span className={styles.header__emailStatsEmpty}>
+                                      {t('notifications.noEmail') || 'Aucune notification email'}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
-                              <button
-                                className={styles.header__notificationDelete}
-                                onClick={(e) => handleDelete(notif.id, e)}
-                                aria-label={t('notifications.delete') || 'Supprimer la notification'}
-                                title={t('notifications.delete') || 'Supprimer'}
-                              >
-                                <Icon icon={FaTrash} size={14} />
-                              </button>
-                            </div>
-                          ))
+                            )}
+                          </>
                         ) : (
                           <div className={styles.header__notificationEmpty}>
                             {t('notifications.empty')}

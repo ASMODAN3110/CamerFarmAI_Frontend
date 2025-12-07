@@ -1199,13 +1199,36 @@ export function MonitoringPage() {
       setTimeout(async () => {
         try {
           await refreshNotifications();
+          
+          // Vérifier si des notifications email ont été créées
+          if (import.meta.env.DEV) {
+            const { notificationService } = await import('@/services/notificationService');
+            const emailNotifications = await notificationService.getAllEmail();
+            const recentEmailNotifs = emailNotifications.filter(
+              n => new Date(n.dateEnvoi).getTime() > Date.now() - 5000 // Dernières 5 secondes
+            );
+            
+            if (recentEmailNotifs.length > 0) {
+              console.log(`📧 ${recentEmailNotifs.length} notification(s) email créée(s):`, recentEmailNotifs);
+              recentEmailNotifs.forEach(notif => {
+                console.log(`   - Statut: ${notif.statut}, Type: ${notif.event?.type}`);
+              });
+            } else {
+              console.warn('⚠️ Aucune notification email créée après l\'activation de l\'actionneur');
+              console.log('   → Vérifiez que:');
+              console.log('     1. Vous avez une adresse email dans votre profil');
+              console.log('     2. Le backend crée bien des notifications email');
+              console.log('     3. La configuration SMTP est correcte côté backend');
+              console.log('   → Utilisez diagnoseEmailNotifications() dans la console pour plus de détails');
+            }
+          }
         } catch (refreshError) {
           // Ne pas bloquer l'utilisateur si le rafraîchissement échoue
           if (import.meta.env.DEV) {
             console.warn('⚠️ Erreur lors du rafraîchissement des notifications:', refreshError);
           }
         }
-      }, 1000); // Attendre 1 seconde pour laisser le temps au backend
+      }, 2000); // Attendre 2 secondes pour laisser le temps au backend
     } catch (error) {
       console.error(`❌ Erreur lors de la mise à jour de l'actionneur ${actuator.name}:`, error);
       

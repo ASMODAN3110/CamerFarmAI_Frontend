@@ -8,8 +8,10 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
-import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaShieldAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaShieldAlt, FaCheckCircle, FaTimesCircle, FaBell } from 'react-icons/fa';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import { TwoFactorModal } from '@/components/ui/TwoFactorModal/TwoFactorModal';
+import { plantationService } from '@/services/plantationService';
 import type { TranslationKey } from '@/utils/translations';
 import styles from './ProfilePage.module.css';
 
@@ -34,6 +36,132 @@ export function ProfilePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isTwoFactorModalOpen, setIsTwoFactorModalOpen] = useState(false);
   const [twoFactorMode, setTwoFactorMode] = useState<'enable' | 'disable'>('enable');
+  
+  // Utiliser le hook pour les notifications email
+  const {
+    emailNotifications,
+    stats: emailStats,
+    isLoading: isLoadingEmails,
+  } = useEmailNotifications({ autoRefresh: true, refreshInterval: 60000 });
+  const [enrichedEmailDescriptions, setEnrichedEmailDescriptions] = useState<Map<string, string>>(new Map());
+  
+  // Cache pour les noms de plantations
+  const [plantationNamesCache, setPlantationNamesCache] = useState<Map<string, string>>(new Map());
+  const [allPlantationsCache, setAllPlantationsCache] = useState<Map<string, string>>(new Map());
+  const [allPlantationsLoaded, setAllPlantationsLoaded] = useState(false);
+  
+  // Fonction pour récupérer le nom d'une plantation
+  const getPlantationName = async (plantationId: string): Promise<string> => {
+    if (plantationNamesCache.has(plantationId)) {
+      return plantationNamesCache.get(plantationId)!;
+    }
+    
+    try {
+      const plantation = await plantationService.getById(plantationId);
+      const name = plantation.name;
+      setPlantationNamesCache(prev => new Map(prev).set(plantationId, name));
+      setAllPlantationsCache(prev => new Map(prev).set(plantationId, name));
+      return name;
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.warn('⚠️ Erreur lors de la récupération du nom de plantation:', error);
+      }
+      return 'la plantation';
+    }
+  };
+  
+  // Enrichir les descriptions des notifications email
+  useEffect(() => {
+    const enrichEmailDescriptions = async () => {
+      const newEnriched = new Map<string, string>();
+      
+      // Identifier les notifications qui ont besoin d'enrichissement
+      const notificationsToEnrich = emailNotifications.filter(notif => 
+        notif.event?.description && 
+        (notif.event.description.includes('undefined') || 
+         notif.event.description.includes('"la plantation"'))
+      );
+
+      if (notificationsToEnrich.length === 0) {
+        // Aucune notification à enrichir
+        emailNotifications.forEach(notif => {
+          newEnriched.set(notif.id, notif.event?.description || '');
+        });
+        setEnrichedEmailDescriptions(newEnriched);
+        return;
+      }
+
+      // Charger toutes les plantations une seule fois si nécessaire
+      if (!allPlantationsLoaded && notificationsToEnrich.some(n => 
+        n.event &&
+        !n.event.actuator?.plantationId && 
+        !n.event.sensor?.plantationId && 
+        !(n.event as any).plantationId
+      )) {
+        try {
+          const plantations = await plantationService.getAll();
+          const newCache = new Map<string, string>();
+          plantations.forEach(p => {
+            newCache.set(p.id, p.name);
+            setPlantationNamesCache(prev => new Map(prev).set(p.id, p.name));
+          });
+          setAllPlantationsCache(newCache);
+          setAllPlantationsLoaded(true);
+        } catch (error) {
+          if (import.meta.env.DEV) {
+            console.warn('⚠️ Erreur lors de la récupération des plantations:', error);
+          }
+        }
+      }
+
+      // Enrichir chaque notification
+      for (const notif of emailNotifications) {
+        if (notif.event?.description) {
+          const needsEnrichment = notif.event.description.includes('undefined') || 
+                                  notif.event.description.includes('"la plantation"');
+          
+          if (needsEnrichment) {
+            let plantationId = (notif.event as any).plantationId || 
+                              notif.event.actuator?.plantationId || 
+                              notif.event.sensor?.plantationId;
+            
+            let plantationName: string | null = null;
+
+            if (plantationId) {
+              // Utiliser le cache si disponible
+              if (allPlantationsCache.has(plantationId)) {
+                plantationName = allPlantationsCache.get(plantationId)!;
+              } else {
+                plantationName = await getPlantationName(plantationId);
+                setAllPlantationsCache(prev => new Map(prev).set(plantationId, plantationName!));
+              }
+            } else if (notif.event.type === 'mode_changed' && allPlantationsCache.size > 0) {
+              // Pour mode_changed sans plantationId, utiliser la première plantation du cache
+              plantationName = Array.from(allPlantationsCache.values())[0];
+            }
+
+            if (plantationName) {
+              let enhanced = notif.event.description.replace(/undefined/g, plantationName);
+              enhanced = enhanced.replace(/"la plantation"/g, `"${plantationName}"`);
+              newEnriched.set(notif.id, enhanced);
+            } else {
+              newEnriched.set(notif.id, notif.event.description);
+            }
+          } else {
+            newEnriched.set(notif.id, notif.event.description);
+          }
+        } else {
+          newEnriched.set(notif.id, notif.event?.description || '');
+        }
+      }
+      
+      setEnrichedEmailDescriptions(newEnriched);
+    };
+    
+    if (emailNotifications.length > 0) {
+      enrichEmailDescriptions();
+    }
+  }, [emailNotifications, allPlantationsCache, allPlantationsLoaded]);
 
   const profileNavItems = useMemo(
     () => [
@@ -486,6 +614,178 @@ export function ProfilePage() {
                         ? t('profile.twoFactor.disableButton')
                         : t('profile.twoFactor.enableButton')}
                     </Button>
+                  </div>
+                </div>
+
+                <div className={styles.emailNotificationsSection}>
+                  <label className={styles.emailNotificationsLabel}>
+                    <FaBell /> {t('profile.emailNotifications.title')}
+                  </label>
+                  <div className={styles.emailNotificationsContent}>
+                    {!user.email ? (
+                      <div className={styles.emailNotificationsWarning}>
+                        <p className={styles.emailNotificationsWarningText}>
+                          {t('profile.emailNotifications.noEmailConfigured')}
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <p className={styles.emailNotificationsDescription}>
+                          {t('profile.emailNotifications.description')}
+                        </p>
+                        
+                        {/* Bouton de diagnostic */}
+                        <div style={{ marginBottom: '1rem' }}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={async () => {
+                              if (typeof window !== 'undefined' && (window as any).diagnoseEmailNotifications) {
+                                await (window as any).diagnoseEmailNotifications();
+                              } else {
+                                console.log('💡 Script de diagnostic non disponible. Vérifiez la console pour plus d\'informations.');
+                                console.log('📧 Notifications email actuelles:', emailNotifications);
+                                console.log('📊 Statistiques:', emailStats);
+                                if (emailNotifications.length === 0) {
+                                  console.warn('⚠️ Aucune notification email trouvée. Le backend ne crée peut-être pas de notifications email.');
+                                }
+                                if (emailNotifications.some(n => n.statut === 'ERREUR')) {
+                                  console.error('❌ Certaines notifications email ont échoué. Vérifiez la configuration SMTP côté backend.');
+                                }
+                              }
+                            }}
+                            style={{ fontSize: '0.875rem' }}
+                          >
+                            🔍 Diagnostic des notifications email
+                          </Button>
+                        </div>
+                        
+                        {/* Statistiques des notifications email */}
+                        {emailStats && (() => {
+                          // Calculer les statistiques spécifiques aux emails
+                          const emailSent = emailNotifications.filter(n => n.statut === 'ENVOYEE').length;
+                          const emailPending = emailNotifications.filter(n => n.statut === 'EN_ATTENTE').length;
+                          const emailErrors = emailNotifications.filter(n => n.statut === 'ERREUR').length;
+                          const totalEmails = emailNotifications.length;
+                          
+                          return (
+                            <div className={styles.emailNotificationsStats}>
+                              <div className={styles.emailNotificationsStatsItem}>
+                                <span className={styles.emailNotificationsStatsLabel}>
+                                  {t('profile.emailNotifications.status.sent')}:
+                                </span>
+                                <span className={styles.emailNotificationsStatsValue}>
+                                  {emailSent}
+                                </span>
+                              </div>
+                              {emailPending > 0 && (
+                                <div className={styles.emailNotificationsStatsItem}>
+                                  <span className={styles.emailNotificationsStatsLabel}>
+                                    {t('profile.emailNotifications.status.pending')}:
+                                  </span>
+                                  <span className={styles.emailNotificationsStatsValue}>
+                                    {emailPending}
+                                  </span>
+                                </div>
+                              )}
+                              {emailErrors > 0 && (
+                                <div className={styles.emailNotificationsStatsItem}>
+                                  <span className={styles.emailNotificationsStatsLabel}>
+                                    {t('profile.emailNotifications.status.error')}:
+                                  </span>
+                                  <span className={`${styles.emailNotificationsStatsValue} ${styles.emailNotificationsStatsError}`}>
+                                    {emailErrors}
+                                  </span>
+                                </div>
+                              )}
+                              {emailErrors > 0 && emailErrors === totalEmails && (
+                                <div style={{ 
+                                  marginTop: '1rem', 
+                                  padding: '0.75rem', 
+                                  backgroundColor: '#fee', 
+                                  border: '1px solid #fcc',
+                                  borderRadius: '4px',
+                                  fontSize: '0.875rem',
+                                  color: '#c33'
+                                }}>
+                                  <strong>⚠️ Problème SMTP détecté</strong>
+                                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8125rem' }}>
+                                    Toutes les notifications email échouent à l'envoi. 
+                                    Vérifiez la configuration SMTP côté backend (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS).
+                                  </p>
+                                </div>
+                              )}
+                              {totalEmails > 0 && (
+                                <div className={styles.emailNotificationsStatsItem}>
+                                  <span className={styles.emailNotificationsStatsLabel}>
+                                    {t('profile.emailNotifications.total')}:
+                                  </span>
+                                  <span className={styles.emailNotificationsStatsValue}>
+                                    {totalEmails}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
+                        
+                        {/* Liste des notifications email récentes */}
+                        {isLoadingEmails ? (
+                          <div className={styles.emailNotificationsLoading}>
+                            {t('notifications.loading') || 'Chargement...'}
+                          </div>
+                        ) : emailNotifications.length > 0 ? (
+                          <div className={styles.emailNotificationsList}>
+                            <h4 className={styles.emailNotificationsListTitle}>
+                              {t('profile.emailNotifications.recent') || 'Notifications récentes'}
+                            </h4>
+                            {emailNotifications.slice(0, 5).map((notif) => (
+                              <div 
+                                key={notif.id} 
+                                className={`${styles.emailNotificationItem} ${
+                                  notif.statut === 'ERREUR' ? styles.emailNotificationItemError : ''
+                                }`}
+                              >
+                                <div className={styles.emailNotificationContent}>
+                                  <div className={styles.emailNotificationMessage}>
+                                    {enrichedEmailDescriptions.get(notif.id) || notif.event?.description || t('notifications.noDescription')}
+                                  </div>
+                                  <div className={styles.emailNotificationMeta}>
+                                    <span className={styles.emailNotificationStatus}>
+                                      {notif.statut === 'ENVOYEE' && '✅ '}
+                                      {notif.statut === 'EN_ATTENTE' && '⏳ '}
+                                      {notif.statut === 'ERREUR' && '❌ '}
+                                      {notif.statut === 'ENVOYEE' && t('profile.emailNotifications.status.sent')}
+                                      {notif.statut === 'EN_ATTENTE' && t('profile.emailNotifications.status.pending')}
+                                      {notif.statut === 'ERREUR' && t('profile.emailNotifications.status.error')}
+                                    </span>
+                                    <span className={styles.emailNotificationDate}>
+                                      {new Date(notif.dateEnvoi).toLocaleDateString('fr-FR', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            {emailNotifications.length > 5 && (
+                              <div className={styles.emailNotificationsMore}>
+                                {t('profile.emailNotifications.more')?.replace('{count}', String(emailNotifications.length - 5)) || 
+                                  `+ ${emailNotifications.length - 5} autre(s) notification(s)`}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className={styles.emailNotificationsEmpty}>
+                            {t('profile.emailNotifications.noNotifications') || 'Aucune notification email pour le moment'}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

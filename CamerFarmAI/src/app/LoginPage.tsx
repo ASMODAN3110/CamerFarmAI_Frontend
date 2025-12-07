@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
@@ -18,6 +18,7 @@ export function LoginPage() {
   const verifyTwoFactor = useAuthStore((s) => s.verifyTwoFactor);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string; twoFactor?: string }>({});
@@ -95,9 +96,17 @@ export function LoginPage() {
         return;
       }
       
-      // Redirection après connexion réussie vers la page d'accueil
-      // L'utilisateur peut ensuite accéder à son profil via le menu
-      navigate('/', { replace: true });
+      // Redirection après connexion réussie
+      // Vérifier s'il y a une URL de retour dans les paramètres
+      const returnUrl = searchParams.get('returnUrl');
+      
+      // Si une URL de retour est présente et valide, rediriger vers celle-ci
+      if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
+        navigate(returnUrl, { replace: true });
+      } else {
+        // Sinon, rediriger vers la page d'accueil
+        navigate('/', { replace: true });
+      }
     } catch (error: any) {
       // Afficher le message d'erreur détaillé du backend
       const errorMessage = 
@@ -139,7 +148,17 @@ export function LoginPage() {
 
     try {
       await verifyTwoFactor(temporaryToken, twoFactorCode);
-      navigate('/', { replace: true });
+      
+      // Redirection après vérification 2FA réussie
+      const returnUrl = searchParams.get('returnUrl');
+      
+      // Si une URL de retour est présente et valide, rediriger vers celle-ci
+      if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
+        navigate(returnUrl, { replace: true });
+      } else {
+        // Sinon, rediriger vers la page d'accueil
+        navigate('/', { replace: true });
+      }
     } catch (error: any) {
       const errorMessage = 
         error?.response?.data?.message || 

@@ -21,7 +21,7 @@ export function useNotifications(options?: {
   refreshInterval?: number;
   unreadOnly?: boolean;
 }): UseNotificationsReturn {
-  const { autoRefresh = true, refreshInterval = 45000, unreadOnly = false } = options || {};
+  const { autoRefresh = true, refreshInterval = 60000, unreadOnly = false } = options || {}; // 60 secondes pour optimiser
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   
   const [notifications, setNotifications] = useState<Notification[]>([]);
