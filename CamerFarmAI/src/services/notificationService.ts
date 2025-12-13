@@ -153,18 +153,6 @@ export const notificationService = {
     return webNotifications;
   },
 
-  /**
-   * Récupère uniquement les notifications email de l'utilisateur connecté
-   */
-  async getAllEmail(): Promise<Notification[]> {
-    const allNotifications = await this.getAll();
-    // Filtrer uniquement les notifications email et trier par date décroissante
-    const emailNotifications = allNotifications
-      .filter(notif => notif.canal === 'email')
-      .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
-    
-    return emailNotifications;
-  },
 
   /**
    * Récupère les statistiques des notifications de l'utilisateur
