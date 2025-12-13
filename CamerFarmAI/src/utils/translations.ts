@@ -281,24 +281,6 @@ export type TranslationKey =
   | 'profile.role.advisor'
   | 'profile.role.admin'
   | 'profile.role.technician'
-  | 'profile.emailNotifications.title'
-  | 'profile.emailNotifications.description'
-  | 'profile.emailNotifications.enabled'
-  | 'profile.emailNotifications.disabled'
-  | 'profile.emailNotifications.enableButton'
-  | 'profile.emailNotifications.disableButton'
-  | 'profile.emailNotifications.testEmail'
-  | 'profile.emailNotifications.testEmailSending'
-  | 'profile.emailNotifications.testEmailSuccess'
-  | 'profile.emailNotifications.testEmailError'
-  | 'profile.emailNotifications.noEmailConfigured'
-  | 'profile.emailNotifications.status.sent'
-  | 'profile.emailNotifications.status.pending'
-  | 'profile.emailNotifications.status.error'
-  | 'profile.emailNotifications.recent'
-  | 'profile.emailNotifications.noNotifications'
-  | 'profile.emailNotifications.more'
-  | 'profile.emailNotifications.total'
   | 'language.fr'
   | 'language.en'
   | 'language.ff';
@@ -585,24 +567,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.advisor': 'Conseiller',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
-    'profile.emailNotifications.title': 'Notifications par email',
-    'profile.emailNotifications.description': 'Recevez des alertes par email lorsque des événements importants se produisent (seuils dépassés, actionneurs activés, etc.)',
-    'profile.emailNotifications.enabled': 'Activées',
-    'profile.emailNotifications.disabled': 'Désactivées',
-    'profile.emailNotifications.enableButton': 'Activer les notifications email',
-    'profile.emailNotifications.disableButton': 'Désactiver les notifications email',
-    'profile.emailNotifications.testEmail': 'Envoyer un email de test',
-    'profile.emailNotifications.testEmailSending': 'Envoi en cours...',
-    'profile.emailNotifications.testEmailSuccess': 'Email de test envoyé avec succès !',
-    'profile.emailNotifications.testEmailError': 'Erreur lors de l\'envoi de l\'email de test',
-    'profile.emailNotifications.noEmailConfigured': 'Aucune adresse email configurée. Veuillez ajouter une adresse email pour recevoir des notifications.',
-    'profile.emailNotifications.status.sent': 'Envoyé',
-    'profile.emailNotifications.status.pending': 'En attente',
-    'profile.emailNotifications.status.error': 'Erreur',
-    'profile.emailNotifications.recent': 'Notifications récentes',
-    'profile.emailNotifications.noNotifications': 'Aucune notification email pour le moment',
-    'profile.emailNotifications.more': '+ {count} autre(s) notification(s)',
-    'profile.emailNotifications.total': 'Total',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -888,24 +852,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.advisor': 'Advisor',
     'profile.role.admin': 'Administrator',
     'profile.role.technician': 'Technician',
-    'profile.emailNotifications.title': 'Email Notifications',
-    'profile.emailNotifications.description': 'Receive email alerts when important events occur (thresholds exceeded, actuators activated, etc.)',
-    'profile.emailNotifications.enabled': 'Enabled',
-    'profile.emailNotifications.disabled': 'Disabled',
-    'profile.emailNotifications.enableButton': 'Enable email notifications',
-    'profile.emailNotifications.disableButton': 'Disable email notifications',
-    'profile.emailNotifications.testEmail': 'Send test email',
-    'profile.emailNotifications.testEmailSending': 'Sending...',
-    'profile.emailNotifications.testEmailSuccess': 'Test email sent successfully!',
-    'profile.emailNotifications.testEmailError': 'Error sending test email',
-    'profile.emailNotifications.noEmailConfigured': 'No email address configured. Please add an email address to receive notifications.',
-    'profile.emailNotifications.status.sent': 'Sent',
-    'profile.emailNotifications.status.pending': 'Pending',
-    'profile.emailNotifications.status.error': 'Error',
-    'profile.emailNotifications.recent': 'Recent notifications',
-    'profile.emailNotifications.noNotifications': 'No email notifications at the moment',
-    'profile.emailNotifications.more': '+ {count} more notification(s)',
-    'profile.emailNotifications.total': 'Total',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -1191,24 +1137,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.advisor': 'Tontinoowo',
     'profile.role.admin': 'Toppitoowo',
     'profile.role.technician': 'Kuutowo',
-    'profile.emailNotifications.title': 'Jokkondirɗe email',
-    'profile.emailNotifications.description': 'Heɓ jokkondirɗe email so tawii koɗɗe mawnɗe seɗɗii (seuils ɓuri, toppuɗe waɗɗaama, etc.)',
-    'profile.emailNotifications.enabled': 'Waɗɗaama',
-    'profile.emailNotifications.disabled': 'Ɓaawtaama',
-    'profile.emailNotifications.enableButton': 'Waɗɗu jokkondirɗe email',
-    'profile.emailNotifications.disableButton': 'Ɓaawtu jokkondirɗe email',
-    'profile.emailNotifications.testEmail': 'Neldu email jokkondirgol',
-    'profile.emailNotifications.testEmailSending': 'Nelduɗe...',
-    'profile.emailNotifications.testEmailSuccess': 'Email jokkondirgol nelduɗo e moƴƴere!',
-    'profile.emailNotifications.testEmailError': 'Koɗɗe ngam neldugol email jokkondirgol',
-    'profile.emailNotifications.noEmailConfigured': 'Alaa nder email njaatondiraani. Ɗaɓɓu ɓeydu nder email ngam heɓde jokkondirɗe.',
-    'profile.emailNotifications.status.sent': 'Nelduɗo',
-    'profile.emailNotifications.status.pending': 'Naatnude',
-    'profile.emailNotifications.status.error': 'Koɗɗe',
-    'profile.emailNotifications.recent': 'Tindinɗe kesɗe',
-    'profile.emailNotifications.noNotifications': 'Alaa tindinɗe email jooni',
-    'profile.emailNotifications.more': '+ {count} tindinɗe goɗɗe',
-    'profile.emailNotifications.total': 'Fuɗɗam',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',

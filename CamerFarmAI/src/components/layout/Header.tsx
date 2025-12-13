@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash, FaEnvelope } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash } from 'react-icons/fa';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotificationContext } from '@/contexts/NotificationContext';
@@ -393,25 +393,6 @@ export function Header({
                                 </button>
                               </div>
                             ))}
-                            {stats && stats.parCanal && stats.parCanal.email !== undefined && (
-                              <div className={styles.header__emailStats}>
-                                <div className={styles.header__emailStatsLabel}>
-                                  <Icon icon={FaEnvelope} size={14} />
-                                  <span>{t('profile.emailNotifications.title')}</span>
-                                </div>
-                                <div className={styles.header__emailStatsCount}>
-                                  {stats.parCanal.email > 0 ? (
-                                    <span className={styles.header__emailStatsNumber}>
-                                      {stats.parCanal.email} {t('notifications.sent') || 'envoyées'}
-                                    </span>
-                                  ) : (
-                                    <span className={styles.header__emailStatsEmpty}>
-                                      {t('notifications.noEmail') || 'Aucune notification email'}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
                           </>
                         ) : (
                           <div className={styles.header__notificationEmpty}>
