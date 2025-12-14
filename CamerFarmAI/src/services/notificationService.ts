@@ -106,7 +106,12 @@ const normalizeNotification = (data: any): Notification => {
       type: data.event.type,
       description: data.event.description,
       date: data.event.date,
-      plantationId: data.event.plantationId, // Inclure plantationId si présent dans l'événement brut
+      // Essayer de trouver plantationId dans plusieurs endroits possibles
+      plantationId: data.event.plantationId || 
+                    (data.event as any).plantationId || 
+                    (data.event as any).plantation?.id ||
+                    data.event.actuator?.plantationId || 
+                    data.event.sensor?.plantationId,
       sensorId: data.event.sensorId || null, // ID du capteur (selon la documentation API)
       actuatorId: data.event.actuatorId || null, // ID de l'actionneur (selon la documentation API)
       sensor: data.event.sensor || null,

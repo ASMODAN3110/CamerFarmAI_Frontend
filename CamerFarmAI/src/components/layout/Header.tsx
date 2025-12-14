@@ -211,9 +211,13 @@ export function Header({
           
           if (needsEnrichment) {
             // Essayer de trouver le plantationId depuis l'événement
-            let plantationId = (notif.event as any).plantationId || 
+            // Pour mode_changed, le plantationId peut être dans plusieurs endroits
+            let plantationId = notif.event.plantationId || 
+                              (notif.event as any).plantationId || 
                               notif.event.actuator?.plantationId || 
-                              notif.event.sensor?.plantationId;
+                              notif.event.sensor?.plantationId ||
+                              // Pour mode_changed, essayer aussi dans les données brutes de l'événement
+                              (notif.event.type === 'mode_changed' && (notif.event as any).plantation?.id);
 
             let plantationName: string | null = null;
 
@@ -227,9 +231,51 @@ export function Header({
                 // Mettre à jour le cache
                 setAllPlantationsCache(prev => new Map(prev).set(plantationId!, plantationName!));
               }
-            } else if (notif.event.type === 'mode_changed' && allPlantationsCache.size > 0) {
-              // Pour mode_changed sans plantationId, utiliser la première plantation du cache
-              plantationName = Array.from(allPlantationsCache.values())[0];
+            } else if (notif.event.type === 'mode_changed') {
+              // Pour mode_changed sans plantationId, essayer de récupérer toutes les plantations
+              // et utiliser celle qui correspond (ou la première si on ne peut pas déterminer)
+              if (allPlantationsCache.size === 1) {
+                // Si une seule plantation, l'utiliser
+                plantationName = Array.from(allPlantationsCache.values())[0];
+              } else if (allPlantationsCache.size > 1) {
+                // Si plusieurs plantations, essayer de récupérer toutes les plantations
+                // et utiliser la première (ou on pourrait améliorer avec une logique plus sophistiquée)
+                try {
+                  const plantations = await plantationService.getAll();
+                  if (plantations.length > 0) {
+                    // Utiliser la première plantation trouvée
+                    plantationName = plantations[0].name;
+                    // Mettre à jour le cache avec toutes les plantations
+                    plantations.forEach(p => {
+                      setAllPlantationsCache(prev => new Map(prev).set(p.id, p.name));
+                    });
+                  }
+                } catch (error) {
+                  if (import.meta.env.DEV) {
+                    console.warn('⚠️ Impossible de récupérer les plantations pour mode_changed:', error);
+                  }
+                }
+              } else {
+                // Si le cache est vide, essayer de charger les plantations
+                try {
+                  const plantations = await plantationService.getAll();
+                  if (plantations.length > 0) {
+                    plantationName = plantations[0].name;
+                    // Mettre à jour le cache
+                    const newCache = new Map<string, string>();
+                    plantations.forEach(p => {
+                      newCache.set(p.id, p.name);
+                      setPlantationNamesCache(prev => new Map(prev).set(p.id, p.name));
+                    });
+                    setAllPlantationsCache(newCache);
+                    setAllPlantationsLoaded(true);
+                  }
+                } catch (error) {
+                  if (import.meta.env.DEV) {
+                    console.warn('⚠️ Impossible de récupérer les plantations pour mode_changed:', error);
+                  }
+                }
+              }
             }
 
             if (plantationName) {
