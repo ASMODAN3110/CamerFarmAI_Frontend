@@ -59,6 +59,39 @@
   opacity: 0.8;
 }
 
+/* Masquer l'icône native du navigateur pour les champs password */
+.formField__input[type="password"]::-webkit-credentials-auto-fill-button,
+.formField__input[type="password"]::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.formField__input[type="password"]::-ms-reveal,
+.formField__input[type="password"]::-ms-clear {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Masquer également les icônes de révélation de mot de passe dans tous les navigateurs */
+.formField__input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+.formField__input[type="password"]::-webkit-inner-spin-button,
+.formField__input[type="password"]::-webkit-outer-spin-button {
+  display: none !important;
+}
+
 .formField__inputError {
   background-color: #fff5f5;
   border-color: var(--color-danger);

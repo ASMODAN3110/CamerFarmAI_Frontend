@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -63,6 +63,15 @@ export function SignUpPage() {
       navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  // Mémoriser l'icône pour éviter les problèmes de réconciliation
+  const passwordIcon = useMemo(() => {
+    return showPassword ? <FaEyeSlash aria-hidden="true" key="eye-slash-icon" /> : <FaEye aria-hidden="true" key="eye-icon" />;
+  }, [showPassword]);
+
+  const confirmPasswordIcon = useMemo(() => {
+    return showConfirmPassword ? <FaEyeSlash aria-hidden="true" key="eye-slash-confirm-icon" /> : <FaEye aria-hidden="true" key="eye-confirm-icon" />;
+  }, [showConfirmPassword]);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -441,7 +450,7 @@ export function SignUpPage() {
                 aria-label={showPassword ? t('signup.hidePassword') : t('signup.showPassword')}
                 tabIndex={-1}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {passwordIcon}
               </button>
             </div>
             {/* Indicateurs de validation du mot de passe */}
@@ -490,7 +499,7 @@ export function SignUpPage() {
                 aria-label={showConfirmPassword ? t('signup.hidePassword') : t('signup.showPassword')}
                 tabIndex={-1}
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                {confirmPasswordIcon}
               </button>
             </div>
 

@@ -300,10 +300,43 @@
   padding-right: calc(var(--spacing-md) + 24px + var(--spacing-sm));
 }
 
+/* Masquer l'icône native du navigateur pour les champs password */
+.signUpPage__passwordWrapper .formField__input[type="password"]::-webkit-credentials-auto-fill-button,
+.signUpPage__passwordWrapper .formField__input[type="password"]::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.signUpPage__passwordWrapper .formField__input[type="password"]::-ms-reveal,
+.signUpPage__passwordWrapper .formField__input[type="password"]::-ms-clear {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Masquer également les icônes de révélation de mot de passe dans tous les navigateurs */
+.signUpPage__passwordWrapper .formField__input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+.signUpPage__passwordWrapper .formField__input[type="password"]::-webkit-inner-spin-button,
+.signUpPage__passwordWrapper .formField__input[type="password"]::-webkit-outer-spin-button {
+  display: none !important;
+}
+
 .signUpPage__togglePassword {
   position: absolute;
   right: var(--spacing-md);
-  bottom: calc(var(--spacing-md) + var(--spacing-xs));
+  top: calc(var(--font-size-sm) + var(--spacing-xs) + var(--spacing-xs) + var(--spacing-md));
   background: none;
   border: none;
   cursor: pointer;
@@ -314,10 +347,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  z-index: 10;
   width: 24px;
   height: 24px;
   line-height: 1;
+  pointer-events: auto;
+}
+
+.signUpPage__togglePassword > * {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .signUpPage__togglePassword:hover {
