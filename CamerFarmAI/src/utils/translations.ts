@@ -24,6 +24,8 @@ export type TranslationKey =
   | 'login.noAccount'
   | 'login.signupLink'
   | 'login.backToHome'
+  | 'login.showPassword'
+  | 'login.hidePassword'
   | 'login.errors.emailRequired'
   | 'login.errors.emailInvalid'
   | 'login.errors.phoneRequired'
@@ -310,6 +312,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.noAccount': 'Vous n\'avez pas de compte ?',
     'login.signupLink': 'Inscrivez-vous.',
     'login.backToHome': 'Retour à l\'accueil',
+    'login.showPassword': 'Afficher le mot de passe',
+    'login.hidePassword': 'Masquer le mot de passe',
     'login.errors.emailRequired': 'L\'adresse email est requise',
     'login.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
     'login.errors.phoneRequired': 'Le numéro de téléphone est requis',
@@ -595,6 +599,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.noAccount': 'Don\'t have an account?',
     'login.signupLink': 'Sign up.',
     'login.backToHome': 'Back to home',
+    'login.showPassword': 'Show password',
+    'login.hidePassword': 'Hide password',
     'login.errors.emailRequired': 'Email address is required',
     'login.errors.emailInvalid': 'Email address is invalid',
     'login.errors.phoneRequired': 'Phone number is required',
@@ -880,6 +886,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.noAccount': 'Aɗa alaa konte?',
     'login.signupLink': 'Winndito.',
     'login.backToHome': 'Rutto fuɗɗo',
+    'login.showPassword': 'Hollu finnde',
+    'login.hidePassword': 'Suuɗu finnde',
     'login.errors.emailRequired': 'Nder email ina tawaa',
     'login.errors.emailInvalid': 'Nder email fotaani',
     'login.errors.phoneRequired': 'Nder tel ina tawaa',

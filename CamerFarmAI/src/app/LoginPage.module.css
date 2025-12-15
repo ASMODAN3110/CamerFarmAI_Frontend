@@ -406,6 +406,78 @@
   }
 }
 
+.loginPage__passwordWrapper {
+  position: relative;
+}
+
+.loginPage__passwordWrapper .formField__input {
+  padding-right: calc(var(--spacing-md) + 24px + var(--spacing-sm));
+}
+
+/* Masquer l'icône native du navigateur pour les champs password */
+.loginPage__passwordWrapper .formField__input[type="password"]::-webkit-credentials-auto-fill-button,
+.loginPage__passwordWrapper .formField__input[type="password"]::-webkit-strong-password-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.loginPage__passwordWrapper .formField__input[type="password"]::-ms-reveal,
+.loginPage__passwordWrapper .formField__input[type="password"]::-ms-clear {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Masquer également les icônes de révélation de mot de passe dans tous les navigateurs */
+.loginPage__passwordWrapper .formField__input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+.loginPage__passwordWrapper .formField__input[type="password"]::-webkit-inner-spin-button,
+.loginPage__passwordWrapper .formField__input[type="password"]::-webkit-outer-spin-button {
+  display: none !important;
+}
+
+.loginPage__togglePassword {
+  position: absolute;
+  right: var(--spacing-md);
+  top: calc(var(--font-size-sm) + var(--spacing-xs) + var(--spacing-xs) + var(--spacing-md));
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  transition: color 0.2s ease;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  pointer-events: auto;
+}
+
+.loginPage__togglePassword:hover {
+  color: var(--color-primary);
+}
+
+.loginPage__togglePassword > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .loginPage__submitButton {
   width: 100%;
   margin-top: var(--spacing-md);

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
@@ -23,6 +23,7 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string; twoFactor?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [requires2FA, setRequires2FA] = useState(false);
   const [temporaryToken, setTemporaryToken] = useState<string | null>(null);
   const [twoFactorCode, setTwoFactorCode] = useState('');
@@ -53,6 +54,11 @@ export function LoginPage() {
       navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
+  // Mémoriser l'icône pour éviter les problèmes de réconciliation
+  const passwordIcon = useMemo(() => {
+    return showPassword ? <FaEyeSlash aria-hidden="true" key="eye-slash-icon" /> : <FaEye aria-hidden="true" key="eye-icon" />;
+  }, [showPassword]);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -224,18 +230,29 @@ export function LoginPage() {
                   disabled={isSubmitting}
                 />
 
-                <FormField
-                  type="password"
-                  name="password"
-                  label={t('login.passwordLabel')}
-                  placeholder={t('login.passwordPlaceholder')}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  error={errors.password}
-                  required
-                  autoComplete="current-password"
-                  disabled={isSubmitting}
-                />
+                <div className={styles.loginPage__passwordWrapper}>
+                  <FormField
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    label={t('login.passwordLabel')}
+                    placeholder={t('login.passwordPlaceholder')}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={errors.password}
+                    required
+                    autoComplete="current-password"
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    className={styles.loginPage__togglePassword}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? t('login.hidePassword') : t('login.showPassword')}
+                    tabIndex={-1}
+                  >
+                    {passwordIcon}
+                  </button>
+                </div>
 
                 <Button
                   type="submit"
