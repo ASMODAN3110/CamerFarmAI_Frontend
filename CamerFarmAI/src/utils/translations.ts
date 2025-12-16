@@ -213,6 +213,8 @@ export type TranslationKey =
   | 'monitoring.thresholds.save'
   | 'monitoring.thresholds.saving'
   | 'monitoring.thresholds.cancel'
+  | 'monitoring.thresholds.editingFor'
+  | 'monitoring.thresholds.editingSubtitle'
   | 'monitoring.thresholds.invalidData'
   | 'monitoring.thresholds.maxMustBeGreater'
   | 'monitoring.thresholds.updateSuccess'
@@ -466,6 +468,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.thresholds.save': 'Enregistrer',
     'monitoring.thresholds.saving': 'Enregistrement...',
     'monitoring.thresholds.cancel': 'Annuler',
+    'monitoring.thresholds.editingFor': 'Modification des seuils pour',
+    'monitoring.thresholds.editingSubtitle': 'Définissez les valeurs minimales et maximales pour déclencher des alertes',
     'monitoring.thresholds.invalidData': 'Données de seuils invalides',
     'monitoring.thresholds.maxMustBeGreater': 'Le seuil maximum doit être strictement supérieur au seuil minimum',
     'monitoring.thresholds.updateSuccess': 'Seuils mis à jour avec succès',
@@ -818,6 +822,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.thresholds.save': 'Save',
     'monitoring.thresholds.saving': 'Saving...',
     'monitoring.thresholds.cancel': 'Cancel',
+    'monitoring.thresholds.editingFor': 'Editing thresholds for',
+    'monitoring.thresholds.editingSubtitle': 'Set minimum and maximum values to trigger alerts',
     'monitoring.thresholds.invalidData': 'Invalid threshold data',
     'monitoring.thresholds.maxMustBeGreater': 'Max threshold must be greater than min threshold',
     'monitoring.thresholds.updateSuccess': 'Thresholds updated successfully',
@@ -1120,6 +1126,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.thresholds.save': 'Danndu',
     'monitoring.thresholds.saving': 'Nana dannda...',
     'monitoring.thresholds.cancel': 'Haaytu',
+    'monitoring.thresholds.editingFor': 'Waylude señoluuji ngam',
+    'monitoring.thresholds.editingSubtitle': 'Naatu limoore woɗnde e ɓurnde ngam jaltude tintine',
     'monitoring.thresholds.invalidData': 'Keɓe señol heewaani',
     'monitoring.thresholds.maxMustBeGreater': 'Señol ɓurnde wonaa ɗiɗo e jaasi to woɗnde',
     'monitoring.thresholds.updateSuccess': 'Señoluuji danndaama e moƴƴugol',
