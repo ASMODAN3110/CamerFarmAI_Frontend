@@ -421,11 +421,13 @@
   margin-top: var(--spacing-xl);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: #000;
 }
 
 .monitoringPage__thresholdsHeader {
@@ -436,14 +438,14 @@
 
 .monitoringPage__thresholdsTitle {
   margin: 0;
-  color: var(--color-white);
+  color: #000;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
 }
 
 .monitoringPage__thresholdsSubtitle {
   margin: 0;
-  color: var(--color-text-light);
+  color: #333;
   font-size: var(--font-size-sm);
 }
 
@@ -459,8 +461,16 @@
   gap: var(--spacing-md);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  color: #000;
+}
+
+.monitoringPage__thresholdItemEditing {
+  background: rgba(40, 167, 69, 0.25);
+  border: 2px solid rgba(40, 167, 69, 0.6);
+  box-shadow: 0 0 20px rgba(40, 167, 69, 0.3);
 }
 
 .monitoringPage__thresholdInfo {
@@ -471,24 +481,61 @@
 
 .monitoringPage__thresholdLabel {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-white);
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-base);
 }
 
 .monitoringPage__thresholdValues {
   display: flex;
   gap: var(--spacing-md);
-  color: var(--color-text-light);
+  color: #333;
   font-size: var(--font-size-sm);
+}
+
+.monitoringPage__thresholdValues strong {
+  color: #000;
+  font-weight: var(--font-weight-semibold);
 }
 
 .monitoringPage__thresholdForm {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  background: rgba(0, 0, 0, 0.3);
-  padding: var(--spacing-md);
+  gap: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.12);
+  padding: var(--spacing-lg);
   border-radius: var(--border-radius-md);
+  border: 2px solid rgba(40, 167, 69, 0.5);
+  margin-top: var(--spacing-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.monitoringPage__thresholdFormHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.monitoringPage__thresholdFormTitle {
+  margin: 0;
+  color: #4ade80;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.monitoringPage__thresholdFormSubtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--font-size-sm);
 }
 
 .monitoringPage__thresholdInputs {
@@ -505,18 +552,41 @@
   font-size: var(--font-size-sm);
 }
 
+.monitoringPage__thresholdInputLabel {
+  font-weight: var(--font-weight-semibold);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: var(--font-size-sm);
+}
+
 .monitoringPage__thresholdInputs input {
   width: 100%;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--color-white);
+  font-size: var(--font-size-base);
+  transition: all 0.2s ease;
+  font-weight: var(--font-weight-medium);
+}
+
+.monitoringPage__thresholdInputs input:focus {
+  outline: none;
+  border-color: #4ade80;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3);
 }
 
 .monitoringPage__thresholdError {
   color: var(--color-danger);
   font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: rgba(220, 53, 69, 0.1);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
 .monitoringPage__thresholdActions {

@@ -22,6 +22,8 @@ import {
   FaHandPointer,
   FaArrowLeft,
   FaCircle,
+  FaEdit,
+  FaTimes,
 } from 'react-icons/fa';
 import styles from './MonitoringPage.module.css';
 
@@ -1492,47 +1494,82 @@ export function MonitoringPage() {
               </div>
               <div className={styles.monitoringPage__thresholdsList}>
                 {sensors.map((sensor) => (
-                  <div key={sensor.id} className={styles.monitoringPage__thresholdItem}>
+                  <div 
+                    key={sensor.id} 
+                    className={`${styles.monitoringPage__thresholdItem} ${
+                      thresholdEdit.sensorId === sensor.id ? styles.monitoringPage__thresholdItemEditing : ''
+                    }`}
+                  >
                     <div className={styles.monitoringPage__thresholdInfo}>
-                      <div className={styles.monitoringPage__thresholdLabel}>{getSensorLabel(sensor.type)}</div>
+                      <div className={styles.monitoringPage__thresholdLabel}>
+                        <Icon icon={FaThermometerHalf} size={16} />
+                        {getSensorLabel(sensor.type)}
+                      </div>
                       <div className={styles.monitoringPage__thresholdValues}>
-                        <span>{t('monitoring.thresholds.min')}: {sensor.seuilMin ?? '—'}</span>
-                        <span>{t('monitoring.thresholds.max')}: {sensor.seuilMax ?? '—'}</span>
+                        <span>{t('monitoring.thresholds.min')}: <strong>{sensor.seuilMin ?? '—'}</strong></span>
+                        <span>{t('monitoring.thresholds.max')}: <strong>{sensor.seuilMax ?? '—'}</strong></span>
                       </div>
                     </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleOpenThresholdEdit(sensor)}
-                    >
-                      {t('monitoring.thresholds.edit')}
-                    </Button>
+                    {thresholdEdit.sensorId === sensor.id ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={handleCloseThresholdEdit}
+                        disabled={thresholdEdit.loading}
+                      >
+                        <FaTimes /> {t('monitoring.thresholds.cancel')}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleOpenThresholdEdit(sensor)}
+                      >
+                        <FaEdit /> {t('monitoring.thresholds.edit')}
+                      </Button>
+                    )}
                     {thresholdEdit.sensorId === sensor.id && (
                       <div className={styles.monitoringPage__thresholdForm}>
+                        <div className={styles.monitoringPage__thresholdFormHeader}>
+                          <h4 className={styles.monitoringPage__thresholdFormTitle}>
+                            {t('monitoring.thresholds.editingFor')} {getSensorLabel(sensor.type)}
+                          </h4>
+                          <p className={styles.monitoringPage__thresholdFormSubtitle}>
+                            {t('monitoring.thresholds.editingSubtitle')}
+                          </p>
+                        </div>
                         <div className={styles.monitoringPage__thresholdInputs}>
                           <label>
-                            {t('monitoring.thresholds.min')}
+                            <span className={styles.monitoringPage__thresholdInputLabel}>
+                              {t('monitoring.thresholds.min')}
+                            </span>
                             <input
                               type="number"
                               min={0}
                               step="0.1"
                               value={thresholdEdit.seuilMin}
                               onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMin: e.target.value }))}
+                              placeholder={sensor.seuilMin !== undefined && sensor.seuilMin !== null ? String(sensor.seuilMin) : '0.0'}
                             />
                           </label>
                           <label>
-                            {t('monitoring.thresholds.max')}
+                            <span className={styles.monitoringPage__thresholdInputLabel}>
+                              {t('monitoring.thresholds.max')}
+                            </span>
                             <input
                               type="number"
                               min={0}
                               step="0.1"
                               value={thresholdEdit.seuilMax}
                               onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMax: e.target.value }))}
+                              placeholder={sensor.seuilMax !== undefined && sensor.seuilMax !== null ? String(sensor.seuilMax) : '0.0'}
                             />
                           </label>
                         </div>
                         {thresholdEdit.error && (
-                          <div className={styles.monitoringPage__thresholdError}>{thresholdEdit.error}</div>
+                          <div className={styles.monitoringPage__thresholdError}>
+                            <FaTimesCircle /> {thresholdEdit.error}
+                          </div>
                         )}
                         <div className={styles.monitoringPage__thresholdActions}>
                           <Button
