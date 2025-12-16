@@ -20,6 +20,8 @@ export interface Sensor {
   type: SensorType | string;
   status: 'active' | 'inactive' | 'offline';
   plantationId: string;
+  seuilMin?: number;
+  seuilMax?: number;
   createdAt?: string;
   updatedAt?: string;
   latestReading?: SensorReading;
@@ -75,6 +77,8 @@ const normalizeSensor = (data: any): Sensor => ({
   type: data.type || data.sensorType || '',
   status: data.status || 'inactive',
   plantationId: data.plantationId,
+  seuilMin: typeof data.seuilMin === 'number' ? data.seuilMin : data.seuilMin !== undefined ? Number(data.seuilMin) : undefined,
+  seuilMax: typeof data.seuilMax === 'number' ? data.seuilMax : data.seuilMax !== undefined ? Number(data.seuilMax) : undefined,
   createdAt: data.createdAt,
   updatedAt: data.updatedAt,
   latestReading: data.latestReading ? normalizeSensorReading(data.latestReading) : undefined,
@@ -225,6 +229,26 @@ export const plantationService = {
       return payload.map(normalizeSensorReading);
     }
     return [];
+  },
+
+  /**
+   * Met à jour les seuils d'un capteur
+   * @param plantationId - ID de la plantation
+   * @param sensorId - ID du capteur
+   * @param seuils - seuilMin et seuilMax (seuilMax doit être > seuilMin)
+   * @returns Capteur mis à jour
+   */
+  async updateSensorThresholds(
+    plantationId: string,
+    sensorId: string,
+    seuils: { seuilMin: number; seuilMax: number }
+  ): Promise<Sensor> {
+    const res = await api.patch(
+      `/plantations/${plantationId}/sensors/${sensorId}/thresholds`,
+      seuils
+    );
+    const data = res.data?.data || res.data;
+    return normalizeSensor(data);
   },
 
   async getAllSensorReadings(plantationId: string): Promise<SensorReading[]> {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -9,6 +9,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading, type SensorType } from '@/services/plantationService';
 import { useNotificationContext } from '@/contexts/NotificationContext';
+import { useAuthStore } from '@/services/useAuthStore';
 import {
   FaTint,
   FaSun,
@@ -814,6 +815,7 @@ export function MonitoringPage() {
   const navigate = useNavigate();
   const plantationId = searchParams.get('plantationId');
   const { refresh: refreshNotifications } = useNotificationContext();
+  const user = useAuthStore((s) => s.user);
   const [sensorData, setSensorData] = useState<SensorData>({
     temperature: 25.1,
     soilHumidity: 58,
@@ -841,6 +843,21 @@ export function MonitoringPage() {
     irrigationPump: false,
     fans: false,
     lighting: false,
+  });
+  const [thresholdEdit, setThresholdEdit] = useState<{
+    sensorId: string | null;
+    type: string | null;
+    seuilMin: string;
+    seuilMax: string;
+    loading: boolean;
+    error: string | null;
+  }>({
+    sensorId: null,
+    type: null,
+    seuilMin: '',
+    seuilMax: '',
+    loading: false,
+    error: null,
   });
 
   // Mettre à jour l'état des équipements depuis les actionneurs
@@ -1044,6 +1061,100 @@ export function MonitoringPage() {
     if (sensors.length === 0) return true; // Par défaut actif si pas de données
     // Vérifier si au moins un capteur est actif
     return sensors.some(sensor => sensor.status === 'active');
+  };
+
+  const isFarmerOwner = useMemo(() => {
+    if (!user) return false;
+    const role = (user.role || '').toLowerCase();
+    const isOwner = plantation?.ownerId ? plantation.ownerId === user.id : true;
+    return role === 'farmer' && isOwner;
+  }, [user, plantation?.ownerId]);
+
+  const getSensorLabel = (sensorType: string) => {
+    switch (sensorType) {
+      case 'temperature':
+        return t('monitoring.sensors.temperature');
+      case 'soilHumidity':
+      case 'soilMoisture':
+        return t('monitoring.sensors.soilHumidity');
+      case 'co2':
+      case 'co2Level':
+        return t('monitoring.sensors.co2');
+      case 'luminosity':
+        return t('monitoring.sensors.luminosity');
+      case 'waterLevel':
+        return t('monitoring.sensors.waterLevel');
+      default:
+        return sensorType;
+    }
+  };
+
+  const handleOpenThresholdEdit = (sensor: Sensor) => {
+    if (!isFarmerOwner) return;
+    setThresholdEdit({
+      sensorId: sensor.id,
+      type: sensor.type,
+      seuilMin: sensor.seuilMin !== undefined && sensor.seuilMin !== null ? String(sensor.seuilMin) : '',
+      seuilMax: sensor.seuilMax !== undefined && sensor.seuilMax !== null ? String(sensor.seuilMax) : '',
+      loading: false,
+      error: null,
+    });
+  };
+
+  const handleCloseThresholdEdit = () => {
+    setThresholdEdit({
+      sensorId: null,
+      type: null,
+      seuilMin: '',
+      seuilMax: '',
+      loading: false,
+      error: null,
+    });
+  };
+
+  const handleSubmitThresholdEdit = async () => {
+    if (!plantationId || !thresholdEdit.sensorId) return;
+    const seuilMin = Number(thresholdEdit.seuilMin);
+    const seuilMax = Number(thresholdEdit.seuilMax);
+
+    if (Number.isNaN(seuilMin) || Number.isNaN(seuilMax) || seuilMin < 0 || seuilMax < 0) {
+      setThresholdEdit((prev) => ({ ...prev, error: t('monitoring.thresholds.invalidData') }));
+      return;
+    }
+    if (seuilMax <= seuilMin) {
+      setThresholdEdit((prev) => ({ ...prev, error: t('monitoring.thresholds.maxMustBeGreater') }));
+      return;
+    }
+
+    try {
+      setThresholdEdit((prev) => ({ ...prev, loading: true, error: null }));
+      const updatedSensor = await plantationService.updateSensorThresholds(plantationId, thresholdEdit.sensorId, {
+        seuilMin,
+        seuilMax,
+      });
+
+      setSensors((prev) =>
+        prev.map((sensor) =>
+          sensor.id === updatedSensor.id ? { ...sensor, seuilMin: updatedSensor.seuilMin, seuilMax: updatedSensor.seuilMax } : sensor
+        )
+      );
+      alert(t('monitoring.thresholds.updateSuccess'));
+      handleCloseThresholdEdit();
+    } catch (error: any) {
+      console.error('❌ Erreur lors de la mise à jour des seuils:', error);
+      const status = error?.response?.status;
+      let message = t('monitoring.thresholds.updateError');
+      if (status === 404) {
+        message = t('monitoring.thresholds.notFound');
+      } else if (status === 403) {
+        message = t('monitoring.thresholds.forbidden');
+      } else if (status === 400) {
+        message = error?.response?.data?.message || t('monitoring.thresholds.invalidData');
+      } else if (status === 401) {
+        message = t('monitoring.thresholds.unauthorized');
+      }
+      setThresholdEdit((prev) => ({ ...prev, error: message, loading: false }));
+    }
   };
 
   // Configuration de la navbar
@@ -1373,6 +1484,81 @@ export function MonitoringPage() {
                 </div>
               )}
             </div>
+          {isFarmerOwner && sensors.length > 0 && (
+            <div className={styles.monitoringPage__thresholdsCard}>
+              <div className={styles.monitoringPage__thresholdsHeader}>
+                <h3 className={styles.monitoringPage__thresholdsTitle}>{t('monitoring.thresholds.title')}</h3>
+                <p className={styles.monitoringPage__thresholdsSubtitle}>{t('monitoring.thresholds.subtitle')}</p>
+              </div>
+              <div className={styles.monitoringPage__thresholdsList}>
+                {sensors.map((sensor) => (
+                  <div key={sensor.id} className={styles.monitoringPage__thresholdItem}>
+                    <div className={styles.monitoringPage__thresholdInfo}>
+                      <div className={styles.monitoringPage__thresholdLabel}>{getSensorLabel(sensor.type)}</div>
+                      <div className={styles.monitoringPage__thresholdValues}>
+                        <span>{t('monitoring.thresholds.min')}: {sensor.seuilMin ?? '—'}</span>
+                        <span>{t('monitoring.thresholds.max')}: {sensor.seuilMax ?? '—'}</span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleOpenThresholdEdit(sensor)}
+                    >
+                      {t('monitoring.thresholds.edit')}
+                    </Button>
+                    {thresholdEdit.sensorId === sensor.id && (
+                      <div className={styles.monitoringPage__thresholdForm}>
+                        <div className={styles.monitoringPage__thresholdInputs}>
+                          <label>
+                            {t('monitoring.thresholds.min')}
+                            <input
+                              type="number"
+                              min={0}
+                              step="0.1"
+                              value={thresholdEdit.seuilMin}
+                              onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMin: e.target.value }))}
+                            />
+                          </label>
+                          <label>
+                            {t('monitoring.thresholds.max')}
+                            <input
+                              type="number"
+                              min={0}
+                              step="0.1"
+                              value={thresholdEdit.seuilMax}
+                              onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMax: e.target.value }))}
+                            />
+                          </label>
+                        </div>
+                        {thresholdEdit.error && (
+                          <div className={styles.monitoringPage__thresholdError}>{thresholdEdit.error}</div>
+                        )}
+                        <div className={styles.monitoringPage__thresholdActions}>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={handleSubmitThresholdEdit}
+                            disabled={thresholdEdit.loading}
+                          >
+                            {thresholdEdit.loading ? t('monitoring.thresholds.saving') : t('monitoring.thresholds.save')}
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={handleCloseThresholdEdit}
+                            disabled={thresholdEdit.loading}
+                          >
+                            {t('monitoring.thresholds.cancel')}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           </div>
 
           {/* Section de contrôle des équipements */}

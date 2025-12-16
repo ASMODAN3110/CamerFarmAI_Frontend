@@ -205,6 +205,21 @@ export type TranslationKey =
   | 'monitoring.sensors.co2'
   | 'monitoring.sensors.luminosity'
   | 'monitoring.sensors.waterLevel'
+  | 'monitoring.thresholds.title'
+  | 'monitoring.thresholds.subtitle'
+  | 'monitoring.thresholds.min'
+  | 'monitoring.thresholds.max'
+  | 'monitoring.thresholds.edit'
+  | 'monitoring.thresholds.save'
+  | 'monitoring.thresholds.saving'
+  | 'monitoring.thresholds.cancel'
+  | 'monitoring.thresholds.invalidData'
+  | 'monitoring.thresholds.maxMustBeGreater'
+  | 'monitoring.thresholds.updateSuccess'
+  | 'monitoring.thresholds.updateError'
+  | 'monitoring.thresholds.notFound'
+  | 'monitoring.thresholds.forbidden'
+  | 'monitoring.thresholds.unauthorized'
   | 'monitoring.updated'
   | 'monitoring.status.good'
   | 'monitoring.status.optimal'
@@ -443,6 +458,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.sensors.co2': 'Taux de CO2',
     'monitoring.sensors.luminosity': 'Luminosité',
     'monitoring.sensors.waterLevel': 'Niveau d\'eau',
+    'monitoring.thresholds.title': 'Seuils des capteurs',
+    'monitoring.thresholds.subtitle': 'Ajustez les seuils pour vos capteurs afin de recevoir des alertes pertinentes.',
+    'monitoring.thresholds.min': 'Seuil min',
+    'monitoring.thresholds.max': 'Seuil max',
+    'monitoring.thresholds.edit': 'Modifier les seuils',
+    'monitoring.thresholds.save': 'Enregistrer',
+    'monitoring.thresholds.saving': 'Enregistrement...',
+    'monitoring.thresholds.cancel': 'Annuler',
+    'monitoring.thresholds.invalidData': 'Données de seuils invalides',
+    'monitoring.thresholds.maxMustBeGreater': 'Le seuil maximum doit être strictement supérieur au seuil minimum',
+    'monitoring.thresholds.updateSuccess': 'Seuils mis à jour avec succès',
+    'monitoring.thresholds.updateError': 'Erreur lors de la mise à jour des seuils',
+    'monitoring.thresholds.notFound': 'Capteur ou plantation introuvable',
+    'monitoring.thresholds.forbidden': 'Vous n\'avez pas la permission de modifier ces seuils',
+    'monitoring.thresholds.unauthorized': 'Vous devez être connecté pour modifier les seuils',
     'monitoring.updated': 'Mis à jour',
     'monitoring.status.good': 'Bon',
     'monitoring.status.optimal': 'Optimal',
@@ -780,6 +810,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.sensors.co2': 'CO2 Rate',
     'monitoring.sensors.luminosity': 'Luminosity',
     'monitoring.sensors.waterLevel': 'Water Level',
+    'monitoring.thresholds.title': 'Sensor thresholds',
+    'monitoring.thresholds.subtitle': 'Adjust thresholds to receive relevant alerts for your sensors.',
+    'monitoring.thresholds.min': 'Min threshold',
+    'monitoring.thresholds.max': 'Max threshold',
+    'monitoring.thresholds.edit': 'Edit thresholds',
+    'monitoring.thresholds.save': 'Save',
+    'monitoring.thresholds.saving': 'Saving...',
+    'monitoring.thresholds.cancel': 'Cancel',
+    'monitoring.thresholds.invalidData': 'Invalid threshold data',
+    'monitoring.thresholds.maxMustBeGreater': 'Max threshold must be greater than min threshold',
+    'monitoring.thresholds.updateSuccess': 'Thresholds updated successfully',
+    'monitoring.thresholds.updateError': 'Error while updating thresholds',
+    'monitoring.thresholds.notFound': 'Sensor or plantation not found',
+    'monitoring.thresholds.forbidden': 'You are not allowed to edit these thresholds',
+    'monitoring.thresholds.unauthorized': 'You must be logged in to edit thresholds',
     'monitoring.updated': 'Updated',
     'monitoring.status.good': 'Good',
     'monitoring.status.optimal': 'Optimal',
@@ -1067,6 +1112,21 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.sensors.co2': 'Nder CO2',
     'monitoring.sensors.luminosity': 'Ndaariɗe',
     'monitoring.sensors.waterLevel': 'Nder Leyɗe',
+    'monitoring.thresholds.title': 'Señoluuji keɓe',
+    'monitoring.thresholds.subtitle': 'Waylu señoluuji ngam heɓde tintine ɓurɗe moƴƴude.',
+    'monitoring.thresholds.min': 'Señol woɗnde',
+    'monitoring.thresholds.max': 'Señol ɓurnde',
+    'monitoring.thresholds.edit': 'Waylu señoluuji',
+    'monitoring.thresholds.save': 'Danndu',
+    'monitoring.thresholds.saving': 'Nana dannda...',
+    'monitoring.thresholds.cancel': 'Haaytu',
+    'monitoring.thresholds.invalidData': 'Keɓe señol heewaani',
+    'monitoring.thresholds.maxMustBeGreater': 'Señol ɓurnde wonaa ɗiɗo e jaasi to woɗnde',
+    'monitoring.thresholds.updateSuccess': 'Señoluuji danndaama e moƴƴugol',
+    'monitoring.thresholds.updateError': 'Juumre e danndude señoluuji',
+    'monitoring.thresholds.notFound': 'Keɓe walla leydi njiyataa',
+    'monitoring.thresholds.forbidden': 'A alaa yamiroore ngam waylude ɗee señoluuji',
+    'monitoring.thresholds.unauthorized': 'A fotaa seŋo ngam waylude señoluuji',
     'monitoring.updated': 'Ɓeyduɗe',
     'monitoring.status.good': 'Moƴƴi',
     'monitoring.status.optimal': 'Ɓurɗo',
