@@ -124,6 +124,7 @@ export type TranslationKey =
   | 'plantations.createModal.errors.coordinatesRequiredTogether'
   | 'plantations.cropType'
   | 'plantations.errors.fetchFailed'
+  | 'plantations.detail.title'
   | 'plantations.detail.loading'
   | 'plantations.detail.backToList'
   | 'plantations.detail.createdAt'
@@ -591,6 +592,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.coordinatesRequiredTogether': 'La latitude et la longitude doivent être fournies ensemble',
     'plantations.cropType': 'Culture',
     'plantations.errors.fetchFailed': 'Impossible de charger les plantations. Les données affichées peuvent être obsolètes.',
+    'plantations.detail.title': 'Détail plantation',
     'plantations.detail.loading': 'Chargement de la plantation...',
     'plantations.detail.backToList': 'Retour à la liste',
     'plantations.detail.createdAt': 'Créée le',
@@ -896,6 +898,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.locationRequired': 'Location is required',
     'plantations.cropType': 'Crop',
     'plantations.errors.fetchFailed': 'Unable to load plantations. Displayed data may be outdated.',
+    'plantations.detail.title': 'Plantation Details',
     'plantations.detail.loading': 'Loading plantation...',
     'plantations.detail.backToList': 'Back to list',
     'plantations.detail.createdAt': 'Created on',
@@ -1263,6 +1266,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.coordinatesRequiredTogether': 'Latitude e longitude ina tawaa e nder goɗɗe',
     'plantations.cropType': 'Fannu ngesa',
     'plantations.errors.fetchFailed': 'Waawaa nattude nguurndam. Keɓe njiyataa waawaa heddude.',
+    'plantations.detail.title': 'Keɓe nguurndam',
     'plantations.detail.loading': 'Jokkondir nguurndam...',
     'plantations.detail.backToList': 'Ruttoo e njiylol',
     'plantations.detail.createdAt': 'Waɗaaɗe',

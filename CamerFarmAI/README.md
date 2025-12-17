@@ -40,6 +40,11 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
   - Édition des seuils par capteur (réservé aux propriétaires de plantation)
   - Validation des seuils (max > min)
   - Sauvegarde via API avec gestion d'erreurs
+- **Système de variation des couleurs dynamique** :
+  - Les couleurs des jauges s'adaptent automatiquement aux seuils configurés par l'utilisateur
+  - Chaque type de capteur utilise une logique de variation spécifique optimisée
+  - Transitions fluides entre les zones (optimal, avertissement, danger)
+  - Zones d'avertissement configurables pour une meilleure visibilité
 - **Contrôle des équipements** :
   - Pompe d'irrigation
   - Ventilateurs
@@ -241,6 +246,126 @@ interface Actuator {
   plantationId: string;
 }
 ```
+
+## 🎨 Système de variation des couleurs des jauges
+
+Le système de variation des couleurs est conçu pour fournir un feedback visuel immédiat et intuitif sur l'état des capteurs. Chaque type de capteur utilise une logique de variation spécifique optimisée pour son domaine d'application.
+
+### Principe général
+
+Les couleurs des jauges s'adaptent **dynamiquement** aux seuils (`seuilMin` et `seuilMax`) configurés par l'utilisateur. Si aucun seuil n'est défini, des valeurs par défaut sont utilisées. Le système utilise des **gradients CSS linéaires** pour créer des transitions fluides entre les différentes zones de statut.
+
+### Zones de statut
+
+Chaque jauge définit trois zones principales :
+- **🟢 Zone optimale** : Valeurs dans la plage idéale (vert)
+- **🟡 Zone d'avertissement** : Valeurs proches des limites (jaune/orange)
+- **🔴 Zone de danger** : Valeurs critiques (rouge)
+
+### Logique par type de capteur
+
+#### 🌡️ Température (0-50°C)
+
+**Gradient optimisé** : Vert optimal autour de `seuilMin`, transition fluide vers rouge au-dessus de `seuilMax`.
+
+- **En dessous de `seuilMin - 5°C`** : Bleu-vert (très froid)
+- **Autour de `seuilMin`** : Vert optimal (température idéale)
+- **Entre `seuilMin` et `seuilMax`** : Transition progressive vert → jaune → orange
+- **À `seuilMax`** : Rouge (danger)
+- **Au-dessus de `seuilMax`** : Rouge intense (danger extrême)
+
+**Caractéristiques** :
+- 9 stops de gradient pour une transition ultra-fluide
+- Zone d'avertissement de 5% avant `seuilMax`
+- Dégradé HSL pour des transitions naturelles
+
+#### 💧 Humidité du sol (0-100%)
+
+**Gradient optimisé** : Zone optimale verte bien définie entre les seuils avec transitions fluides.
+
+- **En dessous de `seuilMin - 12%`** : Rouge intense (très sec)
+- **Entre `seuilMin - 12%` et `seuilMin`** : Transition rouge → orange-jaune
+- **Entre `seuilMin` et `seuilMax`** : Zone optimale verte (humidité idéale)
+- **Entre `seuilMax` et `seuilMax + 12%`** : Transition jaune-orange → rouge
+- **Au-dessus de `seuilMax + 12%`** : Rouge intense (saturation)
+
+**Caractéristiques** :
+- 11 stops de gradient pour une zone optimale bien visible
+- Zone d'avertissement de 8% de chaque côté
+- Centre de la zone optimale en vert pur
+
+#### 🌬️ Niveau de CO₂ (0-2500 ppm)
+
+**Gradient optimisé** : Vert optimal en dessous de `seuilMin`, transition progressive vers rouge au-dessus de `seuilMax`.
+
+- **En dessous de `seuilMin`** : Vert optimal (air de qualité)
+- **Entre `seuilMin` et `seuilMax`** : Transition progressive vert-jaune → jaune → orange
+- **À `seuilMax`** : Rouge-orange (danger)
+- **Au-dessus de `seuilMax`** : Rouge intense (danger extrême)
+
+**Caractéristiques** :
+- 10 stops de gradient avec 4 zones de transition
+- Zone d'avertissement de 5% avant `seuilMax`
+- Transitions en quartiles pour une progression claire
+
+#### 💧 Niveau d'eau (0-100%)
+
+**Gradient optimisé** : Rouge en dessous de `seuilMin`, vert au-dessus avec transition fluide.
+
+- **En dessous de `seuilMin - 10%`** : Rouge intense (vide)
+- **Entre `seuilMin - 10%` et `seuilMin`** : Transition rouge → orange-jaune
+- **À `seuilMin`** : Orange-jaune (niveau critique)
+- **Au-dessus de `seuilMin + 20%`** : Vert (bon niveau)
+- **À 100%** : Vert foncé (plein)
+
+**Caractéristiques** :
+- 7 stops de gradient pour une transition claire
+- Zone d'avertissement de 5% avant `seuilMin`
+- Gradient vertical (de bas en haut) pour l'effet de réservoir
+
+#### ☀️ Luminosité (0-100000 lux)
+
+**Gradient optimisé** : Zone optimale verte entre les seuils avec transitions fluides.
+
+- **En dessous de `seuilMin - 6%`** : Bleu foncé (obscurité totale)
+- **Entre `seuilMin - 6%` et `seuilMin`** : Transition bleu-gris → vert-cyan
+- **Entre `seuilMin` et `seuilMax`** : Zone optimale verte (luminosité idéale)
+- **Entre `seuilMax` et `seuilMax + 6%`** : Transition vert-jaune → jaune → orange
+- **Au-dessus de `seuilMax + 6%`** : Rouge (saturation extrême)
+
+**Caractéristiques** :
+- 9 stops de gradient pour une transition naturelle
+- Zone d'avertissement de 3% de chaque côté
+- Effet de glow dynamique basé sur la position dans le gradient
+
+### Valeurs par défaut
+
+Si aucun seuil n'est configuré, les valeurs suivantes sont utilisées :
+
+| Capteur | `seuilMin` (défaut) | `seuilMax` (défaut) |
+|---------|---------------------|---------------------|
+| Température | 0°C | 50°C |
+| Humidité du sol | 30% | 60% |
+| CO₂ | 800 ppm | 2000 ppm |
+| Niveau d'eau | 20% | - |
+| Luminosité | 0 lux | 100000 lux |
+
+### Implémentation technique
+
+Le système utilise deux fonctions principales :
+
+1. **`generateXGradientStops()`** : Génère les stops de gradient CSS basés sur les seuils
+2. **`calculateColorFromThresholds()`** : Calcule la couleur actuelle pour les indicateurs de statut
+
+Les gradients sont convertis en **gradients CSS linéaires** pour une compatibilité maximale et des performances optimales. Chaque widget utilise son gradient spécifique pour créer un rendu visuel cohérent et informatif.
+
+### Avantages
+
+- ✅ **Adaptabilité** : Les couleurs s'adaptent automatiquement aux seuils personnalisés
+- ✅ **Fluidité** : Transitions douces entre les zones grâce aux gradients multi-stops
+- ✅ **Intuitivité** : Code couleur universel (vert = bon, jaune = attention, rouge = danger)
+- ✅ **Performance** : Gradients CSS natifs, pas de calculs JavaScript à chaque rendu
+- ✅ **Cohérence** : Logique unifiée pour tous les types de capteurs
 
 ## 🔧 Configuration
 
