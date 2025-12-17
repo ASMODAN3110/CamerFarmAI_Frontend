@@ -35,6 +35,11 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif ou inactif
 - **Animations fluides** : Transitions et animations pour tous les widgets de capteurs
 - **Dégradés de couleur** : Indicateurs visuels de couleur selon les valeurs (rouge = danger, jaune = attention, vert = optimal)
+- **Configuration des seuils** :
+  - Affichage des seuils min/max pour chaque capteur
+  - Édition des seuils par capteur (réservé aux propriétaires de plantation)
+  - Validation des seuils (max > min)
+  - Sauvegarde via API avec gestion d'erreurs
 - **Contrôle des équipements** :
   - Pompe d'irrigation
   - Ventilateurs
@@ -58,6 +63,11 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
 - **Multi-canal** : Support des notifications web, email et SMS
 - **Affichage dans le header** : Badge avec compteur de notifications non lues
+
+### Intelligence Artificielle
+- **Chatbot IA** : Assistant conversationnel pour répondre aux questions sur l'agriculture
+- **Support multilingue** : Chat disponible en français, anglais et fulfulde
+- **Interface intuitive** : Chatbox moderne avec historique des conversations
 
 ### Multilingue
 - Support de 3 langues : Français, English, Fulfulde
@@ -109,7 +119,8 @@ src/
 │   ├── MonitoringPage.tsx         # Page de monitoring en temps réel
 │   ├── GraphsPage.tsx            # Page des graphiques
 │   ├── ListPlantationsPage.tsx   # Liste des plantations
-│   └── PlantationDetailPage.tsx  # Détails d'une plantation
+│   ├── PlantationDetailPage.tsx  # Détails d'une plantation
+│   └── ChatboxPage.tsx           # Page de chat IA
 ├── components/                    # Composants réutilisables
 │   ├── auth/                     # Composants d'authentification
 │   │   └── ProtectedRoute.tsx   # Route protégée
@@ -147,36 +158,6 @@ src/
     └── theme.ts
 ```
 
-## 🔐 Authentification
-
-### Système d'authentification
-
-L'application utilise **Zustand** pour la gestion de l'état d'authentification :
-
-```typescript
-import { useAuthStore } from '@/services/useAuthStore';
-
-// Dans un composant
-const login = useAuthStore((s) => s.login);
-const user = useAuthStore((s) => s.user);
-const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-```
-
-### Routes protégées
-
-Les routes protégées utilisent le composant `ProtectedRoute` :
-
-```tsx
-<Route 
-  path="/profile" 
-  element={
-    <ProtectedRoute>
-      <ProfilePage />
-    </ProtectedRoute>
-  } 
-/>
-```
-
 ## 🌐 Routes
 
 | Route | Description | Protection |
@@ -189,6 +170,7 @@ Les routes protégées utilisent le composant `ProtectedRoute` :
 | `/plantations/:id` | Détails d'une plantation | Protégée |
 | `/graphs?plantationId=:id` | Graphiques et statistiques | Protégée |
 | `/monitoring?plantationId=:id` | Monitoring en temps réel | Protégée |
+| `/ai` | Chatbot IA | Protégée |
 
 ## 📡 API Backend
 
@@ -208,6 +190,7 @@ Les routes protégées utilisent le composant `ProtectedRoute` :
 - `GET /plantations/:id/sensors` - Liste des capteurs d'une plantation
 - `GET /plantations/:id/actuators` - Liste des actionneurs d'une plantation
 - `GET /plantations/:id/sensors/:sensorId/readings` - Lectures d'un capteur
+- `PATCH /plantations/:id/sensors/:sensorId/thresholds` - Mise à jour des seuils d'un capteur
 
 ### Endpoints des notifications
 - `GET /notifications/my` - Liste de toutes les notifications de l'utilisateur
@@ -242,6 +225,8 @@ interface Sensor {
   type: 'temperature' | 'humidity' | 'soilMoisture' | 'co2Level' | 'waterLevel' | 'luminosity';
   status: 'active' | 'inactive' | 'offline';
   plantationId: string;
+  seuilMin?: number;  // Seuil minimum pour les alertes
+  seuilMax?: number;  // Seuil maximum pour les alertes
   latestReading?: SensorReading;
 }
 ```
@@ -265,61 +250,6 @@ interface Actuator {
 |----------|-------------|--------|
 | `VITE_API_URL` | URL de l'API backend | `http://localhost:3000/api/v1` |
 
-### Configuration API
-
-Le fichier `src/services/api.ts` configure Axios avec :
-- Base URL configurable via variable d'environnement
-- Timeout de 30 secondes
-- Support des cookies (withCredentials)
-- Intercepteurs pour :
-  - Ajout automatique du Bearer token
-  - Refresh token automatique sur 401
-  - Logs de debug en développement
-
-## 📦 Dépendances principales
-
-- **React 19** : Bibliothèque UI
-- **TypeScript** : Typage statique
-- **Vite** : Build tool et dev server
-- **React Router DOM** : Routage
-- **Zustand** : Gestion d'état (authentification)
-- **Axios** : Client HTTP
-- **React Icons** : Bibliothèque d'icônes
-- **Recharts** : Graphiques et visualisation de données
-- **Three.js** : Bibliothèque 3D pour WebGL
-- **React Three Fiber** : Renderer React pour Three.js
-- **React Three Drei** : Helpers et utilitaires pour React Three Fiber
-
-## 🎨 Styles
-
-- **CSS Modules** : Styles modulaires par composant
-- **CSS Variables** : Variables CSS pour les thèmes
-- **Responsive Design** : Design adaptatif mobile/desktop
-- **Animations** : 
-  - Animations au scroll pour améliorer l'UX
-  - Animations de jauges (rotation d'aiguilles, pulsations, ondes)
-  - Effets de glow et particules pour la luminosité
-  - Bulles et ondes pour le niveau d'eau
-  - Transitions fluides pour tous les widgets
-- **Dégradés de couleur** : Dégradés dynamiques pour les indicateurs visuels
-- **Effets 3D** : Réservoir d'eau avec effet de profondeur et reflets
-
-## 🌍 Internationalisation
-
-L'application supporte 3 langues :
-- **Français (fr)** : Langue par défaut
-- **English (en)**
-- **Fulfulde (ff)**
-
-Les traductions sont définies dans `src/utils/translations.ts` et couvrent :
-- Navigation
-- Authentification
-- Profil utilisateur
-- Gestion des plantations
-- Monitoring et capteurs
-- Graphiques
-- Messages d'erreur
-
 ## 🚀 Scripts disponibles
 
 ```bash
@@ -335,30 +265,6 @@ npm run preview
 # Linter
 npm run lint
 ```
-
-## 📝 Format des données utilisateur
-
-```typescript
-interface User {
-  id: string;
-  phone: string;
-  firstName: string;
-  lastName: string;
-  role: 'farmer' | 'advisor' | 'admin';
-  language: string;
-  avatarUrl?: string; // URL de la photo de profil
-}
-```
-
-## 🔍 Debug
-
-En mode développement, les logs API sont automatiquement activés :
-- 🚀 Requêtes API
-- ✅ Réponses réussies
-- ❌ Erreurs API
-- 🔄 Tentatives de refresh token
-- 🔧 Normalisation des données
-- 📦 Extraction des données
 
 ## 🐛 Dépannage
 
@@ -386,31 +292,6 @@ En mode développement, les logs API sont automatiquement activés :
 2. Vérifier que les capteurs ont des données dans la plage de dates
 3. Vérifier les filtres de date dans la console
 
-## 🎯 Fonctionnalités avancées
-
-### Affichage conditionnel
-- Les boutons "Monitoring" et "Graphs" n'apparaissent que si la plantation a des capteurs
-- Les widgets de capteurs n'apparaissent que si le capteur est assigné et a des données
-- Les widgets d'actionneurs n'apparaissent que si l'actionneur est assigné à la plantation
-
-### Navigation contextuelle
-- Bouton de retour sur les pages Monitoring et Graphs pour revenir aux détails de la plantation
-- Navigation basée sur `plantationId` dans les paramètres de requête
-
-### Jauges interactives
-- **Jauge de température** : Arc horizontal de 180° avec dégradé vert-jaune-rouge, aiguille pointant exactement sur la valeur
-- **Jauge de CO₂** : Arc horizontal de 180° avec dégradé multi-couleurs et seuils de qualité (Good, Moderate, Poor, Warning, Dangerous)
-- **Jauge d'humidité du sol** : Barre de progression avec dégradé rouge-jaune-vert, bulles animées et indicateur de statut
-- **Jauge de niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles remontantes, ondes multiples, reflets et indicateur de flux
-- **Widget de luminosité** : Effet de glow dynamique, soleil rotatif avec rayons animés, particules de lumière flottantes
-
-### Seuils et statuts
-- **Température** : 0-50°C avec dégradé de couleur
-- **CO₂** : 0-2500 ppm avec seuils (800=Good, 1200=Moderate, 1500=Poor, 2000=Dangerous)
-- **Humidité du sol** : 0-100% avec statuts (Low, Optimal, High)
-- **Niveau d'eau** : 0-100% avec statuts (Low, Warning, Good)
-- **Luminosité** : 0-100000 lux avec descriptions (Dark, Dim, Moderate, Bright, Very Bright)
-
 ## 📄 Licence
 
 Ce projet fait partie du projet CamerFarm AI.
@@ -422,37 +303,5 @@ Pour contribuer au projet, veuillez suivre les conventions de code et créer une
 ## 📞 Support
 
 Pour toute question ou problème, contactez l'équipe de développement.
-
----
-
-## 🔔 Notifications
-
-### Fonctionnalités
-- **Affichage dans le header** : Badge avec compteur de notifications non lues
-- **Rafraîchissement automatique** : Mise à jour toutes les 45 secondes
-- **Gestion** : Marquer comme lue, supprimer, filtrer par statut
-- **Statistiques** : Compteurs de notifications (total, envoyées, en attente, erreurs, non lues, lues)
-- **Multi-canal** : Support des notifications web, email et SMS
-
-### Utilisation
-
-```typescript
-import { useNotifications } from '@/hooks/useNotifications';
-
-// Dans un composant
-const { notifications, stats, markAsRead, deleteNotification } = useNotifications({
-  autoRefresh: true,
-  refreshInterval: 45000,
-  unreadOnly: false
-});
-```
-
-### Types de notifications
-- Alertes de capteurs (température, humidité, CO₂, etc.)
-- Événements de plantation
-- Alertes d'actionneurs
-- Notifications système
-
----
 
 **Dernière mise à jour** : Décembre 2025

@@ -8,7 +8,7 @@ interface AuthState {
     phone: string;
     firstName: string;
     lastName: string;
-    role: 'farmer' | 'advisor' | 'admin';
+    role: 'farmer' | 'technician' | 'admin';
     language: string;
     email?: string;
     avatarUrl?: string | null;

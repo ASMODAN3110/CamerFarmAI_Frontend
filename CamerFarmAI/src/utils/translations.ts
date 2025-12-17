@@ -297,9 +297,72 @@ export type TranslationKey =
   | 'profile.errors.uploadFailed'
   | 'profile.errors.updateFailed'
   | 'profile.role.farmer'
-  | 'profile.role.advisor'
-  | 'profile.role.admin'
   | 'profile.role.technician'
+  | 'profile.role.admin'
+  | 'admin.fakers.title'
+  | 'admin.fakers.subtitle'
+  | 'admin.fakers.test.title'
+  | 'admin.fakers.test.description'
+  | 'admin.fakers.test.button'
+  | 'admin.fakers.test.testing'
+  | 'admin.fakers.testError'
+  | 'admin.fakers.generate.title'
+  | 'admin.fakers.generate.description'
+  | 'admin.fakers.generate.countLabel'
+  | 'admin.fakers.generate.countPlaceholder'
+  | 'admin.fakers.generate.scenarioLabel'
+  | 'admin.fakers.generate.entityLabel'
+  | 'admin.fakers.generate.entityOptional'
+  | 'admin.fakers.generate.entityAll'
+  | 'admin.fakers.generate.button'
+  | 'admin.fakers.generate.generating'
+  | 'admin.fakers.generateError'
+  | 'admin.fakers.errors.countInvalid'
+  | 'admin.fakers.errors.scenarioRequired'
+  | 'admin.fakers.results.total'
+  | 'admin.fakers.results.users'
+  | 'admin.fakers.results.plantations'
+  | 'admin.fakers.results.sensors'
+  | 'admin.fakers.results.sensorReadings'
+  | 'admin.fakers.results.actuators'
+  | 'admin.fakers.results.events'
+  | 'admin.fakers.results.notifications'
+  | 'admin.fakers.scenarios.normal'
+  | 'admin.fakers.scenarios.edge'
+  | 'admin.fakers.scenarios.alert'
+  | 'admin.fakers.scenarios.seasonal'
+  | 'admin.fakers.scenarios.mixed'
+  | 'admin.fakers.scenarios.normal.description'
+  | 'admin.fakers.scenarios.edge.description'
+  | 'admin.fakers.scenarios.alert.description'
+  | 'admin.fakers.scenarios.seasonal.description'
+  | 'admin.fakers.scenarios.mixed.description'
+  | 'admin.fakers.scenarios.weights.normal'
+  | 'admin.fakers.scenarios.weights.edge'
+  | 'admin.fakers.scenarios.weights.alert'
+  | 'admin.fakers.scenarios.weights.seasonal'
+  | 'admin.fakers.info.title'
+  | 'admin.fakers.info.description'
+  | 'admin.fakers.distribution.title'
+  | 'admin.fakers.distribution.description'
+  | 'admin.fakers.distribution.percentage'
+  | 'admin.fakers.entities.title'
+  | 'admin.fakers.entities.description'
+  | 'admin.fakers.entities.user'
+  | 'admin.fakers.entities.plantation'
+  | 'admin.fakers.entities.sensor'
+  | 'admin.fakers.entities.sensorReading'
+  | 'admin.fakers.entities.actuator'
+  | 'admin.fakers.entities.event'
+  | 'admin.fakers.entities.notification'
+  | 'admin.fakers.seasonal.title'
+  | 'admin.fakers.seasonal.description'
+  | 'admin.fakers.seasonal.dry_season'
+  | 'admin.fakers.seasonal.rainy_season'
+  | 'admin.fakers.seasonal.harmattan'
+  | 'admin.fakers.seasonal.transition'
+  | 'admin.fakers.results.percentage'
+  | 'admin.fakers.results.barChart'
   | 'language.fr'
   | 'language.en'
   | 'language.ff';
@@ -602,9 +665,72 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.uploadFailed': 'Erreur lors de l\'upload de la photo',
     'profile.errors.updateFailed': 'Erreur lors de la mise à jour du profil',
     'profile.role.farmer': 'Agriculteur',
-    'profile.role.advisor': 'Conseiller',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
+    'admin.fakers.title': 'Générateur de données de test',
+    'admin.fakers.subtitle': 'Générez des données factices pour tester l\'application',
+    'admin.fakers.test.title': 'Tester les fakers',
+    'admin.fakers.test.description': 'Testez tous les fakers sans les sauvegarder en base de données',
+    'admin.fakers.test.button': 'Tester les fakers',
+    'admin.fakers.test.testing': 'Test en cours...',
+    'admin.fakers.testError': 'Erreur lors du test des fakers',
+    'admin.fakers.generate.title': 'Générer des fakers',
+    'admin.fakers.generate.description': 'Générez et sauvegardez des données factices en base de données',
+    'admin.fakers.generate.countLabel': 'Nombre d\'entités',
+    'admin.fakers.generate.countPlaceholder': '100',
+    'admin.fakers.generate.scenarioLabel': 'Scénario',
+    'admin.fakers.generate.entityLabel': 'Entité spécifique',
+    'admin.fakers.generate.entityOptional': 'optionnel',
+    'admin.fakers.generate.entityAll': 'Toutes les entités',
+    'admin.fakers.generate.button': 'Générer',
+    'admin.fakers.generate.generating': 'Génération en cours...',
+    'admin.fakers.generateError': 'Erreur lors de la génération des fakers',
+    'admin.fakers.errors.countInvalid': 'Le nombre doit être supérieur à 0',
+    'admin.fakers.errors.scenarioRequired': 'Veuillez sélectionner un scénario',
+    'admin.fakers.results.total': 'Total',
+    'admin.fakers.results.users': 'Utilisateurs',
+    'admin.fakers.results.plantations': 'Plantations',
+    'admin.fakers.results.sensors': 'Capteurs',
+    'admin.fakers.results.sensorReadings': 'Lectures de capteurs',
+    'admin.fakers.results.actuators': 'Actionneurs',
+    'admin.fakers.results.events': 'Événements',
+    'admin.fakers.results.notifications': 'Notifications',
+    'admin.fakers.scenarios.normal': 'Normal - Valeurs dans les plages normales',
+    'admin.fakers.scenarios.edge': 'Edge Cases - Valeurs aux limites',
+    'admin.fakers.scenarios.alert': 'Alertes - Valeurs dépassant les seuils',
+    'admin.fakers.scenarios.seasonal': 'Saisonnier - Données saisonnières',
+    'admin.fakers.scenarios.mixed': 'Mixte - Mélange de tous les scénarios',
+    'admin.fakers.scenarios.normal.description': 'Génère des valeurs dans les plages normales pour tous les capteurs. Idéal pour tester le comportement standard de l\'application.',
+    'admin.fakers.scenarios.edge.description': 'Génère des valeurs aux limites min/max. Utile pour tester les cas limites et les validations.',
+    'admin.fakers.scenarios.alert.description': 'Génère des valeurs dépassant les seuils pour déclencher des alertes. Parfait pour tester le système de notifications.',
+    'admin.fakers.scenarios.seasonal.description': 'Génère des données pour les 4 situations saisonnières du Cameroun : saison sèche, saison des pluies, harmattan et transition.',
+    'admin.fakers.scenarios.mixed.description': 'Mélange de tous les scénarios avec des poids équilibrés. Recommandé pour des données réalistes et variées.',
+    'admin.fakers.scenarios.weights.normal': 'Poids normal',
+    'admin.fakers.scenarios.weights.edge': 'Poids edge',
+    'admin.fakers.scenarios.weights.alert': 'Poids alert',
+    'admin.fakers.scenarios.weights.seasonal': 'Poids saisonnier',
+    'admin.fakers.info.title': 'Scénarios disponibles',
+    'admin.fakers.info.description': 'Liste des scénarios de génération disponibles',
+    'admin.fakers.distribution.title': 'Distribution par défaut',
+    'admin.fakers.distribution.description': 'Répartition des entités générées pour 1000 fakers',
+    'admin.fakers.distribution.percentage': 'Pourcentage',
+    'admin.fakers.entities.title': 'Types d\'entités supportés',
+    'admin.fakers.entities.description': 'Liste des types d\'entités qui peuvent être générées',
+    'admin.fakers.entities.user': 'Utilisateurs avec rôles (agriculteur, technicien, admin)',
+    'admin.fakers.entities.plantation': 'Plantations avec cultures camerounaises et coordonnées géographiques',
+    'admin.fakers.entities.sensor': 'Capteurs (température, humidité sol, CO2, niveau d\'eau, luminosité)',
+    'admin.fakers.entities.sensorReading': 'Lectures de capteurs avec variations temporelles cohérentes',
+    'admin.fakers.entities.actuator': 'Actionneurs (pompe, ventilateur, arroseur, vanne, chauffage, éclairage)',
+    'admin.fakers.entities.event': 'Événements (seuil dépassé, actionneur activé/désactivé, changement de mode)',
+    'admin.fakers.entities.notification': 'Notifications (web, email, WhatsApp) avec statuts',
+    'admin.fakers.seasonal.title': 'Situations saisonnières',
+    'admin.fakers.seasonal.description': 'Les valeurs des capteurs varient selon les saisons camerounaises',
+    'admin.fakers.seasonal.dry_season': 'Saison sèche',
+    'admin.fakers.seasonal.rainy_season': 'Saison des pluies',
+    'admin.fakers.seasonal.harmattan': 'Harmattan',
+    'admin.fakers.seasonal.transition': 'Transition',
+    'admin.fakers.results.percentage': '%',
+    'admin.fakers.results.barChart': 'Répartition visuelle',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -906,9 +1032,72 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.uploadFailed': 'Error uploading photo',
     'profile.errors.updateFailed': 'Error updating profile',
     'profile.role.farmer': 'Farmer',
-    'profile.role.advisor': 'Advisor',
-    'profile.role.admin': 'Administrator',
     'profile.role.technician': 'Technician',
+    'profile.role.admin': 'Administrator',
+    'admin.fakers.title': 'Test Data Generator',
+    'admin.fakers.subtitle': 'Generate fake data to test the application',
+    'admin.fakers.test.title': 'Test Fakers',
+    'admin.fakers.test.description': 'Test all fakers without saving them to the database',
+    'admin.fakers.test.button': 'Test Fakers',
+    'admin.fakers.test.testing': 'Testing...',
+    'admin.fakers.testError': 'Error testing fakers',
+    'admin.fakers.generate.title': 'Generate Fakers',
+    'admin.fakers.generate.description': 'Generate and save fake data to the database',
+    'admin.fakers.generate.countLabel': 'Number of entities',
+    'admin.fakers.generate.countPlaceholder': '100',
+    'admin.fakers.generate.scenarioLabel': 'Scenario',
+    'admin.fakers.generate.entityLabel': 'Specific entity',
+    'admin.fakers.generate.entityOptional': 'optional',
+    'admin.fakers.generate.entityAll': 'All entities',
+    'admin.fakers.generate.button': 'Generate',
+    'admin.fakers.generate.generating': 'Generating...',
+    'admin.fakers.generateError': 'Error generating fakers',
+    'admin.fakers.errors.countInvalid': 'Count must be greater than 0',
+    'admin.fakers.errors.scenarioRequired': 'Please select a scenario',
+    'admin.fakers.results.total': 'Total',
+    'admin.fakers.results.users': 'Users',
+    'admin.fakers.results.plantations': 'Plantations',
+    'admin.fakers.results.sensors': 'Sensors',
+    'admin.fakers.results.sensorReadings': 'Sensor readings',
+    'admin.fakers.results.actuators': 'Actuators',
+    'admin.fakers.results.events': 'Events',
+    'admin.fakers.results.notifications': 'Notifications',
+    'admin.fakers.scenarios.normal': 'Normal - Values within normal ranges',
+    'admin.fakers.scenarios.edge': 'Edge Cases - Values at limits',
+    'admin.fakers.scenarios.alert': 'Alerts - Values exceeding thresholds',
+    'admin.fakers.scenarios.seasonal': 'Seasonal - Seasonal data',
+    'admin.fakers.scenarios.mixed': 'Mixed - Mix of all scenarios',
+    'admin.fakers.scenarios.normal.description': 'Generates values within normal ranges for all sensors. Ideal for testing standard application behavior.',
+    'admin.fakers.scenarios.edge.description': 'Generates values at min/max limits. Useful for testing edge cases and validations.',
+    'admin.fakers.scenarios.alert.description': 'Generates values exceeding thresholds to trigger alerts. Perfect for testing the notification system.',
+    'admin.fakers.scenarios.seasonal.description': 'Generates data for the 4 seasonal situations in Cameroon: dry season, rainy season, harmattan, and transition.',
+    'admin.fakers.scenarios.mixed.description': 'Mix of all scenarios with balanced weights. Recommended for realistic and varied data.',
+    'admin.fakers.scenarios.weights.normal': 'Normal weight',
+    'admin.fakers.scenarios.weights.edge': 'Edge weight',
+    'admin.fakers.scenarios.weights.alert': 'Alert weight',
+    'admin.fakers.scenarios.weights.seasonal': 'Seasonal weight',
+    'admin.fakers.info.title': 'Available Scenarios',
+    'admin.fakers.info.description': 'List of available generation scenarios',
+    'admin.fakers.distribution.title': 'Default Distribution',
+    'admin.fakers.distribution.description': 'Entity distribution for 1000 generated fakers',
+    'admin.fakers.distribution.percentage': 'Percentage',
+    'admin.fakers.entities.title': 'Supported Entity Types',
+    'admin.fakers.entities.description': 'List of entity types that can be generated',
+    'admin.fakers.entities.user': 'Users with roles (farmer, technician, admin)',
+    'admin.fakers.entities.plantation': 'Plantations with Cameroonian crops and geographic coordinates',
+    'admin.fakers.entities.sensor': 'Sensors (temperature, soil moisture, CO2, water level, luminosity)',
+    'admin.fakers.entities.sensorReading': 'Sensor readings with consistent temporal variations',
+    'admin.fakers.entities.actuator': 'Actuators (pump, fan, sprinkler, valve, heater, light)',
+    'admin.fakers.entities.event': 'Events (threshold exceeded, actuator activated/deactivated, mode changed)',
+    'admin.fakers.entities.notification': 'Notifications (web, email, WhatsApp) with statuses',
+    'admin.fakers.seasonal.title': 'Seasonal Situations',
+    'admin.fakers.seasonal.description': 'Sensor values vary according to Cameroonian seasons',
+    'admin.fakers.seasonal.dry_season': 'Dry Season',
+    'admin.fakers.seasonal.rainy_season': 'Rainy Season',
+    'admin.fakers.seasonal.harmattan': 'Harmattan',
+    'admin.fakers.seasonal.transition': 'Transition',
+    'admin.fakers.results.percentage': '%',
+    'admin.fakers.results.barChart': 'Visual distribution',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -1210,9 +1399,72 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.uploadFailed': 'Koɗɗe Ɓaawɗe ngam naatnude foto',
     'profile.errors.updateFailed': 'Koɗɗe Ɓaawɗe ngam ɓeydugol jokkondiral',
     'profile.role.farmer': 'Ngaynaajo',
-    'profile.role.advisor': 'Tontinoowo',
-    'profile.role.admin': 'Toppitoowo',
     'profile.role.technician': 'Kuutowo',
+    'profile.role.admin': 'Toppitoowo',
+    'admin.fakers.title': 'Keɓe Ɓaawɗe Ngam Ƴeewtagol',
+    'admin.fakers.subtitle': 'Ɓeydu keɓe ɓaawɗe ngam Ƴeewtagol baɗɗe',
+    'admin.fakers.test.title': 'Ƴeewtu Keɓe Ɓaawɗe',
+    'admin.fakers.test.description': 'Ƴeewtu keɓe ɓaawɗe fof nde alaa danndugol ɗe e ɓeydorde',
+    'admin.fakers.test.button': 'Ƴeewtu Keɓe Ɓaawɗe',
+    'admin.fakers.test.testing': 'Nana Ƴeewta...',
+    'admin.fakers.testError': 'Koɗɗe Ɓaawɗe ngam Ƴeewtagol keɓe ɓaawɗe',
+    'admin.fakers.generate.title': 'Ɓeydu Keɓe Ɓaawɗe',
+    'admin.fakers.generate.description': 'Ɓeydu e danndu keɓe ɓaawɗe e ɓeydorde',
+    'admin.fakers.generate.countLabel': 'Limooɗe Keɓe',
+    'admin.fakers.generate.countPlaceholder': '100',
+    'admin.fakers.generate.scenarioLabel': 'Seenariyo',
+    'admin.fakers.generate.entityLabel': 'Keɓe Goonga',
+    'admin.fakers.generate.entityOptional': 'waɗɗa',
+    'admin.fakers.generate.entityAll': 'Keɓe Fof',
+    'admin.fakers.generate.button': 'Ɓeydu',
+    'admin.fakers.generate.generating': 'Nana Ɓeyda...',
+    'admin.fakers.generateError': 'Koɗɗe Ɓaawɗe ngam Ɓeydugol keɓe ɓaawɗe',
+    'admin.fakers.errors.countInvalid': 'Limooɗe ina waɗi mawnude e 0',
+    'admin.fakers.errors.scenarioRequired': 'Tiiɗnoo suɓo seenariyo',
+    'admin.fakers.results.total': 'Mooftirde',
+    'admin.fakers.results.users': 'Kuutorɓe',
+    'admin.fakers.results.plantations': 'Ɗiɗɓe',
+    'admin.fakers.results.sensors': 'Kuutorɓe Ɓeydorde',
+    'admin.fakers.results.sensorReadings': 'Jaangooje Kuutorɓe Ɓeydorde',
+    'admin.fakers.results.actuators': 'Kuutorɓe Ɓeydugol',
+    'admin.fakers.results.events': 'Ƴeewte',
+    'admin.fakers.results.notifications': 'Tintine',
+    'admin.fakers.scenarios.normal': 'Jawdi - Limoore e limoore jawdi',
+    'admin.fakers.scenarios.edge': 'Ƴeewte Cawɗe - Limoore e cawɗe',
+    'admin.fakers.scenarios.alert': 'Tintine - Limoore ɓurɗe e señoluuji',
+    'admin.fakers.scenarios.seasonal': 'Wakkati - Keɓe wakkati',
+    'admin.fakers.scenarios.mixed': 'Sakkondiral - Sakkondiral fof',
+    'admin.fakers.scenarios.normal.description': 'Ɓeyda limoore e limoore jawdi ngam kuutorɓe ɓeydorde fof. Ɗuum waɗi ngam Ƴeewtagol baɗɗe jawdi.',
+    'admin.fakers.scenarios.edge.description': 'Ɓeyda limoore e cawɗe min/max. Nafaama ngam Ƴeewtagol Ƴeewte cawɗe e jaɓɓingol.',
+    'admin.fakers.scenarios.alert.description': 'Ɓeyda limoore ɓurɗe e señoluuji ngam jaltinaade tintine. Ɗuum ɓurɗi ngam Ƴeewtagol nokkuure tintine.',
+    'admin.fakers.scenarios.seasonal.description': 'Ɓeyda keɓe ngam ɗiɗɓe wakkati 4 Kameruun: wakkati ɓiiɓɓe, wakkati ndiyam, harmattan e sakkondiral.',
+    'admin.fakers.scenarios.mixed.description': 'Sakkondiral fof seenariyooje e limoore sakkondiral. Ɗuum ɓurɗi ngam keɓe goonga e waylitiiɗe.',
+    'admin.fakers.scenarios.weights.normal': 'Limoore jawdi',
+    'admin.fakers.scenarios.weights.edge': 'Limoore cawɗe',
+    'admin.fakers.scenarios.weights.alert': 'Limoore tintine',
+    'admin.fakers.scenarios.weights.seasonal': 'Limoore wakkati',
+    'admin.fakers.info.title': 'Seenariyooje Heewɓe',
+    'admin.fakers.info.description': 'Doggol seenariyooje Ɓeydugol heewɓe',
+    'admin.fakers.distribution.title': 'Sakkondiral Jawdi',
+    'admin.fakers.distribution.description': 'Sakkondiral keɓe ɓeydiiɗe ngam 1000 keɓe ɓaawɗe',
+    'admin.fakers.distribution.percentage': 'Limooɗe',
+    'admin.fakers.entities.title': 'Noone Keɓe Ɓeydiiɗe',
+    'admin.fakers.entities.description': 'Doggol noone keɓe ɗe ena waawi ɓeydugol',
+    'admin.fakers.entities.user': 'Kuutorɓe e nokkuure (koobaajo, teknisiyen, admin)',
+    'admin.fakers.entities.plantation': 'Ɗiɗɓe e ɗiɗɓe Kameruun e koordinat geografik',
+    'admin.fakers.entities.sensor': 'Kuutorɓe ɓeydorde (temperatuure, ɓiiɓɓe leydi, CO2, limooɗe ndiyam, limooɗe annooru)',
+    'admin.fakers.entities.sensorReading': 'Jaangooje kuutorɓe ɓeydorde e waylitiiɗe wakkati sakkondiral',
+    'admin.fakers.entities.actuator': 'Kuutorɓe ɓeydugol (pompe, fentilatoor, arroseur, vanne, chauffage, eklairage)',
+    'admin.fakers.entities.event': 'Ƴeewte (señol ɓurɗe, kuutor ɓeydugol jaltinaaɗe/naatinaaɗe, waylitiiɗe mode)',
+    'admin.fakers.entities.notification': 'Tintine (web, email, WhatsApp) e nokkuure',
+    'admin.fakers.seasonal.title': 'Nokkuure Wakkati',
+    'admin.fakers.seasonal.description': 'Limoore kuutorɓe ɓeydorde waylitaa e wakkati Kameruun',
+    'admin.fakers.seasonal.dry_season': 'Wakkati ɓiiɓɓe',
+    'admin.fakers.seasonal.rainy_season': 'Wakkati Ndiyam',
+    'admin.fakers.seasonal.harmattan': 'Harmattan',
+    'admin.fakers.seasonal.transition': 'Sakkondiral',
+    'admin.fakers.results.percentage': '%',
+    'admin.fakers.results.barChart': 'Sakkondiral Yiilal',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',

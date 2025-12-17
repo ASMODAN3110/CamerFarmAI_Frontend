@@ -231,18 +231,18 @@ export function LoginPage() {
                 />
 
                 <div className={styles.loginPage__passwordWrapper}>
-                  <FormField
+                <FormField
                     type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    label={t('login.passwordLabel')}
-                    placeholder={t('login.passwordPlaceholder')}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    error={errors.password}
-                    required
-                    autoComplete="current-password"
-                    disabled={isSubmitting}
-                  />
+                  name="password"
+                  label={t('login.passwordLabel')}
+                  placeholder={t('login.passwordPlaceholder')}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={errors.password}
+                  required
+                  autoComplete="current-password"
+                  disabled={isSubmitting}
+                />
                   <button
                     type="button"
                     className={styles.loginPage__togglePassword}

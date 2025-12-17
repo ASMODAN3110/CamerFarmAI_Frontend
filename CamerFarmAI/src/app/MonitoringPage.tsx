@@ -8,6 +8,7 @@ import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading, type SensorType } from '@/services/plantationService';
+import type { Notification } from '@/services/notificationService';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { useAuthStore } from '@/services/useAuthStore';
 import {
@@ -157,16 +158,21 @@ function TemperatureWidget({ value, updatedAt, isActive = true }: { value: numbe
             );
           })}
             {/* Needle - points to exact position on arc for current temperature value */}
-          <line
-              x1="0"
-              y1="0"
-              x2={scaledNeedleX}
-              y2={scaledNeedleY}
-              stroke="#10b981"
-              strokeWidth="4"
-            strokeLinecap="round"
-              className={styles.monitoringPage__needle}
-          />
+          <g 
+            className={styles.monitoringPage__needleGroup}
+            style={{ transform: `rotate(${needleAngle}deg)` }}
+          >
+            <line
+                x1="0"
+                y1="0"
+                x2={needleLength}
+                y2="0"
+                stroke="#10b981"
+                strokeWidth="4"
+              strokeLinecap="round"
+                className={styles.monitoringPage__needle}
+            />
+          </g>
             {/* Center circle */}
             <circle
               cx="0"
@@ -220,7 +226,7 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true }: { value: numb
         {/* Value and status badge */}
         <div className={styles.monitoringPage__humidityHeader}>
           <span className={styles.monitoringPage__humidityValueLarge}>
-            <span>{Math.round(value)}</span>
+            <span>{value.toFixed(1)}</span>
             <span className={styles.monitoringPage__humidityValueUnit}>%</span>
           </span>
           <div
@@ -460,16 +466,21 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
           })}
             
             {/* Needle - points to exact position on arc for current CO2 value */}
-          <line
-              x1="0"
-              y1="0"
-              x2={scaledNeedleX}
-              y2={scaledNeedleY}
-              stroke="#10b981"
-              strokeWidth="4"
-            strokeLinecap="round"
-              className={styles.monitoringPage__needle}
-          />
+          <g 
+            className={styles.monitoringPage__needleGroup}
+            style={{ transform: `rotate(${needleAngle}deg)` }}
+          >
+            <line
+                x1="0"
+                y1="0"
+                x2={needleLength}
+                y2="0"
+                stroke="#10b981"
+                strokeWidth="4"
+              strokeLinecap="round"
+                className={styles.monitoringPage__needle}
+            />
+          </g>
             
             {/* Center circle */}
             <circle
@@ -485,7 +496,7 @@ function CO2Widget({ value, updatedAt, isActive = true }: { value: number; updat
           {/* Value display */}
           <div className={styles.monitoringPage__gaugeValueDisplay}>
             <span className={styles.monitoringPage__gaugeValueNumber} style={{ color }}>
-              {Math.round(clampedValue)}
+              {clampedValue.toFixed(0)}
             </span>
             <span className={styles.monitoringPage__gaugeValueUnit}>ppm</span>
         </div>
@@ -741,7 +752,7 @@ function WaterLevelWidget({ value, updatedAt, isActive = true }: { value: number
         {/* Value and status display */}
         <div className={styles.monitoringPage__waterLevelDisplay}>
           <span className={styles.monitoringPage__waterLevelValue}>
-            {Math.round(clampedValue)}%
+            {clampedValue.toFixed(1)}%
           </span>
           <span className={styles.monitoringPage__waterLevelStatus} style={{ color: status.color }}>
             {status.label}
@@ -819,12 +830,82 @@ export function MonitoringPage() {
   const { refresh: refreshNotifications } = useNotificationContext();
   const user = useAuthStore((s) => s.user);
   const [sensorData, setSensorData] = useState<SensorData>({
-    temperature: 25.1,
-    soilHumidity: 58,
-    co2: 531,
-    luminosity: 70290,
-    waterLevel: 79,
+    temperature: 0,
+    soilHumidity: 0,
+    co2: 0,
+    luminosity: 0,
+    waterLevel: 0,
   });
+  // État pour les valeurs animées (pour l'animation de 0 à la valeur réelle)
+  const [animatedSensorData, setAnimatedSensorData] = useState<SensorData>({
+    temperature: 0,
+    soilHumidity: 0,
+    co2: 0,
+    luminosity: 0,
+    waterLevel: 0,
+  });
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  
+  // Animation des valeurs de 0 à la valeur cible (seulement au premier chargement)
+  useEffect(() => {
+    // Ne pas animer si ce n'est pas le premier chargement
+    if (!isFirstLoad) {
+      // Pour les mises à jour en temps réel, mettre à jour directement sans animation
+      setAnimatedSensorData(sensorData);
+      return;
+    }
+    
+    // Vérifier si on doit animer (si les valeurs cibles sont différentes des valeurs animées)
+    const shouldAnimate = 
+      Math.abs(sensorData.temperature - animatedSensorData.temperature) > 0.1 ||
+      Math.abs(sensorData.soilHumidity - animatedSensorData.soilHumidity) > 0.1 ||
+      Math.abs(sensorData.co2 - animatedSensorData.co2) > 1 ||
+      Math.abs(sensorData.luminosity - animatedSensorData.luminosity) > 10 ||
+      Math.abs(sensorData.waterLevel - animatedSensorData.waterLevel) > 0.1;
+    
+    if (!shouldAnimate) return;
+    
+    const duration = 1500; // 1.5 secondes
+    const startTime = Date.now();
+    const startValues = { ...animatedSensorData };
+    const targetValues = { ...sensorData };
+    let animationFrameId: number;
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Fonction d'easing cubic-bezier pour une animation fluide
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      const easedProgress = easeOutCubic(progress);
+      
+      setAnimatedSensorData({
+        temperature: startValues.temperature + (targetValues.temperature - startValues.temperature) * easedProgress,
+        soilHumidity: startValues.soilHumidity + (targetValues.soilHumidity - startValues.soilHumidity) * easedProgress,
+        co2: startValues.co2 + (targetValues.co2 - startValues.co2) * easedProgress,
+        luminosity: startValues.luminosity + (targetValues.luminosity - startValues.luminosity) * easedProgress,
+        waterLevel: startValues.waterLevel + (targetValues.waterLevel - startValues.waterLevel) * easedProgress,
+        co2Level: targetValues.co2Level,
+      });
+      
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        // S'assurer que les valeurs finales sont exactes
+        setAnimatedSensorData(targetValues);
+        setIsFirstLoad(false); // Marquer que le premier chargement est terminé
+      }
+    };
+    
+    animationFrameId = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sensorData, isFirstLoad]);
   const [sensors, setSensors] = useState<Sensor[]>([]);
   const [actuators, setActuators] = useState<Actuator[]>([]);
   const [plantation, setPlantation] = useState<any>(null);
@@ -902,6 +983,18 @@ export function MonitoringPage() {
   const [updatedAt, setUpdatedAt] = useState('17:19:04');
   const { ref: sensorsRef, isVisible: isSensorsVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: equipmentRef, isVisible: isEquipmentVisible } = useScrollAnimation({ threshold: 0.1 });
+
+  // Réinitialiser l'animation quand on change de plantation
+  useEffect(() => {
+    setIsFirstLoad(true);
+    setAnimatedSensorData({
+      temperature: 0,
+      soilHumidity: 0,
+      co2: 0,
+      luminosity: 0,
+      waterLevel: 0,
+    });
+  }, [plantationId]);
 
   // Charger les capteurs de la plantation si plantationId est présent
   useEffect(() => {
@@ -986,11 +1079,11 @@ export function MonitoringPage() {
           const waterReading = sensorMap.get('waterLevel');
 
           const newSensorData = {
-            temperature: tempReading?.value ?? 25.1,
-            soilHumidity: soilReading?.value ?? 58,
-            co2: co2Reading?.value ?? 531,
-            luminosity: lumReading?.value ?? 70290,
-            waterLevel: waterReading?.value ?? 79,
+            temperature: tempReading?.value ?? 0,
+            soilHumidity: soilReading?.value ?? 0,
+            co2: co2Reading?.value ?? 0,
+            luminosity: lumReading?.value ?? 0,
+            waterLevel: waterReading?.value ?? 0,
             co2Level: co2Reading?.value,
           };
           
@@ -1000,6 +1093,16 @@ export function MonitoringPage() {
           }
           
           setSensorData(newSensorData);
+          
+          // Réinitialiser les valeurs animées à 0 pour déclencher l'animation au premier chargement
+          setAnimatedSensorData({
+            temperature: 0,
+            soilHumidity: 0,
+            co2: 0,
+            luminosity: 0,
+            waterLevel: 0,
+          });
+          setIsFirstLoad(true); // Réinitialiser le flag pour permettre l'animation
 
           // Déterminer quels capteurs sont disponibles (basé sur leur présence dans sensors, pas seulement sur les lectures)
           // Vérifier si un capteur de chaque type existe dans le tableau sensors
@@ -1224,14 +1327,16 @@ export function MonitoringPage() {
             const lumReading = sensorMap.get('luminosity');
             const waterReading = sensorMap.get('waterLevel');
 
-      setSensorData((prev) => ({
-              temperature: availableSensors.temperature && tempReading ? tempReading.value : prev.temperature,
-              soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : prev.soilHumidity,
-              co2: availableSensors.co2 && co2Reading ? co2Reading.value : prev.co2,
-              luminosity: availableSensors.luminosity && lumReading ? lumReading.value : prev.luminosity,
-              waterLevel: availableSensors.waterLevel && waterReading ? waterReading.value : prev.waterLevel,
+      const newData = {
+              temperature: availableSensors.temperature && tempReading ? tempReading.value : 0,
+              soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : 0,
+              co2: availableSensors.co2 && co2Reading ? co2Reading.value : 0,
+              luminosity: availableSensors.luminosity && lumReading ? lumReading.value : 0,
+              waterLevel: availableSensors.waterLevel && waterReading ? waterReading.value : 0,
               co2Level: co2Reading?.value,
-            }));
+            };
+      setSensorData(newData);
+      // L'animation sera gérée automatiquement par le useEffect
           }
         } catch (error) {
           console.error('Error refreshing sensor data:', error);
@@ -1316,14 +1421,15 @@ export function MonitoringPage() {
           // Vérifier si des notifications email ont été créées
           if (import.meta.env.DEV) {
             const { notificationService } = await import('@/services/notificationService');
-            const emailNotifications = await notificationService.getAllEmail();
+            const allNotifications = await notificationService.getAll();
+            const emailNotifications = allNotifications.filter((n: Notification) => n.canal === 'email');
             const recentEmailNotifs = emailNotifications.filter(
-              n => new Date(n.dateEnvoi).getTime() > Date.now() - 5000 // Dernières 5 secondes
+              (n: Notification) => new Date(n.dateEnvoi).getTime() > Date.now() - 5000 // Dernières 5 secondes
             );
             
             if (recentEmailNotifs.length > 0) {
               console.log(`📧 ${recentEmailNotifs.length} notification(s) email créée(s):`, recentEmailNotifs);
-              recentEmailNotifs.forEach(notif => {
+              recentEmailNotifs.forEach((notif: Notification) => {
                 console.log(`   - Statut: ${notif.statut}, Type: ${notif.event?.type}`);
               });
             } else {
@@ -1439,7 +1545,7 @@ export function MonitoringPage() {
               {availableSensors.temperature && (
                 <TemperatureWidget 
                   key={`temp-${sensorData.temperature}-${updatedAt}`}
-                  value={sensorData.temperature} 
+                  value={animatedSensorData.temperature} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('temperature')}
                 />
@@ -1447,7 +1553,7 @@ export function MonitoringPage() {
               {availableSensors.soilHumidity && (
                 <SoilHumidityWidget 
                   key={`soil-${sensorData.soilHumidity}-${updatedAt}`}
-                  value={sensorData.soilHumidity} 
+                  value={animatedSensorData.soilHumidity} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('soilHumidity')}
                 />
@@ -1455,21 +1561,21 @@ export function MonitoringPage() {
               {availableSensors.co2 && (
                 <CO2Widget 
                   key={`co2-${sensorData.co2}-${updatedAt}`}
-                  value={sensorData.co2}
+                  value={animatedSensorData.co2}
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('co2')}
                 />
               )}
               {availableSensors.luminosity && (
                 <LuminosityWidget 
-                  value={sensorData.luminosity} 
+                  value={animatedSensorData.luminosity} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('luminosity')}
                 />
               )}
               {availableSensors.waterLevel && (
                 <WaterLevelWidget 
-                  value={sensorData.waterLevel} 
+                  value={animatedSensorData.waterLevel} 
                   updatedAt={updatedAt} 
                   isActive={getSensorStatus('waterLevel')}
                 />

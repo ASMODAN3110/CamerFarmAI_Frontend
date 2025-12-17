@@ -3,6 +3,7 @@ import { AuthProvider } from './services/authProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
+import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';

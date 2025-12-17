@@ -10,7 +10,7 @@ export interface LoginResponse {
     phone: string;
     firstName: string;
     lastName: string;
-    role: 'farmer' | 'advisor' | 'admin';
+    role: 'farmer' | 'technician' | 'admin';
     language: string;
   };
   // Le backend peut aussi retourner {success: true, data: {...}}
@@ -22,7 +22,7 @@ export interface LoginResponse {
       phone: string;
       firstName: string;
       lastName: string;
-      role: 'farmer' | 'advisor' | 'admin';
+      role: 'farmer' | 'technician' | 'admin';
       language: string;
     };
     accessToken?: string;
@@ -39,7 +39,7 @@ export interface User {
   phone: string;
   firstName: string;
   lastName: string;
-  role: 'farmer' | 'advisor' | 'admin';
+  role: 'farmer' | 'technician' | 'admin';
   language: string;
   email?: string;
   avatarUrl?: string | null;
