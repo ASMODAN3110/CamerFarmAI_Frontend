@@ -87,17 +87,6 @@ Créer un fichier `.env` à la racine du projet :
 VITE_API_URL=http://localhost:3000/api/v1
 ```
 
-### Configuration TypeScript
-- **tsconfig.json** : Configuration TypeScript principale
-- **tsconfig.app.json** : Configuration pour l'application
-- **tsconfig.node.json** : Configuration pour Node.js
-
-### Configuration Vite
-- **vite.config.ts** : Configuration du build et du dev server
-
-### Configuration ESLint
-- **eslint.config.js** : Règles de linting
-
 ## 📊 Versions des dépendances
 
 ### Dependencies (Production)
@@ -161,26 +150,6 @@ npm --version   # Doit être >= 9.0.0
 npm list --depth=0
 ```
 
-## 🔍 Vérification des requirements
-
-### Script de vérification
-
-Vous pouvez créer un script pour vérifier que tous les requirements sont satisfaits :
-
-```bash
-# Vérifier Node.js
-node --version
-
-# Vérifier npm
-npm --version
-
-# Vérifier que les dépendances sont installées
-test -d node_modules && echo "✓ node_modules existe" || echo "✗ node_modules manquant"
-
-# Vérifier que le fichier .env existe
-test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec VITE_API_URL)"
-```
-
 ## 📝 Notes importantes
 
 ### Versions de React
@@ -200,12 +169,6 @@ test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec V
 - L'API doit être accessible à l'URL configurée dans `.env`
 - Les CORS doivent être configurés pour accepter les requêtes du frontend
 
-### Jauges et widgets
-- Les jauges utilisent SVG pour un rendu vectoriel de haute qualité
-- Les animations CSS sont utilisées pour les effets visuels (ondes, bulles, glow)
-- Les dégradés de couleur sont calculés dynamiquement selon les valeurs des capteurs
-- Les transitions sont optimisées avec `cubic-bezier` pour des animations fluides
-
 ## 🐛 Résolution de problèmes
 
 ### Erreur "Node version not supported"
@@ -223,54 +186,6 @@ test -f .env && echo "✓ .env existe" || echo "⚠ .env manquant (créer avec V
 - Vérifier que le backend est démarré
 - Vérifier l'URL dans `.env`
 - Vérifier les CORS côté backend
-
-## 🎨 Fonctionnalités visuelles
-
-### Jauges interactives
-- **Jauge de température** : Arc SVG horizontal de 180° (0-50°C) avec dégradé vert-jaune-rouge
-- **Jauge de CO₂** : Arc SVG horizontal de 180° (0-2500 ppm) avec dégradé multi-couleurs
-- **Jauge d'humidité du sol** : Barre de progression avec dégradé rouge-jaune-vert et bulles animées
-- **Jauge de niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles et ondes
-- **Widget de luminosité** : Effet de glow dynamique avec soleil rotatif et particules
-
-### Animations CSS
-- Animations de pulsation pour les effets de glow
-- Animations de rotation pour les éléments rotatifs
-- Animations de flottement pour les particules et bulles
-- Animations d'ondes pour les surfaces d'eau
-- Transitions fluides pour les changements de valeurs
-
-### Dégradés de couleur
-- Dégradés HSL pour des transitions de couleur fluides
-- Dégradés linéaires SVG pour les arcs de jauges
-- Dégradés CSS pour les barres de progression
-- Calculs dynamiques basés sur les valeurs normalisées
-
----
-
-## 🔔 Système de notifications
-
-### Fonctionnalités
-- **Notifications en temps réel** : Système de notifications web pour les alertes et événements
-- **Gestion des notifications** : Marquer comme lue, supprimer, filtrer par statut
-- **Statistiques** : Compteurs de notifications (total, envoyées, en attente, erreurs, non lues, lues)
-- **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
-- **Multi-canal** : Support des notifications web, email et SMS
-
-### Services
-- **notificationService** : Service API pour la gestion des notifications
-- **NotificationContext** : Contexte React pour l'accès global aux notifications
-- **useNotifications** : Hook personnalisé pour utiliser les notifications dans les composants
-
-### Endpoints API
-- `GET /notifications/my` - Récupérer toutes les notifications de l'utilisateur
-- `GET /notifications/my?unreadOnly=true` - Récupérer uniquement les notifications non lues
-- `GET /notifications/web` - Récupérer uniquement les notifications web
-- `GET /notifications/stats` - Récupérer les statistiques des notifications
-- `PUT /notifications/:id/read` - Marquer une notification comme lue
-- `DELETE /notifications/:id` - Supprimer une notification
-
----
 
 **Dernière mise à jour** : Décembre 2025
 

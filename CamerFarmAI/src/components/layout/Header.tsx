@@ -51,6 +51,7 @@ export function Header({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const { t } = useTranslation();
   const navigate = useNavigate();
