@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { Modal } from '@/components/ui/Modal/Modal';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading } from '@/services/plantationService';
@@ -24,6 +25,7 @@ import {
   FaCircle,
   FaEdit,
   FaTimes,
+  FaInfoCircle,
 } from 'react-icons/fa';
 import styles from './MonitoringPage.module.css';
 
@@ -46,8 +48,8 @@ interface EquipmentState {
 // Amélioration : Gradients avec transitions fluides et zones d'avertissement claires
 function generateTemperatureGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 50) {
   // Gradient optimisé : Vert optimal autour de seuilMin, transition fluide vers rouge au-dessus de seuilMax
-  const effectiveMin = seuilMin ?? min;
-  const effectiveMax = seuilMax ?? max;
+  const effectiveMin = seuilMin ?? 18;
+  const effectiveMax = seuilMax ?? 28;
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
   const warningZone = 5; // Zone d'avertissement de 5% avant seuilMax
@@ -67,8 +69,8 @@ function generateTemperatureGradientStops(seuilMin?: number, seuilMax?: number, 
 
 function generateSoilHumidityGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 100) {
   // Gradient optimisé : Zone optimale verte bien définie entre les seuils avec transitions fluides
-  const effectiveMin = seuilMin ?? 30;
-  const effectiveMax = seuilMax ?? 60;
+  const effectiveMin = seuilMin ?? 40;
+  const effectiveMax = seuilMax ?? 70;
   
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
@@ -91,8 +93,8 @@ function generateSoilHumidityGradientStops(seuilMin?: number, seuilMax?: number,
 
 function generateCO2GradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 2500) {
   // Gradient optimisé : Vert optimal en dessous de seuilMin, transition progressive vers rouge au-dessus de seuilMax
-  const effectiveMin = seuilMin ?? 800;
-  const effectiveMax = seuilMax ?? 2000;
+  const effectiveMin = seuilMin ?? 400;
+  const effectiveMax = seuilMax ?? 1200;
   
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
@@ -115,7 +117,7 @@ function generateCO2GradientStops(seuilMin?: number, seuilMax?: number, min = 0,
 // Fonction pour générer les stops de gradient pour le niveau d'eau
 function generateWaterLevelGradientStops(seuilMin?: number, min = 0, max = 100) {
   // Gradient optimisé : Rouge en dessous de seuilMin, vert au-dessus avec transition fluide
-  const effectiveMin = seuilMin ?? 20;
+  const effectiveMin = seuilMin ?? 15;
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const warningZone = 5; // Zone d'avertissement de 5%
   
@@ -133,8 +135,8 @@ function generateWaterLevelGradientStops(seuilMin?: number, min = 0, max = 100) 
 // Fonction pour générer les stops de gradient pour la luminosité
 function generateLuminosityGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 100000) {
   // Gradient optimisé : Zone optimale verte entre les seuils avec transitions fluides
-  const effectiveMin = seuilMin ?? 0;
-  const effectiveMax = seuilMax ?? max;
+  const effectiveMin = seuilMin ?? 10000;
+  const effectiveMax = seuilMax ?? 60000;
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
   const warningZone = 3; // Zone d'avertissement de 3%
@@ -154,9 +156,8 @@ function generateLuminosityGradientStops(seuilMin?: number, seuilMax?: number, m
 
 function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax?: number, type: 'temperature' | 'soilHumidity' | 'co2' | 'waterLevel' | 'luminosity' = 'temperature') {
   if (type === 'temperature') {
-    const min = 0, max = 50;
-    const effectiveMin = seuilMin ?? min;
-    const effectiveMax = seuilMax ?? max;
+    const effectiveMin = seuilMin ?? 18;
+    const effectiveMax = seuilMax ?? 28;
     
     // Amélioration : Calcul plus précis avec transitions fluides
     if (value <= effectiveMin - 5) return 'hsl(200, 90%, 60%)'; // Bleu-vert (très froid)
@@ -168,18 +169,58 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'soilHumidity') {
-    const effectiveMin = seuilMin ?? 30;
-    const effectiveMax = seuilMax ?? 60;
+    const effectiveMin = seuilMin ?? 40;
+    const effectiveMax = seuilMax ?? 70;
+    const warningZone = 8; // Zone d'avertissement de 8% (cohérent avec le gradient)
     
-    // Amélioration : Zones d'avertissement plus précises
-    if (value >= effectiveMin && value <= effectiveMax) return 'hsl(120, 80%, 60%)'; // Vert optimal
-    if (value < effectiveMin - 8 || value > effectiveMax + 8) return 'hsl(0, 90%, 55%)'; // Rouge
-    return 'hsl(45, 90%, 55%)'; // Orange-jaune (zone d'avertissement)
+    // Logique alignée avec le gradient : transitions progressives
+    // Zone optimale (verte) entre les seuils
+    if (value >= effectiveMin && value <= effectiveMax) {
+      // Plus proche du centre = vert plus pur
+      const center = (effectiveMin + effectiveMax) / 2;
+      const distanceFromCenter = Math.abs(value - center);
+      const maxDistance = (effectiveMax - effectiveMin) / 2;
+      const ratio = distanceFromCenter / maxDistance;
+      // Transition du vert pur au centre vers vert-jaune aux bords
+      if (ratio < 0.3) return 'hsl(120, 80%, 60%)'; // Vert optimal
+      if (ratio < 0.6) return 'hsl(100, 82%, 59%)'; // Vert-jaune léger
+      return 'hsl(75, 85%, 58%)'; // Jaune-vert (bord de la zone optimale)
+    }
+    
+    // Zone d'avertissement en dessous du seuil min
+    if (value < effectiveMin) {
+      const distanceBelow = effectiveMin - value;
+      if (distanceBelow <= warningZone) {
+        // Transition orange-jaune → rouge-orange → rouge
+        const ratio = distanceBelow / warningZone;
+        if (ratio < 0.33) return 'hsl(45, 90%, 55%)'; // Orange-jaune
+        if (ratio < 0.66) return 'hsl(15, 90%, 55%)'; // Rouge-orange
+        return 'hsl(0, 90%, 55%)'; // Rouge
+      }
+      // Au-delà de la zone d'avertissement = rouge intense
+      return 'hsl(0, 95%, 50%)'; // Rouge intense (très sec)
+    }
+    
+    // Zone d'avertissement au-dessus du seuil max
+    if (value > effectiveMax) {
+      const distanceAbove = value - effectiveMax;
+      if (distanceAbove <= warningZone) {
+        // Transition orange-jaune → rouge-orange → rouge
+        const ratio = distanceAbove / warningZone;
+        if (ratio < 0.33) return 'hsl(45, 90%, 55%)'; // Orange-jaune
+        if (ratio < 0.66) return 'hsl(15, 90%, 55%)'; // Rouge-orange
+        return 'hsl(0, 90%, 55%)'; // Rouge
+      }
+      // Au-delà de la zone d'avertissement = rouge intense
+      return 'hsl(0, 95%, 50%)'; // Rouge intense (trop humide)
+    }
+    
+    return 'hsl(120, 80%, 60%)'; // Par défaut vert (ne devrait jamais arriver ici)
   }
   
   if (type === 'co2') {
-    const effectiveMin = seuilMin ?? 800;
-    const effectiveMax = seuilMax ?? 2000;
+    const effectiveMin = seuilMin ?? 400;
+    const effectiveMax = seuilMax ?? 1200;
     
     // Amélioration : Transitions plus fluides
     if (value <= effectiveMin) return 'hsl(120, 80%, 60%)'; // Vert bon
@@ -192,7 +233,7 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'waterLevel') {
-    const effectiveMin = seuilMin ?? 20;
+    const effectiveMin = seuilMin ?? 15;
     
     // Amélioration : Transitions plus fluides
     if (value >= effectiveMin + 10) return 'hsl(120, 80%, 60%)'; // Vert bon
@@ -202,9 +243,8 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'luminosity') {
-    const max = 100000;
-    const effectiveMin = seuilMin ?? 0;
-    const effectiveMax = seuilMax ?? max;
+    const effectiveMin = seuilMin ?? 10000;
+    const effectiveMax = seuilMax ?? 60000;
     
     // Amélioration : Zones plus précises
     if (value >= effectiveMin && value <= effectiveMax) return 'hsl(120, 80%, 60%)'; // Vert optimal
@@ -377,22 +417,38 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
   const { t } = useTranslation();
   const min = 0;
   const max = 100;
-  const effectiveMin = seuilMin ?? 30;
-  const effectiveMax = seuilMax ?? 60;
+  const effectiveMin = seuilMin ?? 40;
+  const effectiveMax = seuilMax ?? 70;
   
   // #region agent log
   fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:312',message:'Effective thresholds calculated',data:{effectiveMin,effectiveMax,min,max},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
   // #endregion
   
-  // Determine status based on humidity level avec seuils
+  // Calculer la couleur basée sur les seuils pour synchronisation
+  const color = calculateColorFromThresholds(value, seuilMin, seuilMax, 'soilHumidity');
+  
+  // Determine status based on humidity level avec seuils (synchronisé avec calculateColorFromThresholds)
   const getStatus = () => {
+    const warningZone = 8; // Cohérent avec calculateColorFromThresholds
+    
     if (value >= effectiveMin && value <= effectiveMax) {
-      return { text: t('monitoring.status.optimal'), color: '#22c55e', bgColor: '#22c55e' };
+      return { text: t('monitoring.status.optimal') };
     }
-    if (value < effectiveMin - 10 || value > effectiveMax + 10) {
-      return { text: t('monitoring.status.low'), color: '#ef4444', bgColor: '#ef4444' };
+    // En dessous du seuil min
+    if (value < effectiveMin) {
+      if (value < effectiveMin - warningZone) {
+        return { text: t('monitoring.status.low') }; // Très sec
+      }
+      return { text: t('monitoring.status.moderate') }; // Zone d'avertissement
     }
-    return { text: t('monitoring.status.moderate'), color: '#eab308', bgColor: '#eab308' };
+    // Au-dessus du seuil max
+    if (value > effectiveMax) {
+      if (value > effectiveMax + warningZone) {
+        return { text: t('monitoring.status.high') }; // Trop humide
+      }
+      return { text: t('monitoring.status.moderate') }; // Zone d'avertissement
+    }
+    return { text: t('monitoring.status.moderate') };
   };
   const status = getStatus();
   
@@ -424,13 +480,13 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
       <div className={styles.monitoringPage__humidityContainer}>
         {/* Value and status badge */}
         <div className={styles.monitoringPage__humidityHeader}>
-          <span className={styles.monitoringPage__humidityValueLarge}>
+          <span className={styles.monitoringPage__humidityValueLarge} style={{ color }}>
             <span>{value.toFixed(1)}</span>
             <span className={styles.monitoringPage__humidityValueUnit}>%</span>
           </span>
           <div
             className={styles.monitoringPage__humidityStatusBadge}
-            style={{ backgroundColor: status.bgColor }}
+            style={{ backgroundColor: color }}
           >
           {status.text}
         </div>
@@ -456,14 +512,23 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
             ))}
           </div>
           
-          {/* Progress bar track */}
-          <div className={styles.monitoringPage__progressBarTrackEnhanced}>
-            {/* Progress bar fill with gradient */}
+          {/* Progress bar track avec gradient sur toute la barre (0-100%) - masqué pour ne montrer que jusqu'à la valeur */}
+          <div 
+            className={styles.monitoringPage__progressBarTrackEnhanced}
+            style={{ 
+              background: cssGradient,
+              clipPath: `inset(0 ${100 - value}% 0 0)`,
+              transition: 'clip-path 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
+            {/* Progress bar fill - contient les bulles d'eau */}
             <div
               className={styles.monitoringPage__progressBarFillEnhanced}
               style={{ 
-                width: `${value}%`,
-                background: cssGradient
+                width: '100%',
+                height: '100%',
+                background: 'transparent',
+                position: 'relative'
               }}
             >
               {/* #region agent log */}
@@ -484,9 +549,9 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
-            />
+                  />
                 ))}
-          </div>
+              </div>
             </div>
             
             {/* Measurement markers */}
@@ -520,8 +585,8 @@ function CO2Widget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { 
   const { t } = useTranslation();
   const min = 0;
   const max = 2500;
-  const effectiveMin = seuilMin ?? 800;
-  const effectiveMax = seuilMax ?? 2000;
+  const effectiveMin = seuilMin ?? 400;
+  const effectiveMax = seuilMax ?? 1200;
   
   // S'assurer que la valeur est strictement dans les limites [0, 2500]
   const clampedValue = Math.max(min, Math.min(max, value));
@@ -705,8 +770,8 @@ function CO2Widget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { 
 function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
   const { t } = useTranslation();
   const maxValue = 100000; // Max value for lux
-  const effectiveMin = seuilMin ?? 0;
-  const effectiveMax = seuilMax ?? maxValue;
+  const effectiveMin = seuilMin ?? 10000;
+  const effectiveMax = seuilMax ?? 60000;
   
   // Normalize value (0-100%)
   const normalizedValue = (value / maxValue) * 100;
@@ -867,7 +932,7 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
             <div 
               className={styles.monitoringPage__luminosityStatus}
               style={{
-                color: normalizedValue > 60 ? '#047857' : normalizedValue > 30 ? '#059669' : '#6b7280',
+                color: calculateColorFromThresholds(value, seuilMin, seuilMax, 'luminosity'),
               }}
             >
               {getLightDescription(value)}
@@ -882,7 +947,7 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
 // Widget de niveau d'eau avec réservoir 3D
 function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
   const { t } = useTranslation();
-  const effectiveMin = seuilMin ?? 20;
+  const effectiveMin = seuilMin ?? 15;
   
   const getStatus = (level: number) => {
     if (level >= effectiveMin) {
@@ -977,7 +1042,7 @@ function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
           
           {/* Pipe with water flow indicator */}
           <div className={styles.monitoringPage__waterPipe}>
-            {clampedValue > 20 && (
+            {clampedValue > effectiveMin && (
               <div className={styles.monitoringPage__waterFlow} />
             )}
           </div>
@@ -1061,6 +1126,7 @@ export function MonitoringPage() {
   const plantationId = searchParams.get('plantationId');
   const { refresh: refreshNotifications } = useNotificationContext();
   const user = useAuthStore((s) => s.user);
+  const [showGaugeHelp, setShowGaugeHelp] = useState(false);
   const [sensorData, setSensorData] = useState<SensorData>({
     temperature: 0,
     soilHumidity: 0,
@@ -1773,9 +1839,19 @@ export function MonitoringPage() {
           )}
           {/* Section des capteurs */}
           <div className={styles.monitoringPage__section}>
-            <h2 className={styles.monitoringPage__sectionTitle}>
-              {t('monitoring.sensors.title')}
-            </h2>
+            <div className={styles.monitoringPage__sectionTitleContainer}>
+              <h2 className={styles.monitoringPage__sectionTitle}>
+                {t('monitoring.sensors.title')}
+              </h2>
+              <button
+                className={styles.monitoringPage__helpButton}
+                onClick={() => setShowGaugeHelp(true)}
+                aria-label={t('monitoring.help.title')}
+                title={t('monitoring.help.title')}
+              >
+                <Icon icon={FaInfoCircle} size={20} />
+              </button>
+            </div>
             <div
               ref={sensorsRef as React.RefObject<HTMLDivElement>}
               className={`${styles.monitoringPage__sensorsGrid} ${
@@ -2108,7 +2184,100 @@ export function MonitoringPage() {
         </div>
       </main>
       <Footer />
+      <GaugeHelpModal
+        isOpen={showGaugeHelp}
+        onClose={() => setShowGaugeHelp(false)}
+      />
     </>
+  );
+}
+
+// Composant modal d'aide pour expliquer les couleurs des jauges
+function GaugeHelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { t } = useTranslation();
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('monitoring.help.title')}
+      size="lg"
+    >
+      <div className={styles.monitoringPage__gaugeHelpContent}>
+        <p className={styles.monitoringPage__gaugeHelpIntro}>
+          {t('monitoring.help.intro')}
+        </p>
+
+        {/* Légende des zones */}
+        <div className={styles.monitoringPage__gaugeHelpZones}>
+          <h3 className={styles.monitoringPage__gaugeHelpZonesTitle}>
+            Zones de couleur
+          </h3>
+          <div className={styles.monitoringPage__gaugeHelpZonesList}>
+            <div className={styles.monitoringPage__colorZoneContainer}>
+              <div className={`${styles.monitoringPage__colorZone} ${styles['monitoringPage__colorZone--optimal']}`} />
+              <span>{t('monitoring.help.zones.optimal')}</span>
+            </div>
+            <div className={styles.monitoringPage__colorZoneContainer}>
+              <div className={`${styles.monitoringPage__colorZone} ${styles['monitoringPage__colorZone--warning']}`} />
+              <span>{t('monitoring.help.zones.warning')}</span>
+            </div>
+            <div className={styles.monitoringPage__colorZoneContainer}>
+              <div className={`${styles.monitoringPage__colorZone} ${styles['monitoringPage__colorZone--danger']}`} />
+              <span>{t('monitoring.help.zones.danger')}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sections par type de jauge */}
+        <div className={styles.monitoringPage__gaugeHelpSections}>
+          <div className={styles.monitoringPage__gaugeHelpSection}>
+            <h3 className={styles.monitoringPage__gaugeHelpSectionTitle}>
+              {t('monitoring.help.temperature.title')}
+            </h3>
+            <p className={styles.monitoringPage__gaugeHelpSectionDescription}>
+              {t('monitoring.help.temperature.description')}
+            </p>
+          </div>
+
+          <div className={styles.monitoringPage__gaugeHelpSection}>
+            <h3 className={styles.monitoringPage__gaugeHelpSectionTitle}>
+              {t('monitoring.help.soilHumidity.title')}
+            </h3>
+            <p className={styles.monitoringPage__gaugeHelpSectionDescription}>
+              {t('monitoring.help.soilHumidity.description')}
+            </p>
+          </div>
+
+          <div className={styles.monitoringPage__gaugeHelpSection}>
+            <h3 className={styles.monitoringPage__gaugeHelpSectionTitle}>
+              {t('monitoring.help.co2.title')}
+            </h3>
+            <p className={styles.monitoringPage__gaugeHelpSectionDescription}>
+              {t('monitoring.help.co2.description')}
+            </p>
+          </div>
+
+          <div className={styles.monitoringPage__gaugeHelpSection}>
+            <h3 className={styles.monitoringPage__gaugeHelpSectionTitle}>
+              {t('monitoring.help.luminosity.title')}
+            </h3>
+            <p className={styles.monitoringPage__gaugeHelpSectionDescription}>
+              {t('monitoring.help.luminosity.description')}
+            </p>
+          </div>
+
+          <div className={styles.monitoringPage__gaugeHelpSection}>
+            <h3 className={styles.monitoringPage__gaugeHelpSectionTitle}>
+              {t('monitoring.help.waterLevel.title')}
+            </h3>
+            <p className={styles.monitoringPage__gaugeHelpSectionDescription}>
+              {t('monitoring.help.waterLevel.description')}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Modal>
   );
 }
 

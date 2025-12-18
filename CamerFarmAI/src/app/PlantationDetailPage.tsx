@@ -151,17 +151,6 @@ export function PlantationDetailPage() {
       />
       <main className={styles.plantationDetailPage}>
         <div className={styles.plantationDetailPage__container}>
-          {/* Header avec bouton retour */}
-          <div className={styles.plantationDetailPage__header}>
-            <Button
-              variant="secondary"
-              onClick={() => navigate('/plantations')}
-              className={styles.plantationDetailPage__backButton}
-            >
-              <FaArrowLeft /> {t('plantations.detail.backToList')}
-            </Button>
-          </div>
-
           {/* Informations principales de la plantation */}
           <Card className={styles.plantationDetailPage__infoCard}>
             <div className={styles.plantationDetailPage__infoHeader}>

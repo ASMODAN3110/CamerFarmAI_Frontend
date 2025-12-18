@@ -344,11 +344,11 @@ Si aucun seuil n'est configuré, les valeurs suivantes sont utilisées :
 
 | Capteur | `seuilMin` (défaut) | `seuilMax` (défaut) |
 |---------|---------------------|---------------------|
-| Température | 0°C | 50°C |
-| Humidité du sol | 30% | 60% |
-| CO₂ | 800 ppm | 2000 ppm |
-| Niveau d'eau | 20% | - |
-| Luminosité | 0 lux | 100000 lux |
+| Température | 18°C | 28°C |
+| Humidité du sol | 40% | 70% |
+| CO₂ | 400 ppm | 1200 ppm |
+| Niveau d'eau | 15% | - |
+| Luminosité | 10000 lux | 60000 lux |
 
 ### Implémentation technique
 
