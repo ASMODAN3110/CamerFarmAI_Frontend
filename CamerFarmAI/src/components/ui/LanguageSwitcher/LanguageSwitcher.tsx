@@ -7,6 +7,7 @@ const languages = [
   { code: 'fr' as const, label: 'Français', flag: '🇫🇷' },
   { code: 'en' as const, label: 'English', flag: '🇬🇧' },
   { code: 'ff' as const, label: 'Fulfulde', flag: '🇨🇲' },
+  { code: 'ew' as const, label: 'Ewondo', flag: '🇨🇲' },
 ];
 
 interface LanguageSwitcherProps {
@@ -36,7 +37,7 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps 
     };
   }, [isOpen]);
 
-  const handleLanguageChange = (langCode: 'fr' | 'en' | 'ff') => {
+  const handleLanguageChange = (langCode: 'fr' | 'en' | 'ff' | 'ew') => {
     changeLanguage(langCode);
     setIsOpen(false);
   };

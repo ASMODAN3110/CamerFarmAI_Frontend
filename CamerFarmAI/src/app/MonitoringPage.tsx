@@ -445,7 +445,7 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
     if (value > effectiveMax) {
       if (value > effectiveMax + warningZone) {
         return { text: t('monitoring.status.high') }; // Trop humide
-      }
+    }
       return { text: t('monitoring.status.moderate') }; // Zone d'avertissement
     }
     return { text: t('monitoring.status.moderate') };
@@ -549,9 +549,9 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
-                  />
+            />
                 ))}
-              </div>
+          </div>
             </div>
             
             {/* Measurement markers */}
@@ -1840,9 +1840,9 @@ export function MonitoringPage() {
           {/* Section des capteurs */}
           <div className={styles.monitoringPage__section}>
             <div className={styles.monitoringPage__sectionTitleContainer}>
-              <h2 className={styles.monitoringPage__sectionTitle}>
-                {t('monitoring.sensors.title')}
-              </h2>
+            <h2 className={styles.monitoringPage__sectionTitle}>
+              {t('monitoring.sensors.title')}
+            </h2>
               <button
                 className={styles.monitoringPage__helpButton}
                 onClick={() => setShowGaugeHelp(true)}
