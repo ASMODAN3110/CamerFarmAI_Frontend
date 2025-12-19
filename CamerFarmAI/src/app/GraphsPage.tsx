@@ -376,10 +376,10 @@ export function GraphsPage() {
             </p>
             {!plantationId && (
               <div className={styles.graphsPage__emptyMessage}>
-                <p>Veuillez sélectionner une plantation pour voir les graphiques.</p>
+                <p>{t('graphs.selectPlantation')}</p>
                 <Link to="/plantations">
                   <Button variant="primary" style={{ marginTop: '1rem' }}>
-                    Voir mes plantations
+                    {t('graphs.viewMyPlantations')}
                   </Button>
                 </Link>
               </div>
@@ -391,12 +391,12 @@ export function GraphsPage() {
             )}
             {!isLoading && chartData.length === 0 && plantationId && sensors.length === 0 && (
               <p className={styles.graphsPage__emptyMessage}>
-                Aucun capteur avec des données disponibles pour cette plantation.
+                {t('graphs.noSensorsAvailable')}
               </p>
             )}
             {!isLoading && chartData.length === 0 && plantationId && sensors.length > 0 && (
               <p className={styles.graphsPage__emptyMessage}>
-                {t('graphs.empty')} - Aucune donnée disponible pour les capteurs sélectionnés.
+                {t('graphs.empty')} - {t('graphs.noDataForSelectedSensors')}
               </p>
             )}
           </div>
@@ -482,13 +482,13 @@ export function GraphsPage() {
            {!plantationId ? (
              <div className={styles.graphsPage__chartSection}>
                <p className={styles.graphsPage__emptyMessage}>
-                 Veuillez sélectionner une plantation pour voir les graphiques.
+                 {t('graphs.selectPlantation')}
                </p>
              </div>
            ) : !activeSensor ? (
              <div className={styles.graphsPage__chartSection}>
                <p className={styles.graphsPage__emptyMessage}>
-                 Aucun capteur sélectionné. Veuillez sélectionner un capteur ci-dessus.
+                 {t('graphs.noSensorSelected')}
                </p>
              </div>
            ) : sensors.length > 0 ? (
@@ -574,10 +574,10 @@ export function GraphsPage() {
                    return (
                  <div className={styles.graphsPage__chartContainer}>
                    <p className={styles.graphsPage__emptyMessage}>
-                     {t('graphs.empty')} - Aucune donnée disponible pour ce capteur ({activeSensor.label}).
+                     {t('graphs.empty')} - {t('graphs.noDataForSensor')} ({activeSensor.label}).
                      {sensorsData.length > 0 && (
                        <span style={{ display: 'block', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                         {sensorsData.length} point(s) de données chargé(s) mais aucune valeur pour {activeSensor.dataKey}
+                         {t('graphs.dataPointsLoaded').replace('{count}', sensorsData.length.toString()).replace('{sensorKey}', activeSensor.dataKey)}
                        </span>
                      )}
                    </p>
@@ -589,7 +589,7 @@ export function GraphsPage() {
            ) : (
              <div className={styles.graphsPage__chartSection}>
                <p className={styles.graphsPage__emptyMessage}>
-                 Aucun capteur avec des données disponibles pour cette plantation.
+                 {t('graphs.noSensorsWithData')}
                </p>
           </div>
            )}

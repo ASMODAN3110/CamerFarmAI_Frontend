@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { TranslationKey } from '@/utils/translations';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { Button } from '@/components/ui/Button/Button';
 import { Header } from '@/components/layout/Header';
@@ -400,6 +401,7 @@ export function ProfilePage() {
                     <option value="fr">{t('language.fr')}</option>
                     <option value="en">{t('language.en')}</option>
                     <option value="ff">{t('language.ff')}</option>
+                    <option value="ew">{t('language.ew')}</option>
                   </select>
                 </div>
 

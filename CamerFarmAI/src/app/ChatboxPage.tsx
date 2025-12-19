@@ -15,13 +15,6 @@ interface Message {
   timestamp: Date;
 }
 
-const SUGGESTED_QUESTIONS = [
-  'Comment optimiser l\'irrigation de ma plantation ?',
-  'Quels sont les meilleurs moments pour arroser ?',
-  'Comment détecter les maladies des plantes ?',
-  'Quelle est la température idéale pour mes cultures ?',
-];
-
 export function ChatboxPage() {
   const { t, language } = useTranslation();
   const [question, setQuestion] = useState('');
@@ -57,7 +50,7 @@ export function ChatboxPage() {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `(${language.toUpperCase()}) Réponse IA simulée pour : "${userMessage.content}"\n\nJe suis votre assistant IA pour l'agriculture. Je peux vous aider avec des questions sur l'irrigation, les capteurs, les plantations et bien plus encore.`,
+        content: `(${language.toUpperCase()}) ${t('chatbox.aiResponse.prefix')} "${userMessage.content}"\n\n${t('chatbox.aiResponse.intro')}`,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, aiMessage]);
@@ -68,6 +61,14 @@ export function ChatboxPage() {
   const handleSuggestedQuestion = (suggestedQuestion: string) => {
     setQuestion(suggestedQuestion);
   };
+
+  // Questions suggérées avec traductions
+  const suggestedQuestions = useMemo(() => [
+    t('chatbox.suggestedQuestions.question1'),
+    t('chatbox.suggestedQuestions.question2'),
+    t('chatbox.suggestedQuestions.question3'),
+    t('chatbox.suggestedQuestions.question4'),
+  ], [t]);
 
 
   const navItems = useMemo(
@@ -92,9 +93,9 @@ export function ChatboxPage() {
                 <FaRobot className={styles.aiIcon} />
               </div>
             </div>
-            <h1 className={styles.title}>Assistance Intelligente (IA)</h1>
+            <h1 className={styles.title}>{t('chatbox.title')}</h1>
             <p className={styles.description}>
-              Posez vos questions sur l'agriculture, les plantations, les capteurs et obtenez des réponses intelligentes en temps réel.
+              {t('chatbox.description')}
             </p>
           </div>
 
@@ -103,18 +104,18 @@ export function ChatboxPage() {
               {messages.length === 0 ? (
                 <div className={styles.emptyState}>
                   <FaRobot className={styles.emptyIcon} />
-                  <h3 className={styles.emptyTitle}>Commencez une conversation</h3>
+                  <h3 className={styles.emptyTitle}>{t('chatbox.emptyState.title')}</h3>
                   <p className={styles.emptyDescription}>
-                    Posez votre première question ou choisissez une suggestion ci-dessous
+                    {t('chatbox.emptyState.description')}
                   </p>
                   
                   <div className={styles.suggestionsContainer}>
                     <div className={styles.suggestionsHeader}>
                       <FaLightbulb className={styles.suggestionsIcon} />
-                      <span>Questions suggérées</span>
+                      <span>{t('chatbox.suggestionsHeader')}</span>
                     </div>
                     <div className={styles.suggestionsGrid}>
-                      {SUGGESTED_QUESTIONS.map((suggestion, index) => (
+                      {suggestedQuestions.map((suggestion, index) => (
                         <button
                           key={index}
                           className={styles.suggestionCard}
@@ -183,11 +184,11 @@ export function ChatboxPage() {
                 <div className={styles.inputZone}>
                   <div className={styles.inputLabel}>
                     <FaUser className={styles.inputLabelIcon} />
-                    <span>Votre message</span>
+                    <span>{t('chatbox.inputLabel')}</span>
                   </div>
                   <div className={styles.inputWrapper}>
                     <textarea
-                      placeholder="Écrivez votre question ici..."
+                      placeholder={t('chatbox.inputPlaceholder')}
                       className={styles.chatInput}
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
@@ -207,14 +208,14 @@ export function ChatboxPage() {
                       variant="primary"
                     >
                       <FaPaperPlane className={styles.sendIcon} />
-                      {isLoading ? 'Envoi...' : 'Envoyer'}
+                      {isLoading ? t('chatbox.sending') : t('chatbox.sendButton')}
                     </Button>
                   </div>
                   <div className={styles.inputFooter}>
                     <span className={styles.inputHint}>
                       {messages.length === 0 
-                        ? 'Appuyez sur Entrée pour envoyer, Shift+Entrée pour une nouvelle ligne'
-                        : `${question.length} caractère${question.length > 1 ? 's' : ''}`
+                        ? t('chatbox.inputHint')
+                        : `${question.length} ${question.length > 1 ? t('chatbox.characters') : t('chatbox.characterCount')}`
                       }
                     </span>
                   </div>
