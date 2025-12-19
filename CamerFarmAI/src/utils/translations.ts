@@ -124,6 +124,7 @@ export type TranslationKey =
   | 'plantations.createModal.errors.coordinatesRequiredTogether'
   | 'plantations.cropType'
   | 'plantations.errors.fetchFailed'
+  | 'plantations.detail.title'
   | 'plantations.detail.loading'
   | 'plantations.detail.backToList'
   | 'plantations.detail.createdAt'
@@ -244,6 +245,22 @@ export type TranslationKey =
   | 'monitoring.mode.automaticInfo'
   | 'monitoring.mode.updateError'
   | 'monitoring.noSensors'
+  | 'monitoring.help.title'
+  | 'monitoring.help.intro'
+  | 'monitoring.help.temperature.title'
+  | 'monitoring.help.temperature.description'
+  | 'monitoring.help.soilHumidity.title'
+  | 'monitoring.help.soilHumidity.description'
+  | 'monitoring.help.co2.title'
+  | 'monitoring.help.co2.description'
+  | 'monitoring.help.luminosity.title'
+  | 'monitoring.help.luminosity.description'
+  | 'monitoring.help.waterLevel.title'
+  | 'monitoring.help.waterLevel.description'
+  | 'monitoring.help.zones.optimal'
+  | 'monitoring.help.zones.warning'
+  | 'monitoring.help.zones.danger'
+  | 'monitoring.help.close'
   | 'profile.back'
   | 'profile.pageLabel'
   | 'profile.welcome'
@@ -562,6 +579,22 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automaticInfo': 'Mode automatique activé : Les équipements sont contrôlés automatiquement selon les données des capteurs.',
     'monitoring.mode.updateError': 'Erreur lors de la mise à jour du mode. Veuillez réessayer.',
     'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
+    'monitoring.help.title': 'Comment fonctionnent les couleurs des jauges ?',
+    'monitoring.help.intro': 'Les couleurs des jauges s\'adaptent automatiquement selon les seuils que vous avez configurés (seuilMin et seuilMax). Chaque jauge utilise un système de couleurs pour vous indiquer rapidement l\'état de vos capteurs.',
+    'monitoring.help.temperature.title': '🌡️ Température (0-50°C)',
+    'monitoring.help.temperature.description': 'La jauge de température affiche du vert autour de votre seuil minimum (température idéale), puis transitionne progressivement vers le jaune et l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (danger).',
+    'monitoring.help.soilHumidity.title': '💧 Humidité du sol (0-100%)',
+    'monitoring.help.soilHumidity.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min ou au-dessus du seuil max, la couleur passe à l\'orange puis au rouge pour indiquer un niveau critique.',
+    'monitoring.help.co2.title': '🌬️ Taux de CO2 (0-2500 ppm)',
+    'monitoring.help.co2.description': 'Le vert indique un bon niveau de CO2 (en dessous du seuil min). La couleur transitionne vers le jaune puis l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (niveau dangereux).',
+    'monitoring.help.luminosity.title': '☀️ Luminosité (0-100000 lux)',
+    'monitoring.help.luminosity.description': 'La zone optimale (verte) se trouve entre votre seuil minimum et maximum. En dehors de cette plage, la couleur devient jaune (avertissement) puis rouge (saturation ou obscurité extrême).',
+    'monitoring.help.waterLevel.title': '💧 Niveau d\'eau (0-100%)',
+    'monitoring.help.waterLevel.description': 'Le rouge indique un niveau critique (en dessous du seuil min). Au-dessus du seuil minimum, la couleur passe progressivement à l\'orange, puis au vert pour indiquer un niveau suffisant.',
+    'monitoring.help.zones.optimal': 'Zone optimale',
+    'monitoring.help.zones.warning': 'Zone d\'avertissement',
+    'monitoring.help.zones.danger': 'Zone de danger',
+    'monitoring.help.close': 'Fermer',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
@@ -591,6 +624,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.coordinatesRequiredTogether': 'La latitude et la longitude doivent être fournies ensemble',
     'plantations.cropType': 'Culture',
     'plantations.errors.fetchFailed': 'Impossible de charger les plantations. Les données affichées peuvent être obsolètes.',
+    'plantations.detail.title': 'Détail plantation',
     'plantations.detail.loading': 'Chargement de la plantation...',
     'plantations.detail.backToList': 'Retour à la liste',
     'plantations.detail.createdAt': 'Créée le',
@@ -896,6 +930,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.locationRequired': 'Location is required',
     'plantations.cropType': 'Crop',
     'plantations.errors.fetchFailed': 'Unable to load plantations. Displayed data may be outdated.',
+    'plantations.detail.title': 'Plantation Details',
     'plantations.detail.loading': 'Loading plantation...',
     'plantations.detail.backToList': 'Back to list',
     'plantations.detail.createdAt': 'Created on',
@@ -979,6 +1014,22 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automaticInfo': 'Automatic mode enabled: Equipment is controlled automatically based on sensor data.',
     'monitoring.mode.updateError': 'Error updating mode. Please try again.',
     'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
+    'monitoring.help.title': 'How do gauge colors work?',
+    'monitoring.help.intro': 'Gauge colors adapt automatically based on the thresholds you have configured (seuilMin and seuilMax). Each gauge uses a color system to quickly indicate the status of your sensors.',
+    'monitoring.help.temperature.title': '🌡️ Temperature (0-50°C)',
+    'monitoring.help.temperature.description': 'The temperature gauge displays green around your minimum threshold (ideal temperature), then progressively transitions to yellow and orange between thresholds, and becomes red above the maximum threshold (danger).',
+    'monitoring.help.soilHumidity.title': '💧 Soil Humidity (0-100%)',
+    'monitoring.help.soilHumidity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold or above the max threshold, the color changes to orange then red to indicate a critical level.',
+    'monitoring.help.co2.title': '🌬️ CO2 Rate (0-2500 ppm)',
+    'monitoring.help.co2.description': 'Green indicates a good CO2 level (below the min threshold). The color transitions to yellow then orange between thresholds, and becomes red above the maximum threshold (dangerous level).',
+    'monitoring.help.luminosity.title': '☀️ Luminosity (0-100000 lux)',
+    'monitoring.help.luminosity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Outside this range, the color becomes yellow (warning) then red (extreme saturation or darkness).',
+    'monitoring.help.waterLevel.title': '💧 Water Level (0-100%)',
+    'monitoring.help.waterLevel.description': 'Red indicates a critical level (below the min threshold). Above the minimum threshold, the color progressively changes to orange, then green to indicate a sufficient level.',
+    'monitoring.help.zones.optimal': 'Optimal zone',
+    'monitoring.help.zones.warning': 'Warning zone',
+    'monitoring.help.zones.danger': 'Danger zone',
+    'monitoring.help.close': 'Close',
     'profile.back': 'Back',
     'profile.pageLabel': 'User profile',
     'profile.welcome': 'Welcome, {name}',
@@ -1263,6 +1314,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.createModal.errors.coordinatesRequiredTogether': 'Latitude e longitude ina tawaa e nder goɗɗe',
     'plantations.cropType': 'Fannu ngesa',
     'plantations.errors.fetchFailed': 'Waawaa nattude nguurndam. Keɓe njiyataa waawaa heddude.',
+    'plantations.detail.title': 'Keɓe nguurndam',
     'plantations.detail.loading': 'Jokkondir nguurndam...',
     'plantations.detail.backToList': 'Ruttoo e njiylol',
     'plantations.detail.createdAt': 'Waɗaaɗe',
@@ -1334,6 +1386,23 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.status.bright': 'Ndaariɗo',
     'monitoring.status.normal': 'Goonga',
     'monitoring.status.dim': 'Suuɗo',
+    'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
+    'monitoring.help.title': 'Hol no nooneeɗe kulooruuji jokkondirɗe?',
+    'monitoring.help.intro': 'Kulooruuji jokkondirɗe ɓeydiraa e hoore maɓɓe no fuɗɗiiɗe señoluuji maa (seuilMin e seuilMax). Jokkondir kala huutortoo e noone kulooruuji ngam hollude e sahaa nokkuure jokkondirɗe maa.',
+    'monitoring.help.temperature.title': '🌡️ Temperatuur (0-50°C)',
+    'monitoring.help.temperature.description': 'Jokkondiral temperatuur hollataa wuɗɗo haa ñiiɓɓo señol woɗnde maa (temperatuur moƴƴude), rewo ɓeydiraa e jaasi e ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (meɗɗe).',
+    'monitoring.help.soilHumidity.title': '💧 Ɓuɓɓe Leyɗe (0-100%)',
+    'monitoring.help.soilHumidity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde walla e dow señol ɓurnde, kulooru naatiraa ñiiɓɓo rewo boɗɗo ngam hollude nokkuure meɗɗe.',
+    'monitoring.help.co2.title': '🌬️ Nder CO2 (0-2500 ppm)',
+    'monitoring.help.co2.description': 'Wuɗɗo hollataa nokkuure CO2 moƴƴude (ley nder señol woɗnde). Kulooru ɓeydiraa e jaasi rewo ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (nokkuure meɗɗe).',
+    'monitoring.help.luminosity.title': '☀️ Ndaariɗe (0-100000 lux)',
+    'monitoring.help.luminosity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ɗo wadde nokkuure ngal, kulooru naatiraa jaasi (tintine) rewo boɗɗo (ɓeydugol walla ñuulɗe ɓurɗe).',
+    'monitoring.help.waterLevel.title': '💧 Nder Leyɗe (0-100%)',
+    'monitoring.help.waterLevel.description': 'Boɗɗo hollataa nokkuure meɗɗe (ley nder señol woɗnde). E dow señol woɗnde, kulooru ɓeydiraa e jaasi e ñiiɓɓo, rewo wuɗɗo ngam hollude nokkuure ɓurɗo.',
+    'monitoring.help.zones.optimal': 'Nokkuure moƴƴude',
+    'monitoring.help.zones.warning': 'Nokkuure tintine',
+    'monitoring.help.zones.danger': 'Nokkuure meɗɗe',
+    'monitoring.help.close': 'Uddu',
     'monitoring.equipment.title': 'Toppu kuuɗe e kuuɗe',
     'monitoring.equipment.irrigationPump': 'Pompe Irrigasion',
     'monitoring.equipment.fans': 'Ventilateerɗe',
@@ -1345,7 +1414,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.manual': 'Jokkondirɗam',
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
     'monitoring.mode.updateError': 'Firde e huutoreede wattinɗam. Tiiɗno yeewto.',
-    'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'profile.back': 'Rutto',
     'profile.pageLabel': 'Jokkondiral kuutoro',
     'profile.welcome': 'Aɗa naatii, {name}',

@@ -38,6 +38,7 @@ export function PlantationDetailPage() {
   const detailNavItems = [
     { label: t('nav.home'), href: '/' },
     { label: t('nav.plantations'), href: '/plantations' },
+    ...(id ? [{ label: t('plantations.detail.title'), href: `/plantations/${id}` }] : []),
     { label: t('nav.ai'), href: '/ai' },
     { label: t('nav.support'), href: '/support' },
   ];
@@ -143,20 +144,13 @@ export function PlantationDetailPage() {
   return (
     <>
       <Background3D />
-      <Header navItems={detailNavItems} currentPath={`/plantations/${id}`} showAuthIcons />
+      <Header 
+        navItems={detailNavItems} 
+        currentPath={`/plantations/${id}`} 
+        showAuthIcons 
+      />
       <main className={styles.plantationDetailPage}>
         <div className={styles.plantationDetailPage__container}>
-          {/* Header avec bouton retour */}
-          <div className={styles.plantationDetailPage__header}>
-            <Button
-              variant="secondary"
-              onClick={() => navigate('/plantations')}
-              className={styles.plantationDetailPage__backButton}
-            >
-              <FaArrowLeft /> {t('plantations.detail.backToList')}
-            </Button>
-          </div>
-
           {/* Informations principales de la plantation */}
           <Card className={styles.plantationDetailPage__infoCard}>
             <div className={styles.plantationDetailPage__infoHeader}>
