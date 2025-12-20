@@ -1,10 +1,11 @@
-import { ComponentType } from 'react';
+import { type ComponentType } from 'react';
 import styles from './Icon.module.css';
 
 export interface IconBaseProps {
   size?: number | string;
   className?: string;
   'aria-label'?: string;
+  role?: string;
 }
 
 export type IconComponent = ComponentType<IconBaseProps>;
