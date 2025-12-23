@@ -380,6 +380,24 @@ export type TranslationKey =
   | 'admin.fakers.seasonal.transition'
   | 'admin.fakers.results.percentage'
   | 'admin.fakers.results.barChart'
+  | 'chatbox.title'
+  | 'chatbox.description'
+  | 'chatbox.emptyState.title'
+  | 'chatbox.emptyState.description'
+  | 'chatbox.suggestionsHeader'
+  | 'chatbox.suggestedQuestions.question1'
+  | 'chatbox.suggestedQuestions.question2'
+  | 'chatbox.suggestedQuestions.question3'
+  | 'chatbox.suggestedQuestions.question4'
+  | 'chatbox.aiResponse.prefix'
+  | 'chatbox.aiResponse.intro'
+  | 'chatbox.inputLabel'
+  | 'chatbox.inputPlaceholder'
+  | 'chatbox.sendButton'
+  | 'chatbox.sending'
+  | 'chatbox.inputHint'
+  | 'chatbox.characters'
+  | 'chatbox.characterCount'
   | 'language.fr'
   | 'language.en'
   | 'language.ff'
@@ -766,6 +784,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant IA CamerFarm',
+    'chatbox.description': 'Posez vos questions sur l\'agriculture et recevez des conseils personnalisés en temps réel.',
+    'chatbox.emptyState.title': 'Bienvenue dans l\'Assistant IA',
+    'chatbox.emptyState.description': 'Commencez une conversation en posant une question ou en sélectionnant une suggestion ci-dessous.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Comment améliorer le rendement de mes cultures ?',
+    'chatbox.suggestedQuestions.question2': 'Quels sont les meilleurs moments pour arroser ?',
+    'chatbox.suggestedQuestions.question3': 'Comment identifier les maladies des plantes ?',
+    'chatbox.suggestedQuestions.question4': 'Quels capteurs dois-je installer pour mon type de culture ?',
+    'chatbox.aiResponse.prefix': 'Réponse à votre question',
+    'chatbox.aiResponse.intro': 'Voici une réponse détaillée à votre question. L\'assistant IA analyse vos données et vous fournit des recommandations personnalisées basées sur les meilleures pratiques agricoles.',
+    'chatbox.inputLabel': 'Votre question',
+    'chatbox.inputPlaceholder': 'Tapez votre question ici... (Ex: Comment optimiser l\'irrigation ?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Appuyez sur Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -1151,6 +1187,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Visual distribution',
+    'chatbox.title': 'CamerFarm AI Assistant',
+    'chatbox.description': 'Ask your questions about agriculture and receive personalized advice in real time.',
+    'chatbox.emptyState.title': 'Welcome to the AI Assistant',
+    'chatbox.emptyState.description': 'Start a conversation by asking a question or selecting a suggestion below.',
+    'chatbox.suggestionsHeader': 'Suggested questions',
+    'chatbox.suggestedQuestions.question1': 'How can I improve my crop yield?',
+    'chatbox.suggestedQuestions.question2': 'What are the best times to water?',
+    'chatbox.suggestedQuestions.question3': 'How to identify plant diseases?',
+    'chatbox.suggestedQuestions.question4': 'What sensors should I install for my crop type?',
+    'chatbox.aiResponse.prefix': 'Answer to your question',
+    'chatbox.aiResponse.intro': 'Here is a detailed answer to your question. The AI assistant analyzes your data and provides you with personalized recommendations based on agricultural best practices.',
+    'chatbox.inputLabel': 'Your question',
+    'chatbox.inputPlaceholder': 'Type your question here... (Ex: How to optimize irrigation?)',
+    'chatbox.sendButton': 'Send',
+    'chatbox.sending': 'Sending...',
+    'chatbox.inputHint': 'Press Enter to send, Shift+Enter for a new line',
+    'chatbox.characters': 'characters',
+    'chatbox.characterCount': 'character',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -1536,6 +1590,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Sakkondiral',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Sakkondiral Yiilal',
+    'chatbox.title': 'CamerFarm AI Ballal',
+    'chatbox.description': 'Naamnoo laawol maaɗa e ngayka e heɓo tawtoreeji kuutorɗam e wakkati ekkitiiɗam.',
+    'chatbox.emptyState.title': 'Arii e Ballal AI',
+    'chatbox.emptyState.description': 'Fuɗɗo waasde naamnoo laawol maaɗa walla suɓo tawtoreejo ɗoo les.',
+    'chatbox.suggestionsHeader': 'Laawol naamnooɗe',
+    'chatbox.suggestedQuestions.question1': 'Hol no mi waɗaade ɓeydugol ɗiɗɓe am?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe ɓurɗe ɓeydeede ngam ɓeydugol ndiyam?',
+    'chatbox.suggestedQuestions.question3': 'Hol no mi anndinaade cuuɗi ɗiɗɓe?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe kuutorɓe ɓeydorde mi waɗaade ngam gollal ɗiɗɓe am?',
+    'chatbox.aiResponse.prefix': 'Noddu laawol maaɗa',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo noddiraaɗo laawol maaɗa. Ballal AI seŋtina keɓe maaɗa e heɓa maa tawtoreeji kuutorɗam e jokkondiral baɗɗe ngayka jawdi.',
+    'chatbox.inputLabel': 'Laawol maaɗa',
+    'chatbox.inputPlaceholder': 'Binndo laawol maaɗa ton... (Misaal: Hol no mi waɗaade ɓeydugol ndiyam?)',
+    'chatbox.sendButton': 'Neldu',
+    'chatbox.sending': 'Neldugol...',
+    'chatbox.inputHint': 'Dobo Enter ngam neldugol, Shift+Enter ngam ɓoggo hesere',
+    'chatbox.characters': 'binndi',
+    'chatbox.characterCount': 'binndal',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
@@ -1921,6 +1993,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant AI CamerFarm',
+    'chatbox.description': 'Sígní question wá é agriculture é bwá conseils personnalisés temps réel.',
+    'chatbox.emptyState.title': 'Bwá Assistant AI',
+    'chatbox.emptyState.description': 'Kómbí conversation sígní question wá é sélectionner suggestion ékpé.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Hol no bwá rendement bisó wá?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe irrigation ékpé mbálá?',
+    'chatbox.suggestedQuestions.question3': 'Hol no anndinaade maladies bisó?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe capteurs ékpé ngam type culture wá?',
+    'chatbox.aiResponse.prefix': 'Réponse question wá',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo question wá. Assistant AI seŋtina données wá é heɓa wá conseils personnalisés basés pratiques agricoles ékpé.',
+    'chatbox.inputLabel': 'Question wá',
+    'chatbox.inputPlaceholder': 'Sígní question wá ton... (Ex: Hol no optimiser irrigation?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Dobo Enter ngam envoyer, Shift+Enter ngam ligne ékpé',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
