@@ -7,6 +7,7 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 ### Authentification
 - **Inscription** : Création de compte avec email, téléphone, nom et prénom
 - **Connexion** : Authentification par email et mot de passe
+- **Authentification à deux facteurs (2FA)** : Sécurisation supplémentaire avec codes de vérification (Google Authenticator, Authy, etc.)
 - **Gestion de session** : Refresh token automatique, déconnexion
 - **Protection des routes** : Routes protégées nécessitant une authentification
 
@@ -14,6 +15,7 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Page de profil** : Visualisation et modification des informations personnelles
 - **Upload de photo** : Téléchargement et affichage de la photo de profil
 - **Gestion des données** : Modification du prénom, nom, téléphone, langue
+- **Gestion du 2FA** : Activation/désactivation de l'authentification à deux facteurs depuis le profil
 
 ### Gestion des plantations
 - **Liste des plantations** : Visualisation de toutes les plantations de l'utilisateur
@@ -71,13 +73,14 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 
 ### Intelligence Artificielle
 - **Chatbot IA** : Assistant conversationnel pour répondre aux questions sur l'agriculture
-- **Support multilingue** : Chat disponible en français, anglais et fulfulde
+- **Support multilingue** : Chat disponible en français, anglais, fulfulde et ewondo
 - **Interface intuitive** : Chatbox moderne avec historique des conversations
 
 ### Multilingue
-- Support de 3 langues : Français, English, Fulfulde
+- Support de 4 langues : Français, English, Fulfulde, Ewondo
 - Changement de langue dynamique
 - Traductions complètes de l'interface
+- Approche hybride pour l'Ewondo : termes techniques modernes conservés en français pour une meilleure compréhension
 
 ## 📋 Prérequis
 
@@ -140,7 +143,8 @@ src/
 │       ├── Dropdown/            # Menu déroulant
 │       ├── LanguageSwitcher/    # Sélecteur de langue
 │       ├── FloatingButton/      # Bouton flottant
-│       └── CreatePlantationModal/ # Modal de création de plantation
+│       ├── CreatePlantationModal/ # Modal de création de plantation
+│       └── TwoFactorModal/      # Modal d'authentification à deux facteurs
 ├── services/                      # Services API
 │   ├── api.ts                    # Configuration Axios
 │   ├── authService.ts           # Service d'authentification
@@ -187,6 +191,10 @@ src/
 - `PUT /auth/profile` - Mise à jour du profil
 - `POST /auth/profile/avatar` - Upload de la photo de profil
 - `POST /auth/refresh` - Rafraîchissement du token
+- `POST /auth/2fa/setup` - Configuration du 2FA (génération du QR code)
+- `POST /auth/2fa/verify` - Vérification du code 2FA lors de la connexion
+- `POST /auth/2fa/enable` - Activation du 2FA
+- `POST /auth/2fa/disable` - Désactivation du 2FA
 
 ### Endpoints des plantations
 - `GET /plantations/my` - Liste des plantations de l'utilisateur
@@ -428,5 +436,315 @@ Pour contribuer au projet, veuillez suivre les conventions de code et créer une
 ## 📞 Support
 
 Pour toute question ou problème, contactez l'équipe de développement.
+
+## 🌐 Système de traduction (i18n)
+
+Le système de traduction de CamerFarm AI est implémenté de manière centralisée et type-safe, permettant une gestion efficace des 4 langues supportées.
+
+### Architecture du système
+
+Le système de traduction repose sur une architecture en couches :
+
+```
+┌─────────────────────────────────────────┐
+│   Composants React (UI)                 │
+│   Utilisent useTranslation()            │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│   Hook useTranslation()                 │
+│   - Fournit la fonction t(key)          │
+│   - Utilise useLanguage() pour la      │
+│     langue courante                     │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│   Fonction getTranslation()             │
+│   - Recherche la traduction dans         │
+│     translations[language][key]         │
+│   - Fallback sur la clé si absente      │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│   Objet translations                    │
+│   - Structure: Record<Language,          │
+│     Record<TranslationKey, string>>    │
+│   - Toutes les traductions centralisées │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│   LanguageContext (React Context)       │
+│   - Gère l'état de la langue            │
+│   - Persiste dans localStorage          │
+│   - Met à jour document.documentElement  │
+└─────────────────────────────────────────┘
+```
+
+### Composants principaux
+
+#### 1. **LanguageContext** (`src/contexts/LanguageContext.tsx`)
+
+Le contexte React qui gère l'état global de la langue dans l'application.
+
+**Fonctionnalités :**
+- **État de la langue** : Stocke la langue courante (`fr`, `en`, `ff`, `ew`)
+- **Persistance** : Sauvegarde automatique dans `localStorage` avec la clé `camerfarm-language`
+- **Initialisation** : Récupère la langue sauvegardée au démarrage, sinon utilise le français par défaut
+- **Mise à jour du DOM** : Met à jour l'attribut `lang` de `<html>` pour l'accessibilité et le SEO
+- **Validation** : Vérifie que la langue stockée est valide avant de l'utiliser
+
+**Exemple d'utilisation :**
+```typescript
+import { useLanguage } from '@/contexts/LanguageContext';
+
+function MyComponent() {
+  const { language, changeLanguage } = useLanguage();
+  
+  return (
+    <button onClick={() => changeLanguage('en')}>
+      Current: {language}
+    </button>
+  );
+}
+```
+
+#### 2. **Fichier de traductions** (`src/utils/translations.ts`)
+
+Le fichier central contenant toutes les traductions de l'application.
+
+**Structure :**
+- **Type `TranslationKey`** : Union type TypeScript listant toutes les clés de traduction possibles (type-safe)
+- **Type `Language`** : `'fr' | 'en' | 'ff' | 'ew'`
+- **Objet `translations`** : Structure hiérarchique `Record<Language, Record<TranslationKey, string>>`
+
+**Organisation des clés :**
+Les clés suivent une convention de nommage hiérarchique par fonctionnalité :
+- `nav.*` : Navigation (home, support, monitoring, etc.)
+- `auth.*` : Authentification (login, signup, logout, profile)
+- `login.*` : Page de connexion (title, labels, placeholders, errors, etc.)
+- `signup.*` : Page d'inscription
+- `plantations.*` : Gestion des plantations
+- `monitoring.*` : Monitoring en temps réel
+- `profile.*` : Profil utilisateur
+- `chatbox.*` : Chatbot IA
+- `admin.*` : Administration
+- etc.
+
+**Exemple de structure :**
+```typescript
+export const translations: Record<Language, Record<TranslationKey, string>> = {
+  fr: {
+    'nav.home': 'Accueil',
+    'nav.support': 'Support',
+    'login.title': 'CONNEXION',
+    'login.emailLabel': 'Adresse email',
+    // ... toutes les autres traductions
+  },
+  en: {
+    'nav.home': 'Home',
+    'nav.support': 'Support',
+    'login.title': 'LOGIN',
+    'login.emailLabel': 'Email address',
+    // ...
+  },
+  // ... autres langues
+};
+```
+
+#### 3. **Fonction `getTranslation()`** (`src/utils/translations.ts`)
+
+Fonction utilitaire qui récupère la traduction pour une clé et une langue données.
+
+**Logique :**
+1. Recherche la traduction dans `translations[language][key]`
+2. Si la traduction existe, la retourne
+3. Sinon, retourne la clé elle-même comme fallback (évite les erreurs d'affichage)
+
+**Signature :**
+```typescript
+export function getTranslation(
+  key: TranslationKey, 
+  language: Language
+): string
+```
+
+**Exemple :**
+```typescript
+getTranslation('nav.home', 'fr')  // → 'Accueil'
+getTranslation('nav.home', 'en')  // → 'Home'
+getTranslation('nav.home', 'ff')  // → 'Galle'
+getTranslation('nav.home', 'ew')  // → 'Ndé'
+```
+
+#### 4. **Hook `useTranslation()`** (`src/hooks/useTranslation.ts`)
+
+Hook React personnalisé qui simplifie l'utilisation des traductions dans les composants.
+
+**Fonctionnalités :**
+- Récupère automatiquement la langue courante via `useLanguage()`
+- Fournit une fonction `t(key)` qui encapsule `getTranslation()`
+- Retourne également la langue courante pour un usage conditionnel
+
+**Exemple d'utilisation :**
+```typescript
+import { useTranslation } from '@/hooks/useTranslation';
+
+function MyComponent() {
+  const { t, language } = useTranslation();
+  
+  return (
+    <div>
+      <h1>{t('nav.home')}</h1>
+      <p>Current language: {language}</p>
+    </div>
+  );
+}
+```
+
+#### 5. **Composant `LanguageSwitcher`** (`src/components/ui/LanguageSwitcher/LanguageSwitcher.tsx`)
+
+Composant UI permettant à l'utilisateur de changer de langue.
+
+**Fonctionnalités :**
+- Affiche la langue courante avec son drapeau
+- Menu déroulant avec les 4 langues disponibles
+- Indicateur visuel de la langue active
+- Gestion du clic extérieur pour fermer le menu
+- Support de variantes (`default`, `light`)
+
+**Langues affichées :**
+```typescript
+const languages = [
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'ff', label: 'Fulfulde', flag: '🇨🇲' },
+  { code: 'ew', label: 'Ewondo', flag: '🇨🇲' },
+];
+```
+
+### Flux de traduction
+
+1. **Initialisation** :
+   - Au chargement de l'application, `LanguageProvider` vérifie `localStorage`
+   - Si une langue valide est trouvée, elle est utilisée
+   - Sinon, le français (`fr`) est utilisé par défaut
+   - L'attribut `lang` de `<html>` est mis à jour
+
+2. **Utilisation dans un composant** :
+   ```typescript
+   const { t } = useTranslation();
+   const title = t('login.title'); // Récupère la traduction
+   ```
+
+3. **Changement de langue** :
+   - L'utilisateur clique sur `LanguageSwitcher`
+   - `changeLanguage('en')` est appelé
+   - Le contexte met à jour l'état
+   - `localStorage` est mis à jour
+   - `document.documentElement.lang` est mis à jour
+   - Tous les composants utilisant `useTranslation()` se re-rendent automatiquement
+
+4. **Récupération de la traduction** :
+   - `t(key)` appelle `getTranslation(key, language)`
+   - La fonction cherche dans `translations[language][key]`
+   - Retourne la traduction ou la clé en fallback
+
+### Avantages de cette architecture
+
+✅ **Type-safety** : TypeScript garantit que seules les clés valides peuvent être utilisées  
+✅ **Centralisation** : Toutes les traductions sont dans un seul fichier, facile à maintenir  
+✅ **Performance** : Pas de chargement dynamique, toutes les traductions sont en mémoire  
+✅ **Persistance** : La préférence de langue est sauvegardée entre les sessions  
+✅ **Accessibilité** : L'attribut `lang` du HTML est mis à jour automatiquement  
+✅ **Réactivité** : Changement de langue instantané sans rechargement de page  
+✅ **Fallback** : Si une traduction manque, la clé est affichée (évite les erreurs)  
+✅ **Maintenabilité** : Structure hiérarchique claire des clés de traduction  
+
+### Ajout d'une nouvelle traduction
+
+Pour ajouter une nouvelle traduction :
+
+1. **Ajouter la clé au type `TranslationKey`** :
+   ```typescript
+   export type TranslationKey = 
+     | 'nav.home'
+     | 'nav.newKey'  // ← Nouvelle clé
+     | // ...
+   ```
+
+2. **Ajouter la traduction pour chaque langue** :
+   ```typescript
+   export const translations = {
+     fr: {
+       'nav.newKey': 'Nouvelle traduction',
+       // ...
+     },
+     en: {
+       'nav.newKey': 'New translation',
+       // ...
+     },
+     ff: {
+       'nav.newKey': 'Tradusyon hesere',
+       // ...
+     },
+     ew: {
+       'nav.newKey': 'Traduction ékpé',
+       // ...
+     },
+   };
+   ```
+
+3. **Utiliser dans un composant** :
+   ```typescript
+   const { t } = useTranslation();
+   return <div>{t('nav.newKey')}</div>;
+   ```
+
+### Bonnes pratiques
+
+1. **Nommage des clés** : Utiliser une hiérarchie claire (`feature.section.item`)
+2. **Cohérence** : Maintenir la même structure pour toutes les langues
+3. **Complétude** : S'assurer que toutes les clés existent pour toutes les langues
+4. **Contexte** : Les clés doivent être suffisamment descriptives pour comprendre leur usage
+5. **Réutilisation** : Éviter la duplication, réutiliser les clés communes
+
+### Exemple complet
+
+```typescript
+// Dans un composant
+import { useTranslation } from '@/hooks/useTranslation';
+
+export function LoginPage() {
+  const { t } = useTranslation();
+  
+  return (
+    <div>
+      <h1>{t('login.title')}</h1>
+      <label>{t('login.emailLabel')}</label>
+      <input placeholder={t('login.emailPlaceholder')} />
+      <button>{t('login.submitButton')}</button>
+    </div>
+  );
+}
+```
+
+## 🌍 Langues supportées
+
+L'application supporte 4 langues pour une accessibilité maximale :
+
+| Langue | Code | Description |
+|--------|------|-------------|
+| Français | `fr` | Langue principale (par défaut) |
+| English | `en` | Langue internationale |
+| Fulfulde | `ff` | Langue locale camerounaise |
+| Ewondo | `ew` | Langue locale camerounaise (approche hybride pour les termes techniques) |
+
+### Approche de traduction Ewondo
+
+Pour l'Ewondo, une approche hybride a été adoptée :
+- **Termes de base** : Traduits en Ewondo (ex: "Accueil" → "Ndé", "Connexion" → "Kómbí")
+- **Termes techniques modernes** : Conservés en français pour une meilleure compréhension (ex: "Email", "Monitoring", "Système", "AI", "Dashboard")
+
+Cette approche reflète l'usage réel de la langue Ewondo dans un contexte technologique moderne.
 
 **Dernière mise à jour** : Décembre 2025
