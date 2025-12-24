@@ -52,11 +52,12 @@ export function GraphsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const plantationId = searchParams.get('plantationId');
-  const [selectedSensor, setSelectedSensor] = useState<string>('');
   // États pour les valeurs des champs (temporaires, non appliquées)
+  const [selectedSensorInput, setSelectedSensorInput] = useState<string>('');
   const [dateFromInput, setDateFromInput] = useState('');
   const [dateToInput, setDateToInput] = useState('');
   // États pour les valeurs appliquées (utilisées pour le filtrage)
+  const [selectedSensor, setSelectedSensor] = useState<string>('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [sensorsData, setSensorsData] = useState<any[]>([]);
@@ -285,15 +286,19 @@ export function GraphsPage() {
     chartDataLength: chartData.length
   });
 
-  // Mettre à jour selectedSensor si aucun n'est sélectionné ou si le capteur sélectionné n'est plus disponible
+  // Mettre à jour selectedSensorInput et selectedSensor si aucun n'est sélectionné ou si le capteur sélectionné n'est plus disponible
   useEffect(() => {
     if (sensors.length > 0) {
+      if (!selectedSensorInput || !sensors.find(s => s.id === selectedSensorInput)) {
+        console.log('📊 GraphsPage: Mise à jour du capteur sélectionné (input) vers:', sensors[0].id);
+        setSelectedSensorInput(sensors[0].id);
+      }
       if (!selectedSensor || !sensors.find(s => s.id === selectedSensor)) {
-        console.log('📊 GraphsPage: Mise à jour du capteur sélectionné vers:', sensors[0].id);
+        console.log('📊 GraphsPage: Mise à jour du capteur appliqué vers:', sensors[0].id);
         setSelectedSensor(sensors[0].id);
       }
     }
-  }, [sensors, selectedSensor]);
+  }, [sensors, selectedSensor, selectedSensorInput]);
 
   const activeSensor = sensors.find((s) => s.id === selectedSensor) || sensors[0];
   
@@ -322,7 +327,8 @@ export function GraphsPage() {
     // Appliquer les filtres en copiant les valeurs des champs vers les valeurs appliquées
     setDateFrom(dateFromInput);
     setDateTo(dateToInput);
-    console.log('Filter applied:', { dateFrom: dateFromInput, dateTo: dateToInput, sensor: selectedSensor });
+    setSelectedSensor(selectedSensorInput);
+    console.log('Filter applied:', { dateFrom: dateFromInput, dateTo: dateToInput, sensor: selectedSensorInput });
   };
 
   const handleResetFilter = () => {
@@ -331,6 +337,11 @@ export function GraphsPage() {
     setDateToInput('');
     setDateFrom('');
     setDateTo('');
+    // Réinitialiser le capteur au premier disponible
+    if (sensors.length > 0) {
+      setSelectedSensorInput(sensors[0].id);
+      setSelectedSensor(sensors[0].id);
+    }
     console.log('Filter reset');
   };
 
@@ -407,14 +418,14 @@ export function GraphsPage() {
             {sensors.map((sensor) => (
               <button
                 key={sensor.id}
-                onClick={() => setSelectedSensor(sensor.id)}
+                onClick={() => setSelectedSensorInput(sensor.id)}
                 className={`${styles.graphsPage__sensorButton} ${
-                  selectedSensor === sensor.id
+                  selectedSensorInput === sensor.id
                     ? `${sensor.bgColor} ${styles.graphsPage__sensorButtonActive}`
                     : styles.graphsPage__sensorButtonInactive
                 }`}
                 style={
-                  selectedSensor === sensor.id
+                  selectedSensorInput === sensor.id
                     ? {
                         borderColor: sensor.color,
                       }
@@ -465,7 +476,7 @@ export function GraphsPage() {
               >
                 {t('graphs.applyFilter')}
               </Button>
-              {(dateFromInput || dateToInput || dateFrom || dateTo) && (
+              {(dateFromInput || dateToInput || dateFrom || dateTo || (selectedSensorInput !== selectedSensor)) && (
                 <Button
                   variant="secondary"
                   onClick={handleResetFilter}
