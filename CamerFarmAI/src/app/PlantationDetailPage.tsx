@@ -444,7 +444,7 @@ export function PlantationDetailPage() {
       </main>
       <Footer />
       <FloatingButton
-        href="/support"
+        href="/ai"
         position="bottom-right"
         aria-label={t('floatingButton.ariaLabel')}
       />
