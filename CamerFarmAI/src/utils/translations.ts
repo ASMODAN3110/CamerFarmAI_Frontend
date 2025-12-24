@@ -143,6 +143,10 @@ export type TranslationKey =
   | 'plantations.detail.sensors.noSensors'
   | 'plantations.detail.sensors.noSensorsMessage'
   | 'plantations.detail.sensors.noData'
+  | 'plantations.detail.sensors.readingsHistory'
+  | 'plantations.detail.sensors.recentReadings'
+  | 'plantations.detail.sensors.loadingReadings'
+  | 'plantations.detail.sensors.noReadings'
   | 'plantations.detail.errors.invalidId'
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
@@ -662,6 +666,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Aucun capteur installé',
     'plantations.detail.sensors.noData': 'Aucune donnée',
     'plantations.detail.sensors.noSensorsMessage': 'Cette plantation n\'a pas encore de capteurs installés. Installez des capteurs pour accéder au monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique des valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement des valeurs...',
+    'plantations.detail.sensors.noReadings': 'Aucune valeur enregistrée',
     'plantations.detail.errors.invalidId': 'ID de plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -987,6 +995,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'No sensors installed',
     'plantations.detail.sensors.noData': 'No data',
     'plantations.detail.sensors.noSensorsMessage': 'This plantation does not have any sensors installed yet. Install sensors to access monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Readings History',
+    'plantations.detail.sensors.recentReadings': 'Recent Readings',
+    'plantations.detail.sensors.loadingReadings': 'Loading readings...',
+    'plantations.detail.sensors.noReadings': 'No readings recorded',
     'plantations.detail.errors.invalidId': 'Invalid plantation ID',
     'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
     'plantations.detail.errors.notFound': 'Plantation not found',
@@ -1390,6 +1402,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alaa jokkondirɗe nattaaɗe',
     'plantations.detail.sensors.noData': 'Alaa keɓe',
     'plantations.detail.sensors.noSensorsMessage': 'Nguurndam ngal alaa jokkondirɗe nattaaɗe jooni. Natt jokkondirɗe ngam naatde e jokkondiral.',
+    'plantations.detail.sensors.readingsHistory': 'Jokkondiral keɓe',
+    'plantations.detail.sensors.recentReadings': 'Keɓe sakkitiɗe',
+    'plantations.detail.sensors.loadingReadings': 'Jokkondir keɓe...',
+    'plantations.detail.sensors.noReadings': 'Alaa keɓe binndaaɗe',
     'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
     'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
     'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
@@ -1871,6 +1887,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alé capteur installé',
     'plantations.detail.sensors.noData': 'Alé données',
     'plantations.detail.sensors.noSensorsMessage': 'Plantation ékpé alé capteurs installés. Installez capteurs accéder monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement valeurs...',
+    'plantations.detail.sensors.noReadings': 'Alé valeurs enregistrées',
     'plantations.detail.errors.invalidId': 'ID plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Alé charger détails plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -2031,4 +2051,3 @@ export function getTranslation(key: TranslationKey, language: Language): string 
   
   return translation || key;
 }
-

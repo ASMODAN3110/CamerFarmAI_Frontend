@@ -23,7 +23,7 @@ import {
   FaTimesCircle,
   FaChartBar,
 } from 'react-icons/fa';
-import { plantationService, type Plantation, type Sensor } from '@/services/plantationService';
+import { plantationService, type Plantation, type Sensor, type SensorReading } from '@/services/plantationService';
 import styles from './PlantationDetailPage.module.css';
 
 export function PlantationDetailPage() {
@@ -33,6 +33,8 @@ export function PlantationDetailPage() {
   const [plantation, setPlantation] = useState<Plantation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sensorReadings, setSensorReadings] = useState<Record<string, SensorReading[]>>({});
+  const [loadingReadings, setLoadingReadings] = useState<Record<string, boolean>>({});
 
   // Configuration de la navbar
   const detailNavItems = [
@@ -75,6 +77,74 @@ export function PlantationDetailPage() {
 
     loadPlantation();
   }, [id, t]);
+
+  // Charger les readings pour chaque capteur
+  useEffect(() => {
+    const loadSensorReadings = async () => {
+      if (!plantation || !plantation.sensors || plantation.sensors.length === 0) {
+        return;
+      }
+
+      const readingsMap: Record<string, SensorReading[]> = {};
+      const loadingMap: Record<string, boolean> = {};
+
+      // Initialiser l'état de chargement pour tous les capteurs
+      plantation.sensors.forEach((sensor) => {
+        if (sensor.id) {
+          loadingMap[sensor.id] = true;
+        }
+      });
+      setLoadingReadings(loadingMap);
+
+      // Charger les readings pour chaque capteur
+      // On récupère toujours depuis l'API pour avoir l'historique complet
+      for (const sensor of plantation.sensors) {
+        if (!sensor.id || !id) {
+          loadingMap[sensor.id || ''] = false;
+          continue;
+        }
+
+        try {
+          // Toujours récupérer depuis l'API pour avoir l'historique complet
+          // Si les readings sont déjà incluses, on peut les utiliser comme fallback
+          let readings: SensorReading[] = [];
+          
+          // Essayer d'abord de récupérer depuis l'API
+          try {
+            readings = await plantationService.getSensorReadings(id, sensor.id);
+            console.log(`📊 PlantationDetailPage - Readings récupérées pour capteur ${sensor.id} (${sensor.type}):`, readings.length);
+          } catch (apiErr) {
+            console.warn(`⚠️ PlantationDetailPage - Erreur API pour capteur ${sensor.id}, utilisation des readings incluses si disponibles:`, apiErr);
+            // Fallback: utiliser les readings incluses dans le capteur si disponibles
+            if (sensor.readings && sensor.readings.length > 0) {
+              readings = sensor.readings;
+              console.log(`📊 PlantationDetailPage - Utilisation des readings incluses pour capteur ${sensor.id}:`, readings.length);
+            }
+          }
+
+          // Trier par timestamp décroissant (plus récent en premier)
+          readingsMap[sensor.id] = readings.sort((a, b) => 
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+        } catch (err) {
+          console.error(`❌ PlantationDetailPage - Erreur lors du chargement des readings pour capteur ${sensor.id}:`, err);
+          readingsMap[sensor.id] = [];
+        } finally {
+          loadingMap[sensor.id] = false;
+        }
+      }
+
+      setSensorReadings(readingsMap);
+      setLoadingReadings(loadingMap);
+      console.log('📊 PlantationDetailPage - État final des readings:', {
+        sensorsCount: plantation.sensors.length,
+        readingsCount: Object.keys(readingsMap).length,
+        totalReadings: Object.values(readingsMap).reduce((sum, readings) => sum + readings.length, 0),
+      });
+    };
+
+    loadSensorReadings();
+  }, [plantation, id]);
 
   const formatDate = (value: string) => {
     const date = new Date(value);
@@ -311,6 +381,53 @@ export function PlantationDetailPage() {
                           </span>
                         </div>
                       )}
+                      
+                      {/* Historique des valeurs - Section toujours visible */}
+                      <div className={styles.plantationDetailPage__readingsSection}>
+                        <h4 className={styles.plantationDetailPage__readingsTitle}>
+                          <Icon icon={FaChartLine} size={14} />
+                          {t('plantations.detail.sensors.readingsHistory')}
+                        </h4>
+                        {loadingReadings[sensor.id] ? (
+                          <div className={styles.plantationDetailPage__readingsLoading}>
+                            <Icon icon={FaCloud} size={16} />
+                            {t('plantations.detail.sensors.loadingReadings')}
+                          </div>
+                        ) : sensorReadings[sensor.id] && sensorReadings[sensor.id].length > 0 ? (
+                          <>
+                            <div className={styles.plantationDetailPage__readingsList}>
+                              {sensorReadings[sensor.id].slice(0, 15).map((reading) => (
+                                <div key={reading.id} className={styles.plantationDetailPage__readingItem}>
+                                  <span className={styles.plantationDetailPage__readingValue}>
+                                    {reading.value}{getSensorUnit(sensor.type)}
+                                  </span>
+                                  <span className={styles.plantationDetailPage__readingTime}>
+                                    {formatDateTime(reading.timestamp)}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                            {sensorReadings[sensor.id].length > 15 && (
+                              <div className={styles.plantationDetailPage__readingsMore}>
+                                +{sensorReadings[sensor.id].length - 15} {t('plantations.detail.sensors.recentReadings').toLowerCase()}...
+                                <span className={styles.plantationDetailPage__readingsTotal}>
+                                  ({sensorReadings[sensor.id].length} {t('plantations.detail.sensors.recentReadings').toLowerCase()})
+                                </span>
+                              </div>
+                            )}
+                            {sensorReadings[sensor.id].length <= 15 && sensorReadings[sensor.id].length > 0 && (
+                              <div className={styles.plantationDetailPage__readingsSummary}>
+                                {sensorReadings[sensor.id].length} {t('plantations.detail.sensors.recentReadings').toLowerCase()}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className={styles.plantationDetailPage__readingsEmpty}>
+                            <Icon icon={FaCloud} size={16} />
+                            {t('plantations.detail.sensors.noReadings')}
+                          </div>
+                        )}
+                      </div>
                     </Card>
                   );
                 })}
