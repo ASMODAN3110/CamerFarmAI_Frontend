@@ -24,6 +24,7 @@ import {
   FaChartBar,
 } from 'react-icons/fa';
 import { plantationService, type Plantation, type Sensor, type SensorReading } from '@/services/plantationService';
+import { getSensorStatusColor, getSensorStatusLabel, getTimeSinceLastReading } from '@/utils/sensorStatus';
 import styles from './PlantationDetailPage.module.css';
 
 export function PlantationDetailPage() {
@@ -101,6 +102,13 @@ export function PlantationDetailPage() {
       for (const sensor of plantation.sensors) {
         if (!sensor.id || !id) {
           loadingMap[sensor.id || ''] = false;
+          continue;
+        }
+
+        // Ne charger les readings que si le capteur est actif
+        if (sensor.status !== 'active') {
+          loadingMap[sensor.id] = false;
+          readingsMap[sensor.id] = [];
           continue;
         }
 
@@ -338,19 +346,26 @@ export function PlantationDetailPage() {
                     return '';
                   };
                   
+                  const statusColor = getSensorStatusColor(sensor.status as 'active' | 'inactive' | 'offline');
+                  const statusLabel = getSensorStatusLabel(sensor.status as 'active' | 'inactive' | 'offline', t);
+                  const timeSinceReading = getTimeSinceLastReading(sensor.latestReading?.timestamp);
+                  
                   return (
                     <Card key={sensor.id} className={styles.plantationDetailPage__sensorCard}>
                       <div className={styles.plantationDetailPage__sensorHeader}>
-                        <div className={styles.plantationDetailPage__sensorStatus}>
+                        <div 
+                          className={styles.plantationDetailPage__sensorStatus}
+                          style={{ color: statusColor }}
+                        >
                           {sensor.status === 'active' ? (
                             <>
                               <Icon icon={FaCheckCircle} size={16} />
-                              <span>{t('plantations.detail.sensors.active')}</span>
+                              <span>{statusLabel}</span>
                             </>
                           ) : (
                             <>
                               <Icon icon={FaTimesCircle} size={16} />
-                              <span>{t('plantations.detail.sensors.inactive')}</span>
+                              <span>{statusLabel}</span>
                             </>
                           )}
                         </div>
@@ -374,13 +389,22 @@ export function PlantationDetailPage() {
                           </div>
                         </div>
                       </div>
-                      {sensor.latestReading?.timestamp && (
-                        <div className={styles.plantationDetailPage__sensorFooter}>
-                          <span className={styles.plantationDetailPage__sensorTimestamp}>
-                            {t('plantations.detail.sensors.lastUpdate')}: {formatDateTime(sensor.latestReading.timestamp)}
-                          </span>
-                        </div>
-                      )}
+                      <div className={styles.plantationDetailPage__sensorFooter}>
+                        <span className={styles.plantationDetailPage__sensorTimestamp}>
+                          {sensor.latestReading?.timestamp ? (
+                            <>
+                              {t('plantations.detail.sensors.lastUpdate')}: {formatDateTime(sensor.latestReading.timestamp)}
+                              <span style={{ marginLeft: '8px', fontSize: '0.85em', opacity: 0.7 }}>
+                                ({timeSinceReading})
+                              </span>
+                            </>
+                          ) : (
+                            <span style={{ color: '#ef4444', fontStyle: 'italic' }}>
+                              {t('plantations.detail.sensors.noReading') || 'Aucune lecture'}
+                            </span>
+                          )}
+                        </span>
+                      </div>
                       
                       {/* Historique des valeurs - Section toujours visible */}
                       <div className={styles.plantationDetailPage__readingsSection}>

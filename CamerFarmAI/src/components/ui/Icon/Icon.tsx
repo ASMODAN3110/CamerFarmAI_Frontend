@@ -1,4 +1,4 @@
-import { type ComponentType } from 'react';
+import { type ComponentType, type CSSProperties } from 'react';
 import styles from './Icon.module.css';
 
 export interface IconBaseProps {
@@ -6,6 +6,7 @@ export interface IconBaseProps {
   className?: string;
   'aria-label'?: string;
   role?: string;
+  style?: CSSProperties;
 }
 
 export type IconComponent = ComponentType<IconBaseProps>;
@@ -15,9 +16,10 @@ interface IconProps {
   size?: number | string;
   className?: string;
   'aria-label'?: string;
+  style?: CSSProperties;
 }
 
-export function Icon({ icon: IconComponent, size = 24, className, 'aria-label': ariaLabel }: IconProps) {
+export function Icon({ icon: IconComponent, size = 24, className, 'aria-label': ariaLabel, style }: IconProps) {
   const classes = [styles.icon, className].filter(Boolean).join(' ');
 
   return (
@@ -26,6 +28,7 @@ export function Icon({ icon: IconComponent, size = 24, className, 'aria-label': 
       size={size}
       aria-label={ariaLabel}
       role={ariaLabel ? 'img' : undefined}
+      style={style}
     />
   );
 }

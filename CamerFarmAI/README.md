@@ -348,15 +348,15 @@ Chaque jauge définit trois zones principales :
 
 ### Valeurs par défaut
 
-Si aucun seuil n'est configuré, les valeurs suivantes sont utilisées :
+Si aucun seuil n'est configuré, les valeurs suivantes sont utilisées. Ces valeurs sont adaptées aux conditions climatiques et aux cultures du Cameroun :
 
-| Capteur | `seuilMin` (défaut) | `seuilMax` (défaut) |
-|---------|---------------------|---------------------|
-| Température | 18°C | 28°C |
-| Humidité du sol | 40% | 70% |
-| CO₂ | 400 ppm | 1200 ppm |
-| Niveau d'eau | 15% | - |
-| Luminosité | 10000 lux | 60000 lux |
+| Capteur | `seuilMin` (défaut) | `seuilMax` (défaut) | Justification |
+|---------|---------------------|---------------------|---------------|
+| Température | 22°C | 30°C | Plage optimale pour cultures tropicales (cacao, café, maïs, etc.) |
+| Humidité du sol | 50% | 80% | Adapté aux cultures tropicales nécessitant plus d'eau |
+| CO₂ | 400 ppm | 1000 ppm | Plage normale de CO₂ en agriculture |
+| Niveau d'eau | 20% | - | Niveau minimum plus élevé pour cultures tropicales |
+| Luminosité | 20000 lux | 90000 lux | Plage optimale pour cultures tropicales en plein soleil. Échelle lux : < 50 (très sombre), 50-200 (sombre), 200-500 (normal), 500-1000 (fort), > 1000 (très lumineux). Soleil direct : 10 000 à 100 000 lux |
 
 ### Implémentation technique
 

@@ -77,11 +77,15 @@ export function GraphsPage() {
       try {
         // Récupérer tous les capteurs
         const sensors = await plantationService.getSensors(plantationId);
-        console.log('📊 GraphsPage: Capteurs récupérés:', sensors.length, sensors.map(s => ({ id: s.id, type: s.type, hasReadings: !!s.readings?.length })));
+        console.log('📊 GraphsPage: Capteurs récupérés:', sensors.length, sensors.map(s => ({ id: s.id, type: s.type, status: s.status, hasReadings: !!s.readings?.length })));
         
-        // Récupérer toutes les lectures de tous les capteurs
+        // Filtrer uniquement les capteurs actifs
+        const activeSensors = sensors.filter(s => s.status === 'active');
+        console.log('📊 GraphsPage: Capteurs actifs:', activeSensors.length);
+        
+        // Récupérer toutes les lectures de tous les capteurs actifs uniquement
         const allReadings: SensorReading[] = [];
-        for (const sensor of sensors) {
+        for (const sensor of activeSensors) {
           if (sensor.readings && sensor.readings.length > 0) {
             console.log(`📊 GraphsPage: Capteur ${sensor.type} a ${sensor.readings.length} lectures incluses`);
             allReadings.push(...sensor.readings);
@@ -96,9 +100,9 @@ export function GraphsPage() {
         
         console.log('📊 GraphsPage: Total de lectures:', allReadings.length);
         
-        // Créer un map pour associer chaque lecture à son type de capteur
+        // Créer un map pour associer chaque lecture à son type de capteur (uniquement pour les capteurs actifs)
         const sensorTypeMap = new Map<string, string>();
-        sensors.forEach(sensor => {
+        activeSensors.forEach(sensor => {
           if (sensor.id) {
             sensorTypeMap.set(sensor.id, sensor.type);
           }
