@@ -226,7 +226,7 @@ export function ChatboxPage() {
         </div>
       </main>
       <Footer />
-      <FloatingButton href="/support" position="bottom-right" aria-label={t('floatingButton.ariaLabel')} />
+      <FloatingButton href="/ai" position="bottom-right" aria-label={t('floatingButton.ariaLabel')} />
     </>
   );
 }

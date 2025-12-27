@@ -143,6 +143,51 @@
   margin: 0;
 }
 
+.monitoringPage__inactiveAlert {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  background: rgba(254, 242, 242, 0.95);
+  border: 2px solid #ef4444;
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
+
+.monitoringPage__inactiveAlert > div {
+  flex: 1;
+}
+
+.monitoringPage__inactiveAlert strong {
+  display: block;
+  color: #dc2626;
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-xs);
+}
+
+.monitoringPage__inactiveAlert p {
+  margin: 0;
+  color: #991b1b;
+  font-size: var(--font-size-base);
+}
+
+.monitoringPage__inactiveAlert ul {
+  margin: var(--spacing-xs) 0 0 0;
+  color: #991b1b;
+  font-size: var(--font-size-sm);
+}
+
+.monitoringPage__inactiveAlert li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.monitoringPage__thresholdStatus {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
 .monitoringPage__sensorsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -251,10 +296,6 @@
 
 .monitoringPage__gauge path {
   transition: stroke-dasharray 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.monitoringPage__needle {
-  /* L'aiguille elle-même n'a pas besoin de transition */
 }
 
 .monitoringPage__needleGroup {
@@ -658,6 +699,7 @@
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   min-height: 280px;
+  transition: background-color 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .monitoringPage__luminosityGlow {
@@ -672,6 +714,7 @@
   pointer-events: none;
   z-index: 1;
   animation: glowPulse 3s ease-in-out infinite;
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .monitoringPage__luminosityGlowSecondary {
@@ -687,6 +730,7 @@
   z-index: 0;
   animation: glowPulse 4s ease-in-out infinite;
   animation-delay: 0.5s;
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes glowPulse {
@@ -709,6 +753,7 @@
   pointer-events: none;
   animation: particleFloat 4s ease-in-out infinite;
   box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes particleFloat {
@@ -763,7 +808,8 @@
 .monitoringPage__luminosityIconLarge {
   color: #fbbf24;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 4px currentColor);
 }
 
 .monitoringPage__luminosityRay {
@@ -778,6 +824,7 @@
   transform-origin: center bottom;
   pointer-events: none;
   animation: rayPulse 2s ease-in-out infinite;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .monitoringPage__luminosityRayOuter {
@@ -792,6 +839,7 @@
   transform-origin: center bottom;
   pointer-events: none;
   animation: rayPulse 2.5s ease-in-out infinite;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes rayPulse {
@@ -864,14 +912,28 @@
   overflow: hidden;
 }
 
-.monitoringPage__waterLevel {
+/* Gradient background covering the entire tank height */
+.monitoringPage__waterLevelGradient {
   position: absolute;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.monitoringPage__waterLevel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: clip-path 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  /* Gradient will be applied inline: red (0%) -> yellow (50%) -> green (100%) */
+  z-index: 2;
+  /* This element acts as a mask to show only the filled portion of the gradient */
+  /* The gradient is behind (z-index: 1), this element clips it from the top */
 }
 
 .monitoringPage__waterLayerSurface {
@@ -996,31 +1058,71 @@
   top: 0;
   bottom: 0;
   right: 8px;
-  width: 24px;
+  width: 28px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 8px 0;
   text-align: right;
+  z-index: 3;
+}
+
+.monitoringPage__waterMarkersLeft {
+  right: auto;
+  left: 8px;
+  text-align: left;
 }
 
 .monitoringPage__waterMarker {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
+  gap: 3px;
+  position: relative;
+}
+
+.monitoringPage__waterMarkersLeft .monitoringPage__waterMarker {
+  justify-content: flex-start;
 }
 
 .monitoringPage__waterMarkerLabel {
   font-size: 8px;
-  color: #047857;
-  margin-right: 4px;
+  font-weight: 500;
+  color: rgba(5, 150, 105, 0.7);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1px 2px;
+  border-radius: 2px;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  opacity: 0.8;
+}
+
+.monitoringPage__waterMarkersLeft .monitoringPage__waterMarkerLabel {
+  margin-left: 3px;
+  margin-right: 0;
+}
+
+.monitoringPage__waterMarkers:not(.monitoringPage__waterMarkersLeft) .monitoringPage__waterMarkerLabel {
+  margin-right: 3px;
+  margin-left: 0;
 }
 
 .monitoringPage__waterMarkerLine {
+  background-color: rgba(16, 185, 129, 0.4);
+  border-radius: 1px;
+}
+
+.monitoringPage__waterMarkerLineMajor {
   height: 2px;
-  width: 8px;
-  background-color: rgba(16, 185, 129, 0.8);
+  width: 10px;
+  background-color: rgba(5, 150, 105, 0.5);
+  box-shadow: none;
+}
+
+.monitoringPage__waterMarkerLineMinor {
+  height: 1px;
+  width: 5px;
+  background-color: rgba(16, 185, 129, 0.3);
 }
 
 .monitoringPage__waterTankCap {

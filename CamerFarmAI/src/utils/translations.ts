@@ -143,6 +143,10 @@ export type TranslationKey =
   | 'plantations.detail.sensors.noSensors'
   | 'plantations.detail.sensors.noSensorsMessage'
   | 'plantations.detail.sensors.noData'
+  | 'plantations.detail.sensors.readingsHistory'
+  | 'plantations.detail.sensors.recentReadings'
+  | 'plantations.detail.sensors.loadingReadings'
+  | 'plantations.detail.sensors.noReadings'
   | 'plantations.detail.errors.invalidId'
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
@@ -261,6 +265,12 @@ export type TranslationKey =
   | 'monitoring.help.zones.warning'
   | 'monitoring.help.zones.danger'
   | 'monitoring.help.close'
+  | 'monitoring.inactiveSensors.title'
+  | 'monitoring.inactiveSensors.message'
+  | 'sensor.status.active'
+  | 'sensor.status.inactive'
+  | 'sensor.status.offline'
+  | 'sensor.status.unknown'
   | 'profile.back'
   | 'profile.pageLabel'
   | 'profile.welcome'
@@ -380,6 +390,24 @@ export type TranslationKey =
   | 'admin.fakers.seasonal.transition'
   | 'admin.fakers.results.percentage'
   | 'admin.fakers.results.barChart'
+  | 'chatbox.title'
+  | 'chatbox.description'
+  | 'chatbox.emptyState.title'
+  | 'chatbox.emptyState.description'
+  | 'chatbox.suggestionsHeader'
+  | 'chatbox.suggestedQuestions.question1'
+  | 'chatbox.suggestedQuestions.question2'
+  | 'chatbox.suggestedQuestions.question3'
+  | 'chatbox.suggestedQuestions.question4'
+  | 'chatbox.aiResponse.prefix'
+  | 'chatbox.aiResponse.intro'
+  | 'chatbox.inputLabel'
+  | 'chatbox.inputPlaceholder'
+  | 'chatbox.sendButton'
+  | 'chatbox.sending'
+  | 'chatbox.inputHint'
+  | 'chatbox.characters'
+  | 'chatbox.characterCount'
   | 'language.fr'
   | 'language.en'
   | 'language.ff'
@@ -581,21 +609,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Erreur lors de la mise à jour du mode. Veuillez réessayer.',
     'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
     'monitoring.help.title': 'Comment fonctionnent les couleurs des jauges ?',
-    'monitoring.help.intro': 'Les couleurs des jauges s\'adaptent automatiquement selon les seuils que vous avez configurés (seuilMin et seuilMax). Chaque jauge utilise un système de couleurs pour vous indiquer rapidement l\'état de vos capteurs.',
+    'monitoring.help.intro': 'Les couleurs des jauges s\'adaptent automatiquement selon les seuils que vous avez configurés (seuilMin et seuilMax). La zone optimale (verte) se situe entre ces deux seuils. Chaque jauge utilise un système de couleurs pour vous indiquer rapidement l\'état de vos capteurs.',
     'monitoring.help.temperature.title': '🌡️ Température (0-50°C)',
-    'monitoring.help.temperature.description': 'La jauge de température affiche du vert autour de votre seuil minimum (température idéale), puis transitionne progressivement vers le jaune et l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (danger).',
+    'monitoring.help.temperature.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur passe du bleu (froid) au vert. Au-dessus du seuil max, elle devient orange puis rouge (trop chaud).',
     'monitoring.help.soilHumidity.title': '💧 Humidité du sol (0-100%)',
-    'monitoring.help.soilHumidity.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min ou au-dessus du seuil max, la couleur passe à l\'orange puis au rouge pour indiquer un niveau critique.',
+    'monitoring.help.soilHumidity.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur passe à l\'orange puis au rouge (trop sec). Au-dessus du seuil max, elle devient orange puis rouge (trop humide).',
     'monitoring.help.co2.title': '🌬️ Taux de CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Le vert indique un bon niveau de CO2 (en dessous du seuil min). La couleur transitionne vers le jaune puis l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (niveau dangereux).',
+    'monitoring.help.co2.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur est bleu-vert (faible). Au-dessus du seuil max, elle devient jaune puis orange puis rouge (niveau dangereux).',
     'monitoring.help.luminosity.title': '☀️ Luminosité (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'La zone optimale (verte) se trouve entre votre seuil minimum et maximum. En dehors de cette plage, la couleur devient jaune (avertissement) puis rouge (saturation ou obscurité extrême).',
+    'monitoring.help.luminosity.description': 'La zone optimale (verte) se trouve entre votre seuil minimum et maximum. En dessous du seuil min, la couleur devient bleu-gris puis bleu foncé (obscurité). Au-dessus du seuil max, elle devient jaune puis orange puis rouge (saturation extrême).',
     'monitoring.help.waterLevel.title': '💧 Niveau d\'eau (0-100%)',
-    'monitoring.help.waterLevel.description': 'Le rouge indique un niveau critique (en dessous du seuil min). Au-dessus du seuil minimum, la couleur passe progressivement à l\'orange, puis au vert pour indiquer un niveau suffisant.',
+    'monitoring.help.waterLevel.description': 'Le rouge indique un niveau critique (en dessous du seuil min). Au-dessus du seuil minimum, la couleur passe progressivement à l\'orange, puis au vert pour indiquer un niveau suffisant. Le gradient de couleur s\'applique sur toute la hauteur de la jauge.',
     'monitoring.help.zones.optimal': 'Zone optimale',
     'monitoring.help.zones.warning': 'Zone d\'avertissement',
     'monitoring.help.zones.danger': 'Zone de danger',
     'monitoring.help.close': 'Fermer',
+    'monitoring.inactiveSensors.title': 'Capteurs inactifs détectés',
+    'monitoring.inactiveSensors.message': 'capteur(s) n\'ont pas envoyé de données depuis plus d\'1 heure',
+    'sensor.status.active': 'Actif',
+    'sensor.status.inactive': 'Inactif',
+    'sensor.status.offline': 'Hors ligne',
+    'sensor.status.unknown': 'Inconnu',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
@@ -644,6 +678,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Aucun capteur installé',
     'plantations.detail.sensors.noData': 'Aucune donnée',
     'plantations.detail.sensors.noSensorsMessage': 'Cette plantation n\'a pas encore de capteurs installés. Installez des capteurs pour accéder au monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique des valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement des valeurs...',
+    'plantations.detail.sensors.noReadings': 'Aucune valeur enregistrée',
     'plantations.detail.errors.invalidId': 'ID de plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -766,6 +804,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant IA CamerFarm',
+    'chatbox.description': 'Posez vos questions sur l\'agriculture et recevez des conseils personnalisés en temps réel.',
+    'chatbox.emptyState.title': 'Bienvenue dans l\'Assistant IA',
+    'chatbox.emptyState.description': 'Commencez une conversation en posant une question ou en sélectionnant une suggestion ci-dessous.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Comment améliorer le rendement de mes cultures ?',
+    'chatbox.suggestedQuestions.question2': 'Quels sont les meilleurs moments pour arroser ?',
+    'chatbox.suggestedQuestions.question3': 'Comment identifier les maladies des plantes ?',
+    'chatbox.suggestedQuestions.question4': 'Quels capteurs dois-je installer pour mon type de culture ?',
+    'chatbox.aiResponse.prefix': 'Réponse à votre question',
+    'chatbox.aiResponse.intro': 'Voici une réponse détaillée à votre question. L\'assistant IA analyse vos données et vous fournit des recommandations personnalisées basées sur les meilleures pratiques agricoles.',
+    'chatbox.inputLabel': 'Votre question',
+    'chatbox.inputPlaceholder': 'Tapez votre question ici... (Ex: Comment optimiser l\'irrigation ?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Appuyez sur Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -951,6 +1007,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'No sensors installed',
     'plantations.detail.sensors.noData': 'No data',
     'plantations.detail.sensors.noSensorsMessage': 'This plantation does not have any sensors installed yet. Install sensors to access monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Readings History',
+    'plantations.detail.sensors.recentReadings': 'Recent Readings',
+    'plantations.detail.sensors.loadingReadings': 'Loading readings...',
+    'plantations.detail.sensors.noReadings': 'No readings recorded',
     'plantations.detail.errors.invalidId': 'Invalid plantation ID',
     'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
     'plantations.detail.errors.notFound': 'Plantation not found',
@@ -1017,21 +1077,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Error updating mode. Please try again.',
     'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
     'monitoring.help.title': 'How do gauge colors work?',
-    'monitoring.help.intro': 'Gauge colors adapt automatically based on the thresholds you have configured (minThreshold and maxThreshold). Each gauge uses a color system to quickly indicate the status of your sensors.',
+    'monitoring.help.intro': 'Gauge colors adapt automatically based on the thresholds you have configured (minThreshold and maxThreshold). The optimal zone (green) is between these two thresholds. Each gauge uses a color system to quickly indicate the status of your sensors.',
     'monitoring.help.temperature.title': '🌡️ Temperature (0-50°C)',
-    'monitoring.help.temperature.description': 'The temperature gauge displays green around your minimum threshold (ideal temperature), then progressively transitions to yellow and orange between thresholds, and becomes red above the maximum threshold (danger).',
+    'monitoring.help.temperature.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color transitions from blue (cold) to green. Above the max threshold, it becomes orange then red (too hot).',
     'monitoring.help.soilHumidity.title': '💧 Soil Humidity (0-100%)',
-    'monitoring.help.soilHumidity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold or above the max threshold, the color changes to orange then red to indicate a critical level.',
+    'monitoring.help.soilHumidity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color changes to orange then red (too dry). Above the max threshold, it becomes orange then red (too wet).',
     'monitoring.help.co2.title': '🌬️ CO2 Rate (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Green indicates a good CO2 level (below the min threshold). The color transitions to yellow then orange between thresholds, and becomes red above the maximum threshold (dangerous level).',
+    'monitoring.help.co2.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color is blue-green (low). Above the max threshold, it becomes yellow then orange then red (dangerous level).',
     'monitoring.help.luminosity.title': '☀️ Luminosity (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Outside this range, the color becomes yellow (warning) then red (extreme saturation or darkness).',
+    'monitoring.help.luminosity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color becomes blue-grey then dark blue (darkness). Above the max threshold, it becomes yellow then orange then red (extreme saturation).',
     'monitoring.help.waterLevel.title': '💧 Water Level (0-100%)',
-    'monitoring.help.waterLevel.description': 'Red indicates a critical level (below the min threshold). Above the minimum threshold, the color progressively changes to orange, then green to indicate a sufficient level.',
+    'monitoring.help.waterLevel.description': 'Red indicates a critical level (below the min threshold). Above the minimum threshold, the color progressively changes to orange, then green to indicate a sufficient level. The color gradient applies across the entire gauge height.',
     'monitoring.help.zones.optimal': 'Optimal zone',
     'monitoring.help.zones.warning': 'Warning zone',
     'monitoring.help.zones.danger': 'Danger zone',
     'monitoring.help.close': 'Close',
+    'monitoring.inactiveSensors.title': 'Inactive sensors detected',
+    'monitoring.inactiveSensors.message': 'sensor(s) have not sent data for more than 1 hour',
+    'sensor.status.active': 'Active',
+    'sensor.status.inactive': 'Inactive',
+    'sensor.status.offline': 'Offline',
+    'sensor.status.unknown': 'Unknown',
     'profile.back': 'Back',
     'profile.pageLabel': 'User profile',
     'profile.welcome': 'Welcome, {name}',
@@ -1151,6 +1217,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Visual distribution',
+    'chatbox.title': 'CamerFarm AI Assistant',
+    'chatbox.description': 'Ask your questions about agriculture and receive personalized advice in real time.',
+    'chatbox.emptyState.title': 'Welcome to the AI Assistant',
+    'chatbox.emptyState.description': 'Start a conversation by asking a question or selecting a suggestion below.',
+    'chatbox.suggestionsHeader': 'Suggested questions',
+    'chatbox.suggestedQuestions.question1': 'How can I improve my crop yield?',
+    'chatbox.suggestedQuestions.question2': 'What are the best times to water?',
+    'chatbox.suggestedQuestions.question3': 'How to identify plant diseases?',
+    'chatbox.suggestedQuestions.question4': 'What sensors should I install for my crop type?',
+    'chatbox.aiResponse.prefix': 'Answer to your question',
+    'chatbox.aiResponse.intro': 'Here is a detailed answer to your question. The AI assistant analyzes your data and provides you with personalized recommendations based on agricultural best practices.',
+    'chatbox.inputLabel': 'Your question',
+    'chatbox.inputPlaceholder': 'Type your question here... (Ex: How to optimize irrigation?)',
+    'chatbox.sendButton': 'Send',
+    'chatbox.sending': 'Sending...',
+    'chatbox.inputHint': 'Press Enter to send, Shift+Enter for a new line',
+    'chatbox.characters': 'characters',
+    'chatbox.characterCount': 'character',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
@@ -1336,6 +1420,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alaa jokkondirɗe nattaaɗe',
     'plantations.detail.sensors.noData': 'Alaa keɓe',
     'plantations.detail.sensors.noSensorsMessage': 'Nguurndam ngal alaa jokkondirɗe nattaaɗe jooni. Natt jokkondirɗe ngam naatde e jokkondiral.',
+    'plantations.detail.sensors.readingsHistory': 'Jokkondiral keɓe',
+    'plantations.detail.sensors.recentReadings': 'Keɓe sakkitiɗe',
+    'plantations.detail.sensors.loadingReadings': 'Jokkondir keɓe...',
+    'plantations.detail.sensors.noReadings': 'Alaa keɓe binndaaɗe',
     'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
     'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
     'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
@@ -1391,21 +1479,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.status.dim': 'Suuɗo',
     'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'monitoring.help.title': 'Hol no nooneeɗe kulooruuji jokkondirɗe?',
-    'monitoring.help.intro': 'Kulooruuji jokkondirɗe ɓeydiraa e hoore maɓɓe no fuɗɗiiɗe señoluuji maa (señol woɗnde e señol ɓurnde). Jokkondir kala huutortoo e noone kulooruuji ngam hollude e sahaa nokkuure jokkondirɗe maa.',
+    'monitoring.help.intro': 'Kulooruuji jokkondirɗe ɓeydiraa e hoore maɓɓe no fuɗɗiiɗe señoluuji maa (señol woɗnde e señol ɓurnde). Nokkuure moƴƴude (wuɗɗo) woni hakkunde señoluuji ɗiɗi ɗen. Jokkondir kala huutortoo e noone kulooruuji ngam hollude e sahaa nokkuure jokkondirɗe maa.',
     'monitoring.help.temperature.title': '🌡️ Temperatuur (0-50°C)',
-    'monitoring.help.temperature.description': 'Jokkondiral temperatuur hollataa wuɗɗo haa ñiiɓɓo señol woɗnde maa (temperatuur moƴƴude), rewo ɓeydiraa e jaasi e ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (meɗɗe).',
+    'monitoring.help.temperature.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru ɓeydiraa e bulaawal (ɓulɓulɗe) haa wuɗɗo. E dow señol ɓurnde, naatiraa ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe).',
     'monitoring.help.soilHumidity.title': '💧 Ɓuɓɓe Leyɗe (0-100%)',
-    'monitoring.help.soilHumidity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde walla e dow señol ɓurnde, kulooru naatiraa ñiiɓɓo rewo boɗɗo ngam hollude nokkuure meɗɗe.',
+    'monitoring.help.soilHumidity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru naatiraa ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe). E dow señol ɓurnde, naatiraa ñiiɓɓo rewo boɗɗo (ɓuɓɓe ɓurɗe).',
     'monitoring.help.co2.title': '🌬️ Nder CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Wuɗɗo hollataa nokkuure CO2 moƴƴude (ley nder señol woɗnde). Kulooru ɓeydiraa e jaasi rewo ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (nokkuure meɗɗe).',
+    'monitoring.help.co2.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru woni bulaawal-wuɗɗo (woɗɗude). E dow señol ɓurnde, naatiraa jaasi rewo ñiiɓɓo rewo boɗɗo (nokkuure meɗɗe).',
     'monitoring.help.luminosity.title': '☀️ Ndaariɗe (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ɗo wadde nokkuure ngal, kulooru naatiraa jaasi (tintine) rewo boɗɗo (ɓeydugol walla ñuulɗe ɓurɗe).',
+    'monitoring.help.luminosity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru naatiraa bulaawal-ɓuɓɓe rewo bulaawal ñuulɗe (ñuulɗe). E dow señol ɓurnde, naatiraa jaasi rewo ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe).',
     'monitoring.help.waterLevel.title': '💧 Nder Leyɗe (0-100%)',
-    'monitoring.help.waterLevel.description': 'Boɗɗo hollataa nokkuure meɗɗe (ley nder señol woɗnde). E dow señol woɗnde, kulooru ɓeydiraa e jaasi e ñiiɓɓo, rewo wuɗɗo ngam hollude nokkuure ɓurɗo.',
+    'monitoring.help.waterLevel.description': 'Boɗɗo hollataa nokkuure meɗɗe (ley nder señol woɗnde). E dow señol woɗnde, kulooru ɓeydiraa e jaasi e ñiiɓɓo, rewo wuɗɗo ngam hollude nokkuure ɓurɗo. Gradient kulooru naatiraa e dow jokkondiral fof.',
     'monitoring.help.zones.optimal': 'Nokkuure moƴƴude',
     'monitoring.help.zones.warning': 'Nokkuure tintine',
     'monitoring.help.zones.danger': 'Nokkuure meɗɗe',
     'monitoring.help.close': 'Uddu',
+    'monitoring.inactiveSensors.title': 'Jokkondirɗe ɓe alaa kuuɗe',
+    'monitoring.inactiveSensors.message': 'jokkondirɗe ɓe ndaɓɓaani dataa ɓurɗe nder sahaa 1',
+    'sensor.status.active': 'Kuuɗe',
+    'sensor.status.inactive': 'Alaa kuuɗe',
+    'sensor.status.offline': 'Alaa jokkondirɗo',
+    'sensor.status.unknown': 'Anndaa',
     'monitoring.equipment.title': 'Toppu kuuɗe e kuuɗe',
     'monitoring.equipment.irrigationPump': 'Pompe Irrigasion',
     'monitoring.equipment.fans': 'Ventilateerɗe',
@@ -1536,6 +1630,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Sakkondiral',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Sakkondiral Yiilal',
+    'chatbox.title': 'CamerFarm AI Ballal',
+    'chatbox.description': 'Naamnoo laawol maaɗa e ngayka e heɓo tawtoreeji kuutorɗam e wakkati ekkitiiɗam.',
+    'chatbox.emptyState.title': 'Arii e Ballal AI',
+    'chatbox.emptyState.description': 'Fuɗɗo waasde naamnoo laawol maaɗa walla suɓo tawtoreejo ɗoo les.',
+    'chatbox.suggestionsHeader': 'Laawol naamnooɗe',
+    'chatbox.suggestedQuestions.question1': 'Hol no mi waɗaade ɓeydugol ɗiɗɓe am?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe ɓurɗe ɓeydeede ngam ɓeydugol ndiyam?',
+    'chatbox.suggestedQuestions.question3': 'Hol no mi anndinaade cuuɗi ɗiɗɓe?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe kuutorɓe ɓeydorde mi waɗaade ngam gollal ɗiɗɓe am?',
+    'chatbox.aiResponse.prefix': 'Noddu laawol maaɗa',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo noddiraaɗo laawol maaɗa. Ballal AI seŋtina keɓe maaɗa e heɓa maa tawtoreeji kuutorɗam e jokkondiral baɗɗe ngayka jawdi.',
+    'chatbox.inputLabel': 'Laawol maaɗa',
+    'chatbox.inputPlaceholder': 'Binndo laawol maaɗa ton... (Misaal: Hol no mi waɗaade ɓeydugol ndiyam?)',
+    'chatbox.sendButton': 'Neldu',
+    'chatbox.sending': 'Neldugol...',
+    'chatbox.inputHint': 'Dobo Enter ngam neldugol, Shift+Enter ngam ɓoggo hesere',
+    'chatbox.characters': 'binndi',
+    'chatbox.characterCount': 'binndal',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
@@ -1736,21 +1848,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Erreur mise à jour mode. Bwá sígní.',
     'monitoring.noSensors': 'Alé capteur actuellement affecté plantation ékpé. Bwá affecter capteurs voir données monitoring.',
     'monitoring.help.title': 'Comment fonctionnent couleurs jauges?',
-    'monitoring.help.intro': 'Couleurs jauges s\'adaptent automatiquement selon seuils wá configurés (seuilMin é seuilMax). Chaque jauge utilise système couleurs indiquer rapidement état capteurs wá.',
+    'monitoring.help.intro': 'Couleurs jauges s\'adaptent automatiquement selon seuils wá configurés (seuilMin é seuilMax). Zone optimale (verte) situe entre seuils ékpé. Chaque jauge utilise système couleurs indiquer rapidement état capteurs wá.',
     'monitoring.help.temperature.title': '🌡️ Mvú (0-50°C)',
-    'monitoring.help.temperature.description': 'Jauge température affiche vert autour seuil minimum (température idéale), puis transitionne progressivement vers jaune é orange entre seuils, é devient rouge au-dessus seuil maximum (danger).',
+    'monitoring.help.temperature.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur transitionne bleu (froid) vers vert. Au-dessus seuil max, devient orange puis rouge (trop chaud).',
     'monitoring.help.soilHumidity.title': '💧 Mvú bisó (0-100%)',
-    'monitoring.help.soilHumidity.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min ou au-dessus seuil max, couleur passe orange puis rouge indiquer niveau critique.',
+    'monitoring.help.soilHumidity.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur passe orange puis rouge (trop sec). Au-dessus seuil max, devient orange puis rouge (trop humide).',
     'monitoring.help.co2.title': '🌬️ Taux CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Vert indique bon niveau CO2 (en dessous seuil min). Couleur transitionne vers jaune puis orange entre seuils, é devient rouge au-dessus seuil maximum (niveau dangereux).',
+    'monitoring.help.co2.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur bleu-vert (faible). Au-dessus seuil max, devient jaune puis orange puis rouge (niveau dangereux).',
     'monitoring.help.luminosity.title': '☀️ Nsámbí (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'Zone optimale (verte) trouve entre seuil minimum é maximum. En dehors plage ékpé, couleur devient jaune (avertissement) puis rouge (saturation ou obscurité extrême).',
+    'monitoring.help.luminosity.description': 'Zone optimale (verte) trouve entre seuil minimum é maximum. En dessous seuil min, couleur devient bleu-gris puis bleu foncé (obscurité). Au-dessus seuil max, devient jaune puis orange puis rouge (saturation extrême).',
     'monitoring.help.waterLevel.title': '💧 Niveau mán (0-100%)',
-    'monitoring.help.waterLevel.description': 'Rouge indique niveau critique (en dessous seuil min). Au-dessus seuil minimum, couleur passe progressivement orange, puis vert indiquer niveau suffisant.',
+    'monitoring.help.waterLevel.description': 'Rouge indique niveau critique (en dessous seuil min). Au-dessus seuil minimum, couleur passe progressivement orange, puis vert indiquer niveau suffisant. Gradient couleur applique sur toute hauteur jauge.',
     'monitoring.help.zones.optimal': 'Zone optimale',
     'monitoring.help.zones.warning': 'Zone avertissement',
     'monitoring.help.zones.danger': 'Zone danger',
     'monitoring.help.close': 'Fermer',
+    'monitoring.inactiveSensors.title': 'Capteurs inactifs détectés',
+    'monitoring.inactiveSensors.message': 'capteur(s) n\'ont pas envoyé de données depuis plus d\'1 heure',
+    'sensor.status.active': 'Actif',
+    'sensor.status.inactive': 'Inactif',
+    'sensor.status.offline': 'Hors ligne',
+    'sensor.status.unknown': 'Inconnu',
     'plantations.createModal.title': 'Entrez informations champ',
     'plantations.createModal.nameLabel': 'Nkómbó plantation wá',
     'plantations.createModal.namePlaceholder': 'Sígní nkómbó plantation wá',
@@ -1799,6 +1917,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alé capteur installé',
     'plantations.detail.sensors.noData': 'Alé données',
     'plantations.detail.sensors.noSensorsMessage': 'Plantation ékpé alé capteurs installés. Installez capteurs accéder monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement valeurs...',
+    'plantations.detail.sensors.noReadings': 'Alé valeurs enregistrées',
     'plantations.detail.errors.invalidId': 'ID plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Alé charger détails plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -1921,6 +2043,24 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant AI CamerFarm',
+    'chatbox.description': 'Sígní question wá é agriculture é bwá conseils personnalisés temps réel.',
+    'chatbox.emptyState.title': 'Bwá Assistant AI',
+    'chatbox.emptyState.description': 'Kómbí conversation sígní question wá é sélectionner suggestion ékpé.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Hol no bwá rendement bisó wá?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe irrigation ékpé mbálá?',
+    'chatbox.suggestedQuestions.question3': 'Hol no anndinaade maladies bisó?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe capteurs ékpé ngam type culture wá?',
+    'chatbox.aiResponse.prefix': 'Réponse question wá',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo question wá. Assistant AI seŋtina données wá é heɓa wá conseils personnalisés basés pratiques agricoles ékpé.',
+    'chatbox.inputLabel': 'Question wá',
+    'chatbox.inputPlaceholder': 'Sígní question wá ton... (Ex: Hol no optimiser irrigation?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Dobo Enter ngam envoyer, Shift+Enter ngam ligne ékpé',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
@@ -1929,16 +2069,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
 };
 
 export function getTranslation(key: TranslationKey, language: Language): string {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1931',message:'getTranslation entry',data:{key,language,hasLanguage:!!translations[language],hasKey:!!translations[language]?.[key]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
-  
   const translation = translations[language]?.[key];
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1935',message:'getTranslation result',data:{key,language,translation,fallback:translation||key},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   return translation || key;
 }
-

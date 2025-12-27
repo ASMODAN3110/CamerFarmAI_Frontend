@@ -4,30 +4,15 @@ import axios from 'axios';
 // En développement, utiliser le proxy Vite pour éviter les problèmes CORS
 // En production, utiliser l'URL complète du backend
 const getBaseURL = () => {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:getBaseURL',message:'getBaseURL called',data:{VITE_API_URL:import.meta.env.VITE_API_URL,DEV:import.meta.env.DEV},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
   if (import.meta.env.VITE_API_URL) {
-    const baseURL = import.meta.env.VITE_API_URL;
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:getBaseURL',message:'Using VITE_API_URL',data:{baseURL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
-    return baseURL;
+    return import.meta.env.VITE_API_URL;
   }
   // En développement, utiliser le proxy Vite
   if (import.meta.env.DEV) {
-    const baseURL = '/api/v1';
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:getBaseURL',message:'Using DEV proxy baseURL',data:{baseURL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-    // #endregion
-    return baseURL;
+    return '/api/v1';
   }
   // En production, utiliser l'URL complète
-  const baseURL = 'http://localhost:3000/api/v1';
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:getBaseURL',message:'Using production baseURL',data:{baseURL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-  // #endregion
-  return baseURL;
+  return 'http://localhost:3000/api/v1';
 };
 
 const api = axios.create({
@@ -66,9 +51,6 @@ api.interceptors.request.use((config) => {
   }
   
   const fullURL = `${config.baseURL}${config.url}`;
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:request-interceptor',message:'Request interceptor - before request',data:{method:config.method?.toUpperCase(),url:config.url,baseURL:config.baseURL,fullURL,hasToken:!!token},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-  // #endregion
   
   // Logs pour debug
   if (DEBUG) {

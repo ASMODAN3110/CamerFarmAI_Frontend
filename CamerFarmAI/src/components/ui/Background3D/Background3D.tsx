@@ -217,11 +217,15 @@ function EnergyLines() {
   return (
     <group>
       {lines.map((geometry, i) => (
+        // @ts-ignore - react-three/fiber line component conflicts with SVG line element types
         <line
           key={i}
-          ref={(el) => {
-            if (el) linesRef.current[i] = el;
+          ref={(el: any) => {
+            if (el) {
+              linesRef.current[i] = el as THREE.Line;
+            }
           }}
+          // @ts-ignore - geometry prop is valid for react-three/fiber line component
           geometry={geometry}
         >
           <lineBasicMaterial
@@ -239,6 +243,7 @@ function EnergyLines() {
 export function Background3D() {
   const [mounted, setMounted] = useState(false);
   const [particleCount, setParticleCount] = useState(2000);
+  const [contextLost, setContextLost] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -248,16 +253,47 @@ export function Background3D() {
     };
     updateParticleCount();
     window.addEventListener('resize', updateParticleCount);
-    return () => window.removeEventListener('resize', updateParticleCount);
+    
+    return () => {
+      window.removeEventListener('resize', updateParticleCount);
+    };
   }, []);
 
-  if (!mounted) {
+  if (!mounted || contextLost) {
     return null;
   }
 
   return (
     <div className={styles.background3D}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+      <Canvas 
+        camera={{ position: [0, 0, 5], fov: 75 }}
+        gl={{ 
+          preserveDrawingBuffer: false,
+          powerPreference: 'high-performance',
+          antialias: false,
+          stencil: false,
+          depth: true
+        }}
+        onCreated={({ gl }) => {
+          // Gestion de la perte de contexte WebGL
+          const canvas = gl.domElement;
+          const handleContextLost = (event: Event) => {
+            event.preventDefault();
+            setContextLost(true);
+            console.warn('WebGL context lost. Background3D will be hidden until context is restored.');
+          };
+          
+          const handleContextRestored = () => {
+            setContextLost(false);
+            console.info('WebGL context restored. Background3D will be re-rendered.');
+          };
+          
+          canvas.addEventListener('webglcontextlost', handleContextLost);
+          canvas.addEventListener('webglcontextrestored', handleContextRestored);
+          
+          // Cleanup function will be handled by react-three/fiber
+        }}
+      >
         <ambientLight intensity={0.6} />
         <pointLight position={[10, 10, 10]} intensity={1.2} color="#28a745" />
         <pointLight position={[-10, -10, -10]} intensity={0.8} color="#34ce57" />

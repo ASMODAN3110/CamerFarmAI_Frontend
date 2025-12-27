@@ -130,3 +130,35 @@ temp/
 *.bak
 *.backup
 *.orig
+
+# React/Vite specific
+.vite
+vite.config.*.timestamp-*
+
+# React Three Fiber
+*.glb.cache
+*.gltf.cache
+
+# Local development
+.local
+.cache
+
+# Production builds
+*.map
+sourcemap.json
+
+# IDE - Cursor
+.cursor/
+
+# OS specific - Windows
+$RECYCLE.BIN/
+*.lnk
+
+# OS specific - macOS
+.AppleDouble
+.LSOverride
+Icon
+
+# OS specific - Linux
+*~
+.directory

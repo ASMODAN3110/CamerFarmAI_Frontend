@@ -232,6 +232,27 @@ export const plantationService = {
   },
 
   /**
+   * Ajoute une lecture pour un capteur
+   * Le capteur sera automatiquement activé s'il était inactif
+   * @param plantationId - ID de la plantation
+   * @param sensorId - ID du capteur
+   * @param value - Valeur de la lecture
+   * @returns La lecture créée
+   */
+  async addSensorReading(
+    plantationId: string,
+    sensorId: string,
+    value: number
+  ): Promise<SensorReading> {
+    const res = await api.post(
+      `/plantations/${plantationId}/sensors/${sensorId}/readings`,
+      { value }
+    );
+    const payload = res.data?.data || res.data;
+    return normalizeSensorReading(payload);
+  },
+
+  /**
    * Met à jour les seuils d'un capteur
    * @param plantationId - ID de la plantation
    * @param sensorId - ID du capteur
