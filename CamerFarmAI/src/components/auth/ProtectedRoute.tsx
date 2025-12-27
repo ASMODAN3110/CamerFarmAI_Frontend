@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/services/useAuthStore';
+import {useAuth} from '@/contexts/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -84,3 +85,110 @@ export const ProtectedRoute = ({
   return <>{children}</>;
 };
 
+
+
+// import { useEffect, useState } from 'react';
+// import { Navigate, useLocation } from 'react-router-dom';
+// import { useAuthStore } from '@/services/useAuthStore';
+
+// interface ProtectedRouteProps {
+//   children: React.ReactNode;
+//   /**
+//    * Liste des rôles autorisés pour cette route
+//    * Ex: ['technician'], ['farmer', 'admin'], etc.
+//    */
+//   roles: string[];
+//   /**
+//    * Si true, force la vérification du token dans localStorage au montage
+//    */
+//   requireAuthCheck?: boolean;
+// }
+
+// export const ProtectedRoute = ({
+//   children,
+//   roles,
+//   requireAuthCheck = true,
+// }: ProtectedRouteProps) => {
+//   const location = useLocation();
+
+//   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+//   const user = useAuthStore((state) => state.user);
+//   const loadUser = useAuthStore((state) => state.loadUser);
+
+//   const [isValidating, setIsValidating] = useState(true);
+//   const [isCheckingToken, setIsCheckingToken] = useState(false);
+
+//   useEffect(() => {
+//     const validateAuth = async () => {
+//       // Si déjà authentifié avec rôle chargé → OK
+//       if (isAuthenticated && user && roles.includes(user.role)) {
+//         setIsValidating(false);
+//         return;
+//       }
+
+//       // Si on ne demande pas de vérification explicite → on accepte l'état actuel
+//       if (!requireAuthCheck) {
+//         setIsValidating(false);
+//         return;
+//       }
+
+//       // Vérification du token dans localStorage
+//       const token = localStorage.getItem('accessToken');
+
+//       if (!token) {
+//         setIsValidating(false);
+//         return;
+//       }
+
+//       // Si pas d'utilisateur chargé, on essaie de le récupérer
+//       if (!user) {
+//         setIsCheckingToken(true);
+//         try {
+//           await loadUser();
+//         } catch (error) {
+//           console.error('Erreur lors du chargement de l\'utilisateur:', error);
+//           localStorage.removeItem('accessToken');
+//         } finally {
+//           setIsCheckingToken(false);
+//         }
+//       }
+
+//       setIsValidating(false);
+//     };
+
+//     validateAuth();
+//   }, [isAuthenticated, user, loadUser, roles, requireAuthCheck]);
+
+//   // Loader pendant validation
+//   if (isValidating || isCheckingToken) {
+//     return (
+//       <div
+//         style={{
+//           display: 'flex',
+//           justifyContent: 'center',
+//           alignItems: 'center',
+//           height: '100vh',
+//           fontSize: '1.2rem',
+//           color: '#666',
+//           backgroundColor: '#f9fafb',
+//         }}
+//       >
+//         Vérification de l'authentification...
+//       </div>
+//     );
+//   }
+
+//   // Pas authentifié → login avec returnUrl
+//   if (!isAuthenticated || !user) {
+//     const returnUrl = encodeURIComponent(location.pathname + location.search);
+//     return <Navigate to={`/login?returnUrl=${returnUrl}`} replace />;
+//   }
+
+//   // Authentifié mais rôle non autorisé → page unauthorized ou accueil
+//   if (!roles.includes(user.role)) {
+//     return <Navigate to="/unauthorized" replace />;
+//   }
+
+//   // Tout est OK → affichage du contenu
+//   return <>{children}</>;
+// };
