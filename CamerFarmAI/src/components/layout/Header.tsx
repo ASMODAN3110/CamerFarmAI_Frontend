@@ -26,18 +26,20 @@ interface HeaderProps {
 }
 
 // Les labels seront traduits dynamiquement dans le composant
-const defaultNavItemsConfig: Array<{ key: 'nav.home' | 'nav.support'; href: string }> = [
+const defaultNavItemsConfig: Array<{ key: 'nav.home' | 'nav.support' | 'nav.guide'; href: string }> = [
   { key: 'nav.home', href: '/' },
+  { key: 'nav.guide', href: '/guide' },
   { key: 'nav.support', href: '/support' },
 ];
 
 const authenticatedNavItemsConfig: Array<{ 
-  key: 'nav.home' | 'nav.plantations' | 'nav.support' | 'nav.ai'; 
+  key: 'nav.home' | 'nav.plantations' | 'nav.support' | 'nav.ai' | 'nav.guide'; 
   href: string 
 }> = [
   { key: 'nav.home', href: '/' },
   { key: 'nav.plantations', href: '/plantations' },
   { key: 'nav.ai', href: '/ai' },
+  { key: 'nav.guide', href: '/guide' },
   { key: 'nav.support', href: '/support' },
 ];
 
