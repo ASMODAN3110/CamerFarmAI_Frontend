@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { plantationService } from '@/services/plantationService';
 import type { Notification as AppNotification } from '@/services/notificationService';
+import { formatSensorNotification, isSensorStatusNotification } from '@/utils/notificationFormatters';
 import logoIcon from '@/assets/logo.png';
 import styles from './Header.module.css';
 
@@ -307,6 +308,12 @@ export function Header({
 
   // Fonction pour obtenir la description enrichie d'une notification
   const getNotificationDescription = (notif: AppNotification): string => {
+    // Vérifier si c'est une notification de changement de statut de capteur
+    if (isSensorStatusNotification(notif)) {
+      return formatSensorNotification(notif, t);
+    }
+    
+    // Sinon, utiliser le système d'enrichissement existant
     const enriched = enrichedNotifications.get(notif.id);
     if (enriched) {
       return enriched;
