@@ -2,6 +2,21 @@
 
 Plateforme intelligente pour une agriculture camerounaise moderne et durable. Application web React permettant aux producteurs de suivre leurs cultures en temps réel grâce à l'IoT et l'intelligence artificielle.
 
+## 🛠️ Technologies utilisées
+
+- **React 19** : Bibliothèque UI moderne avec hooks et contexte
+- **TypeScript** : Typage statique pour une meilleure maintenabilité
+- **Vite** : Build tool rapide et moderne
+- **React Router** : Routage côté client
+- **Axios** : Client HTTP pour les appels API
+- **Zustand** : Gestion d'état légère
+- **Recharts** : Bibliothèque de graphiques React
+- **React Three Fiber** : Rendu 3D pour les visualisations avancées
+- **React Icons** : Collection d'icônes
+- **Lucide React** : Icônes modernes et optimisées
+- **CSS Modules** : Styles modulaires et encapsulés
+- **ESLint** : Linter pour la qualité du code
+
 ## 🚀 Fonctionnalités
 
 ### Authentification
@@ -34,7 +49,11 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
   - **Niveau de CO₂** : Jauge semi-circulaire horizontale (0-2500 ppm) avec dégradé vert-lime-jaune-orange-rouge et seuils de qualité
   - **Niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles remontantes, ondes de surface et indicateur de flux
   - **Luminosité** : Widget avec effet de glow dynamique, soleil rotatif avec rayons animés, particules de lumière flottantes
-- **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif ou inactif
+- **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif, inactif ou hors ligne
+  - **Statut actif** : Capteur fonctionnel et envoyant des données régulièrement
+  - **Statut inactif** : Capteur n'ayant pas envoyé de données depuis plus d'1 heure
+  - **Statut hors ligne** : Capteur déconnecté ou non disponible
+- **Alertes de capteurs inactifs** : Notification visuelle lorsqu'un ou plusieurs capteurs sont inactifs
 - **Animations fluides** : Transitions et animations pour tous les widgets de capteurs
 - **Dégradés de couleur** : Indicateurs visuels de couleur selon les valeurs (rouge = danger, jaune = attention, vert = optimal)
 - **Configuration des seuils** :
@@ -161,7 +180,9 @@ src/
 │   ├── LanguageContext.tsx      # Contexte de langue
 │   └── NotificationContext.tsx  # Contexte de notifications
 ├── utils/                         # Utilitaires
-│   └── translations.ts           # Fichiers de traduction
+│   ├── translations.ts           # Fichiers de traduction (4 langues)
+│   ├── sensorStatus.ts           # Utilitaires pour les statuts des capteurs
+│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email
 └── styles/                        # Styles globaux
     ├── global.css
     └── theme.ts
@@ -236,12 +257,17 @@ interface Plantation {
 interface Sensor {
   id: string;
   type: 'temperature' | 'humidity' | 'soilMoisture' | 'co2Level' | 'waterLevel' | 'luminosity';
-  status: 'active' | 'inactive' | 'offline';
+  status: 'active' | 'inactive' | 'offline';  // Statut du capteur
   plantationId: string;
   seuilMin?: number;  // Seuil minimum pour les alertes
   seuilMax?: number;  // Seuil maximum pour les alertes
-  latestReading?: SensorReading;
+  latestReading?: SensorReading;  // Dernière lecture du capteur
 }
+
+// Statuts des capteurs :
+// - 'active' : Capteur fonctionnel et envoyant des données régulièrement
+// - 'inactive' : Capteur n'ayant pas envoyé de données depuis plus d'1 heure
+// - 'offline' : Capteur déconnecté ou non disponible
 ```
 
 #### Actionneur
@@ -387,16 +413,16 @@ Les gradients sont convertis en **gradients CSS linéaires** pour une compatibil
 
 ```bash
 # Développement
-npm run dev
+npm run dev          # Lance le serveur de développement sur http://localhost:5173
 
 # Build de production
-npm run build
+npm run build        # Compile l'application pour la production dans le dossier dist/
 
 # Preview du build
-npm run preview
+npm run preview      # Prévisualise le build de production localement
 
 # Linter
-npm run lint
+npm run lint         # Vérifie le code avec ESLint
 ```
 
 ## 🐛 Dépannage
@@ -748,3 +774,35 @@ Pour l'Ewondo, une approche hybride a été adoptée :
 Cette approche reflète l'usage réel de la langue Ewondo dans un contexte technologique moderne.
 
 **Dernière mise à jour** : Décembre 2025
+
+## 🔍 Statuts des capteurs
+
+Le système gère trois statuts pour les capteurs :
+
+| Statut | Description | Couleur | Signification |
+|--------|-------------|---------|---------------|
+| **Actif** | Capteur fonctionnel et envoyant des données régulièrement | 🟢 Vert | Le capteur fonctionne normalement et transmet des données |
+| **Inactif** | Capteur n'ayant pas envoyé de données depuis plus d'1 heure | 🔴 Rouge | Le capteur n'a pas transmis de données récemment (défaut de communication ou problème technique) |
+| **Hors ligne** | Capteur déconnecté ou non disponible | ⚫ Gris | Le capteur est complètement déconnecté ou non configuré |
+
+### Détection automatique
+
+Le système détecte automatiquement le statut d'un capteur en fonction de :
+- **Timestamp de la dernière lecture** : Si aucune lecture n'a été reçue depuis plus d'1 heure, le capteur est marqué comme inactif
+- **Connexion réseau** : Si le capteur est déconnecté du réseau, il est marqué comme hors ligne
+- **Configuration** : Si le capteur n'est pas correctement configuré, il peut être marqué comme hors ligne
+
+### Alertes visuelles
+
+Lorsqu'un ou plusieurs capteurs sont inactifs, une alerte visuelle s'affiche sur la page de monitoring :
+- **Icône d'alerte** : Indicateur visuel avec icône d'erreur
+- **Liste des capteurs inactifs** : Affichage de tous les capteurs inactifs avec leur type et le temps écoulé depuis la dernière lecture
+- **Message informatif** : Indication du nombre de capteurs inactifs détectés
+
+### Utilitaires de statut
+
+Le fichier `src/utils/sensorStatus.ts` fournit des fonctions utilitaires pour :
+- `getSensorStatusColor(status)` : Retourne la couleur associée à un statut
+- `getSensorStatusLabel(status, t)` : Retourne le label traduit d'un statut
+- `isSensorInactiveTooLong(timestamp, thresholdHours)` : Vérifie si un capteur est inactif depuis trop longtemps
+- `getTimeSinceLastReading(timestamp)` : Calcule et formate le temps écoulé depuis la dernière lecture
