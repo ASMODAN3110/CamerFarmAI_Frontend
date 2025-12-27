@@ -284,6 +284,154 @@
   color: var(--color-text-light);
 }
 
+/* Readings Section */
+.plantationDetailPage__readingsSection {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.plantationDetailPage__readingsTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.plantationDetailPage__readingsTitle svg {
+  color: var(--color-primary);
+}
+
+.plantationDetailPage__readingsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: var(--spacing-xs);
+}
+
+.plantationDetailPage__readingsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.plantationDetailPage__readingsList::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 3px;
+}
+
+.plantationDetailPage__readingsList::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 3px;
+}
+
+.plantationDetailPage__readingsList::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+.plantationDetailPage__readingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.plantationDetailPage__readingItem:hover {
+  background: var(--color-gray-100);
+}
+
+.plantationDetailPage__readingValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.plantationDetailPage__readingTime {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-family: monospace;
+}
+
+.plantationDetailPage__readingsLoading {
+  padding: var(--spacing-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.plantationDetailPage__readingsLoading svg {
+  color: var(--color-text-light);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.plantationDetailPage__readingsEmpty {
+  padding: var(--spacing-md);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.plantationDetailPage__readingsEmpty svg {
+  color: var(--color-text-light);
+}
+
+.plantationDetailPage__readingsMore {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-style: italic;
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.plantationDetailPage__readingsTotal {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-weight: var(--font-weight-medium);
+}
+
+.plantationDetailPage__readingsSummary {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  font-style: italic;
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--spacing-xs);
+}
+
 /* Empty State */
 .plantationDetailPage__emptyState {
   display: flex;

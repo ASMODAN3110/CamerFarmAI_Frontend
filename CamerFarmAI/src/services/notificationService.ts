@@ -3,6 +3,15 @@ import { api } from './api';
 export type NotificationChannel = 'web' | 'email' | 'whatsapp';
 export type NotificationStatus = 'EN_ATTENTE' | 'ENVOYEE' | 'ERREUR';
 
+export enum EventType {
+  SEUIL_DEPASSE = 'seuil_depasse',
+  ACTIONNEUR_ACTIVE = 'actionneur_active',
+  ACTIONNEUR_DESACTIVE = 'actionneur_desactive',
+  MODE_CHANGED = 'mode_changed',
+  SENSOR_ACTIVE = 'sensor_active',
+  SENSOR_INACTIVE = 'sensor_inactive',
+}
+
 export interface NotificationEvent {
   id: string;
   type: string;
@@ -14,6 +23,7 @@ export interface NotificationEvent {
   sensor?: {
     id: string;
     type: string;
+    status?: 'active' | 'inactive' | 'offline'; // Statut du capteur
     plantationId: string;
   } | null;
   actuator?: {
@@ -114,7 +124,12 @@ const normalizeNotification = (data: any): Notification => {
                     data.event.sensor?.plantationId,
       sensorId: data.event.sensorId || null, // ID du capteur (selon la documentation API)
       actuatorId: data.event.actuatorId || null, // ID de l'actionneur (selon la documentation API)
-      sensor: data.event.sensor || null,
+      sensor: data.event.sensor ? {
+        id: data.event.sensor.id,
+        type: data.event.sensor.type,
+        status: data.event.sensor.status || undefined,
+        plantationId: data.event.sensor.plantationId,
+      } : null,
       actuator: data.event.actuator || null,
     } : undefined,
   };

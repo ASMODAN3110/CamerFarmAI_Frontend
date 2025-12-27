@@ -20,9 +20,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(LANGUAGE_KEY) as Language;
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LanguageContext.tsx:22',message:'LanguageProvider init',data:{stored,isValid:stored==='fr'||stored==='en'||stored==='ff'||stored==='ew',finalLanguage:stored&&(stored==='fr'||stored==='en'||stored==='ff'||stored==='ew')?stored:DEFAULT_LANGUAGE},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       return stored && (stored === 'fr' || stored === 'en' || stored === 'ff' || stored === 'ew') ? stored : DEFAULT_LANGUAGE;
     }
     return DEFAULT_LANGUAGE;
@@ -36,9 +33,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   }, [language]);
 
   const changeLanguage = (newLanguage: Language) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LanguageContext.tsx:35',message:'changeLanguage called',data:{newLanguage,isEw:newLanguage==='ew'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    // #endregion
     setLanguage(newLanguage);
   };
 

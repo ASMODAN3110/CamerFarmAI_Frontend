@@ -12,6 +12,7 @@ import { plantationService, type Sensor, type Actuator, type SensorReading } fro
 import type { Notification } from '@/services/notificationService';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { useAuthStore } from '@/services/useAuthStore';
+import { getSensorStatusColor, getTimeSinceLastReading } from '@/utils/sensorStatus';
 import {
   FaTint,
   FaSun,
@@ -44,23 +45,55 @@ interface EquipmentState {
   lighting: boolean;
 }
 
+// Constantes centralisées pour les valeurs par défaut des seuils
+// Valeurs adaptées aux conditions climatiques et aux cultures du Cameroun
+const DEFAULT_THRESHOLDS = {
+  temperature: { min: 22, max: 30 }, // Plage optimale pour cultures tropicales (cacao, café, maïs, etc.)
+  soilHumidity: { min: 50, max: 80 }, // Humidité du sol adaptée aux cultures tropicales nécessitant plus d'eau
+  co2: { min: 400, max: 1000 }, // Plage normale de CO₂ en agriculture (400-1000 ppm)
+  waterLevel: { min: 20 }, // Niveau d'eau minimum plus élevé pour cultures tropicales
+  // Luminosité adaptée au climat tropical avec forte exposition solaire
+  // Échelle lux : < 50 (très sombre), 50-200 (sombre), 200-500 (normal), 500-1000 (fort), > 1000 (très lumineux)
+  // Soleil direct : 10 000 à 100 000 lux. Pour cultures tropicales : plage optimale en plein soleil
+  luminosity: { min: 20000, max: 90000 }, // Plage optimale pour cultures tropicales en plein soleil (20k-90k lux)
+} as const;
+
+// Fonction utilitaire pour valider et normaliser les seuils
+function normalizeThresholds(
+  seuilMin?: number,
+  seuilMax?: number,
+  type: 'temperature' | 'soilHumidity' | 'co2' | 'luminosity' = 'temperature'
+): { min: number; max: number } {
+  const defaults = DEFAULT_THRESHOLDS[type];
+  const min = seuilMin ?? defaults.min;
+  const max = seuilMax ?? defaults.max;
+  
+  // Validation : s'assurer que max > min
+  if (max <= min) {
+    console.warn(`Invalid thresholds: max (${max}) must be greater than min (${min}). Using defaults.`);
+    return { min: defaults.min, max: defaults.max };
+  }
+  
+  return { min, max };
+}
+
 // Fonctions utilitaires pour calculer les couleurs basées sur les seuils
 // Amélioration : Gradients avec transitions fluides et zones d'avertissement claires
+// Logique cohérente : Zone optimale entre les seuils (pas seulement à seuilMin)
 function generateTemperatureGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 50) {
-  // Gradient optimisé : Vert optimal autour de seuilMin, transition fluide vers rouge au-dessus de seuilMax
-  const effectiveMin = seuilMin ?? 18;
-  const effectiveMax = seuilMax ?? 28;
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'temperature');
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
   const warningZone = 5; // Zone d'avertissement de 5% avant seuilMax
+  const coldZone = 5; // Zone de froid avant seuilMin
   
   return [
     { offset: '0%', color: 'hsl(200, 90%, 60%)' }, // Bleu-vert (très froid)
-    { offset: `${Math.max(0, minOffset - 15)}%`, color: 'hsl(180, 85%, 60%)' }, // Cyan (froid)
-    { offset: `${Math.max(0, minOffset - 5)}%`, color: 'hsl(150, 80%, 60%)' }, // Vert-cyan (approche optimal)
+    { offset: `${Math.max(0, minOffset - coldZone * 2)}%`, color: 'hsl(180, 85%, 60%)' }, // Cyan (froid)
+    { offset: `${Math.max(0, minOffset - coldZone)}%`, color: 'hsl(150, 80%, 60%)' }, // Vert-cyan (approche optimal)
     { offset: `${minOffset}%`, color: 'hsl(120, 80%, 60%)' }, // Vert optimal à seuilMin
-    { offset: `${minOffset + (maxOffset - minOffset) * 0.3}%`, color: 'hsl(90, 85%, 58%)' }, // Vert-jaune (transition douce)
-    { offset: `${minOffset + (maxOffset - minOffset) * 0.6}%`, color: 'hsl(60, 90%, 55%)' }, // Jaune (avertissement)
+    { offset: `${(minOffset + maxOffset) / 2}%`, color: 'hsl(120, 85%, 62%)' }, // Vert pur au centre (zone optimale)
+    { offset: `${minOffset + (maxOffset - minOffset) * 0.7}%`, color: 'hsl(60, 90%, 55%)' }, // Jaune (avertissement)
     { offset: `${maxOffset - warningZone}%`, color: 'hsl(30, 90%, 55%)' }, // Orange (proche danger)
     { offset: `${maxOffset}%`, color: 'hsl(0, 90%, 55%)' }, // Rouge à seuilMax
     { offset: '100%', color: 'hsl(0, 95%, 50%)' }, // Rouge intense (danger extrême)
@@ -69,8 +102,7 @@ function generateTemperatureGradientStops(seuilMin?: number, seuilMax?: number, 
 
 function generateSoilHumidityGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 100) {
   // Gradient optimisé : Zone optimale verte bien définie entre les seuils avec transitions fluides
-  const effectiveMin = seuilMin ?? 40;
-  const effectiveMax = seuilMax ?? 70;
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'soilHumidity');
   
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
@@ -93,8 +125,7 @@ function generateSoilHumidityGradientStops(seuilMin?: number, seuilMax?: number,
 
 function generateCO2GradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 2500) {
   // Gradient optimisé : Vert optimal en dessous de seuilMin, transition progressive vers rouge au-dessus de seuilMax
-  const effectiveMin = seuilMin ?? 400;
-  const effectiveMax = seuilMax ?? 1200;
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'co2');
   
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
@@ -117,7 +148,7 @@ function generateCO2GradientStops(seuilMin?: number, seuilMax?: number, min = 0,
 // Fonction pour générer les stops de gradient pour le niveau d'eau
 function generateWaterLevelGradientStops(seuilMin?: number, min = 0, max = 100) {
   // Gradient optimisé : Rouge en dessous de seuilMin, vert au-dessus avec transition fluide
-  const effectiveMin = seuilMin ?? 15;
+  const effectiveMin = seuilMin ?? DEFAULT_THRESHOLDS.waterLevel.min;
   const minOffset = ((effectiveMin - min) / (max - min)) * 100;
   const warningZone = 5; // Zone d'avertissement de 5%
   
@@ -132,45 +163,49 @@ function generateWaterLevelGradientStops(seuilMin?: number, min = 0, max = 100) 
   ];
 }
 
-// Fonction pour générer les stops de gradient pour la luminosité
-function generateLuminosityGradientStops(seuilMin?: number, seuilMax?: number, min = 0, max = 100000) {
-  // Gradient optimisé : Zone optimale verte entre les seuils avec transitions fluides
-  const effectiveMin = seuilMin ?? 10000;
-  const effectiveMax = seuilMax ?? 60000;
-  const minOffset = ((effectiveMin - min) / (max - min)) * 100;
-  const maxOffset = ((effectiveMax - min) / (max - min)) * 100;
-  const warningZone = 3; // Zone d'avertissement de 3%
-  
-  return [
-    { offset: '0%', color: 'hsl(240, 60%, 40%)' }, // Bleu foncé (obscurité totale)
-    { offset: `${Math.max(0, minOffset - warningZone * 2)}%`, color: 'hsl(220, 50%, 45%)' }, // Bleu-gris (très faible)
-    { offset: `${Math.max(0, minOffset - warningZone)}%`, color: 'hsl(200, 45%, 50%)' }, // Gris-bleu (faible)
-    { offset: `${minOffset}%`, color: 'hsl(150, 70%, 55%)' }, // Vert-cyan à seuilMin
-    { offset: `${(minOffset + maxOffset) / 2}%`, color: 'hsl(120, 80%, 60%)' }, // Vert optimal au centre
-    { offset: `${maxOffset}%`, color: 'hsl(90, 85%, 58%)' }, // Vert-jaune à seuilMax
-    { offset: `${Math.min(100, maxOffset + warningZone)}%`, color: 'hsl(60, 90%, 55%)' }, // Jaune (trop lumineux)
-    { offset: `${Math.min(100, maxOffset + warningZone * 2)}%`, color: 'hsl(30, 90%, 55%)' }, // Orange (saturation)
-    { offset: '100%', color: 'hsl(0, 90%, 55%)' }, // Rouge (saturation extrême)
-  ];
-}
-
 function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax?: number, type: 'temperature' | 'soilHumidity' | 'co2' | 'waterLevel' | 'luminosity' = 'temperature') {
   if (type === 'temperature') {
-    const effectiveMin = seuilMin ?? 18;
-    const effectiveMax = seuilMax ?? 28;
+    const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'temperature');
+    const coldZone = 5; // Zone de froid avant seuilMin
     
-    // Amélioration : Calcul plus précis avec transitions fluides
-    if (value <= effectiveMin - 5) return 'hsl(200, 90%, 60%)'; // Bleu-vert (très froid)
-    if (value <= effectiveMin) return 'hsl(120, 80%, 60%)'; // Vert optimal
-    if (value >= effectiveMax) return 'hsl(0, 90%, 55%)'; // Rouge danger
-    const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
-    const hue = 120 - (ratio * 120); // De vert (120) à rouge (0)
-    return `hsl(${hue}, 90%, 55%)`;
+    // Zone très froide (en dessous de seuilMin - coldZone)
+    if (value <= effectiveMin - coldZone) return 'hsl(200, 90%, 60%)'; // Bleu-vert (très froid)
+    
+    // Zone froide (entre seuilMin - coldZone et seuilMin)
+    if (value <= effectiveMin) {
+      const ratio = (value - (effectiveMin - coldZone)) / coldZone;
+      const hue = 200 - (ratio * 80); // De bleu-vert (200) à vert (120)
+      return `hsl(${hue}, 85%, 60%)`;
+    }
+    
+    // Zone optimale (entre seuilMin et seuilMax)
+    if (value <= effectiveMax) {
+      const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
+      if (ratio < 0.5) {
+        // Première moitié : vert pur au centre
+        return 'hsl(120, 85%, 62%)'; // Vert optimal
+      } else {
+        // Seconde moitié : transition vers jaune
+        const subRatio = (ratio - 0.5) * 2; // 0 à 1 dans la seconde moitié
+        const hue = 120 - (subRatio * 60); // De vert (120) à jaune (60)
+        return `hsl(${hue}, 90%, 55%)`;
+      }
+    }
+    
+    // Zone chaude (au-dessus de seuilMax)
+    const warningZone = 5;
+    if (value <= effectiveMax + warningZone) {
+      const ratio = (value - effectiveMax) / warningZone;
+      const hue = 60 - (ratio * 30); // De jaune (60) à orange (30)
+      return `hsl(${hue}, 90%, 55%)`;
+    }
+    
+    // Zone très chaude (au-dessus de seuilMax + warningZone)
+    return 'hsl(0, 95%, 50%)'; // Rouge intense (danger extrême)
   }
   
   if (type === 'soilHumidity') {
-    const effectiveMin = seuilMin ?? 40;
-    const effectiveMax = seuilMax ?? 70;
+    const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'soilHumidity');
     const warningZone = 8; // Zone d'avertissement de 8% (cohérent avec le gradient)
     
     // Logique alignée avec le gradient : transitions progressives
@@ -219,8 +254,7 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'co2') {
-    const effectiveMin = seuilMin ?? 400;
-    const effectiveMax = seuilMax ?? 1200;
+    const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'co2');
     
     // Amélioration : Transitions plus fluides
     if (value <= effectiveMin) return 'hsl(120, 80%, 60%)'; // Vert bon
@@ -233,7 +267,7 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'waterLevel') {
-    const effectiveMin = seuilMin ?? 15;
+    const effectiveMin = seuilMin ?? DEFAULT_THRESHOLDS.waterLevel.min;
     
     // Amélioration : Transitions plus fluides
     if (value >= effectiveMin + 10) return 'hsl(120, 80%, 60%)'; // Vert bon
@@ -243,13 +277,32 @@ function calculateColorFromThresholds(value: number, seuilMin?: number, seuilMax
   }
   
   if (type === 'luminosity') {
-    const effectiveMin = seuilMin ?? 10000;
-    const effectiveMax = seuilMax ?? 60000;
+    const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'luminosity');
+    const warningZone = 0.1; // 10% de marge pour la zone d'avertissement
     
-    // Amélioration : Zones plus précises
+    // Zone optimale (entre les seuils)
     if (value >= effectiveMin && value <= effectiveMax) return 'hsl(120, 80%, 60%)'; // Vert optimal
-    if (value < effectiveMin - (effectiveMin * 0.1) || value > effectiveMax + (effectiveMax * 0.1)) return 'hsl(0, 90%, 55%)'; // Rouge
-    return 'hsl(60, 90%, 55%)'; // Jaune (zone d'avertissement)
+    
+    // Zone d'avertissement (en dessous de seuilMin ou au-dessus de seuilMax)
+    const minWarning = effectiveMin * (1 - warningZone);
+    const maxWarning = effectiveMax * (1 + warningZone);
+    
+    if (value >= minWarning && value < effectiveMin) {
+      // Zone d'avertissement en dessous
+      const ratio = (value - minWarning) / (effectiveMin - minWarning);
+      const hue = 200 - (ratio * 50); // De bleu-gris (200) à vert-cyan (150)
+      return `hsl(${hue}, 70%, 55%)`;
+    }
+    
+    if (value > effectiveMax && value <= maxWarning) {
+      // Zone d'avertissement au-dessus
+      const ratio = (value - effectiveMax) / (maxWarning - effectiveMax);
+      const hue = 90 - (ratio * 30); // De vert-jaune (90) à jaune (60)
+      return `hsl(${hue}, 90%, 55%)`;
+    }
+    
+    // Zone critique (très en dessous ou très au-dessus)
+    return 'hsl(0, 90%, 55%)'; // Rouge
   }
   
   return '#6b7280'; // Par défaut
@@ -410,19 +463,10 @@ function TemperatureWidget({ value, updatedAt, isActive = true, seuilMin, seuilM
 
 // Widget d'humidité du sol avec barre de progression horizontale améliorée
 function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:305',message:'SoilHumidityWidget entry',data:{value,seuilMin,seuilMax,seuilMinType:typeof seuilMin,seuilMaxType:typeof seuilMax},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   const { t } = useTranslation();
   const min = 0;
   const max = 100;
-  const effectiveMin = seuilMin ?? 40;
-  const effectiveMax = seuilMax ?? 70;
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:312',message:'Effective thresholds calculated',data:{effectiveMin,effectiveMax,min,max},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'soilHumidity');
   
   // Calculer la couleur basée sur les seuils pour synchronisation
   const color = calculateColorFromThresholds(value, seuilMin, seuilMax, 'soilHumidity');
@@ -458,10 +502,6 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
   
   // Convertir les stops SVG en gradient CSS linéaire
   const cssGradient = `linear-gradient(to right, ${gradientStops.map(stop => `${stop.color} ${stop.offset}`).join(', ')})`;
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:333',message:'Gradient stops generated',data:{gradientId,gradientStopsCount:gradientStops.length,gradientStops,cssGradient},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
 
   return (
     <div className={styles.monitoringPage__widget}>
@@ -531,12 +571,6 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
                 position: 'relative'
               }}
             >
-              {/* #region agent log */}
-              {(() => {
-                fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:396',message:'Progress bar style applied',data:{width:`${value}%`,background:cssGradient,gradientId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-                return null;
-              })()}
-              {/* #endregion */}
               {/* Water bubbles */}
               <div className={styles.monitoringPage__waterBubbles}>
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -585,8 +619,7 @@ function CO2Widget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { 
   const { t } = useTranslation();
   const min = 0;
   const max = 2500;
-  const effectiveMin = seuilMin ?? 400;
-  const effectiveMax = seuilMax ?? 1200;
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'co2');
   
   // S'assurer que la valeur est strictement dans les limites [0, 2500]
   const clampedValue = Math.max(min, Math.min(max, value));
@@ -770,59 +803,137 @@ function CO2Widget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { 
 function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
   const { t } = useTranslation();
   const maxValue = 100000; // Max value for lux
-  const effectiveMin = seuilMin ?? 10000;
-  const effectiveMax = seuilMax ?? 60000;
-  
-  // Normalize value (0-100%)
-  const normalizedValue = (value / maxValue) * 100;
+  const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'luminosity');
   
   // Calculer si la valeur est dans la plage optimale
   const isInOptimalRange = value >= effectiveMin && value <= effectiveMax;
   
-  // Générer le gradient basé sur les seuils pour le glow
-  const gradientStops = generateLuminosityGradientStops(seuilMin, seuilMax, 0, maxValue);
-  const normalizedMin = (effectiveMin / maxValue) * 100;
-  const normalizedMax = (effectiveMax / maxValue) * 100;
+  // Calculer la couleur du glow directement depuis calculateColorFromThresholds pour cohérence
+  const glowColorValue = calculateColorFromThresholds(value, seuilMin, seuilMax, 'luminosity');
   
-  // Calculer la couleur du glow basée sur la position dans le gradient
-  const getGlowColorFromGradient = () => {
-    if (normalizedValue <= normalizedMin) {
-      const ratio = normalizedValue / normalizedMin;
-      return gradientStops[Math.floor(ratio * 3)]?.color || gradientStops[0].color;
-    }
-    if (normalizedValue >= normalizedMax) {
-      const ratio = (normalizedValue - normalizedMax) / (100 - normalizedMax);
-      const index = Math.min(3 + Math.floor(ratio * (gradientStops.length - 3)), gradientStops.length - 1);
-      return gradientStops[index]?.color || gradientStops[gradientStops.length - 1].color;
-    }
-    const ratio = (normalizedValue - normalizedMin) / (normalizedMax - normalizedMin);
-    const index = Math.floor(3 + ratio * 2);
-    return gradientStops[Math.min(index, gradientStops.length - 1)]?.color || gradientStops[3].color;
+  // Convertir HSL en RGB pour le glow avec opacité
+  const hslToRgba = (hsl: string, opacity: number): string => {
+    // Extraire les valeurs HSL de la chaîne "hsl(h, s%, l%)"
+    const match = hsl.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    if (!match) return `rgba(107, 114, 128, ${opacity})`;
+    
+    const h = parseInt(match[1]) / 360;
+    const s = parseInt(match[2]) / 100;
+    const l = parseInt(match[3]) / 100;
+    
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h * 6) % 2 - 1));
+    const m = l - c / 2;
+    
+    let r = 0, g = 0, b = 0;
+    if (h < 1/6) { r = c; g = x; b = 0; }
+    else if (h < 2/6) { r = x; g = c; b = 0; }
+    else if (h < 3/6) { r = 0; g = c; b = x; }
+    else if (h < 4/6) { r = 0; g = x; b = c; }
+    else if (h < 5/6) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    
+    return `rgba(${Math.round((r + m) * 255)}, ${Math.round((g + m) * 255)}, ${Math.round((b + m) * 255)}, ${opacity})`;
   };
   
-  const glowColorValue = getGlowColorFromGradient();
-  const glowColor = isInOptimalRange
-    ? (normalizedValue < 50 
-      ? `${glowColorValue}${Math.floor((0.3 + (normalizedValue / 50) * 0.3) * 255).toString(16).padStart(2, '0')}` 
-      : `${glowColorValue}${Math.floor((0.6 + ((normalizedValue - 50) / 50) * 0.3) * 255).toString(16).padStart(2, '0')}`)
-    : `rgba(107, 114, 128, ${0.3 + (normalizedValue / 100) * 0.2})`; // Gris si hors plage
+  // Calculer les zones par rapport aux seuils pour des effets visuels adaptés
+  // Utiliser une zone d'avertissement basée sur un pourcentage de la plage optimale
+  const optimalRange = effectiveMax - effectiveMin;
+  const warningZonePercent = 0.15; // 15% de la plage optimale pour la zone d'avertissement
+  const warningZone = optimalRange * warningZonePercent;
+  const minWarning = effectiveMin - warningZone;
+  const maxWarning = effectiveMax + warningZone;
   
-  // Static values for glow and background based on normalized value et seuils
-  const glowOpacity = normalizedValue < 50 ? 0.1 + (normalizedValue / 50) * 0.2 : 0.3 + ((normalizedValue - 50) / 50) * 0.2;
-  const glowSize = normalizedValue < 50 ? (normalizedValue / 50) * 20 : 20 + ((normalizedValue - 50) / 50) * 20;
-  const backgroundOpacity = 0.8 - (normalizedValue / 100) * 0.4;
-  const backgroundColor = isInOptimalRange 
-    ? `rgba(209, 250, 229, ${backgroundOpacity})` // Green-tinted light background
-    : `rgba(229, 231, 235, ${backgroundOpacity})`; // Gris si hors plage
+  const isCritical = value < minWarning || value > maxWarning;
+  const isWarning = !isInOptimalRange && !isCritical;
+  
+  // Calculer les valeurs de glow et background basées sur la position relative par rapport aux seuils
+  // Le glow est plus intense quand la valeur est dans la plage optimale
+  let glowIntensity: number;
+  let glowSize: number;
+  let sunSize: number;
+  let rayIntensity: number;
+  let particleCount: number;
+  
+  if (isInOptimalRange) {
+    // Zone optimale : glow intense et rayonnement fort
+    // Ratio de 0 à 1 dans la plage optimale
+    const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
+    glowIntensity = 0.5 + ratio * 0.25; // 0.5 à 0.75 (plus intense)
+    glowSize = 25 + ratio * 25; // 25px à 50px
+    sunSize = 66 + ratio * 14; // 66px à 80px
+    rayIntensity = 0.5 + ratio * 0.3; // 0.5 à 0.8
+    particleCount = 14 + Math.floor(ratio * 8); // 14 à 22 particules
+  } else if (isWarning) {
+    // Zone d'avertissement : glow modéré
+    if (value < effectiveMin) {
+      // Entre minWarning et effectiveMin
+      const ratio = Math.max(0, Math.min(1, (value - minWarning) / (effectiveMin - minWarning)));
+      glowIntensity = 0.25 + ratio * 0.25; // 0.25 à 0.5
+      glowSize = 12 + ratio * 13; // 12px à 25px
+      sunSize = 58 + ratio * 8; // 58px à 66px
+      rayIntensity = 0.25 + ratio * 0.25; // 0.25 à 0.5
+      particleCount = 8 + Math.floor(ratio * 6); // 8 à 14 particules
+    } else {
+      // Entre effectiveMax et maxWarning
+      const ratio = Math.max(0, Math.min(1, (value - effectiveMax) / (maxWarning - effectiveMax)));
+      glowIntensity = 0.5 + ratio * 0.2; // 0.5 à 0.7
+      glowSize = 25 + ratio * 20; // 25px à 45px
+      sunSize = 66 + ratio * 10; // 66px à 76px
+      rayIntensity = 0.5 + ratio * 0.25; // 0.5 à 0.75
+      particleCount = 14 + Math.floor(ratio * 6); // 14 à 20 particules
+    }
+  } else {
+    // Zone critique : glow faible ou très intense selon la direction
+    if (value < minWarning) {
+      // Très en dessous du seuil min
+      const minCritical = Math.max(0, effectiveMin - warningZone * 2);
+      const ratio = minCritical > 0 ? Math.max(0, Math.min(1, (value - 0) / (minWarning - 0))) : 0.5;
+      glowIntensity = 0.1 + ratio * 0.15; // 0.1 à 0.25
+      glowSize = 5 + ratio * 7; // 5px à 12px
+      sunSize = 50 + ratio * 8; // 50px à 58px
+      rayIntensity = 0.1 + ratio * 0.15; // 0.1 à 0.25
+      particleCount = Math.floor(ratio * 8); // 0 à 8 particules
+    } else {
+      // Très au-dessus du seuil max
+      const maxCritical = Math.min(maxValue, effectiveMax + warningZone * 2);
+      const ratio = maxCritical < maxValue ? Math.max(0, Math.min(1, (value - maxWarning) / (maxCritical - maxWarning))) : 0.5;
+      glowIntensity = 0.6 + ratio * 0.15; // 0.6 à 0.75 (très intense)
+      glowSize = 35 + ratio * 15; // 35px à 50px
+      sunSize = 76 + ratio * 4; // 76px à 80px
+      rayIntensity = 0.7 + ratio * 0.1; // 0.7 à 0.8
+      particleCount = 18 + Math.floor(ratio * 4); // 18 à 22 particules
+    }
+  }
+  
+  const glowOpacity = Math.min(0.85, Math.max(0.1, glowIntensity));
+  const glowSizeFinal = Math.max(5, Math.min(60, glowSize));
+  
+  // Calculer la couleur du glow avec opacité
+  const glowColor = hslToRgba(glowColorValue, glowOpacity);
+  
+  // Background s'adapte à la couleur calculée et à l'état
+  // Utiliser la valeur relative par rapport aux seuils, pas la normalisation absolue
+  const valueRelativeToOptimal = isInOptimalRange 
+    ? (value - effectiveMin) / (effectiveMax - effectiveMin) // 0 à 1 dans la plage optimale
+    : value < effectiveMin 
+      ? (value - minWarning) / (effectiveMin - minWarning) // 0 à 1 dans la zone d'avertissement basse
+      : (value - effectiveMax) / (maxWarning - effectiveMax); // 0 à 1 dans la zone d'avertissement haute
+  
+  const backgroundBaseOpacity = isInOptimalRange ? 0.5 : isWarning ? 0.4 : 0.3;
+  const backgroundOpacity = backgroundBaseOpacity - (Math.abs(valueRelativeToOptimal) * 0.15);
+  const backgroundColor = hslToRgba(glowColorValue, Math.max(0.1, Math.min(0.6, backgroundOpacity)));
 
-  // Get text description based on light level
+  // Get text description based on light level (échelle lux standard)
+  // < 50 lux : très sombre, 50-200 : sombre, 200-500 : normal, 500-1000 : fort, > 1000 : très lumineux
+  // Soleil direct : 10 000 à 100 000 lux
   const getLightDescription = (level: number) => {
-    const normalized = (level / maxValue) * 100;
-    if (normalized < 20) return t('monitoring.status.dim');
-    if (normalized < 40) return t('monitoring.status.dim');
-    if (normalized < 60) return t('monitoring.status.normal');
-    if (normalized < 80) return t('monitoring.status.bright');
-    return t('monitoring.status.bright');
+    if (level < 50) return t('monitoring.status.dim'); // Très sombre
+    if (level < 200) return t('monitoring.status.dim'); // Sombre
+    if (level < 500) return t('monitoring.status.normal'); // Normal
+    if (level < 1000) return t('monitoring.status.bright'); // Fort
+    if (level < 10000) return t('monitoring.status.bright'); // Très lumineux
+    return t('monitoring.status.bright'); // Soleil direct (10k-100k lux)
   };
 
   return (
@@ -843,37 +954,70 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
         className={styles.monitoringPage__luminosityContainer}
         style={{ backgroundColor }}
       >
-        {/* Multiple glow layers for depth */}
+        {/* Multiple glow layers for depth - taille adaptative selon les seuils */}
         <div
           className={styles.monitoringPage__luminosityGlow}
           style={{
             opacity: glowOpacity,
-            boxShadow: `0 0 ${glowSize}px ${glowColor}`,
+            boxShadow: `0 0 ${glowSizeFinal}px ${glowColor}, 0 0 ${glowSizeFinal * 1.5}px ${glowColor}`,
             background: glowColor,
+            width: `${100 + glowSizeFinal * 0.5}px`,
+            height: `${100 + glowSizeFinal * 0.5}px`,
           }}
         />
         <div
           className={styles.monitoringPage__luminosityGlowSecondary}
           style={{
-            opacity: glowOpacity * 0.5,
-            boxShadow: `0 0 ${glowSize * 1.5}px ${glowColor}`,
+            opacity: glowOpacity * 0.4,
+            boxShadow: `0 0 ${glowSizeFinal * 2}px ${glowColor}, 0 0 ${glowSizeFinal * 3}px ${glowColor}`,
             background: glowColor,
+            width: `${150 + glowSizeFinal * 0.3}px`,
+            height: `${150 + glowSizeFinal * 0.3}px`,
           }}
         />
         
-        {/* Light particles */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={i}
-            className={styles.monitoringPage__luminosityParticle}
-            style={{
-              left: `${20 + (i * 7) % 60}%`,
-              top: `${15 + (i * 11) % 70}%`,
-              animationDelay: `${i * 0.2}s`,
-              opacity: normalizedValue > 30 ? 0.3 + (normalizedValue / 100) * 0.4 : 0,
-            }}
-          />
-        ))}
+        {/* Light particles - nombre adaptatif selon les seuils */}
+        {Array.from({ length: particleCount }).map((_, i) => {
+          // Calculer l'opacité des particules basée sur la position relative aux seuils
+          let particleOpacity: number;
+          if (isInOptimalRange) {
+            const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
+            particleOpacity = 0.5 + ratio * 0.3; // 0.5 à 0.8
+          } else if (isWarning) {
+            if (value < effectiveMin) {
+              const ratio = Math.max(0, Math.min(1, (value - minWarning) / (effectiveMin - minWarning)));
+              particleOpacity = 0.3 + ratio * 0.2; // 0.3 à 0.5
+            } else {
+              const ratio = Math.max(0, Math.min(1, (value - effectiveMax) / (maxWarning - effectiveMax)));
+              particleOpacity = 0.5 + ratio * 0.25; // 0.5 à 0.75
+            }
+          } else {
+            if (value < minWarning) {
+              const ratio = Math.max(0, Math.min(1, value / minWarning));
+              particleOpacity = 0.1 + ratio * 0.2; // 0.1 à 0.3
+            } else {
+              particleOpacity = 0.6 + (value / maxValue) * 0.2; // 0.6 à 0.8
+            }
+          }
+          
+          // Taille du glow des particules basée sur l'intensité
+          const particleGlowSize = glowIntensity * 8;
+          
+          return (
+            <div
+              key={i}
+              className={styles.monitoringPage__luminosityParticle}
+              style={{
+                left: `${20 + (i * 7) % 60}%`,
+                top: `${15 + (i * 11) % 70}%`,
+                animationDelay: `${i * 0.2}s`,
+                opacity: Math.max(0, Math.min(1, particleOpacity)),
+                backgroundColor: glowColorValue,
+                boxShadow: `0 0 ${particleGlowSize}px ${glowColorValue}`,
+              }}
+            />
+          );
+        })}
         
         <div className={styles.monitoringPage__luminosityContent}>
           {/* Sun icon with animated rays */}
@@ -881,41 +1025,95 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
             <div
               className={styles.monitoringPage__luminosityIconContainer}
               style={{
-                filter: `drop-shadow(0 0 ${8 + (normalizedValue / 100) * 12}px ${glowColor})`,
+                filter: `drop-shadow(0 0 ${glowSizeFinal * 0.3}px ${glowColorValue}) drop-shadow(0 0 ${glowSizeFinal * 0.6}px ${glowColorValue})`,
+                transform: isInOptimalRange ? 'scale(1.05)' : isWarning ? 'scale(1)' : 'scale(0.95)',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               <Icon 
                 icon={FaSun} 
-                size={64} 
+                size={sunSize} 
                 className={styles.monitoringPage__luminosityIconLarge}
+                style={{
+                  color: glowColorValue,
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
               />
         </div>
-            {/* Animated rays */}
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className={styles.monitoringPage__luminosityRay}
-                style={{
-                  height: `${15 + (normalizedValue / 100) * 15}px`,
-                  transform: `rotate(${i * 45}deg) translateY(-35px)`,
-                  opacity: 0.2 + (normalizedValue / 100) * 0.5,
-                  animationDelay: `${i * 0.1}s`,
-                }}
-              />
-            ))}
-            {/* Outer rays for high luminosity */}
-            {normalizedValue > 60 && Array.from({ length: 16 }).map((_, i) => (
-              <div
-                key={`outer-${i}`}
-                className={styles.monitoringPage__luminosityRayOuter}
-                style={{
-                  height: `${8 + ((normalizedValue - 60) / 40) * 8}px`,
-                  transform: `rotate(${i * 22.5}deg) translateY(-45px)`,
-                  opacity: ((normalizedValue - 60) / 40) * 0.3,
-                  animationDelay: `${i * 0.05}s`,
-                }}
-              />
-            ))}
+            {/* Animated rays - intensité adaptée aux seuils */}
+            {Array.from({ length: 8 }).map((_, i) => {
+              // Calculer la hauteur des rayons basée sur la position relative aux seuils
+              let rayHeight: number;
+              if (isInOptimalRange) {
+                const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
+                rayHeight = 18 + ratio * 17; // 18px à 35px
+              } else if (isWarning) {
+                if (value < effectiveMin) {
+                  const ratio = Math.max(0, Math.min(1, (value - minWarning) / (effectiveMin - minWarning)));
+                  rayHeight = 10 + ratio * 8; // 10px à 18px
+                } else {
+                  const ratio = Math.max(0, Math.min(1, (value - effectiveMax) / (maxWarning - effectiveMax)));
+                  rayHeight = 18 + ratio * 12; // 18px à 30px
+                }
+              } else {
+                if (value < minWarning) {
+                  rayHeight = 5 + (value / minWarning) * 5; // 5px à 10px
+                } else {
+                  rayHeight = 30 + ((value - maxWarning) / (maxValue - maxWarning)) * 10; // 30px à 40px
+                }
+              }
+              
+              return (
+                <div
+                  key={i}
+                  className={styles.monitoringPage__luminosityRay}
+                  style={{
+                    height: `${rayHeight}px`,
+                    transform: `rotate(${i * 45}deg) translateY(-35px)`,
+                    opacity: rayIntensity,
+                    animationDelay: `${i * 0.1}s`,
+                    background: `linear-gradient(to top, ${glowColorValue}, ${hslToRgba(glowColorValue, 0.3)})`,
+                    boxShadow: `0 0 ${rayHeight * 0.3}px ${glowColorValue}`,
+                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                />
+              );
+            })}
+            {/* Outer rays - seulement si dans la plage optimale ou au-dessus */}
+            {value >= effectiveMin && Array.from({ length: 16 }).map((_, i) => {
+              // Calculer la hauteur et l'opacité des rayons extérieurs
+              let outerRayHeight: number;
+              let outerRayOpacity: number;
+              
+              if (isInOptimalRange) {
+                const ratio = (value - effectiveMin) / (effectiveMax - effectiveMin);
+                outerRayHeight = 10 + ratio * 10; // 10px à 20px
+                outerRayOpacity = 0.35 + ratio * 0.2; // 0.35 à 0.55
+              } else if (value > effectiveMax) {
+                const ratio = Math.max(0, Math.min(1, (value - effectiveMax) / (maxWarning - effectiveMax)));
+                outerRayHeight = 10 + ratio * 8; // 10px à 18px
+                outerRayOpacity = 0.3 + ratio * 0.2; // 0.3 à 0.5
+              } else {
+                outerRayHeight = 10;
+                outerRayOpacity = 0.25;
+              }
+              
+              return (
+                <div
+                  key={`outer-${i}`}
+                  className={styles.monitoringPage__luminosityRayOuter}
+                  style={{
+                    height: `${outerRayHeight}px`,
+                    transform: `rotate(${i * 22.5}deg) translateY(-45px)`,
+                    opacity: outerRayOpacity,
+                    animationDelay: `${i * 0.05}s`,
+                    background: `linear-gradient(to top, ${glowColorValue}, ${hslToRgba(glowColorValue, 0.2)})`,
+                    boxShadow: `0 0 ${outerRayHeight * 0.2}px ${glowColorValue}`,
+                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                />
+              );
+            })}
         </div>
 
           {/* Value display */}
@@ -923,16 +1121,32 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
             <span 
               className={styles.monitoringPage__luminosityValue}
               style={{
-                textShadow: `0 0 ${8 + (normalizedValue / 100) * 12}px ${glowColor}`,
+                color: glowColorValue,
+                textShadow: `0 0 ${glowSizeFinal * 0.2}px ${glowColorValue}, 0 0 ${glowSizeFinal * 0.4}px ${glowColorValue}`,
+                transform: isInOptimalRange ? 'scale(1.05)' : 'scale(1)',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               {value.toLocaleString('fr-FR')}
             </span>
-            <span className={styles.monitoringPage__luminosityUnit}>lux</span>
+            <span 
+              className={styles.monitoringPage__luminosityUnit}
+              style={{
+                color: glowColorValue,
+                opacity: 0.8,
+              }}
+            >
+              lux
+            </span>
             <div 
               className={styles.monitoringPage__luminosityStatus}
               style={{
-                color: calculateColorFromThresholds(value, seuilMin, seuilMax, 'luminosity'),
+                color: glowColorValue,
+                textShadow: `0 0 ${glowSizeFinal * 0.1}px ${glowColorValue}`,
+                backgroundColor: hslToRgba(glowColorValue, 0.1),
+                padding: '4px 12px',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
               }}
             >
               {getLightDescription(value)}
@@ -947,7 +1161,7 @@ function LuminosityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
 // Widget de niveau d'eau avec réservoir 3D
 function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
   const { t } = useTranslation();
-  const effectiveMin = seuilMin ?? 15;
+  const effectiveMin = seuilMin ?? DEFAULT_THRESHOLDS.waterLevel.min;
   
   const getStatus = (level: number) => {
     if (level >= effectiveMin) {
@@ -987,12 +1201,18 @@ function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
         <div className={styles.monitoringPage__waterTankWrapper}>
           {/* Tank container */}
           <div className={styles.monitoringPage__waterTank}>
-            {/* Water level with gradient basé sur les seuils */}
+            {/* Background gradient covering the entire tank */}
+            <div
+              className={styles.monitoringPage__waterLevelGradient}
+              style={{
+                background: cssGradient
+              }}
+            />
+            {/* Water level mask - only shows the filled portion from bottom */}
             <div
               className={styles.monitoringPage__waterLevel}
               style={{
-                height: `${clampedValue}%`,
-                background: cssGradient
+                clipPath: `inset(${100 - clampedValue}% 0 0 0)`
               }}
             >
               {/* Surface water layer with multiple ripples */}
@@ -1021,31 +1241,47 @@ function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
               <div className={styles.monitoringPage__waterReflection} />
           </div>
             
-            {/* Level markers */}
+            {/* Level markers - Right side */}
             <div className={styles.monitoringPage__waterMarkers}>
-              {[0, 20, 40, 60, 80, 100].reverse().map((mark) => (
-                <div key={mark} className={styles.monitoringPage__waterMarker}>
-                  <span className={styles.monitoringPage__waterMarkerLabel}>{mark}%</span>
-                  <div className={styles.monitoringPage__waterMarkerLine} />
-          </div>
-              ))}
-        </div>
+              {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].reverse().map((mark) => {
+                const isMajor = mark % 20 === 0;
+                return (
+                  <div key={`right-${mark}`} className={`${styles.monitoringPage__waterMarker} ${isMajor ? styles.monitoringPage__waterMarkerMajor : styles.monitoringPage__waterMarkerMinor}`}>
+                    {isMajor && <span className={styles.monitoringPage__waterMarkerLabel}>{mark}%</span>}
+                    <div className={`${styles.monitoringPage__waterMarkerLine} ${isMajor ? styles.monitoringPage__waterMarkerLineMajor : styles.monitoringPage__waterMarkerLineMinor}`} />
+                  </div>
+                );
+              })}
+            </div>
             
-            {/* Tank cap with shine effect */}
-            <div className={styles.monitoringPage__waterTankCap}>
-              <div className={styles.monitoringPage__waterCapShine} />
-        </div>
+            {/* Level markers - Left side */}
+            <div className={`${styles.monitoringPage__waterMarkers} ${styles.monitoringPage__waterMarkersLeft}`}>
+              {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].reverse().map((mark) => {
+                const isMajor = mark % 20 === 0;
+                return (
+                  <div key={`left-${mark}`} className={`${styles.monitoringPage__waterMarker} ${isMajor ? styles.monitoringPage__waterMarkerMajor : styles.monitoringPage__waterMarkerMinor}`}>
+                    <div className={`${styles.monitoringPage__waterMarkerLine} ${isMajor ? styles.monitoringPage__waterMarkerLineMajor : styles.monitoringPage__waterMarkerLineMinor}`} />
+                    {isMajor && <span className={styles.monitoringPage__waterMarkerLabel}>{mark}%</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
             
-            {/* Glass reflection effect */}
-            <div className={styles.monitoringPage__waterGlassReflection} />
+          {/* Tank cap with shine effect */}
+          <div className={styles.monitoringPage__waterTankCap}>
+            <div className={styles.monitoringPage__waterCapShine} />
           </div>
-          
-          {/* Pipe with water flow indicator */}
-          <div className={styles.monitoringPage__waterPipe}>
-            {clampedValue > effectiveMin && (
-              <div className={styles.monitoringPage__waterFlow} />
-            )}
-          </div>
+            
+          {/* Glass reflection effect */}
+          <div className={styles.monitoringPage__waterGlassReflection} />
+        </div>
+        
+        {/* Pipe with water flow indicator */}
+        <div className={styles.monitoringPage__waterPipe}>
+          {clampedValue > effectiveMin && (
+            <div className={styles.monitoringPage__waterFlow} />
+          )}
         </div>
         
         {/* Value and status display */}
@@ -1342,20 +1578,32 @@ export function MonitoringPage() {
         if (plantationData.hasSensors && plantationData.sensors && plantationData.sensors.length > 0) {
           setSensors(plantationData.sensors);
           
+          // Créer une map des capteurs actifs par type pour vérifier le statut
+          const activeSensorsByType = new Map<string, boolean>();
+          plantationData.sensors.forEach((sensor: Sensor) => {
+            if (sensor.status === 'active') {
+              activeSensorsByType.set(sensor.type, true);
+            }
+          });
+          
           // Extraire les dernières lectures depuis latestReadings ou depuis les capteurs
           const sensorMap = new Map<string, SensorReading>();
           
           // D'abord, utiliser latestReadings si disponible (format backend)
+          // Ne prendre que les lectures des capteurs actifs
           if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
             (plantationData as any).latestReadings.forEach((item: any) => {
-              if (item.latestReading && item.sensorType) {
+              if (item.latestReading && item.sensorType && activeSensorsByType.get(item.sensorType)) {
                 sensorMap.set(item.sensorType, item.latestReading);
               }
             });
           }
           
-          // Sinon, utiliser les lectures des capteurs individuels
+          // Sinon, utiliser les lectures des capteurs individuels (uniquement si actifs)
           plantationData.sensors.forEach((sensor: Sensor) => {
+            // Ne traiter que les capteurs actifs
+            if (sensor.status !== 'active') return;
+            
             if (!sensorMap.has(sensor.type)) {
               if (sensor.latestReading) {
                 sensorMap.set(sensor.type, sensor.latestReading);
@@ -1376,13 +1624,20 @@ export function MonitoringPage() {
           const lumReading = sensorMap.get('luminosity');
           const waterReading = sensorMap.get('waterLevel');
 
+          // Vérifier que les capteurs sont actifs avant d'assigner les valeurs
+          const isTemperatureActive = plantationData.sensors.some(s => s.type === 'temperature' && s.status === 'active');
+          const isSoilMoistureActive = plantationData.sensors.some(s => s.type === 'soilMoisture' && s.status === 'active');
+          const isCo2Active = plantationData.sensors.some(s => s.type === 'co2Level' && s.status === 'active');
+          const isLuminosityActive = plantationData.sensors.some(s => s.type === 'luminosity' && s.status === 'active');
+          const isWaterLevelActive = plantationData.sensors.some(s => s.type === 'waterLevel' && s.status === 'active');
+
           const newSensorData = {
-            temperature: tempReading?.value ?? 0,
-            soilHumidity: soilReading?.value ?? 0,
-            co2: co2Reading?.value ?? 0,
-            luminosity: lumReading?.value ?? 0,
-            waterLevel: waterReading?.value ?? 0,
-            co2Level: co2Reading?.value,
+            temperature: isTemperatureActive && tempReading ? tempReading.value : 0,
+            soilHumidity: isSoilMoistureActive && soilReading ? soilReading.value : 0,
+            co2: isCo2Active && co2Reading ? co2Reading.value : 0,
+            luminosity: isLuminosityActive && lumReading ? lumReading.value : 0,
+            waterLevel: isWaterLevelActive && waterReading ? waterReading.value : 0,
+            co2Level: isCo2Active && co2Reading ? co2Reading.value : undefined,
           };
           
           // Debug: afficher les nouvelles valeurs
@@ -1592,9 +1847,20 @@ export function MonitoringPage() {
         try {
           const plantationData = await plantationService.getById(plantationId);
           if (plantationData.sensors && plantationData.sensors.length > 0) {
-            // Extraire les dernières lectures de chaque type de capteur
+            // Créer une map des capteurs actifs par type pour vérifier le statut
+            const activeSensorsByType = new Map<string, boolean>();
+            plantationData.sensors.forEach((sensor: Sensor) => {
+              if (sensor.status === 'active') {
+                activeSensorsByType.set(sensor.type, true);
+              }
+            });
+            
+            // Extraire les dernières lectures de chaque type de capteur (uniquement actifs)
             const sensorMap = new Map<string, SensorReading>();
             plantationData.sensors.forEach((sensor: Sensor) => {
+              // Ne traiter que les capteurs actifs
+              if (sensor.status !== 'active') return;
+              
               if (sensor.latestReading) {
                 sensorMap.set(sensor.type, sensor.latestReading);
               } else if (sensor.readings && sensor.readings.length > 0) {
@@ -1606,16 +1872,20 @@ export function MonitoringPage() {
             });
 
             // D'abord, utiliser latestReadings si disponible (format backend)
+            // Ne prendre que les lectures des capteurs actifs
             if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
               (plantationData as any).latestReadings.forEach((item: any) => {
-                if (item.latestReading && item.sensorType) {
+                if (item.latestReading && item.sensorType && activeSensorsByType.get(item.sensorType)) {
                   sensorMap.set(item.sensorType, item.latestReading);
                 }
               });
             }
             
-            // Sinon, utiliser les lectures des capteurs individuels
+            // Sinon, utiliser les lectures des capteurs individuels (uniquement si actifs)
             plantationData.sensors.forEach((sensor: Sensor) => {
+              // Ne traiter que les capteurs actifs
+              if (sensor.status !== 'active') return;
+              
               if (!sensorMap.has(sensor.type)) {
                 if (sensor.latestReading) {
                   sensorMap.set(sensor.type, sensor.latestReading);
@@ -1634,13 +1904,20 @@ export function MonitoringPage() {
             const lumReading = sensorMap.get('luminosity');
             const waterReading = sensorMap.get('waterLevel');
 
+            // Vérifier que les capteurs sont actifs avant d'assigner les valeurs
+            const isTemperatureActive = plantationData.sensors.some(s => s.type === 'temperature' && s.status === 'active');
+            const isSoilMoistureActive = plantationData.sensors.some(s => s.type === 'soilMoisture' && s.status === 'active');
+            const isCo2Active = plantationData.sensors.some(s => s.type === 'co2Level' && s.status === 'active');
+            const isLuminosityActive = plantationData.sensors.some(s => s.type === 'luminosity' && s.status === 'active');
+            const isWaterLevelActive = plantationData.sensors.some(s => s.type === 'waterLevel' && s.status === 'active');
+
       const newData = {
-              temperature: availableSensors.temperature && tempReading ? tempReading.value : 0,
-              soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : 0,
-              co2: availableSensors.co2 && co2Reading ? co2Reading.value : 0,
-              luminosity: availableSensors.luminosity && lumReading ? lumReading.value : 0,
-              waterLevel: availableSensors.waterLevel && waterReading ? waterReading.value : 0,
-              co2Level: co2Reading?.value,
+              temperature: availableSensors.temperature && isTemperatureActive && tempReading ? tempReading.value : 0,
+              soilHumidity: availableSensors.soilHumidity && isSoilMoistureActive && soilReading ? soilReading.value : 0,
+              co2: availableSensors.co2 && isCo2Active && co2Reading ? co2Reading.value : 0,
+              luminosity: availableSensors.luminosity && isLuminosityActive && lumReading ? lumReading.value : 0,
+              waterLevel: availableSensors.waterLevel && isWaterLevelActive && waterReading ? waterReading.value : 0,
+              co2Level: isCo2Active && co2Reading ? co2Reading.value : undefined,
             };
       setSensorData(newData);
       // L'animation sera gérée automatiquement par le useEffect
@@ -1650,7 +1927,7 @@ export function MonitoringPage() {
         }
       };
       refreshData();
-    }, 5000); // Mise à jour toutes les 5 secondes
+    }, 60000); // Mise à jour toutes les 1 minute
 
     return () => clearInterval(interval);
   }, [plantationId, plantation?.hasSensors, availableSensors]);
@@ -1873,9 +2150,6 @@ export function MonitoringPage() {
               })()}
               {availableSensors.soilHumidity && (() => {
                 const sensor = sensors.find(s => s.type === 'soilMoisture');
-                // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:1680',message:'Finding soil moisture sensor',data:{sensorsCount:sensors.length,sensorFound:!!sensor,sensorId:sensor?.id,sensorType:sensor?.type,seuilMin:sensor?.seuilMin,seuilMax:sensor?.seuilMax,allSensorTypes:sensors.map(s=>s.type)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-                // #endregion
                 return (
                   <SoilHumidityWidget 
                     key={`soil-${sensorData.soilHumidity}-${updatedAt}`}
@@ -1936,6 +2210,27 @@ export function MonitoringPage() {
                 </div>
               )}
             </div>
+          {/* Alerte pour les capteurs inactifs */}
+          {sensors.length > 0 && sensors.some(s => s.status === 'inactive') && (
+            <div className={styles.monitoringPage__inactiveAlert}>
+              <Icon icon={FaTimesCircle} size={20} style={{ color: '#ef4444' }} />
+              <div>
+                <strong>{t('monitoring.inactiveSensors.title') || 'Capteurs inactifs détectés'}</strong>
+                <p>
+                  {sensors.filter(s => s.status === 'inactive').length} {t('monitoring.inactiveSensors.message') || 'capteur(s) n\'ont pas envoyé de données depuis plus d\'1 heure'}
+                </p>
+                <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
+                  {sensors.filter(s => s.status === 'inactive').map(sensor => (
+                    <li key={sensor.id}>
+                      {sensor.type} - {sensor.latestReading?.timestamp 
+                        ? getTimeSinceLastReading(sensor.latestReading.timestamp)
+                        : 'Jamais de lecture'}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
           {isFarmerOwner && sensors.length > 0 && (
             <div className={styles.monitoringPage__thresholdsCard}>
               <div className={styles.monitoringPage__thresholdsHeader}>
@@ -1954,10 +2249,28 @@ export function MonitoringPage() {
                       <div className={styles.monitoringPage__thresholdLabel}>
                         <Icon icon={FaThermometerHalf} size={16} />
                         {getSensorLabel(sensor.type)}
+                        <div 
+                          className={styles.monitoringPage__thresholdStatus}
+                          style={{ 
+                            color: getSensorStatusColor(sensor.status as 'active' | 'inactive' | 'offline'),
+                            marginLeft: '8px'
+                          }}
+                        >
+                          {sensor.status === 'active' ? (
+                            <Icon icon={FaCheckCircle} size={12} />
+                          ) : (
+                            <Icon icon={FaTimesCircle} size={12} />
+                          )}
+                        </div>
                       </div>
                       <div className={styles.monitoringPage__thresholdValues}>
                         <span>{t('monitoring.thresholds.min')}: <strong>{sensor.seuilMin ?? '—'}</strong></span>
                         <span>{t('monitoring.thresholds.max')}: <strong>{sensor.seuilMax ?? '—'}</strong></span>
+                        {sensor.latestReading?.timestamp && (
+                          <span style={{ fontSize: '0.85em', opacity: 0.7, marginLeft: '8px' }}>
+                            {getTimeSinceLastReading(sensor.latestReading.timestamp)}
+                          </span>
+                        )}
                       </div>
                     </div>
                     {thresholdEdit.sensorId === sensor.id ? (
