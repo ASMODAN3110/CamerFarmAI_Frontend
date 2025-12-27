@@ -463,18 +463,10 @@ function TemperatureWidget({ value, updatedAt, isActive = true, seuilMin, seuilM
 
 // Widget d'humidité du sol avec barre de progression horizontale améliorée
 function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuilMax }: { value: number; updatedAt: string; isActive?: boolean; seuilMin?: number; seuilMax?: number }) {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:305',message:'SoilHumidityWidget entry',data:{value,seuilMin,seuilMax,seuilMinType:typeof seuilMin,seuilMaxType:typeof seuilMax},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   const { t } = useTranslation();
   const min = 0;
   const max = 100;
   const { min: effectiveMin, max: effectiveMax } = normalizeThresholds(seuilMin, seuilMax, 'soilHumidity');
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:312',message:'Effective thresholds calculated',data:{effectiveMin,effectiveMax,min,max},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
   
   // Calculer la couleur basée sur les seuils pour synchronisation
   const color = calculateColorFromThresholds(value, seuilMin, seuilMax, 'soilHumidity');
@@ -510,10 +502,6 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
   
   // Convertir les stops SVG en gradient CSS linéaire
   const cssGradient = `linear-gradient(to right, ${gradientStops.map(stop => `${stop.color} ${stop.offset}`).join(', ')})`;
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:333',message:'Gradient stops generated',data:{gradientId,gradientStopsCount:gradientStops.length,gradientStops,cssGradient},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
 
   return (
     <div className={styles.monitoringPage__widget}>
@@ -583,12 +571,6 @@ function SoilHumidityWidget({ value, updatedAt, isActive = true, seuilMin, seuil
                 position: 'relative'
               }}
             >
-              {/* #region agent log */}
-              {(() => {
-                fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:396',message:'Progress bar style applied',data:{width:`${value}%`,background:cssGradient,gradientId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-                return null;
-              })()}
-              {/* #endregion */}
               {/* Water bubbles */}
               <div className={styles.monitoringPage__waterBubbles}>
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -2168,9 +2150,6 @@ export function MonitoringPage() {
               })()}
               {availableSensors.soilHumidity && (() => {
                 const sensor = sensors.find(s => s.type === 'soilMoisture');
-                // #region agent log
-                fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'MonitoringPage.tsx:1680',message:'Finding soil moisture sensor',data:{sensorsCount:sensors.length,sensorFound:!!sensor,sensorId:sensor?.id,sensorType:sensor?.type,seuilMin:sensor?.seuilMin,seuilMax:sensor?.seuilMax,allSensorTypes:sensors.map(s=>s.type)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-                // #endregion
                 return (
                   <SoilHumidityWidget 
                     key={`soil-${sensorData.soilHumidity}-${updatedAt}`}

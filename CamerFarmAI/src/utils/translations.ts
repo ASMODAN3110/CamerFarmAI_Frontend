@@ -2069,15 +2069,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
 };
 
 export function getTranslation(key: TranslationKey, language: Language): string {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1931',message:'getTranslation entry',data:{key,language,hasLanguage:!!translations[language],hasKey:!!translations[language]?.[key]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
-  
   const translation = translations[language]?.[key];
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1935',message:'getTranslation result',data:{key,language,translation,fallback:translation||key},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   return translation || key;
 }
