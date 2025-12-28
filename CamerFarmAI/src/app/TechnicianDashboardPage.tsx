@@ -1,170 +1,248 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { FaSearch, FaUser, FaTractor, FaWifi, FaToggleOn, FaLeaf,FaPhoneAlt,     // ← Icône téléphone
-  FaMapMarkerAlt } from "react-icons/fa"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { FaSearch, FaUser, FaTractor, FaWifi, FaToggleOn, FaLeaf, FaPhoneAlt, FaMapMarkerAlt, FaExclamationTriangle } from "react-icons/fa"
 
 import styles from "./TechnicianDashboardPage.module.css"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Background3D } from "@/components/ui/Background3D/Background3D"
-// import { redirect } from 'next/navigation'
-// import { getCurrentUser } from '@/lib/auth' // ta fonction pour récupérer l'utilisateur connecté
 
 import {
   technicianService,
-  type Farmer,
-  type Field,
   type TechnicianStats,
-  type FarmerDetails,
-  type Sensor,
-  type Actuator,
+  type FarmerListItem,
+  type PlantationListItem,
+  type PlantationDetails,
 } from "@/services/technicianService"
-
-// On définit un type Equipment générique qui accepte sensors et actuators
-export type Equipment = Sensor | Actuator
+import { type Sensor } from "@/services/plantationService"
 
 export default function TechnicianDashboardPage() {
-
-  const [farmersDetails, setFarmersDetails] = useState<FarmerDetails[]>([])
-  const [filteredFarmers, setFilteredFarmers] = useState<FarmerDetails[]>([])
+  // États pour les données principales
   const [stats, setStats] = useState<TechnicianStats | null>(null)
+  const [farmers, setFarmers] = useState<FarmerListItem[]>([])
+  const [plantations, setPlantations] = useState<PlantationListItem[]>([])
+  const [plantationDetails, setPlantationDetails] = useState<PlantationDetails | null>(null)
 
+  // États de sélection
   const [selectedFarmerId, setSelectedFarmerId] = useState<string | null>(null)
-  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null)
+  const [selectedPlantationId, setSelectedPlantationId] = useState<string | null>(null)
 
-  const [fields, setFields] = useState<Field[]>([])
-  const [equipments, setEquipments] = useState<Equipment[]>([])
+  // États de chargement
+  const [isLoadingStats, setIsLoadingStats] = useState(true)
+  const [isLoadingFarmers, setIsLoadingFarmers] = useState(true)
+  const [isLoadingPlantations, setIsLoadingPlantations] = useState(false)
+  const [isLoadingPlantationDetails, setIsLoadingPlantationDetails] = useState(false)
 
+  // États de recherche et erreurs
   const [searchTerm, setSearchTerm] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [fetchError, setFetchError] = useState<string | null>(null)
+  const [searchDebounceTimer, setSearchDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  // État pour le rafraîchissement automatique
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
   /* =======================
-     CHARGEMENT INITIAL
+     CHARGEMENT INITIAL (HYBRIDE)
   ======================= */
   useEffect(() => {
-    const loadDashboard = async () => {
-      setIsLoading(true)
+    const loadInitialData = async () => {
+      setIsLoadingStats(true)
+      setIsLoadingFarmers(true)
+      setError(null)
+
       try {
-        const [statsData, farmersDetailsData] = await Promise.all([
+        // Charger les stats et la liste des agriculteurs en parallèle
+        const [statsData, farmersData] = await Promise.all([
           technicianService.getStats(),
-          technicianService.getFarmersWithDetails(),
+          technicianService.getFarmers(),
         ])
 
-        setFarmersDetails(farmersDetailsData)
-        setFilteredFarmers(farmersDetailsData)
         setStats(statsData)
+        setFarmers(farmersData)
+        setLastRefresh(new Date())
 
-        // Sélectionne automatiquement le premier agriculteur s'il existe
-        if (farmersDetailsData.length > 0) {
-          setSelectedFarmerId(farmersDetailsData[0].id)
+        // Sélectionner automatiquement le premier agriculteur s'il existe
+        if (farmersData.length > 0) {
+          setSelectedFarmerId(farmersData[0].id)
         }
-
-        setFetchError(null)
-      } catch (error) {
-        console.error("Erreur dashboard technicien :", error)
-        setFetchError("Impossible de charger les données")
+      } catch (err: any) {
+        console.error("Erreur lors du chargement initial:", err)
+        setError(err?.response?.data?.message || "Impossible de charger les données")
       } finally {
-        setIsLoading(false)
+        setIsLoadingStats(false)
+        setIsLoadingFarmers(false)
       }
     }
 
-    loadDashboard()
+    loadInitialData()
   }, [])
 
   /* =======================
-     FILTRAGE AGRICULTEURS
-======================= */
-useEffect(() => {
-  if (!searchTerm.trim()) {
-    setFilteredFarmers(farmersDetails)
-    return
-  }
+     RECHERCHE D'AGRICULTEURS (BACKEND)
+  ======================= */
+  useEffect(() => {
+    // Nettoyer le timer précédent
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer)
+    }
 
-  const term = searchTerm.toLowerCase()
+    // Créer un nouveau timer pour le debounce
+    const timer = setTimeout(async () => {
+      setIsLoadingFarmers(true)
+      setError(null)
 
-  setFilteredFarmers(
-    farmersDetails.filter((farmer) => {
-      // Recherche dans le nom de l'agriculteur
-      if (farmer.name.toLowerCase().includes(term)) return true
+      try {
+        const searchQuery = searchTerm.trim()
+        const farmersData = await technicianService.getFarmers(searchQuery || undefined)
+        setFarmers(farmersData)
+        setLastRefresh(new Date())
 
-      // Recherche dans le téléphone
-      if (farmer.phone && farmer.phone.includes(term)) return true
+        // Si un agriculteur était sélectionné mais n'est plus dans les résultats, le désélectionner
+        if (selectedFarmerId && !farmersData.find(f => f.id === selectedFarmerId)) {
+          setSelectedFarmerId(null)
+          setPlantations([])
+          setSelectedPlantationId(null)
+          setPlantationDetails(null)
+        }
+      } catch (err: any) {
+        console.error("Erreur lors de la recherche:", err)
+        setError(err?.response?.data?.message || "Erreur lors de la recherche")
+      } finally {
+        setIsLoadingFarmers(false)
+      }
+    }, 300) // Debounce de 300ms
 
-      // Recherche dans les localisations des champs
-      return farmer.fields.some((field) =>
-        field.location?.toLowerCase().includes(term)
-      )
-    })
-  )
-}, [searchTerm, farmersDetails])
+    setSearchDebounceTimer(timer)
+
+    // Cleanup
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [searchTerm])
 
   /* =======================
-     MISE À JOUR DES CHAMPS QUAND ON CHANGE D'AGRICULTEUR
+     CHARGEMENT DES PLANTATIONS (À LA DEMANDE)
   ======================= */
   useEffect(() => {
     if (!selectedFarmerId) {
-      setFields([])
-      setSelectedFieldId(null)
-      setEquipments([])
+      setPlantations([])
+      setSelectedPlantationId(null)
+      setPlantationDetails(null)
       return
     }
 
-    const selectedFarmerDetails = farmersDetails.find(
-      (f) => f.id === selectedFarmerId
-    )
+    const loadPlantations = async () => {
+      setIsLoadingPlantations(true)
+      setError(null)
 
-    if (selectedFarmerDetails) {
-      setFields(selectedFarmerDetails.fields)
+      try {
+        const plantationsData = await technicianService.getFarmerPlantations(selectedFarmerId)
+        setPlantations(plantationsData)
+        setLastRefresh(new Date())
 
-      // Pré-sélectionne le premier champ s'il existe
-      if (
-        selectedFarmerDetails.fields.length > 0 &&
-        selectedFieldId === null
-      ) {
-        setSelectedFieldId(selectedFarmerDetails.fields[0].id)
+        // Sélectionner automatiquement la première plantation s'il y en a
+        if (plantationsData.length > 0 && !selectedPlantationId) {
+          setSelectedPlantationId(plantationsData[0].id)
+        } else if (plantationsData.length === 0) {
+          setSelectedPlantationId(null)
+          setPlantationDetails(null)
+        }
+      } catch (err: any) {
+        console.error("Erreur lors du chargement des plantations:", err)
+        setError(err?.response?.data?.message || "Impossible de charger les plantations")
+        setPlantations([])
+      } finally {
+        setIsLoadingPlantations(false)
       }
-    } else {
-      setFields([])
-      setSelectedFieldId(null)
-      setEquipments([])
     }
-  }, [selectedFarmerId, farmersDetails])
+
+    loadPlantations()
+  }, [selectedFarmerId])
 
   /* =======================
-     MISE À JOUR DES ÉQUIPEMENTS QUAND ON CHANGE DE CHAMP
+     CHARGEMENT DES DÉTAILS D'UNE PLANTATION (À LA DEMANDE)
   ======================= */
   useEffect(() => {
-    if (!selectedFieldId || fields.length === 0) {
-      setEquipments([])
+    if (!selectedPlantationId) {
+      setPlantationDetails(null)
       return
     }
 
-    const selectedField = fields.find((f) => f.id === selectedFieldId)
-    if (selectedField) {
-      const allEquipments: Equipment[] = [
-        ...(selectedField.sensors || []),
-        ...(selectedField.actuators || []),
-      ]
-      setEquipments(allEquipments)
-    } else {
-      setEquipments([])
-    }
-  }, [selectedFieldId, fields])
+    const loadPlantationDetails = async () => {
+      setIsLoadingPlantationDetails(true)
+      setError(null)
 
+      try {
+        const details = await technicianService.getPlantationDetails(selectedPlantationId)
+        setPlantationDetails(details)
+        setLastRefresh(new Date())
+      } catch (err: any) {
+        console.error("Erreur lors du chargement des détails:", err)
+        setError(err?.response?.data?.message || "Impossible de charger les détails de la plantation")
+        setPlantationDetails(null)
+      } finally {
+        setIsLoadingPlantationDetails(false)
+      }
+    }
+
+    loadPlantationDetails()
+  }, [selectedPlantationId])
+
+  /* =======================
+     RAFRAÎCHISSEMENT AUTOMATIQUE DES STATS
+  ======================= */
+  useEffect(() => {
+    const refreshStats = async () => {
+      try {
+        const statsData = await technicianService.getStats()
+        setStats(statsData)
+        setLastRefresh(new Date())
+      } catch (err) {
+        console.error("Erreur lors du rafraîchissement des stats:", err)
+      }
+    }
+
+    // Rafraîchir toutes les 30 secondes
+    const interval = setInterval(refreshStats, 30000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  /* =======================
+     CALCULS DÉRIVÉS
+  ======================= */
   const selectedFarmer = useMemo(
-    () => farmersDetails.find((f) => f.id === selectedFarmerId) || null,
-    [farmersDetails, selectedFarmerId]
+    () => farmers.find(f => f.id === selectedFarmerId) || null,
+    [farmers, selectedFarmerId]
   )
 
-  if (isLoading) {
+  // Calculer le pourcentage de capteurs actifs pour une plantation
+  const getActiveSensorsPercentage = useCallback((sensors: Sensor[]) => {
+    if (sensors.length === 0) return 0
+    const activeCount = sensors.filter(s => s.status === 'active').length
+    return Math.round((activeCount / sensors.length) * 100)
+  }, [])
+
+  // Vérifier si une plantation a beaucoup de capteurs inactifs (>50%)
+  const hasManyInactiveSensors = useCallback((sensors: Sensor[]) => {
+    if (sensors.length === 0) return false
+    const activePercentage = getActiveSensorsPercentage(sensors)
+    return activePercentage < 50
+  }, [getActiveSensorsPercentage])
+
+  // Afficher l'erreur si elle existe
+  if (error && !isLoadingStats && !isLoadingFarmers) {
     return (
       <>
         <Background3D />
         <Header currentPath="/technicien" showAuthIcons />
         <main className={styles.page}>
-          <div className={styles.loading}>Chargement des données…</div>
+          <div className={styles.error}>
+            <FaExclamationTriangle />
+            <span>{error}</span>
+            <button onClick={() => window.location.reload()}>Réessayer</button>
+          </div>
         </main>
         <Footer />
       </>
@@ -177,12 +255,12 @@ useEffect(() => {
       <Header currentPath="/technicien" showAuthIcons />
 
       <main className={styles.page}>
-        {fetchError && <div className={styles.error}>{fetchError}</div>}
-
         {/* =======================
             STATISTIQUES
         ======================= */}
-        {stats && (
+        {isLoadingStats ? (
+          <div className={styles.loading}>Chargement des statistiques…</div>
+        ) : stats && (
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <div className={styles.statIcon}>
@@ -190,7 +268,7 @@ useEffect(() => {
               </div>
               <div className={styles.statContent}>
                 <div className={styles.statLabel}>AGRICULTEURS</div>
-                <div className={styles.statValue}>{stats.farmersCount}</div>
+                <div className={styles.statValue}>{stats.farmers}</div>
               </div>
             </div>
             <div className={styles.statCard}>
@@ -198,8 +276,8 @@ useEffect(() => {
                 <FaTractor />
               </div>
               <div className={styles.statContent}>
-                <div className={styles.statLabel}>PLANTATION</div>
-                <div className={styles.statValue}>{stats.fieldsCount}</div>
+                <div className={styles.statLabel}>PLANTATIONS</div>
+                <div className={styles.statValue}>{stats.plantations}</div>
               </div>
             </div>
             <div className={styles.statCard}>
@@ -219,7 +297,7 @@ useEffect(() => {
               </div>
               <div className={styles.statContent}>
                 <div className={styles.statLabel}>ACTIONNEURS</div>
-                <div className={styles.statValue}>{stats.actuatorsCount}</div>
+                <div className={styles.statValue}>{stats.actuators}</div>
               </div>
             </div>
           </div>
@@ -232,20 +310,12 @@ useEffect(() => {
           <FaSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Rechercher un agriculteur ou une région..."
+            placeholder="Rechercher un agriculteur..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
           />
-        </div>
-
-        {/* =======================
-            TABS
-        ======================= */}
-        <div className={styles.tabs}>
-          <button className={`${styles.tab} ${styles.tabActive}`}>
-            Vue Tableau de Bord
-          </button>
+          {isLoadingFarmers && <span className={styles.searchLoading}>Recherche...</span>}
         </div>
 
         {/* =======================
@@ -257,148 +327,234 @@ useEffect(() => {
             <div className={styles.sectionHeader}>
               <FaUser className={styles.sectionIcon} />
               <h2 className={styles.sectionTitle}>Agriculteurs</h2>
-              <span className={styles.sectionBadge}>{filteredFarmers.length}</span>
+              <span className={styles.sectionBadge}>{farmers.length}</span>
             </div>
-            <div className={styles.farmersList}>
-              {filteredFarmers.map((farmer) => (
-                <div
-                  key={farmer.id}
-                  className={`${styles.farmerCard} ${
-                    farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedFarmerId(farmer.id)
-                    setSelectedFieldId(null) // Reset champ quand on change d'agriculteur
-                  }}
-                >
-                  <div className={styles.farmerStatus}></div>
-                  <div className={styles.farmerInfo}>
-                    <div className={styles.farmerName}>{farmer.name}</div>
-                    <div className={styles.farmerLocation}>
-                       <FaMapMarkerAlt />Cameroun
+            {isLoadingFarmers ? (
+              <div className={styles.loading}>Chargement des agriculteurs…</div>
+            ) : farmers.length === 0 ? (
+              <div className={styles.emptyMessage}>
+                {searchTerm ? "Aucun agriculteur trouvé" : "Aucun agriculteur"}
+              </div>
+            ) : (
+              <div className={styles.farmersList}>
+                {farmers.map((farmer) => (
+                  <div
+                    key={farmer.id}
+                    className={`${styles.farmerCard} ${
+                      farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedFarmerId(farmer.id)
+                      setSelectedPlantationId(null)
+                    }}
+                  >
+                    <div className={styles.farmerStatus}></div>
+                    <div className={styles.farmerInfo}>
+                      <div className={styles.farmerName}>
+                        {farmer.firstName} {farmer.lastName}
+                      </div>
+                      {farmer.location && (
+                        <div className={styles.farmerLocation}>
+                          <FaMapMarkerAlt /> {farmer.location}
+                        </div>
+                      )}
+                      <div className={styles.farmerFields}>
+                        {farmer.plantationsCount} plantation{farmer.plantationsCount > 1 ? "s" : ""}
+                      </div>
                     </div>
-                    <div className={styles.farmerPhone}><FaPhoneAlt /> {farmer.phone}</div>
-  
-  <div className={styles.farmerFields}>
-    {farmer.fields.length} plantation{farmer.fields.length > 1 ? "s" : ""}
-  </div>
-                    {/* <div className={styles.farmerFields}>
-                      {farmer.fields.length} champs
-                    </div> */}
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* CHAMPS */}
+          {/* PLANTATIONS */}
           <div className={styles.fieldsSection}>
             <div className={styles.panelHeader}>
               <span className={styles.panelTitle}>AGRICULTEUR</span>
               <h3 className={styles.panelSubtitle}>
-                {selectedFarmer ? selectedFarmer.name : "Sélectionnez un agriculteur"}
+                {selectedFarmer
+                  ? `${selectedFarmer.firstName} ${selectedFarmer.lastName}`
+                  : "Sélectionnez un agriculteur"}
               </h3>
             </div>
             <div className={styles.panelContent}>
               <div className={styles.fieldsHeader}>
                 <FaLeaf className={styles.fieldsIcon} />
                 <span className={styles.fieldsTitle}>Plantations</span>
-                <span className={styles.fieldsBadge}>{fields.length}</span>
+                <span className={styles.fieldsBadge}>{plantations.length}</span>
               </div>
-              <div className={styles.fieldsList}>
-                {selectedFarmer ? (
-                  fields.length > 0 ? (
-                    fields.map((field) => (
+              {isLoadingPlantations ? (
+                <div className={styles.loading}>Chargement des plantations…</div>
+              ) : selectedFarmer ? (
+                plantations.length > 0 ? (
+                  <div className={styles.fieldsList}>
+                    {plantations.map((plantation) => (
                       <div
-                        key={field.id}
+                        key={plantation.id}
                         className={`${styles.fieldCard} ${
-                          field.id === selectedFieldId ? styles.fieldCardActive : ""
+                          plantation.id === selectedPlantationId ? styles.fieldCardActive : ""
                         }`}
-                        onClick={() => setSelectedFieldId(field.id)}
+                        onClick={() => setSelectedPlantationId(plantation.id)}
                       >
                         <div className={styles.fieldIcon}>
                           <FaLeaf />
                         </div>
                         <div className={styles.fieldInfo}>
-                          <div className={styles.fieldName}>{field.name}</div>
+                          <div className={styles.fieldName}>{plantation.name}</div>
                           <div className={styles.fieldDetails}>
                             <div className={styles.fieldDetail}>
                               <span className={styles.fieldLabel}>Culture</span>
                               <span className={styles.fieldValue}>
-                                {field.cropType || "N/A"}
+                                {plantation.cropType || "N/A"}
                               </span>
                             </div>
                             <div className={styles.fieldDetail}>
                               <span className={styles.fieldLabel}>Superficie</span>
                               <span className={styles.fieldValue}>
-                                {field.area || "N/A" }
+                                {plantation.area ? `${plantation.area} m²` : "N/A"}
                               </span>
                             </div>
                           </div>
-                          <div className={styles.fieldEquipment}>
-                            🔌 {field.totalDevices || "N/A"} équipements
-                          </div>
                           <div className={styles.fieldDetail}>
-    <span className={styles.fieldLabel}>Localisation</span>
-    <span className={styles.fieldValue}>{field.location || "Non renseignée"}</span>
-  </div>
+                            <span className={styles.fieldLabel}>Localisation</span>
+                            <span className={styles.fieldValue}>
+                              {plantation.location || "Non renseignée"}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <p className={styles.emptyMessage}>Aucun champ disponible</p>
-                  )
+                    ))}
+                  </div>
                 ) : (
-                  <p className={styles.emptyMessage}>Sélectionnez un agriculteur</p>
-                )}
-              </div>
+                  <p className={styles.emptyMessage}>Aucune plantation disponible</p>
+                )
+              ) : (
+                <p className={styles.emptyMessage}>Sélectionnez un agriculteur</p>
+              )}
             </div>
           </div>
 
-          {/* ÉQUIPEMENTS (placeholder pour la suite, tu pourras l'étendre) */}
+          {/* DÉTAILS DE LA PLANTATION */}
           <div className={styles.equipmentSection}>
-            {selectedFieldId ? (
-              equipments.length > 0 ? (
-               <div className={styles.equipmentSection}>
-  <h3 className={styles.equipmentTitle}>Équipements du champ</h3>
-  
-  {equipments.length === 0 ? (
-    <p className={styles.emptyMessage}>Aucun équipement sur ce champ</p>
-  ) : (
-    <div className={styles.equipmentList}>
-      {equipments.map((eq) => {
-        const isActive = eq.status === "active"
-        const displayName = "name" in eq ? eq.name : eq.type
+            {selectedPlantationId ? (
+              isLoadingPlantationDetails ? (
+                <div className={styles.loading}>Chargement des détails…</div>
+              ) : plantationDetails ? (
+                <div className={styles.plantationDetails}>
+                  <div className={styles.detailsHeader}>
+                    <h3 className={styles.detailsTitle}>{plantationDetails.name}</h3>
+                    {plantationDetails.owner && (
+                      <div className={styles.ownerInfo}>
+                        <div className={styles.ownerName}>
+                          Propriétaire: {plantationDetails.owner.firstName} {plantationDetails.owner.lastName}
+                        </div>
+                        {plantationDetails.owner.phone && (
+                          <div className={styles.ownerPhone}>
+                            <FaPhoneAlt /> {plantationDetails.owner.phone}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
 
-        return (
-          <div key={eq.id} className={styles.equipmentItem}>
-            <span className={styles.equipmentName}>{displayName}</span>
-            <span
-              className={`${styles.statusBadge} ${
-                isActive ? styles.statusActive : styles.statusInactive
-              }`}
-            >
-              • {isActive ? "active" : "inactive"}
-            </span>
-          </div>
-        )
-      })}
-    </div>
-  )}
-</div>
+                  {/* CAPTEURS */}
+                  <div className={styles.sensorsSection}>
+                    <h4 className={styles.sensorsTitle}>
+                      Capteurs ({plantationDetails.sensors.length})
+                    </h4>
+                    {plantationDetails.sensors.length > 0 && (
+                      <div className={styles.sensorsStats}>
+                        <span>
+                          Actifs: {plantationDetails.sensors.filter(s => s.status === 'active').length} / {plantationDetails.sensors.length}
+                        </span>
+                        <span className={styles.percentage}>
+                          ({getActiveSensorsPercentage(plantationDetails.sensors)}%)
+                        </span>
+                      </div>
+                    )}
+                    {hasManyInactiveSensors(plantationDetails.sensors) && (
+                      <div className={styles.alert}>
+                        <FaExclamationTriangle />
+                        <span>Plus de 50% des capteurs sont inactifs</span>
+                      </div>
+                    )}
+                    {plantationDetails.sensors.length === 0 ? (
+                      <p className={styles.emptyMessage}>Aucun capteur sur cette plantation</p>
+                    ) : (
+                      <div className={styles.sensorsList}>
+                        {plantationDetails.sensors.map((sensor) => (
+                          <div key={sensor.id} className={styles.sensorItem}>
+                            <div className={styles.sensorInfo}>
+                              <span className={styles.sensorName}>{sensor.type}</span>
+                              {sensor.seuilMin !== undefined && sensor.seuilMax !== undefined && (
+                                <span className={styles.sensorThresholds}>
+                                  Seuils: {sensor.seuilMin} - {sensor.seuilMax}
+                                </span>
+                              )}
+                            </div>
+                            <span
+                              className={`${styles.statusBadge} ${
+                                sensor.status === 'active' ? styles.statusActive : styles.statusInactive
+                              }`}
+                            >
+                              {sensor.status === 'active' ? '🟢 Actif' : '🔴 Inactif'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* ACTIONNEURS */}
+                  <div className={styles.actuatorsSection}>
+                    <h4 className={styles.actuatorsTitle}>
+                      Actionneurs ({plantationDetails.actuators.length})
+                    </h4>
+                    {plantationDetails.actuators.length === 0 ? (
+                      <p className={styles.emptyMessage}>Aucun actionneur sur cette plantation</p>
+                    ) : (
+                      <div className={styles.actuatorsList}>
+                        {plantationDetails.actuators.map((actuator) => (
+                          <div key={actuator.id} className={styles.actuatorItem}>
+                            <div className={styles.actuatorInfo}>
+                              <span className={styles.actuatorName}>{actuator.name || actuator.type}</span>
+                              <span className={styles.actuatorType}>{actuator.type}</span>
+                            </div>
+                            <span
+                              className={`${styles.statusBadge} ${
+                                actuator.status === 'active' ? styles.statusActive : styles.statusInactive
+                              }`}
+                            >
+                              {actuator.status === 'active' ? '🟢 Actif' : '🔴 Inactif'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               ) : (
                 <div className={styles.placeholderText}>
-                  Aucun équipement sur ce champ
+                  Impossible de charger les détails de la plantation
                 </div>
               )
             ) : (
-              <div className={styles.placeholderText}>Sélectionnez un champ</div>
+              <div className={styles.placeholderText}>Sélectionnez une plantation</div>
             )}
           </div>
         </div>
+
+        {/* Indicateur de dernière mise à jour */}
+        {lastRefresh && (
+          <div className={styles.lastRefresh}>
+            Dernière mise à jour: {lastRefresh.toLocaleTimeString()}
+          </div>
+        )}
       </main>
 
       <Footer />
     </>
   )
 }
+

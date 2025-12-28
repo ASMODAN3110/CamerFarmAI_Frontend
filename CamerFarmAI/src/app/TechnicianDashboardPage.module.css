@@ -135,6 +135,12 @@
   color: #9ca3af;
 }
 
+.searchLoading {
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
 /* ============================= */
 /* TABS */
 /* ============================= */
@@ -607,4 +613,280 @@
 
 .statusInactive {
   color: #dc2626; /* Rouge vif mais pas agressif */
+}
+
+/* ============================= */
+/* DÉTAILS DE PLANTATION */
+/* ============================= */
+
+.plantationDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detailsHeader {
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.detailsTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.ownerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.ownerName {
+  font-weight: 600;
+  color: #374151;
+}
+
+.ownerPhone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+}
+
+/* ============================= */
+/* SECTION CAPTEURS */
+/* ============================= */
+
+.sensorsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sensorsTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.sensorsStats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.percentage {
+  font-weight: 600;
+  color: #374151;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alert svg {
+  color: #f59e0b;
+  font-size: 18px;
+}
+
+.sensorsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sensorItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.sensorItem:hover {
+  background: #f3f4f6;
+}
+
+.sensorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sensorName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: capitalize;
+}
+
+.sensorThresholds {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ============================= */
+/* SECTION ACTIONNEURS */
+/* ============================= */
+
+.actuatorsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actuatorsTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.actuatorsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actuatorItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.actuatorItem:hover {
+  background: #f3f4f6;
+}
+
+.actuatorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.actuatorName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.actuatorType {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+/* ============================= */
+/* DERNIÈRE MISE À JOUR */
+/* ============================= */
+
+.lastRefresh {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #9ca3af;
+  padding: 8px;
+}
+
+/* ============================= */
+/* AMÉLIORATION DES BADGES DE STATUT */
+/* ============================= */
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusBadge.statusActive {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.statusBadge.statusInactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ============================= */
+/* AMÉLIORATION DES MESSAGES D'ERREUR */
+/* ============================= */
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.error svg {
+  font-size: 48px;
+  color: #ef4444;
+}
+
+.error button {
+  padding: 10px 20px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.error button:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+/* ============================= */
+/* AMÉLIORATION DU FARMER PHONE */
+/* ============================= */
+
+.farmerPhone {
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }

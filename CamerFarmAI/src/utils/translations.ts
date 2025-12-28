@@ -8,6 +8,7 @@ export type TranslationKey =
   | 'nav.plantations'
   | 'nav.ai'
   | 'nav.guide'
+  | 'nav.technician'
   | 'auth.login'
   | 'auth.signup'
   | 'auth.logout'
@@ -148,6 +149,7 @@ export type TranslationKey =
   | 'plantations.detail.sensors.recentReadings'
   | 'plantations.detail.sensors.loadingReadings'
   | 'plantations.detail.sensors.noReadings'
+  | 'plantations.detail.sensors.noReading'
   | 'plantations.detail.errors.invalidId'
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
@@ -273,6 +275,7 @@ export type TranslationKey =
   | 'sensor.status.offline'
   | 'sensor.status.unknown'
   | 'profile.back'
+  | 'profile.backToDashboard'
   | 'profile.pageLabel'
   | 'profile.welcome'
   | 'profile.loading'
@@ -324,6 +327,7 @@ export type TranslationKey =
   | 'profile.errors.imageSizeExceeded'
   | 'profile.errors.uploadFailed'
   | 'profile.errors.updateFailed'
+  | 'profile.readonlyMessage'
   | 'profile.role.farmer'
   | 'profile.role.technician'
   | 'profile.role.admin'
@@ -530,6 +534,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'IA',
     'nav.guide': 'Guide',
+    'nav.technician': 'Tableau de bord',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
@@ -791,10 +796,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
     'plantations.detail.sensors.loadingReadings': 'Chargement des valeurs...',
     'plantations.detail.sensors.noReadings': 'Aucune valeur enregistrée',
+    'plantations.detail.sensors.noReading': 'Aucune lecture',
     'plantations.detail.errors.invalidId': 'ID de plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
     'profile.back': 'Retour',
+    'profile.backToDashboard': 'Retour au dashboard',
     'profile.pageLabel': 'Profil utilisateur',
     'profile.welcome': 'Bienvenue, {name}',
     'profile.loading': 'Chargement du profil...',
@@ -846,6 +853,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'L\'image ne doit pas dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur lors de l\'upload de la photo',
     'profile.errors.updateFailed': 'Erreur lors de la mise à jour du profil',
+    'profile.readonlyMessage': 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.',
     'profile.role.farmer': 'Agriculteur',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
@@ -1051,6 +1059,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.technician': 'Dashboard',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
@@ -1228,6 +1237,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Recent Readings',
     'plantations.detail.sensors.loadingReadings': 'Loading readings...',
     'plantations.detail.sensors.noReadings': 'No readings recorded',
+    'plantations.detail.sensors.noReading': 'No reading',
     'plantations.detail.errors.invalidId': 'Invalid plantation ID',
     'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
     'plantations.detail.errors.notFound': 'Plantation not found',
@@ -1316,6 +1326,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'sensor.status.offline': 'Offline',
     'sensor.status.unknown': 'Unknown',
     'profile.back': 'Back',
+    'profile.backToDashboard': 'Back to dashboard',
     'profile.pageLabel': 'User profile',
     'profile.welcome': 'Welcome, {name}',
     'profile.loading': 'Loading profile...',
@@ -1367,6 +1378,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Image must not exceed 5MB',
     'profile.errors.uploadFailed': 'Error uploading photo',
     'profile.errors.updateFailed': 'Error updating profile',
+    'profile.readonlyMessage': 'This profile is read-only. Technicians cannot modify their information.',
     'profile.role.farmer': 'Farmer',
     'profile.role.technician': 'Technician',
     'profile.role.admin': 'Administrator',
@@ -1572,6 +1584,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Nguurndam',
     'nav.ai': 'AI',
     'nav.guide': 'Jangirde',
+    'nav.technician': 'Dashboard',
     'auth.login': 'Seŋo',
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
@@ -1749,6 +1762,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Keɓe sakkitiɗe',
     'plantations.detail.sensors.loadingReadings': 'Jokkondir keɓe...',
     'plantations.detail.sensors.noReadings': 'Alaa keɓe binndaaɗe',
+    'plantations.detail.sensors.noReading': 'Alaa jokkondiral',
     'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
     'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
     'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
@@ -1837,6 +1851,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
     'monitoring.mode.updateError': 'Firde e huutoreede wattinɗam. Tiiɗno yeewto.',
     'profile.back': 'Rutto',
+    'profile.backToDashboard': 'Rutto e dashboard',
     'profile.pageLabel': 'Jokkondiral kuutoro',
     'profile.welcome': 'Aɗa naatii, {name}',
     'profile.loading': 'Jokkondir jokkondiral...',
@@ -1888,6 +1903,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Limoore ina tawaa 5MB ɓuri',
     'profile.errors.uploadFailed': 'Koɗɗe Ɓaawɗe ngam naatnude foto',
     'profile.errors.updateFailed': 'Koɗɗe Ɓaawɗe ngam ɓeydugol jokkondiral',
+    'profile.readonlyMessage': 'Jokkondiral ngal no foti tan ko jokkondiral. Kuutowɓe ɓe hokkataa ɓeydugol keɓe maɓɓe.',
     'profile.role.farmer': 'Ngaynaajo',
     'profile.role.technician': 'Kuutowo',
     'profile.role.admin': 'Toppitoowo',
@@ -2093,6 +2109,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Bisó',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.technician': 'Tableau de bord',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
     'auth.logout': 'Bwá',
@@ -2354,10 +2371,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
     'plantations.detail.sensors.loadingReadings': 'Chargement valeurs...',
     'plantations.detail.sensors.noReadings': 'Alé valeurs enregistrées',
+    'plantations.detail.sensors.noReading': 'Alé lecture',
     'plantations.detail.errors.invalidId': 'ID plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Alé charger détails plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
     'profile.back': 'Bwá',
+    'profile.backToDashboard': 'Bwá dashboard',
     'profile.pageLabel': 'Profil utilisateur',
     'profile.welcome': 'Bwá, {name}',
     'profile.loading': 'Chargement profil...',
@@ -2409,6 +2428,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Image alé dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur upload photo',
     'profile.errors.updateFailed': 'Erreur mise à jour profil',
+    'profile.readonlyMessage': 'Profil lecture seule. Techniciens ne peuvent pas modifier informations.',
     'profile.role.farmer': 'Agriculteur',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
