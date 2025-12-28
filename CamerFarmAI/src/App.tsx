@@ -13,6 +13,7 @@ import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
 import { ProfilePage } from './app/ProfilePage';
 import { ChatboxPage } from './app/ChatboxPage';
+import { GuidePage } from './app/GuidePage';
 function App() {
   return (
     <AuthProvider>
@@ -87,6 +88,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/guide" 
+              element={
+                <ProtectedRoute>
+                  <GuidePage />
                 </ProtectedRoute>
               } 
             />

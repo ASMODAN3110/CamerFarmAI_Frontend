@@ -7,6 +7,7 @@ export type TranslationKey =
   | 'nav.graphs'
   | 'nav.plantations'
   | 'nav.ai'
+  | 'nav.guide'
   | 'auth.login'
   | 'auth.signup'
   | 'auth.logout'
@@ -143,6 +144,10 @@ export type TranslationKey =
   | 'plantations.detail.sensors.noSensors'
   | 'plantations.detail.sensors.noSensorsMessage'
   | 'plantations.detail.sensors.noData'
+  | 'plantations.detail.sensors.readingsHistory'
+  | 'plantations.detail.sensors.recentReadings'
+  | 'plantations.detail.sensors.loadingReadings'
+  | 'plantations.detail.sensors.noReadings'
   | 'plantations.detail.errors.invalidId'
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
@@ -261,6 +266,12 @@ export type TranslationKey =
   | 'monitoring.help.zones.warning'
   | 'monitoring.help.zones.danger'
   | 'monitoring.help.close'
+  | 'monitoring.inactiveSensors.title'
+  | 'monitoring.inactiveSensors.message'
+  | 'sensor.status.active'
+  | 'sensor.status.inactive'
+  | 'sensor.status.offline'
+  | 'sensor.status.unknown'
   | 'profile.back'
   | 'profile.pageLabel'
   | 'profile.welcome'
@@ -380,10 +391,135 @@ export type TranslationKey =
   | 'admin.fakers.seasonal.transition'
   | 'admin.fakers.results.percentage'
   | 'admin.fakers.results.barChart'
+  | 'chatbox.title'
+  | 'chatbox.description'
+  | 'chatbox.emptyState.title'
+  | 'chatbox.emptyState.description'
+  | 'chatbox.suggestionsHeader'
+  | 'chatbox.suggestedQuestions.question1'
+  | 'chatbox.suggestedQuestions.question2'
+  | 'chatbox.suggestedQuestions.question3'
+  | 'chatbox.suggestedQuestions.question4'
+  | 'chatbox.aiResponse.prefix'
+  | 'chatbox.aiResponse.intro'
+  | 'chatbox.inputLabel'
+  | 'chatbox.inputPlaceholder'
+  | 'chatbox.sendButton'
+  | 'chatbox.sending'
+  | 'chatbox.inputHint'
+  | 'chatbox.characters'
+  | 'chatbox.characterCount'
   | 'language.fr'
   | 'language.en'
   | 'language.ff'
-  | 'language.ew';
+  | 'language.ew'
+  | 'guide.title'
+  | 'guide.subtitle'
+  | 'guide.tableOfContents.title'
+  | 'guide.tableOfContents.introduction'
+  | 'guide.tableOfContents.quickStart'
+  | 'guide.tableOfContents.authentication'
+  | 'guide.tableOfContents.profile'
+  | 'guide.tableOfContents.plantations'
+  | 'guide.tableOfContents.monitoring'
+  | 'guide.tableOfContents.graphs'
+  | 'guide.tableOfContents.notifications'
+  | 'guide.tableOfContents.ai'
+  | 'guide.tableOfContents.language'
+  | 'guide.introduction.title'
+  | 'guide.introduction.description'
+  | 'guide.introduction.feature1'
+  | 'guide.introduction.feature2'
+  | 'guide.introduction.feature3'
+  | 'guide.introduction.feature4'
+  | 'guide.quickStart.title'
+  | 'guide.quickStart.signup.title'
+  | 'guide.quickStart.signup.step1'
+  | 'guide.quickStart.signup.step2'
+  | 'guide.quickStart.signup.step3'
+  | 'guide.quickStart.signup.step4'
+  | 'guide.quickStart.login.title'
+  | 'guide.quickStart.login.step1'
+  | 'guide.quickStart.login.step2'
+  | 'guide.quickStart.login.step3'
+  | 'guide.auth.title'
+  | 'guide.auth.twoFactor.title'
+  | 'guide.auth.twoFactor.description'
+  | 'guide.auth.twoFactor.step1'
+  | 'guide.auth.twoFactor.step2'
+  | 'guide.auth.twoFactor.step3'
+  | 'guide.auth.twoFactor.step4'
+  | 'guide.auth.twoFactor.tip'
+  | 'guide.profile.title'
+  | 'guide.profile.edit.title'
+  | 'guide.profile.edit.step1'
+  | 'guide.profile.edit.step2'
+  | 'guide.profile.edit.step3'
+  | 'guide.profile.edit.step4'
+  | 'guide.profile.photo.title'
+  | 'guide.profile.photo.step1'
+  | 'guide.profile.photo.step2'
+  | 'guide.profile.photo.step3'
+  | 'guide.plantations.title'
+  | 'guide.plantations.create.title'
+  | 'guide.plantations.create.step1'
+  | 'guide.plantations.create.step2'
+  | 'guide.plantations.create.step3'
+  | 'guide.plantations.create.step4'
+  | 'guide.plantations.view.title'
+  | 'guide.plantations.view.description'
+  | 'guide.plantations.view.feature1'
+  | 'guide.plantations.view.feature2'
+  | 'guide.plantations.view.feature3'
+  | 'guide.monitoring.title'
+  | 'guide.monitoring.description'
+  | 'guide.monitoring.sensors.title'
+  | 'guide.monitoring.sensors.description'
+  | 'guide.monitoring.sensors.temperature'
+  | 'guide.monitoring.sensors.soilHumidity'
+  | 'guide.monitoring.sensors.co2'
+  | 'guide.monitoring.sensors.waterLevel'
+  | 'guide.monitoring.sensors.luminosity'
+  | 'guide.monitoring.thresholds.title'
+  | 'guide.monitoring.thresholds.description'
+  | 'guide.monitoring.thresholds.step1'
+  | 'guide.monitoring.thresholds.step2'
+  | 'guide.monitoring.thresholds.step3'
+  | 'guide.monitoring.actuators.title'
+  | 'guide.monitoring.actuators.description'
+  | 'guide.monitoring.actuators.irrigation'
+  | 'guide.monitoring.actuators.fans'
+  | 'guide.monitoring.actuators.lighting'
+  | 'guide.graphs.title'
+  | 'guide.graphs.description'
+  | 'guide.graphs.filters.title'
+  | 'guide.graphs.filters.step1'
+  | 'guide.graphs.filters.step2'
+  | 'guide.graphs.filters.step3'
+  | 'guide.graphs.sensors.title'
+  | 'guide.graphs.sensors.description'
+  | 'guide.notifications.title'
+  | 'guide.notifications.description'
+  | 'guide.notifications.management.title'
+  | 'guide.notifications.management.step1'
+  | 'guide.notifications.management.step2'
+  | 'guide.notifications.management.step3'
+  | 'guide.ai.title'
+  | 'guide.ai.description'
+  | 'guide.ai.usage.title'
+  | 'guide.ai.usage.step1'
+  | 'guide.ai.usage.step2'
+  | 'guide.ai.usage.step3'
+  | 'guide.ai.tip'
+  | 'guide.language.title'
+  | 'guide.language.description'
+  | 'guide.language.step1'
+  | 'guide.language.step2'
+  | 'guide.language.step3'
+  | 'guide.language.option1'
+  | 'guide.language.option2'
+  | 'guide.language.option3'
+  | 'guide.language.option4';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -393,6 +529,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.graphs': 'Graphiques',
     'nav.plantations': 'Plantations',
     'nav.ai': 'IA',
+    'nav.guide': 'Guide',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
@@ -581,21 +718,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Erreur lors de la mise à jour du mode. Veuillez réessayer.',
     'monitoring.noSensors': 'Aucun capteur n\'est actuellement affecté à cette plantation. Veuillez affecter des capteurs pour voir les données de monitoring.',
     'monitoring.help.title': 'Comment fonctionnent les couleurs des jauges ?',
-    'monitoring.help.intro': 'Les couleurs des jauges s\'adaptent automatiquement selon les seuils que vous avez configurés (seuilMin et seuilMax). Chaque jauge utilise un système de couleurs pour vous indiquer rapidement l\'état de vos capteurs.',
+    'monitoring.help.intro': 'Les couleurs des jauges s\'adaptent automatiquement selon les seuils que vous avez configurés (seuilMin et seuilMax). La zone optimale (verte) se situe entre ces deux seuils. Chaque jauge utilise un système de couleurs pour vous indiquer rapidement l\'état de vos capteurs.',
     'monitoring.help.temperature.title': '🌡️ Température (0-50°C)',
-    'monitoring.help.temperature.description': 'La jauge de température affiche du vert autour de votre seuil minimum (température idéale), puis transitionne progressivement vers le jaune et l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (danger).',
+    'monitoring.help.temperature.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur passe du bleu (froid) au vert. Au-dessus du seuil max, elle devient orange puis rouge (trop chaud).',
     'monitoring.help.soilHumidity.title': '💧 Humidité du sol (0-100%)',
-    'monitoring.help.soilHumidity.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min ou au-dessus du seuil max, la couleur passe à l\'orange puis au rouge pour indiquer un niveau critique.',
+    'monitoring.help.soilHumidity.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur passe à l\'orange puis au rouge (trop sec). Au-dessus du seuil max, elle devient orange puis rouge (trop humide).',
     'monitoring.help.co2.title': '🌬️ Taux de CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Le vert indique un bon niveau de CO2 (en dessous du seuil min). La couleur transitionne vers le jaune puis l\'orange entre les seuils, et devient rouge au-dessus du seuil maximum (niveau dangereux).',
+    'monitoring.help.co2.description': 'La zone optimale (verte) se situe entre votre seuil minimum et maximum. En dessous du seuil min, la couleur est bleu-vert (faible). Au-dessus du seuil max, elle devient jaune puis orange puis rouge (niveau dangereux).',
     'monitoring.help.luminosity.title': '☀️ Luminosité (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'La zone optimale (verte) se trouve entre votre seuil minimum et maximum. En dehors de cette plage, la couleur devient jaune (avertissement) puis rouge (saturation ou obscurité extrême).',
+    'monitoring.help.luminosity.description': 'La zone optimale (verte) se trouve entre votre seuil minimum et maximum. En dessous du seuil min, la couleur devient bleu-gris puis bleu foncé (obscurité). Au-dessus du seuil max, elle devient jaune puis orange puis rouge (saturation extrême).',
     'monitoring.help.waterLevel.title': '💧 Niveau d\'eau (0-100%)',
-    'monitoring.help.waterLevel.description': 'Le rouge indique un niveau critique (en dessous du seuil min). Au-dessus du seuil minimum, la couleur passe progressivement à l\'orange, puis au vert pour indiquer un niveau suffisant.',
+    'monitoring.help.waterLevel.description': 'Le rouge indique un niveau critique (en dessous du seuil min). Au-dessus du seuil minimum, la couleur passe progressivement à l\'orange, puis au vert pour indiquer un niveau suffisant. Le gradient de couleur s\'applique sur toute la hauteur de la jauge.',
     'monitoring.help.zones.optimal': 'Zone optimale',
     'monitoring.help.zones.warning': 'Zone d\'avertissement',
     'monitoring.help.zones.danger': 'Zone de danger',
     'monitoring.help.close': 'Fermer',
+    'monitoring.inactiveSensors.title': 'Capteurs inactifs détectés',
+    'monitoring.inactiveSensors.message': 'capteur(s) n\'ont pas envoyé de données depuis plus d\'1 heure',
+    'sensor.status.active': 'Actif',
+    'sensor.status.inactive': 'Inactif',
+    'sensor.status.offline': 'Hors ligne',
+    'sensor.status.unknown': 'Inconnu',
     'plantations.createModal.title': 'Entrez les informations du champ',
     'plantations.createModal.nameLabel': 'Nom de votre plantation',
     'plantations.createModal.namePlaceholder': 'Entrer le nom de votre plantation',
@@ -644,6 +787,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Aucun capteur installé',
     'plantations.detail.sensors.noData': 'Aucune donnée',
     'plantations.detail.sensors.noSensorsMessage': 'Cette plantation n\'a pas encore de capteurs installés. Installez des capteurs pour accéder au monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique des valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement des valeurs...',
+    'plantations.detail.sensors.noReadings': 'Aucune valeur enregistrée',
     'plantations.detail.errors.invalidId': 'ID de plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -766,10 +913,135 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant IA CamerFarm',
+    'chatbox.description': 'Posez vos questions sur l\'agriculture et recevez des conseils personnalisés en temps réel.',
+    'chatbox.emptyState.title': 'Bienvenue dans l\'Assistant IA',
+    'chatbox.emptyState.description': 'Commencez une conversation en posant une question ou en sélectionnant une suggestion ci-dessous.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Comment améliorer le rendement de mes cultures ?',
+    'chatbox.suggestedQuestions.question2': 'Quels sont les meilleurs moments pour arroser ?',
+    'chatbox.suggestedQuestions.question3': 'Comment identifier les maladies des plantes ?',
+    'chatbox.suggestedQuestions.question4': 'Quels capteurs dois-je installer pour mon type de culture ?',
+    'chatbox.aiResponse.prefix': 'Réponse à votre question',
+    'chatbox.aiResponse.intro': 'Voici une réponse détaillée à votre question. L\'assistant IA analyse vos données et vous fournit des recommandations personnalisées basées sur les meilleures pratiques agricoles.',
+    'chatbox.inputLabel': 'Votre question',
+    'chatbox.inputPlaceholder': 'Tapez votre question ici... (Ex: Comment optimiser l\'irrigation ?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Appuyez sur Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
     'language.ew': 'Ewondo',
+    'guide.title': 'Guide d\'utilisation',
+    'guide.subtitle': 'Découvrez comment utiliser toutes les fonctionnalités de CamerFarm AI pour optimiser votre agriculture intelligente.',
+    'guide.tableOfContents.title': 'Table des matières',
+    'guide.tableOfContents.introduction': 'Introduction',
+    'guide.tableOfContents.quickStart': 'Démarrage rapide',
+    'guide.tableOfContents.authentication': 'Authentification',
+    'guide.tableOfContents.profile': 'Profil utilisateur',
+    'guide.tableOfContents.plantations': 'Plantations',
+    'guide.tableOfContents.monitoring': 'Monitoring',
+    'guide.tableOfContents.graphs': 'Graphiques',
+    'guide.tableOfContents.notifications': 'Notifications',
+    'guide.tableOfContents.ai': 'Chatbot IA',
+    'guide.tableOfContents.language': 'Multilingue',
+    'guide.introduction.title': 'Introduction',
+    'guide.introduction.description': 'CamerFarm AI est une plateforme intelligente conçue pour moderniser l\'agriculture camerounaise. Cette application vous permet de suivre vos cultures en temps réel grâce à l\'IoT et l\'intelligence artificielle.',
+    'guide.introduction.feature1': 'Suivi en temps réel des conditions de vos plantations',
+    'guide.introduction.feature2': 'Contrôle automatique des équipements (irrigation, ventilation, éclairage)',
+    'guide.introduction.feature3': 'Analyse des données historiques avec graphiques interactifs',
+    'guide.introduction.feature4': 'Assistant IA pour conseils agricoles personnalisés',
+    'guide.quickStart.title': 'Démarrage rapide',
+    'guide.quickStart.signup.title': 'Créer un compte',
+    'guide.quickStart.signup.step1': 'Cliquez sur "S\'inscrire" dans le menu de navigation ou sur la page d\'accueil',
+    'guide.quickStart.signup.step2': 'Remplissez le formulaire avec vos informations : nom, prénom, email, téléphone et mot de passe',
+    'guide.quickStart.signup.step3': 'Assurez-vous que votre mot de passe respecte les critères de sécurité (au moins 6 caractères, majuscule, minuscule, chiffre et caractère spécial)',
+    'guide.quickStart.signup.step4': 'Cliquez sur "S\'inscrire" pour créer votre compte',
+    'guide.quickStart.login.title': 'Se connecter',
+    'guide.quickStart.login.step1': 'Accédez à la page de connexion via le menu ou le lien "Se Connecter"',
+    'guide.quickStart.login.step2': 'Entrez votre email ou numéro de téléphone et votre mot de passe',
+    'guide.quickStart.login.step3': 'Si vous avez activé l\'authentification à deux facteurs (2FA), entrez le code de vérification après la connexion',
+    'guide.auth.title': 'Authentification',
+    'guide.auth.twoFactor.title': 'Authentification à deux facteurs (2FA)',
+    'guide.auth.twoFactor.description': 'L\'authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte. Après avoir entré votre mot de passe, vous devrez également fournir un code de vérification généré par une application d\'authentification.',
+    'guide.auth.twoFactor.step1': 'Connectez-vous à votre compte et accédez à votre profil',
+    'guide.auth.twoFactor.step2': 'Dans la section "Authentification à deux facteurs", cliquez sur "Activer le 2FA"',
+    'guide.auth.twoFactor.step3': 'Scannez le code QR avec une application d\'authentification (Google Authenticator, Authy, Microsoft Authenticator, etc.)',
+    'guide.auth.twoFactor.step4': 'Entrez le code de vérification à 6 chiffres généré par l\'application pour confirmer l\'activation',
+    'guide.auth.twoFactor.tip': 'Astuce : Conservez une copie de sauvegarde de votre code QR dans un endroit sûr. Si vous perdez l\'accès à votre application d\'authentification, vous pourrez réactiver le 2FA avec ce code.',
+    'guide.profile.title': 'Gestion du profil utilisateur',
+    'guide.profile.edit.title': 'Modifier les informations personnelles',
+    'guide.profile.edit.step1': 'Accédez à votre profil en cliquant sur "Profil" dans le menu de navigation',
+    'guide.profile.edit.step2': 'Cliquez sur le bouton "Modifier" pour activer le mode édition',
+    'guide.profile.edit.step3': 'Modifiez les champs souhaités : prénom, nom, téléphone ou langue préférée',
+    'guide.profile.edit.step4': 'Cliquez sur "Enregistrer" pour sauvegarder vos modifications ou "Annuler" pour revenir en arrière',
+    'guide.profile.photo.title': 'Changer la photo de profil',
+    'guide.profile.photo.step1': 'Dans la section photo de profil, cliquez sur l\'icône de caméra ou sur la photo actuelle',
+    'guide.profile.photo.step2': 'Sélectionnez une image depuis votre appareil (formats acceptés : JPG, PNG, taille maximale : 5MB)',
+    'guide.profile.photo.step3': 'L\'image sera automatiquement téléchargée et affichée comme nouvelle photo de profil',
+    'guide.plantations.title': 'Gestion des plantations',
+    'guide.plantations.create.title': 'Créer une nouvelle plantation',
+    'guide.plantations.create.step1': 'Accédez à la page "Plantations" depuis le menu de navigation',
+    'guide.plantations.create.step2': 'Cliquez sur le bouton "Créer une plantation"',
+    'guide.plantations.create.step3': 'Remplissez le formulaire avec les informations de votre plantation : nom, localisation, superficie, type de culture et coordonnées GPS (optionnel)',
+    'guide.plantations.create.step4': 'Cliquez sur "Suivant" puis "Créer" pour finaliser la création de votre plantation',
+    'guide.plantations.view.title': 'Visualiser et gérer les plantations',
+    'guide.plantations.view.description': 'La page des plantations affiche toutes vos plantations avec leurs informations principales. Vous pouvez :',
+    'guide.plantations.view.feature1': 'Voir les détails de chaque plantation en cliquant sur "Voir les détails"',
+    'guide.plantations.view.feature2': 'Accéder rapidement au monitoring et aux graphiques depuis la page de détails',
+    'guide.plantations.view.feature3': 'Voir le nombre de capteurs et actionneurs assignés à chaque plantation',
+    'guide.monitoring.title': 'Monitoring en temps réel',
+    'guide.monitoring.description': 'La page de monitoring vous permet de suivre en temps réel les conditions de votre plantation grâce aux données des capteurs IoT.',
+    'guide.monitoring.sensors.title': 'Types de capteurs',
+    'guide.monitoring.sensors.description': 'CamerFarm AI supporte plusieurs types de capteurs pour surveiller différentes conditions :',
+    'guide.monitoring.sensors.temperature': 'Température : Mesure la température ambiante (0-50°C) avec indicateur visuel de couleur',
+    'guide.monitoring.sensors.soilHumidity': 'Humidité du sol : Mesure le pourcentage d\'humidité du sol (0-100%) avec barre de progression animée',
+    'guide.monitoring.sensors.co2': 'Niveau de CO₂ : Mesure la concentration de dioxyde de carbone (0-2500 ppm) avec indicateurs de qualité de l\'air',
+    'guide.monitoring.sensors.waterLevel': 'Niveau d\'eau : Affiche le niveau d\'eau dans le réservoir avec animation 3D',
+    'guide.monitoring.sensors.luminosity': 'Luminosité : Mesure l\'intensité lumineuse avec effet de glow dynamique',
+    'guide.monitoring.thresholds.title': 'Configuration des seuils',
+    'guide.monitoring.thresholds.description': 'Vous pouvez personnaliser les seuils d\'alerte pour chaque capteur afin de recevoir des notifications lorsque les valeurs sortent des plages optimales.',
+    'guide.monitoring.thresholds.step1': 'Sur la page de monitoring, localisez le capteur pour lequel vous souhaitez modifier les seuils',
+    'guide.monitoring.thresholds.step2': 'Cliquez sur l\'icône d\'édition à côté des seuils min/max',
+    'guide.monitoring.thresholds.step3': 'Entrez les nouvelles valeurs (le seuil max doit être supérieur au seuil min) et cliquez sur "Enregistrer"',
+    'guide.monitoring.actuators.title': 'Contrôle des actionneurs',
+    'guide.monitoring.actuators.description': 'Les actionneurs permettent de contrôler automatiquement ou manuellement les équipements de votre plantation :',
+    'guide.monitoring.actuators.irrigation': 'Pompe d\'irrigation : Active/désactive l\'arrosage automatique',
+    'guide.monitoring.actuators.fans': 'Ventilateurs : Contrôle la ventilation pour réguler la température',
+    'guide.monitoring.actuators.lighting': 'Éclairage : Gère l\'éclairage artificiel pour les cultures en serre',
+    'guide.graphs.title': 'Graphiques et statistiques',
+    'guide.graphs.description': 'La page des graphiques vous permet d\'analyser l\'évolution des données de vos capteurs sur différentes périodes.',
+    'guide.graphs.filters.title': 'Utilisation des filtres',
+    'guide.graphs.filters.step1': 'Sélectionnez une plantation depuis la liste déroulante si vous avez plusieurs plantations',
+    'guide.graphs.filters.step2': 'Choisissez une plage de dates en utilisant les sélecteurs "Date de début" et "Date de fin"',
+    'guide.graphs.filters.step3': 'Cliquez sur "Appliquer le filtre" pour charger les données correspondantes',
+    'guide.graphs.sensors.title': 'Sélection des capteurs',
+    'guide.graphs.sensors.description': 'Vous pouvez activer ou désactiver l\'affichage de chaque type de capteur en cochant/décochant les cases correspondantes. Les graphiques se mettent à jour automatiquement.',
+    'guide.notifications.title': 'Système de notifications',
+    'guide.notifications.description': 'Les notifications vous alertent en temps réel des événements importants liés à vos plantations et capteurs.',
+    'guide.notifications.management.title': 'Gérer les notifications',
+    'guide.notifications.management.step1': 'Accédez aux notifications en cliquant sur l\'icône de cloche dans le header (le badge indique le nombre de notifications non lues)',
+    'guide.notifications.management.step2': 'Marquez une notification comme lue en cliquant dessus, ou supprimez-la avec le bouton de suppression',
+    'guide.notifications.management.step3': 'Les notifications sont automatiquement rafraîchies toutes les 45 secondes pour afficher les dernières alertes',
+    'guide.ai.title': 'Chatbot IA',
+    'guide.ai.description': 'L\'assistant IA de CamerFarm AI vous fournit des conseils agricoles personnalisés en temps réel. Il peut répondre à vos questions sur l\'agriculture, l\'irrigation, les maladies des plantes, et bien plus encore.',
+    'guide.ai.usage.title': 'Utiliser le chatbot',
+    'guide.ai.usage.step1': 'Accédez à la page "IA" depuis le menu de navigation ou cliquez sur le bouton flottant en bas à droite',
+    'guide.ai.usage.step2': 'Tapez votre question dans le champ de saisie en bas de la chatbox',
+    'guide.ai.usage.step3': 'Appuyez sur "Envoyer" ou la touche Entrée pour envoyer votre question. L\'assistant IA répondra avec des conseils détaillés',
+    'guide.ai.tip': 'Astuce : Le chatbot supporte plusieurs langues (français, anglais, fulfulde, ewondo). Vous pouvez poser vos questions dans votre langue préférée.',
+    'guide.language.title': 'Changement de langue',
+    'guide.language.description': 'CamerFarm AI supporte 4 langues pour rendre l\'application accessible à tous les utilisateurs camerounais.',
+    'guide.language.step1': 'Cliquez sur le sélecteur de langue dans le header (icône de globe)',
+    'guide.language.step2': 'Sélectionnez votre langue préférée parmi les options disponibles',
+    'guide.language.step3': 'L\'interface se mettra à jour immédiatement dans la langue sélectionnée',
+    'guide.language.option1': 'Français : Langue officielle du Cameroun',
+    'guide.language.option2': 'English : Pour les utilisateurs anglophones',
+    'guide.language.option3': 'Fulfulde : Langue locale du nord du Cameroun',
+    'guide.language.option4': 'Ewondo : Langue locale du centre et sud du Cameroun',
   },
   en: {
     'nav.home': 'Home',
@@ -778,6 +1050,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.graphs': 'Graphs',
     'nav.plantations': 'Plantations',
     'nav.ai': 'AI',
+    'nav.guide': 'Guide',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
@@ -951,6 +1224,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'No sensors installed',
     'plantations.detail.sensors.noData': 'No data',
     'plantations.detail.sensors.noSensorsMessage': 'This plantation does not have any sensors installed yet. Install sensors to access monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Readings History',
+    'plantations.detail.sensors.recentReadings': 'Recent Readings',
+    'plantations.detail.sensors.loadingReadings': 'Loading readings...',
+    'plantations.detail.sensors.noReadings': 'No readings recorded',
     'plantations.detail.errors.invalidId': 'Invalid plantation ID',
     'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
     'plantations.detail.errors.notFound': 'Plantation not found',
@@ -1017,21 +1294,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Error updating mode. Please try again.',
     'monitoring.noSensors': 'No sensors are currently assigned to this plantation. Please assign sensors to view monitoring data.',
     'monitoring.help.title': 'How do gauge colors work?',
-    'monitoring.help.intro': 'Gauge colors adapt automatically based on the thresholds you have configured (minThreshold and maxThreshold). Each gauge uses a color system to quickly indicate the status of your sensors.',
+    'monitoring.help.intro': 'Gauge colors adapt automatically based on the thresholds you have configured (minThreshold and maxThreshold). The optimal zone (green) is between these two thresholds. Each gauge uses a color system to quickly indicate the status of your sensors.',
     'monitoring.help.temperature.title': '🌡️ Temperature (0-50°C)',
-    'monitoring.help.temperature.description': 'The temperature gauge displays green around your minimum threshold (ideal temperature), then progressively transitions to yellow and orange between thresholds, and becomes red above the maximum threshold (danger).',
+    'monitoring.help.temperature.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color transitions from blue (cold) to green. Above the max threshold, it becomes orange then red (too hot).',
     'monitoring.help.soilHumidity.title': '💧 Soil Humidity (0-100%)',
-    'monitoring.help.soilHumidity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold or above the max threshold, the color changes to orange then red to indicate a critical level.',
+    'monitoring.help.soilHumidity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color changes to orange then red (too dry). Above the max threshold, it becomes orange then red (too wet).',
     'monitoring.help.co2.title': '🌬️ CO2 Rate (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Green indicates a good CO2 level (below the min threshold). The color transitions to yellow then orange between thresholds, and becomes red above the maximum threshold (dangerous level).',
+    'monitoring.help.co2.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color is blue-green (low). Above the max threshold, it becomes yellow then orange then red (dangerous level).',
     'monitoring.help.luminosity.title': '☀️ Luminosity (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Outside this range, the color becomes yellow (warning) then red (extreme saturation or darkness).',
+    'monitoring.help.luminosity.description': 'The optimal zone (green) is between your minimum and maximum thresholds. Below the min threshold, the color becomes blue-grey then dark blue (darkness). Above the max threshold, it becomes yellow then orange then red (extreme saturation).',
     'monitoring.help.waterLevel.title': '💧 Water Level (0-100%)',
-    'monitoring.help.waterLevel.description': 'Red indicates a critical level (below the min threshold). Above the minimum threshold, the color progressively changes to orange, then green to indicate a sufficient level.',
+    'monitoring.help.waterLevel.description': 'Red indicates a critical level (below the min threshold). Above the minimum threshold, the color progressively changes to orange, then green to indicate a sufficient level. The color gradient applies across the entire gauge height.',
     'monitoring.help.zones.optimal': 'Optimal zone',
     'monitoring.help.zones.warning': 'Warning zone',
     'monitoring.help.zones.danger': 'Danger zone',
     'monitoring.help.close': 'Close',
+    'monitoring.inactiveSensors.title': 'Inactive sensors detected',
+    'monitoring.inactiveSensors.message': 'sensor(s) have not sent data for more than 1 hour',
+    'sensor.status.active': 'Active',
+    'sensor.status.inactive': 'Inactive',
+    'sensor.status.offline': 'Offline',
+    'sensor.status.unknown': 'Unknown',
     'profile.back': 'Back',
     'profile.pageLabel': 'User profile',
     'profile.welcome': 'Welcome, {name}',
@@ -1151,10 +1434,135 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Visual distribution',
+    'chatbox.title': 'CamerFarm AI Assistant',
+    'chatbox.description': 'Ask your questions about agriculture and receive personalized advice in real time.',
+    'chatbox.emptyState.title': 'Welcome to the AI Assistant',
+    'chatbox.emptyState.description': 'Start a conversation by asking a question or selecting a suggestion below.',
+    'chatbox.suggestionsHeader': 'Suggested questions',
+    'chatbox.suggestedQuestions.question1': 'How can I improve my crop yield?',
+    'chatbox.suggestedQuestions.question2': 'What are the best times to water?',
+    'chatbox.suggestedQuestions.question3': 'How to identify plant diseases?',
+    'chatbox.suggestedQuestions.question4': 'What sensors should I install for my crop type?',
+    'chatbox.aiResponse.prefix': 'Answer to your question',
+    'chatbox.aiResponse.intro': 'Here is a detailed answer to your question. The AI assistant analyzes your data and provides you with personalized recommendations based on agricultural best practices.',
+    'chatbox.inputLabel': 'Your question',
+    'chatbox.inputPlaceholder': 'Type your question here... (Ex: How to optimize irrigation?)',
+    'chatbox.sendButton': 'Send',
+    'chatbox.sending': 'Sending...',
+    'chatbox.inputHint': 'Press Enter to send, Shift+Enter for a new line',
+    'chatbox.characters': 'characters',
+    'chatbox.characterCount': 'character',
     'language.fr': 'Français',
     'language.en': 'English',
     'language.ff': 'Fulfulde',
     'language.ew': 'Ewondo',
+    'guide.title': 'User Guide',
+    'guide.subtitle': 'Discover how to use all CamerFarm AI features to optimize your smart agriculture.',
+    'guide.tableOfContents.title': 'Table of Contents',
+    'guide.tableOfContents.introduction': 'Introduction',
+    'guide.tableOfContents.quickStart': 'Quick Start',
+    'guide.tableOfContents.authentication': 'Authentication',
+    'guide.tableOfContents.profile': 'User Profile',
+    'guide.tableOfContents.plantations': 'Plantations',
+    'guide.tableOfContents.monitoring': 'Monitoring',
+    'guide.tableOfContents.graphs': 'Graphs',
+    'guide.tableOfContents.notifications': 'Notifications',
+    'guide.tableOfContents.ai': 'AI Chatbot',
+    'guide.tableOfContents.language': 'Multilingual',
+    'guide.introduction.title': 'Introduction',
+    'guide.introduction.description': 'CamerFarm AI is an intelligent platform designed to modernize Cameroonian agriculture. This application allows you to monitor your crops in real-time through IoT and artificial intelligence.',
+    'guide.introduction.feature1': 'Real-time monitoring of your plantation conditions',
+    'guide.introduction.feature2': 'Automatic control of equipment (irrigation, ventilation, lighting)',
+    'guide.introduction.feature3': 'Historical data analysis with interactive charts',
+    'guide.introduction.feature4': 'AI assistant for personalized agricultural advice',
+    'guide.quickStart.title': 'Quick Start',
+    'guide.quickStart.signup.title': 'Create an Account',
+    'guide.quickStart.signup.step1': 'Click on "Sign Up" in the navigation menu or on the home page',
+    'guide.quickStart.signup.step2': 'Fill out the form with your information: name, first name, email, phone, and password',
+    'guide.quickStart.signup.step3': 'Make sure your password meets security criteria (at least 6 characters, uppercase, lowercase, number, and special character)',
+    'guide.quickStart.signup.step4': 'Click on "Sign Up" to create your account',
+    'guide.quickStart.login.title': 'Log In',
+    'guide.quickStart.login.step1': 'Access the login page via the menu or the "Log In" link',
+    'guide.quickStart.login.step2': 'Enter your email or phone number and password',
+    'guide.quickStart.login.step3': 'If you have enabled two-factor authentication (2FA), enter the verification code after logging in',
+    'guide.auth.title': 'Authentication',
+    'guide.auth.twoFactor.title': 'Two-Factor Authentication (2FA)',
+    'guide.auth.twoFactor.description': 'Two-factor authentication adds an extra layer of security to your account. After entering your password, you will also need to provide a verification code generated by an authentication app.',
+    'guide.auth.twoFactor.step1': 'Log in to your account and access your profile',
+    'guide.auth.twoFactor.step2': 'In the "Two-Factor Authentication" section, click on "Enable 2FA"',
+    'guide.auth.twoFactor.step3': 'Scan the QR code with an authentication app (Google Authenticator, Authy, Microsoft Authenticator, etc.)',
+    'guide.auth.twoFactor.step4': 'Enter the 6-digit verification code generated by the app to confirm activation',
+    'guide.auth.twoFactor.tip': 'Tip: Keep a backup copy of your QR code in a safe place. If you lose access to your authentication app, you can reactivate 2FA with this code.',
+    'guide.profile.title': 'User Profile Management',
+    'guide.profile.edit.title': 'Edit Personal Information',
+    'guide.profile.edit.step1': 'Access your profile by clicking on "Profile" in the navigation menu',
+    'guide.profile.edit.step2': 'Click on the "Edit" button to enable edit mode',
+    'guide.profile.edit.step3': 'Modify the desired fields: first name, last name, phone, or preferred language',
+    'guide.profile.edit.step4': 'Click on "Save" to save your changes or "Cancel" to go back',
+    'guide.profile.photo.title': 'Change Profile Photo',
+    'guide.profile.photo.step1': 'In the profile photo section, click on the camera icon or the current photo',
+    'guide.profile.photo.step2': 'Select an image from your device (accepted formats: JPG, PNG, maximum size: 5MB)',
+    'guide.profile.photo.step3': 'The image will be automatically uploaded and displayed as your new profile photo',
+    'guide.plantations.title': 'Plantation Management',
+    'guide.plantations.create.title': 'Create a New Plantation',
+    'guide.plantations.create.step1': 'Access the "Plantations" page from the navigation menu',
+    'guide.plantations.create.step2': 'Click on the "Create Plantation" button',
+    'guide.plantations.create.step3': 'Fill out the form with your plantation information: name, location, area, crop type, and GPS coordinates (optional)',
+    'guide.plantations.create.step4': 'Click on "Next" then "Create" to finalize the creation of your plantation',
+    'guide.plantations.view.title': 'View and Manage Plantations',
+    'guide.plantations.view.description': 'The plantations page displays all your plantations with their main information. You can:',
+    'guide.plantations.view.feature1': 'View details of each plantation by clicking on "View Details"',
+    'guide.plantations.view.feature2': 'Quickly access monitoring and graphs from the details page',
+    'guide.plantations.view.feature3': 'See the number of sensors and actuators assigned to each plantation',
+    'guide.monitoring.title': 'Real-Time Monitoring',
+    'guide.monitoring.description': 'The monitoring page allows you to track in real-time the conditions of your plantation through IoT sensor data.',
+    'guide.monitoring.sensors.title': 'Sensor Types',
+    'guide.monitoring.sensors.description': 'CamerFarm AI supports several types of sensors to monitor different conditions:',
+    'guide.monitoring.sensors.temperature': 'Temperature: Measures ambient temperature (0-50°C) with color visual indicator',
+    'guide.monitoring.sensors.soilHumidity': 'Soil Humidity: Measures soil moisture percentage (0-100%) with animated progress bar',
+    'guide.monitoring.sensors.co2': 'CO₂ Level: Measures carbon dioxide concentration (0-2500 ppm) with air quality indicators',
+    'guide.monitoring.sensors.waterLevel': 'Water Level: Displays water level in the tank with 3D animation',
+    'guide.monitoring.sensors.luminosity': 'Luminosity: Measures light intensity with dynamic glow effect',
+    'guide.monitoring.thresholds.title': 'Threshold Configuration',
+    'guide.monitoring.thresholds.description': 'You can customize alert thresholds for each sensor to receive notifications when values fall outside optimal ranges.',
+    'guide.monitoring.thresholds.step1': 'On the monitoring page, locate the sensor for which you want to modify thresholds',
+    'guide.monitoring.thresholds.step2': 'Click on the edit icon next to min/max thresholds',
+    'guide.monitoring.thresholds.step3': 'Enter the new values (max threshold must be greater than min threshold) and click "Save"',
+    'guide.monitoring.actuators.title': 'Actuator Control',
+    'guide.monitoring.actuators.description': 'Actuators allow automatic or manual control of your plantation equipment:',
+    'guide.monitoring.actuators.irrigation': 'Irrigation Pump: Activates/deactivates automatic watering',
+    'guide.monitoring.actuators.fans': 'Fans: Controls ventilation to regulate temperature',
+    'guide.monitoring.actuators.lighting': 'Lighting: Manages artificial lighting for greenhouse crops',
+    'guide.graphs.title': 'Graphs and Statistics',
+    'guide.graphs.description': 'The graphs page allows you to analyze the evolution of your sensor data over different periods.',
+    'guide.graphs.filters.title': 'Using Filters',
+    'guide.graphs.filters.step1': 'Select a plantation from the dropdown list if you have multiple plantations',
+    'guide.graphs.filters.step2': 'Choose a date range using the "Start Date" and "End Date" selectors',
+    'guide.graphs.filters.step3': 'Click on "Apply Filter" to load the corresponding data',
+    'guide.graphs.sensors.title': 'Sensor Selection',
+    'guide.graphs.sensors.description': 'You can enable or disable the display of each sensor type by checking/unchecking the corresponding boxes. Charts update automatically.',
+    'guide.notifications.title': 'Notification System',
+    'guide.notifications.description': 'Notifications alert you in real-time of important events related to your plantations and sensors.',
+    'guide.notifications.management.title': 'Manage Notifications',
+    'guide.notifications.management.step1': 'Access notifications by clicking on the bell icon in the header (the badge indicates the number of unread notifications)',
+    'guide.notifications.management.step2': 'Mark a notification as read by clicking on it, or delete it with the delete button',
+    'guide.notifications.management.step3': 'Notifications are automatically refreshed every 45 seconds to display the latest alerts',
+    'guide.ai.title': 'AI Chatbot',
+    'guide.ai.description': 'CamerFarm AI\'s AI assistant provides you with personalized agricultural advice in real-time. It can answer your questions about agriculture, irrigation, plant diseases, and much more.',
+    'guide.ai.usage.title': 'Using the Chatbot',
+    'guide.ai.usage.step1': 'Access the "AI" page from the navigation menu or click on the floating button at the bottom right',
+    'guide.ai.usage.step2': 'Type your question in the input field at the bottom of the chatbox',
+    'guide.ai.usage.step3': 'Press "Send" or Enter key to send your question. The AI assistant will respond with detailed advice',
+    'guide.ai.tip': 'Tip: The chatbot supports multiple languages (French, English, Fulfulde, Ewondo). You can ask your questions in your preferred language.',
+    'guide.language.title': 'Language Change',
+    'guide.language.description': 'CamerFarm AI supports 4 languages to make the application accessible to all Cameroonian users.',
+    'guide.language.step1': 'Click on the language selector in the header (globe icon)',
+    'guide.language.step2': 'Select your preferred language from the available options',
+    'guide.language.step3': 'The interface will update immediately in the selected language',
+    'guide.language.option1': 'French: Official language of Cameroon',
+    'guide.language.option2': 'English: For English-speaking users',
+    'guide.language.option3': 'Fulfulde: Local language of northern Cameroon',
+    'guide.language.option4': 'Ewondo: Local language of central and southern Cameroon',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -1163,6 +1571,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.graphs': 'Giraafuuji',
     'nav.plantations': 'Nguurndam',
     'nav.ai': 'AI',
+    'nav.guide': 'Jangirde',
     'auth.login': 'Seŋo',
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
@@ -1336,6 +1745,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alaa jokkondirɗe nattaaɗe',
     'plantations.detail.sensors.noData': 'Alaa keɓe',
     'plantations.detail.sensors.noSensorsMessage': 'Nguurndam ngal alaa jokkondirɗe nattaaɗe jooni. Natt jokkondirɗe ngam naatde e jokkondiral.',
+    'plantations.detail.sensors.readingsHistory': 'Jokkondiral keɓe',
+    'plantations.detail.sensors.recentReadings': 'Keɓe sakkitiɗe',
+    'plantations.detail.sensors.loadingReadings': 'Jokkondir keɓe...',
+    'plantations.detail.sensors.noReadings': 'Alaa keɓe binndaaɗe',
     'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
     'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
     'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
@@ -1391,21 +1804,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.status.dim': 'Suuɗo',
     'monitoring.noSensors': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal jooni. Ɗaɓɓu natt jokkondirɗe ngam yiylaade keɓe jokkondiral.',
     'monitoring.help.title': 'Hol no nooneeɗe kulooruuji jokkondirɗe?',
-    'monitoring.help.intro': 'Kulooruuji jokkondirɗe ɓeydiraa e hoore maɓɓe no fuɗɗiiɗe señoluuji maa (señol woɗnde e señol ɓurnde). Jokkondir kala huutortoo e noone kulooruuji ngam hollude e sahaa nokkuure jokkondirɗe maa.',
+    'monitoring.help.intro': 'Kulooruuji jokkondirɗe ɓeydiraa e hoore maɓɓe no fuɗɗiiɗe señoluuji maa (señol woɗnde e señol ɓurnde). Nokkuure moƴƴude (wuɗɗo) woni hakkunde señoluuji ɗiɗi ɗen. Jokkondir kala huutortoo e noone kulooruuji ngam hollude e sahaa nokkuure jokkondirɗe maa.',
     'monitoring.help.temperature.title': '🌡️ Temperatuur (0-50°C)',
-    'monitoring.help.temperature.description': 'Jokkondiral temperatuur hollataa wuɗɗo haa ñiiɓɓo señol woɗnde maa (temperatuur moƴƴude), rewo ɓeydiraa e jaasi e ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (meɗɗe).',
+    'monitoring.help.temperature.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru ɓeydiraa e bulaawal (ɓulɓulɗe) haa wuɗɗo. E dow señol ɓurnde, naatiraa ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe).',
     'monitoring.help.soilHumidity.title': '💧 Ɓuɓɓe Leyɗe (0-100%)',
-    'monitoring.help.soilHumidity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde walla e dow señol ɓurnde, kulooru naatiraa ñiiɓɓo rewo boɗɗo ngam hollude nokkuure meɗɗe.',
+    'monitoring.help.soilHumidity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru naatiraa ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe). E dow señol ɓurnde, naatiraa ñiiɓɓo rewo boɗɗo (ɓuɓɓe ɓurɗe).',
     'monitoring.help.co2.title': '🌬️ Nder CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Wuɗɗo hollataa nokkuure CO2 moƴƴude (ley nder señol woɗnde). Kulooru ɓeydiraa e jaasi rewo ñiiɓɓo hakkunde señoluuji, e naatiraa boɗɗo e dow señol ɓurnde (nokkuure meɗɗe).',
+    'monitoring.help.co2.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru woni bulaawal-wuɗɗo (woɗɗude). E dow señol ɓurnde, naatiraa jaasi rewo ñiiɓɓo rewo boɗɗo (nokkuure meɗɗe).',
     'monitoring.help.luminosity.title': '☀️ Ndaariɗe (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ɗo wadde nokkuure ngal, kulooru naatiraa jaasi (tintine) rewo boɗɗo (ɓeydugol walla ñuulɗe ɓurɗe).',
+    'monitoring.help.luminosity.description': 'Nokkuure moƴƴude (wuɗɗo) woni hakkunde señol woɗnde maa e ɓurnde. Ley nder señol woɗnde, kulooru naatiraa bulaawal-ɓuɓɓe rewo bulaawal ñuulɗe (ñuulɗe). E dow señol ɓurnde, naatiraa jaasi rewo ñiiɓɓo rewo boɗɗo (ɓeydugol ɓurɗe).',
     'monitoring.help.waterLevel.title': '💧 Nder Leyɗe (0-100%)',
-    'monitoring.help.waterLevel.description': 'Boɗɗo hollataa nokkuure meɗɗe (ley nder señol woɗnde). E dow señol woɗnde, kulooru ɓeydiraa e jaasi e ñiiɓɓo, rewo wuɗɗo ngam hollude nokkuure ɓurɗo.',
+    'monitoring.help.waterLevel.description': 'Boɗɗo hollataa nokkuure meɗɗe (ley nder señol woɗnde). E dow señol woɗnde, kulooru ɓeydiraa e jaasi e ñiiɓɓo, rewo wuɗɗo ngam hollude nokkuure ɓurɗo. Gradient kulooru naatiraa e dow jokkondiral fof.',
     'monitoring.help.zones.optimal': 'Nokkuure moƴƴude',
     'monitoring.help.zones.warning': 'Nokkuure tintine',
     'monitoring.help.zones.danger': 'Nokkuure meɗɗe',
     'monitoring.help.close': 'Uddu',
+    'monitoring.inactiveSensors.title': 'Jokkondirɗe ɓe alaa kuuɗe',
+    'monitoring.inactiveSensors.message': 'jokkondirɗe ɓe ndaɓɓaani dataa ɓurɗe nder sahaa 1',
+    'sensor.status.active': 'Kuuɗe',
+    'sensor.status.inactive': 'Alaa kuuɗe',
+    'sensor.status.offline': 'Alaa jokkondirɗo',
+    'sensor.status.unknown': 'Anndaa',
     'monitoring.equipment.title': 'Toppu kuuɗe e kuuɗe',
     'monitoring.equipment.irrigationPump': 'Pompe Irrigasion',
     'monitoring.equipment.fans': 'Ventilateerɗe',
@@ -1536,10 +1955,135 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Sakkondiral',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Sakkondiral Yiilal',
+    'chatbox.title': 'CamerFarm AI Ballal',
+    'chatbox.description': 'Naamnoo laawol maaɗa e ngayka e heɓo tawtoreeji kuutorɗam e wakkati ekkitiiɗam.',
+    'chatbox.emptyState.title': 'Arii e Ballal AI',
+    'chatbox.emptyState.description': 'Fuɗɗo waasde naamnoo laawol maaɗa walla suɓo tawtoreejo ɗoo les.',
+    'chatbox.suggestionsHeader': 'Laawol naamnooɗe',
+    'chatbox.suggestedQuestions.question1': 'Hol no mi waɗaade ɓeydugol ɗiɗɓe am?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe ɓurɗe ɓeydeede ngam ɓeydugol ndiyam?',
+    'chatbox.suggestedQuestions.question3': 'Hol no mi anndinaade cuuɗi ɗiɗɓe?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe kuutorɓe ɓeydorde mi waɗaade ngam gollal ɗiɗɓe am?',
+    'chatbox.aiResponse.prefix': 'Noddu laawol maaɗa',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo noddiraaɗo laawol maaɗa. Ballal AI seŋtina keɓe maaɗa e heɓa maa tawtoreeji kuutorɗam e jokkondiral baɗɗe ngayka jawdi.',
+    'chatbox.inputLabel': 'Laawol maaɗa',
+    'chatbox.inputPlaceholder': 'Binndo laawol maaɗa ton... (Misaal: Hol no mi waɗaade ɓeydugol ndiyam?)',
+    'chatbox.sendButton': 'Neldu',
+    'chatbox.sending': 'Neldugol...',
+    'chatbox.inputHint': 'Dobo Enter ngam neldugol, Shift+Enter ngam ɓoggo hesere',
+    'chatbox.characters': 'binndi',
+    'chatbox.characterCount': 'binndal',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
     'language.ew': 'Ewondo',
+    'guide.title': 'Jangirde Kuutoraade',
+    'guide.subtitle': 'Ɓeydu no kuutoraade kala ɓeyngu CamerFarm AI ngam ɓeydude nguurndam maa ngam anndude.',
+    'guide.tableOfContents.title': 'Tirde Alkawal',
+    'guide.tableOfContents.introduction': 'Fuɗɗorde',
+    'guide.tableOfContents.quickStart': 'Fuɗɗo Cawɗo',
+    'guide.tableOfContents.authentication': 'Tiimtinde',
+    'guide.tableOfContents.profile': 'Jokkondiral Kuutoro',
+    'guide.tableOfContents.plantations': 'Nguurndam',
+    'guide.tableOfContents.monitoring': 'Jokkondiral',
+    'guide.tableOfContents.graphs': 'Giraafuuji',
+    'guide.tableOfContents.notifications': 'Tintine',
+    'guide.tableOfContents.ai': 'AI Jokkondiral',
+    'guide.tableOfContents.language': 'Ɗiɗɗo Ɓasde',
+    'guide.introduction.title': 'Fuɗɗorde',
+    'guide.introduction.description': 'CamerFarm AI ko platform anndal ngol ngam ɓeydude nguurndam Kameruun. Ndee app ina waawi jokkondirde nguurndam maa e nder wakati goonga e IoT e anndal.',
+    'guide.introduction.feature1': 'Jokkondiral wakati goonga ngam nguurndam maa',
+    'guide.introduction.feature2': 'Laamngo otomatik ngam ɓeynguuji (irrigation, ventilation, lighting)',
+    'guide.introduction.feature3': 'Ɓeydude keɓe taariikhi e giraafuuji',
+    'guide.introduction.feature4': 'Jokkondiral AI ngam laawol nguurndam',
+    'guide.quickStart.title': 'Fuɗɗo Cawɗo',
+    'guide.quickStart.signup.title': 'Waɗtu Kontu',
+    'guide.quickStart.signup.step1': 'Dobo "Winndito" e menu walla e hello fuɗɗorde',
+    'guide.quickStart.signup.step2': 'Hulno formo e keɓe maa: innde, innde fuɗɗorde, email, telefon e finnde',
+    'guide.quickStart.signup.step3': 'Ƴeewto finnde maa ina heɓi keɓe kisal (kalaa 6 karaktere, mawnɗe, ɓaŋnguɗe, limoore e karaktere jaɓɓo)',
+    'guide.quickStart.signup.step4': 'Dobo "Winndito" ngam waɗde kontu maa',
+    'guide.quickStart.login.title': 'Seŋo',
+    'guide.quickStart.login.step1': 'Yah e hello seŋo e menu walla jokkol "Seŋo"',
+    'guide.quickStart.login.step2': 'Naatu email maa walla telefon e finnde maa',
+    'guide.quickStart.login.step3': 'So a waɗi 2FA, naatu koode tiimtinde ɓaawo seŋo',
+    'guide.auth.title': 'Tiimtinde',
+    'guide.auth.twoFactor.title': 'Tiimtinde Ɗiɗɗo (2FA)',
+    'guide.auth.twoFactor.description': '2FA ɓeyda kisal e kontu maa. Ɓaawo naatude finnde, a foti naatude koode tiimtinde e app.',
+    'guide.auth.twoFactor.step1': 'Seŋo e kontu maa e yah e jokkondiral maa',
+    'guide.auth.twoFactor.step2': 'E "Tiimtinde Ɗiɗɗo", dobo "Waɗtu 2FA"',
+    'guide.auth.twoFactor.step3': 'Dobo koode QR e app tiimtinde (Google Authenticator, Authy, etc.)',
+    'guide.auth.twoFactor.step4': 'Naatu koode 6 limoore ngam tiimtinde waɗde',
+    'guide.auth.twoFactor.tip': 'Laawol: Danndu koode QR maa e nokkuure kisal. So a ɓeewi app maa, a waawi waɗde 2FA e koode oo.',
+    'guide.profile.title': 'Laamngo Jokkondiral Kuutoro',
+    'guide.profile.edit.title': 'Waylu Keɓe Kuutoro',
+    'guide.profile.edit.step1': 'Yah e jokkondiral maa e dobo "Jokkondiral" e menu',
+    'guide.profile.edit.step2': 'Dobo "Waylu" ngam waɗde waylude',
+    'guide.profile.edit.step3': 'Waylu keɓe: innde fuɗɗorde, innde, telefon walla ɗemngal',
+    'guide.profile.edit.step4': 'Dobo "Danndu" ngam danndude walla "Haaytu" ngam rutto',
+    'guide.profile.photo.title': 'Waylu Foto Jokkondiral',
+    'guide.profile.photo.step1': 'E foto jokkondiral, dobo ikon kamera walla foto jooni',
+    'guide.profile.photo.step2': 'Labo njaajeende e ɓeyngu maa (JPG, PNG, mawnɗe: 5MB)',
+    'guide.profile.photo.step3': 'Njaajeende ina danndoto otomatik e holloto e foto jokkondiral',
+    'guide.plantations.title': 'Laamngo Nguurndam',
+    'guide.plantations.create.title': 'Waɗtu Nguurndam Hesɗo',
+    'guide.plantations.create.step1': 'Yah e hello "Nguurndam" e menu',
+    'guide.plantations.create.step2': 'Dobo "Waɗtu Nguurndam"',
+    'guide.plantations.create.step3': 'Hulno formo e keɓe nguurndam: innde, nokkuure, nguurndam, fannu nguurndam e GPS (jaɓɓo)',
+    'guide.plantations.create.step4': 'Dobo "Jokkuɓe" e "Waɗtu" ngam waɗde nguurndam',
+    'guide.plantations.view.title': 'Yiyde e Laamngo Nguurndam',
+    'guide.plantations.view.description': 'Hello nguurndam hollata nguurndam maa fof e keɓe maɓɓe. A waawi:',
+    'guide.plantations.view.feature1': 'Yiyde keɓe nguurndam kala e dobo "Yiyde Keɓe"',
+    'guide.plantations.view.feature2': 'Yah cawɗo e jokkondiral e giraafuuji e hello keɓe',
+    'guide.plantations.view.feature3': 'Yiyde limoore keɓe e ɓeynguuji e nguurndam kala',
+    'guide.monitoring.title': 'Jokkondiral Wakati Goonga',
+    'guide.monitoring.description': 'Hello jokkondiral ina waawi jokkondirde nguurndam maa e wakati goonga e keɓe IoT.',
+    'guide.monitoring.sensors.title': 'Fannuuji Keɓe',
+    'guide.monitoring.sensors.description': 'CamerFarm AI ina walla fannuuji keɓe ɗuuɗɗe ngam jokkondirde keɓe:',
+    'guide.monitoring.sensors.temperature': 'Temperatuur: Jokkondira temperatuur (0-50°C) e hollirde',
+    'guide.monitoring.sensors.soilHumidity': 'Ɓuɓɓe Leyɗe: Jokkondira ɓuɓɓe leydi (0-100%) e barre',
+    'guide.monitoring.sensors.co2': 'Nder CO2: Jokkondira CO2 (0-2500 ppm) e hollirde',
+    'guide.monitoring.sensors.waterLevel': 'Nder Leyɗe: Hollira nder leydi e tank e animation 3D',
+    'guide.monitoring.sensors.luminosity': 'Ndaariɗe: Jokkondira ndaariɗe e ɓeyngu',
+    'guide.monitoring.thresholds.title': 'Laamngo Señoluuji',
+    'guide.monitoring.thresholds.description': 'A waawi waylude señoluuji ngam keɓe kala ngam heɓde tintine so keɓe ɓeewi e limoore moƴƴude.',
+    'guide.monitoring.thresholds.step1': 'E hello jokkondiral, yiytu keɓe ngam waylude señoluuji',
+    'guide.monitoring.thresholds.step2': 'Dobo ikon waylude e señoluuji min/max',
+    'guide.monitoring.thresholds.step3': 'Naatu keɓe hesɗi (max ina foti mawnɗo e min) e dobo "Danndu"',
+    'guide.monitoring.actuators.title': 'Laamngo Ɓeynguuji',
+    'guide.monitoring.actuators.description': 'Ɓeynguuji ina waawi laamngo otomatik walla laamngo kuutoro ngam ɓeynguuji nguurndam maa:',
+    'guide.monitoring.actuators.irrigation': 'Pompe Irrigation: Waɗta/ɓeewta irrigation otomatik',
+    'guide.monitoring.actuators.fans': 'Ventilateurs: Laamngo ventilation ngam laamngo temperatuur',
+    'guide.monitoring.actuators.lighting': 'Lighting: Laamngo lighting ngam nguurndam e serre',
+    'guide.graphs.title': 'Giraafuuji e Statistiques',
+    'guide.graphs.description': 'Hello giraafuuji ina waawi ɓeydude keɓe keɓe maa e wakati ɗuuɗɗe.',
+    'guide.graphs.filters.title': 'Kuutoraade Filtres',
+    'guide.graphs.filters.step1': 'Labo nguurndam e liste so a jogii ɗuuɗɗe',
+    'guide.graphs.filters.step2': 'Labo wakati e "Fuɗɗo Wakati" e "Gila Wakati"',
+    'guide.graphs.filters.step3': 'Dobo "Waɗtu Filtre" ngam ɓeydude keɓe',
+    'guide.graphs.sensors.title': 'Labo Keɓe',
+    'guide.graphs.sensors.description': 'A waawi waɗde walla ɓeewde hollirde fannu keɓe kala e dobo. Giraafuuji ina ɓeydoto otomatik.',
+    'guide.notifications.title': 'Sistem Tintine',
+    'guide.notifications.description': 'Tintine ina tintina maa e wakati goonga ngam ɓeynguuji nguurndam maa e keɓe.',
+    'guide.notifications.management.title': 'Laamngo Tintine',
+    'guide.notifications.management.step1': 'Yah e tintine e dobo ikon tintine e header (badge hollira limoore tintine ɓeewɗe)',
+    'guide.notifications.management.step2': 'Maarke tintine e dobo walla mbatu e dobo mbatu',
+    'guide.notifications.management.step3': 'Tintine ina ɓeydoto otomatik e kala 45 sekonde ngam hollirde tintine hesɗi',
+    'guide.ai.title': 'AI Jokkondiral',
+    'guide.ai.description': 'Jokkondiral AI CamerFarm AI ina hokki laawol nguurndam e wakati goonga. Ina waawi jaabde laawol maa e nguurndam, irrigation, koɓe nguurndam, e ɗuuɗɗe.',
+    'guide.ai.usage.title': 'Kuutoraade Jokkondiral',
+    'guide.ai.usage.step1': 'Yah e hello "AI" e menu walla dobo buton e nder les',
+    'guide.ai.usage.step2': 'Winndu laawol maa e nder input e les hello',
+    'guide.ai.usage.step3': 'Dobo "Neldu" walla Enter ngam nelde laawol. Jokkondiral AI ina jaabde e laawol',
+    'guide.ai.tip': 'Laawol: Jokkondiral ina walla ɗiɗɗo ɓasde (Faransinkoore, Inngilinkoore, Fulfulde, Ewondo). A waawi laawol maa e ɗemngal maa.',
+    'guide.language.title': 'Waylu Ɗemngal',
+    'guide.language.description': 'CamerFarm AI ina walla ɗiɗɗo ɓasde ngam waɗde app e kuutoro Kameruun fof.',
+    'guide.language.step1': 'Dobo labo ɗemngal e header (ikon globe)',
+    'guide.language.step2': 'Labo ɗemngal maa e ɓeynguuji',
+    'guide.language.step3': 'Interface ina ɓeydoto cawɗo e ɗemngal labɗo',
+    'guide.language.option1': 'Faransinkoore: Ɗemngal jaɓɓo Kameruun',
+    'guide.language.option2': 'Inngilinkoore: Ngam kuutoroje Inngilinkoore',
+    'guide.language.option3': 'Fulfulde: Ɗemngal nokkuure worgo Kameruun',
+    'guide.language.option4': 'Ewondo: Ɗemngal nokkuure caka e les Kameruun',
   },
   ew: {
     'nav.home': 'Ndé',
@@ -1548,6 +2092,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.graphs': 'Graphiques',
     'nav.plantations': 'Bisó',
     'nav.ai': 'AI',
+    'nav.guide': 'Guide',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
     'auth.logout': 'Bwá',
@@ -1736,21 +2281,27 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.updateError': 'Erreur mise à jour mode. Bwá sígní.',
     'monitoring.noSensors': 'Alé capteur actuellement affecté plantation ékpé. Bwá affecter capteurs voir données monitoring.',
     'monitoring.help.title': 'Comment fonctionnent couleurs jauges?',
-    'monitoring.help.intro': 'Couleurs jauges s\'adaptent automatiquement selon seuils wá configurés (seuilMin é seuilMax). Chaque jauge utilise système couleurs indiquer rapidement état capteurs wá.',
+    'monitoring.help.intro': 'Couleurs jauges s\'adaptent automatiquement selon seuils wá configurés (seuilMin é seuilMax). Zone optimale (verte) situe entre seuils ékpé. Chaque jauge utilise système couleurs indiquer rapidement état capteurs wá.',
     'monitoring.help.temperature.title': '🌡️ Mvú (0-50°C)',
-    'monitoring.help.temperature.description': 'Jauge température affiche vert autour seuil minimum (température idéale), puis transitionne progressivement vers jaune é orange entre seuils, é devient rouge au-dessus seuil maximum (danger).',
+    'monitoring.help.temperature.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur transitionne bleu (froid) vers vert. Au-dessus seuil max, devient orange puis rouge (trop chaud).',
     'monitoring.help.soilHumidity.title': '💧 Mvú bisó (0-100%)',
-    'monitoring.help.soilHumidity.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min ou au-dessus seuil max, couleur passe orange puis rouge indiquer niveau critique.',
+    'monitoring.help.soilHumidity.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur passe orange puis rouge (trop sec). Au-dessus seuil max, devient orange puis rouge (trop humide).',
     'monitoring.help.co2.title': '🌬️ Taux CO2 (0-2500 ppm)',
-    'monitoring.help.co2.description': 'Vert indique bon niveau CO2 (en dessous seuil min). Couleur transitionne vers jaune puis orange entre seuils, é devient rouge au-dessus seuil maximum (niveau dangereux).',
+    'monitoring.help.co2.description': 'Zone optimale (verte) situe entre seuil minimum é maximum. En dessous seuil min, couleur bleu-vert (faible). Au-dessus seuil max, devient jaune puis orange puis rouge (niveau dangereux).',
     'monitoring.help.luminosity.title': '☀️ Nsámbí (0-100000 lux)',
-    'monitoring.help.luminosity.description': 'Zone optimale (verte) trouve entre seuil minimum é maximum. En dehors plage ékpé, couleur devient jaune (avertissement) puis rouge (saturation ou obscurité extrême).',
+    'monitoring.help.luminosity.description': 'Zone optimale (verte) trouve entre seuil minimum é maximum. En dessous seuil min, couleur devient bleu-gris puis bleu foncé (obscurité). Au-dessus seuil max, devient jaune puis orange puis rouge (saturation extrême).',
     'monitoring.help.waterLevel.title': '💧 Niveau mán (0-100%)',
-    'monitoring.help.waterLevel.description': 'Rouge indique niveau critique (en dessous seuil min). Au-dessus seuil minimum, couleur passe progressivement orange, puis vert indiquer niveau suffisant.',
+    'monitoring.help.waterLevel.description': 'Rouge indique niveau critique (en dessous seuil min). Au-dessus seuil minimum, couleur passe progressivement orange, puis vert indiquer niveau suffisant. Gradient couleur applique sur toute hauteur jauge.',
     'monitoring.help.zones.optimal': 'Zone optimale',
     'monitoring.help.zones.warning': 'Zone avertissement',
     'monitoring.help.zones.danger': 'Zone danger',
     'monitoring.help.close': 'Fermer',
+    'monitoring.inactiveSensors.title': 'Capteurs inactifs détectés',
+    'monitoring.inactiveSensors.message': 'capteur(s) n\'ont pas envoyé de données depuis plus d\'1 heure',
+    'sensor.status.active': 'Actif',
+    'sensor.status.inactive': 'Inactif',
+    'sensor.status.offline': 'Hors ligne',
+    'sensor.status.unknown': 'Inconnu',
     'plantations.createModal.title': 'Entrez informations champ',
     'plantations.createModal.nameLabel': 'Nkómbó plantation wá',
     'plantations.createModal.namePlaceholder': 'Sígní nkómbó plantation wá',
@@ -1799,6 +2350,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.noSensors': 'Alé capteur installé',
     'plantations.detail.sensors.noData': 'Alé données',
     'plantations.detail.sensors.noSensorsMessage': 'Plantation ékpé alé capteurs installés. Installez capteurs accéder monitoring.',
+    'plantations.detail.sensors.readingsHistory': 'Historique valeurs',
+    'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
+    'plantations.detail.sensors.loadingReadings': 'Chargement valeurs...',
+    'plantations.detail.sensors.noReadings': 'Alé valeurs enregistrées',
     'plantations.detail.errors.invalidId': 'ID plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Alé charger détails plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
@@ -1921,24 +2476,139 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.seasonal.transition': 'Transition',
     'admin.fakers.results.percentage': '%',
     'admin.fakers.results.barChart': 'Répartition visuelle',
+    'chatbox.title': 'Assistant AI CamerFarm',
+    'chatbox.description': 'Sígní question wá é agriculture é bwá conseils personnalisés temps réel.',
+    'chatbox.emptyState.title': 'Bwá Assistant AI',
+    'chatbox.emptyState.description': 'Kómbí conversation sígní question wá é sélectionner suggestion ékpé.',
+    'chatbox.suggestionsHeader': 'Questions suggérées',
+    'chatbox.suggestedQuestions.question1': 'Hol no bwá rendement bisó wá?',
+    'chatbox.suggestedQuestions.question2': 'Ko honɗe irrigation ékpé mbálá?',
+    'chatbox.suggestedQuestions.question3': 'Hol no anndinaade maladies bisó?',
+    'chatbox.suggestedQuestions.question4': 'Ko honɗe capteurs ékpé ngam type culture wá?',
+    'chatbox.aiResponse.prefix': 'Réponse question wá',
+    'chatbox.aiResponse.intro': 'Noddu ɗoo question wá. Assistant AI seŋtina données wá é heɓa wá conseils personnalisés basés pratiques agricoles ékpé.',
+    'chatbox.inputLabel': 'Question wá',
+    'chatbox.inputPlaceholder': 'Sígní question wá ton... (Ex: Hol no optimiser irrigation?)',
+    'chatbox.sendButton': 'Envoyer',
+    'chatbox.sending': 'Envoi...',
+    'chatbox.inputHint': 'Dobo Enter ngam envoyer, Shift+Enter ngam ligne ékpé',
+    'chatbox.characters': 'caractères',
+    'chatbox.characterCount': 'caractère',
     'language.fr': 'Faransinkoore',
     'language.en': 'Inngilinkoore',
     'language.ff': 'Fulfulde',
     'language.ew': 'Ewondo',
+    'guide.title': 'Guide utilisation',
+    'guide.subtitle': 'Fón no kuutoraade kala ɓeyngu CamerFarm AI ngam ɓeydude bisó wá mán.',
+    'guide.tableOfContents.title': 'Tirde Alkawal',
+    'guide.tableOfContents.introduction': 'Fuɗɗorde',
+    'guide.tableOfContents.quickStart': 'Fuɗɗo Cawɗo',
+    'guide.tableOfContents.authentication': 'Tiimtinde',
+    'guide.tableOfContents.profile': 'Profil utilisateur',
+    'guide.tableOfContents.plantations': 'Bisó',
+    'guide.tableOfContents.monitoring': 'Monitoring',
+    'guide.tableOfContents.graphs': 'Graphiques',
+    'guide.tableOfContents.notifications': 'Notifications',
+    'guide.tableOfContents.ai': 'AI Chatbot',
+    'guide.tableOfContents.language': 'Multilingue',
+    'guide.introduction.title': 'Fuɗɗorde',
+    'guide.introduction.description': 'CamerFarm AI ko platform mán ngam ɓeydude bisó camerounaise. App wá bwá jokkondirde bisó wá e wakati goonga e IoT é AI.',
+    'guide.introduction.feature1': 'Jokkondiral wakati goonga ngam bisó wá',
+    'guide.introduction.feature2': 'Laamngo otomatik ngam ɓeynguuji (irrigation, ventilation, éclairage)',
+    'guide.introduction.feature3': 'Ɓeydude keɓe taariikhi e graphiques',
+    'guide.introduction.feature4': 'Jokkondiral AI ngam laawol bisó',
+    'guide.quickStart.title': 'Fuɗɗo Cawɗo',
+    'guide.quickStart.signup.title': 'Sígní kontó',
+    'guide.quickStart.signup.step1': 'Dobo "Sígní" e menu walla e hello fuɗɗorde',
+    'guide.quickStart.signup.step2': 'Hulno formo e keɓe wá: innde, innde fuɗɗorde, email, téléphone é mótí',
+    'guide.quickStart.signup.step3': 'Ƴeewto mótí wá ina heɓi keɓe kisal (kalaa 6 caractères, majuscule, minuscule, chiffre é caractère spécial)',
+    'guide.quickStart.signup.step4': 'Dobo "Sígní" ngam sígní kontó wá',
+    'guide.quickStart.login.title': 'Kómbí',
+    'guide.quickStart.login.step1': 'Yah e hello kómbí e menu walla jokkol "Kómbí"',
+    'guide.quickStart.login.step2': 'Naatu email wá walla téléphone é mótí wá',
+    'guide.quickStart.login.step3': 'So wá waɗi 2FA, naatu kóde vérification ɓaawo kómbí',
+    'guide.auth.title': 'Tiimtinde',
+    'guide.auth.twoFactor.title': 'Tiimtinde Ɗiɗɗo (2FA)',
+    'guide.auth.twoFactor.description': '2FA ɓeyda kisal e kontó wá. Ɓaawo naatude mótí, wá foti naatude kóde vérification e app.',
+    'guide.auth.twoFactor.step1': 'Kómbí e kontó wá é yah e profil wá',
+    'guide.auth.twoFactor.step2': 'E "Tiimtinde Ɗiɗɗo", dobo "Activer 2FA"',
+    'guide.auth.twoFactor.step3': 'Dobo kóde QR e app vérification (Google Authenticator, Authy, etc.)',
+    'guide.auth.twoFactor.step4': 'Naatu kóde 6 chiffres ngam tiimtinde activation',
+    'guide.auth.twoFactor.tip': 'Laawol: Danndu kóde QR wá e nokkuure kisal. So wá ɓeewi app wá, wá waawi waɗde 2FA e kóde oo.',
+    'guide.profile.title': 'Laamngo Profil utilisateur',
+    'guide.profile.edit.title': 'Waylu Keɓe utilisateur',
+    'guide.profile.edit.step1': 'Yah e profil wá e dobo "Profil" e menu',
+    'guide.profile.edit.step2': 'Dobo "Modifier" ngam waɗde waylude',
+    'guide.profile.edit.step3': 'Waylu keɓe: prénom, nom, téléphone walla langue',
+    'guide.profile.edit.step4': 'Dobo "Enregistrer" ngam danndude walla "Annuler" ngam rutto',
+    'guide.profile.photo.title': 'Waylu Foto Profil',
+    'guide.profile.photo.step1': 'E foto profil, dobo ikon caméra walla foto jooni',
+    'guide.profile.photo.step2': 'Labo image e ɓeyngu wá (JPG, PNG, mawnɗe: 5MB)',
+    'guide.profile.photo.step3': 'Image ina danndoto otomatik é holloto e foto profil',
+    'guide.plantations.title': 'Laamngo Bisó',
+    'guide.plantations.create.title': 'Sígní Bisó Hesɗo',
+    'guide.plantations.create.step1': 'Yah e hello "Bisó" e menu',
+    'guide.plantations.create.step2': 'Dobo "Sígní bisó"',
+    'guide.plantations.create.step3': 'Hulno formo e keɓe bisó: nom, localisation, superficie, type culture é GPS (optionnel)',
+    'guide.plantations.create.step4': 'Dobo "Suivant" é "Créer" ngam sígní bisó',
+    'guide.plantations.view.title': 'Fón é Laamngo Bisó',
+    'guide.plantations.view.description': 'Hello bisó hollata bisó wá fof e keɓe maɓɓe. Wá waawi:',
+    'guide.plantations.view.feature1': 'Fón détails bisó kala e dobo "Fón détails"',
+    'guide.plantations.view.feature2': 'Yah cawɗo e monitoring é graphiques e hello détails',
+    'guide.plantations.view.feature3': 'Fón limoore capteurs é actionneurs e bisó kala',
+    'guide.monitoring.title': 'Monitoring Wakati Goonga',
+    'guide.monitoring.description': 'Hello monitoring bwá jokkondirde bisó wá e wakati goonga e keɓe IoT.',
+    'guide.monitoring.sensors.title': 'Fannuuji Capteurs',
+    'guide.monitoring.sensors.description': 'CamerFarm AI walla fannuuji capteurs ɗuuɗɗe ngam jokkondirde keɓe:',
+    'guide.monitoring.sensors.temperature': 'Température: Jokkondira température (0-50°C) e indicateur',
+    'guide.monitoring.sensors.soilHumidity': 'Humidité sol: Jokkondira humidité sol (0-100%) e barre',
+    'guide.monitoring.sensors.co2': 'Niveau CO2: Jokkondira CO2 (0-2500 ppm) e indicateurs',
+    'guide.monitoring.sensors.waterLevel': 'Niveau eau: Hollira niveau eau e réservoir e animation 3D',
+    'guide.monitoring.sensors.luminosity': 'Luminosité: Jokkondira luminosité e effet',
+    'guide.monitoring.thresholds.title': 'Laamngo Seuils',
+    'guide.monitoring.thresholds.description': 'Wá waawi waylude seuils ngam capteurs kala ngam heɓde notifications so keɓe ɓeewi e plage optimal.',
+    'guide.monitoring.thresholds.step1': 'E hello monitoring, yiytu capteur ngam waylude seuils',
+    'guide.monitoring.thresholds.step2': 'Dobo ikon édition e seuils min/max',
+    'guide.monitoring.thresholds.step3': 'Naatu keɓe hesɗi (max ina foti mawnɗo e min) é dobo "Enregistrer"',
+    'guide.monitoring.actuators.title': 'Laamngo Actionneurs',
+    'guide.monitoring.actuators.description': 'Actionneurs walla laamngo otomatik walla manuel ngam ɓeynguuji bisó wá:',
+    'guide.monitoring.actuators.irrigation': 'Pompe irrigation: Active/désactive irrigation otomatik',
+    'guide.monitoring.actuators.fans': 'Ventilateurs: Laamngo ventilation ngam réguler température',
+    'guide.monitoring.actuators.lighting': 'Éclairage: Laamngo éclairage ngam cultures serre',
+    'guide.graphs.title': 'Graphiques é Statistiques',
+    'guide.graphs.description': 'Hello graphiques bwá ɓeydude keɓe capteurs wá e wakati ɗuuɗɗe.',
+    'guide.graphs.filters.title': 'Kuutoraade Filtres',
+    'guide.graphs.filters.step1': 'Labo bisó e liste so wá jogii ɗuuɗɗe',
+    'guide.graphs.filters.step2': 'Labo wakati e "Date début" é "Date fin"',
+    'guide.graphs.filters.step3': 'Dobo "Appliquer filtre" ngam ɓeydude keɓe',
+    'guide.graphs.sensors.title': 'Labo Capteurs',
+    'guide.graphs.sensors.description': 'Wá waawi activer walla désactiver hollirde fannu capteur kala e dobo. Graphiques ina ɓeydoto otomatik.',
+    'guide.notifications.title': 'Sistem Notifications',
+    'guide.notifications.description': 'Notifications tintina wá e wakati goonga ngam ɓeynguuji bisó wá é capteurs.',
+    'guide.notifications.management.title': 'Laamngo Notifications',
+    'guide.notifications.management.step1': 'Yah e notifications e dobo ikon cloche e header (badge hollira limoore notifications non lues)',
+    'guide.notifications.management.step2': 'Marquer notification lue e dobo walla mbatu e dobo suppression',
+    'guide.notifications.management.step3': 'Notifications ina ɓeydoto otomatik e kala 45 secondes ngam hollirde notifications hesɗi',
+    'guide.ai.title': 'AI Chatbot',
+    'guide.ai.description': 'Jokkondiral AI CamerFarm AI hokki laawol bisó e wakati goonga. Ina waawi jaabde laawol wá e bisó, irrigation, maladies plantes, é ɗuuɗɗe.',
+    'guide.ai.usage.title': 'Kuutoraade Chatbot',
+    'guide.ai.usage.step1': 'Yah e hello "AI" e menu walla dobo bouton flottant e nder les',
+    'guide.ai.usage.step2': 'Winndu laawol wá e input e les chatbox',
+    'guide.ai.usage.step3': 'Dobo "Envoyer" walla Enter ngam nelde laawol. Jokkondiral AI ina jaabde e laawol',
+    'guide.ai.tip': 'Laawol: Chatbot walla ɗiɗɗo ɓasde (Français, English, Fulfulde, Ewondo). Wá waawi laawol wá e langue préférée.',
+    'guide.language.title': 'Waylu Langue',
+    'guide.language.description': 'CamerFarm AI walla 4 langues ngam waɗde app e kuutoro camerounais fof.',
+    'guide.language.step1': 'Dobo sélecteur langue e header (ikon globe)',
+    'guide.language.step2': 'Labo langue préférée e ɓeynguuji',
+    'guide.language.step3': 'Interface ina ɓeydoto cawɗo e langue sélectionnée',
+    'guide.language.option1': 'Français: Langue officielle Cameroun',
+    'guide.language.option2': 'English: Ngam kuutoroje anglophones',
+    'guide.language.option3': 'Fulfulde: Langue locale nord Cameroun',
+    'guide.language.option4': 'Ewondo: Langue locale centre é sud Cameroun',
   },
 };
 
 export function getTranslation(key: TranslationKey, language: Language): string {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1931',message:'getTranslation entry',data:{key,language,hasLanguage:!!translations[language],hasKey:!!translations[language]?.[key]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
-  
   const translation = translations[language]?.[key];
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'translations.ts:1935',message:'getTranslation result',data:{key,language,translation,fallback:translation||key},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-  
   return translation || key;
 }
-
