@@ -3,7 +3,7 @@ import { AuthProvider } from './services/authProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
-import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
+// import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';
@@ -13,6 +13,7 @@ import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
 import { ProfilePage } from './app/ProfilePage';
 import { ChatboxPage } from './app/ChatboxPage';
+import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
             <Route 
               path="/plantations" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <ListPlantationsPage />
                 </ProtectedRoute>
               } 
@@ -54,7 +55,7 @@ function App() {
             <Route 
               path="/plantations/:id" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <PlantationDetailPage />
                 </ProtectedRoute>
               } 
@@ -62,7 +63,7 @@ function App() {
             <Route 
               path="/graphs" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <GraphsPage />
                 </ProtectedRoute>
               } 
@@ -70,7 +71,7 @@ function App() {
             <Route 
               path="/monitoring" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <MonitoringPage />
                 </ProtectedRoute>
               } 
@@ -78,7 +79,7 @@ function App() {
             <Route 
               path="/ai" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <ChatboxPage />
                 </ProtectedRoute>
               } 
@@ -86,11 +87,19 @@ function App() {
             <Route 
               path="/profile" 
               element={
-                <ProtectedRoute>
+                <ProtectedRoute >
                   <ProfilePage />
                 </ProtectedRoute>
               } 
             />
+            <Route
+          path="/technicien"
+          element={
+            <ProtectedRoute >
+              <TechnicianDashboardPage />
+            </ProtectedRoute>
+          }
+        />
             <Route 
               path="/guide" 
               element={
@@ -102,6 +111,7 @@ function App() {
             
             {/* Route catch-all - redirige vers la page d'accueil */}
             <Route path="*" element={<Navigate to="/" replace />} />
+            {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
           </Routes>
         </BrowserRouter>
       </NotificationProvider>
