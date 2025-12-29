@@ -27,6 +27,7 @@
   font-weight: 600;
   font-size: var(--font-size-lg);
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .header__logo:hover {
@@ -42,6 +43,11 @@
 
 .header__logoText {
   color: var(--color-primary);
+}
+
+/* Pour le variant technicien, le logoText est dans logoContent */
+.header__technician .header__logoText {
+  color: var(--color-text);
 }
 
 .header__nav {
@@ -422,6 +428,153 @@
   }
 
   .header__mobileMenu {
+    display: none;
+  }
+}
+
+/* ============================= */
+/* HEADER VARIANT TECHNICIEN */
+/* ============================= */
+
+.header__technician {
+  border-top: 1px solid #3b82f6;
+  border-bottom: 1px solid #3b82f6;
+}
+
+.header__containerTechnician {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-xl);
+}
+
+.header__logoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header__logoText {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.header__logoSlogan {
+  font-size: 10px;
+  color: var(--color-gray-600);
+  line-height: 1.3;
+  max-width: 200px;
+}
+
+.header__technicianCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.header__technicianTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.header__technicianSubtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.header__technicianRight {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.header__technicianRight .header__iconButton {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__technicianSeparator {
+  width: 1px;
+  height: 30px;
+  background-color: #1f2937;
+  flex-shrink: 0;
+}
+
+.header__technicianUser {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.header__technicianUserLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.header__technicianLogout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ef4444;
+  transition: color 0.2s ease;
+  line-height: 1.2;
+}
+
+.header__technicianLogout:hover {
+  color: #dc2626;
+}
+
+.header__technicianLogout svg {
+  font-size: 12px;
+}
+
+/* Responsive pour le header technicien */
+@media (max-width: 1400px) {
+  .header__logoSlogan {
+    font-size: 9px;
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .header__logoSlogan {
+    display: none;
+  }
+  
+  .header__technicianTitle {
+    font-size: 24px;
+  }
+  
+  .header__technicianSubtitle {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Sur mobile, le header technicien n'est pas affiché, on utilise le header normal */
+  .header__technician {
     display: none;
   }
 }

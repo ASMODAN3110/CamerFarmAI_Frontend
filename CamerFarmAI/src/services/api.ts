@@ -58,6 +58,7 @@ api.interceptors.request.use((config) => {
       method: config.method?.toUpperCase(),
       url: config.url,
       fullURL: fullURL,
+      params: config.params,
       data: config.data,
       headers: {
         ...config.headers,
@@ -65,6 +66,10 @@ api.interceptors.request.use((config) => {
       }
     });
   }
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:69',message:'Request interceptor - URL constructed',data:{method:config.method?.toUpperCase(),url:config.url,fullURL:fullURL,hasParams:!!config.params,hasParamsSerializer:!!config.paramsSerializer,params:config.params,urlContainsQuery:config.url?.includes('?')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   
   return config;
 });

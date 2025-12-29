@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
-import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBell, FaUser, FaSignOutAlt, FaTrash, FaArrowUp } from 'react-icons/fa';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
+import type { TranslationKey } from '@/utils/translations';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { plantationService } from '@/services/plantationService';
 import type { Notification as AppNotification } from '@/services/notificationService';
@@ -62,7 +63,6 @@ export function Header({
   // Utiliser le contexte de notifications
   const {
     notifications,
-    stats,
     isLoading: isLoadingNotifications,
     markAsRead,
     deleteNotification,
@@ -333,12 +333,23 @@ export function Header({
     }));
   } else {
     // Sinon, utiliser les items par défaut avec traductions
-    const activeNavItemsConfig = isAuthenticated 
-      ? authenticatedNavItemsConfig 
-      : defaultNavItemsConfig;
+    let activeNavItemsConfig: Array<{ key: string; href: string }>;
+    
+    if (isAuthenticated) {
+      // Si l'utilisateur est un technicien, afficher uniquement le lien vers le dashboard technicien
+      if (user?.role === 'technician') {
+        activeNavItemsConfig = [
+          { key: 'nav.technician', href: '/technicien' },
+        ];
+      } else {
+        activeNavItemsConfig = authenticatedNavItemsConfig;
+      }
+    } else {
+      activeNavItemsConfig = defaultNavItemsConfig;
+    }
 
     navItemsWithActive = activeNavItemsConfig.map(item => ({
-      label: t(item.key),
+      label: t(item.key as TranslationKey),
       href: item.href,
       active: item.href === currentPath,
     }));
@@ -356,6 +367,7 @@ export function Header({
   // On compte celles où isRead === false
   const unreadWebCount = notifications.filter(notif => !notif.isRead).length;
 
+  // Version normale du header
   return (
     <header className={styles.header} role="banner">
       <div className={styles.header__container}>
@@ -385,11 +397,35 @@ export function Header({
             <LanguageSwitcher />
             {(isAuthenticated || showAuthIcons) ? (
               <>
+                {/* Version spéciale pour les techniciens */}
+                {user?.role === 'technician' ? (
+                  <>
+                    <Link to="/profile" className={styles.header__iconButton} aria-label={t('auth.profile')}>
+                      <Icon icon={FaUser} size={22} />
+                    </Link>
+
+                    <div className={styles.header__technicianSeparator}></div>
+
+                    <div className={styles.header__technicianUser}>
+                      <span className={styles.header__technicianUserLabel}>{t('profile.role.technician')}</span>
+                      <button
+                        onClick={handleLogout}
+                        className={styles.header__technicianLogout}
+                        aria-label={t('auth.logout')}
+                      >
+                        <Icon icon={FaArrowUp} size={14} />
+                        <span>{t('auth.logout')}</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Version normale pour les autres utilisateurs */}
                 <div className={styles.header__iconButtonContainer}>
                   <button
                     className={styles.header__iconButton}
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    aria-label="Notifications"
+                        aria-label={t('notifications.title')}
                   >
                     <Icon icon={FaBell} size={22} />
                     {unreadWebCount > 0 && (
@@ -409,7 +445,7 @@ export function Header({
                         <button
                           className={styles.header__closeButton}
                           onClick={() => setNotificationsOpen(false)}
-                          aria-label="Fermer"
+                              aria-label={t('header.close')}
                         >
                           ×
                         </button>
@@ -464,7 +500,7 @@ export function Header({
                   <button
                     className={styles.header__iconButton}
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                    aria-label="Profil"
+                        aria-label={t('auth.profile')}
                   >
                     <Icon icon={FaUser} size={22} />
                   </button>
@@ -494,6 +530,8 @@ export function Header({
                     </div>
                   </Dropdown>
                 </div>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -513,7 +551,7 @@ export function Header({
           <button
             className={styles.header__hamburger}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Menu"
+            aria-label={t('header.menu')}
             aria-expanded={mobileMenuOpen}
           >
             <Icon icon={mobileMenuOpen ? FaTimes : FaBars} size={32} />
@@ -548,7 +586,7 @@ export function Header({
                   setNotificationsOpen(!notificationsOpen);
                   setMobileMenuOpen(false);
                 }}
-                aria-label="Notifications"
+                aria-label={t('notifications.title')}
               >
                 <Icon icon={FaBell} size={24} />
                 {unreadWebCount > 0 && (
@@ -562,7 +600,7 @@ export function Header({
                 onClick={() => {
                   setProfileMenuOpen(!profileMenuOpen);
                 }}
-                aria-label="Profil"
+                          aria-label={t('auth.profile')}
               >
                 <Icon icon={FaUser} size={24} />
               </button>

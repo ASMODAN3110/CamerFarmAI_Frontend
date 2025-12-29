@@ -1,6 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/services/useAuthStore';
-import { ProtectedRoute } from './ProtectedRoute';
 
 type UserRole = 'farmer' | 'technician' | 'admin';
 
@@ -37,11 +36,8 @@ export const RoleBasedRoute = ({
 
   // D'abord vérifier l'authentification
   if (!isAuthenticated || !user) {
-    return (
-      <ProtectedRoute>
-        <></>
-      </ProtectedRoute>
-    );
+    const returnUrl = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?returnUrl=${returnUrl}`} replace />;
   }
 
   // Ensuite vérifier les permissions

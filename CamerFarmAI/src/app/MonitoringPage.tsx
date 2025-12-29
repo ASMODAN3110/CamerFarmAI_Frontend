@@ -1578,32 +1578,23 @@ export function MonitoringPage() {
         if (plantationData.hasSensors && plantationData.sensors && plantationData.sensors.length > 0) {
           setSensors(plantationData.sensors);
           
-          // Créer une map des capteurs actifs par type pour vérifier le statut
-          const activeSensorsByType = new Map<string, boolean>();
-          plantationData.sensors.forEach((sensor: Sensor) => {
-            if (sensor.status === 'active') {
-              activeSensorsByType.set(sensor.type, true);
-            }
-          });
-          
           // Extraire les dernières lectures depuis latestReadings ou depuis les capteurs
+          // IMPORTANT: Inclure les capteurs inactifs s'ils ont une dernière lecture disponible
           const sensorMap = new Map<string, SensorReading>();
           
           // D'abord, utiliser latestReadings si disponible (format backend)
-          // Ne prendre que les lectures des capteurs actifs
+          // Prendre toutes les lectures disponibles, même pour les capteurs inactifs
           if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
             (plantationData as any).latestReadings.forEach((item: any) => {
-              if (item.latestReading && item.sensorType && activeSensorsByType.get(item.sensorType)) {
+              if (item.latestReading && item.sensorType) {
                 sensorMap.set(item.sensorType, item.latestReading);
               }
             });
           }
           
-          // Sinon, utiliser les lectures des capteurs individuels (uniquement si actifs)
+          // Sinon, utiliser les lectures des capteurs individuels (actifs ou inactifs s'ils ont une lecture)
           plantationData.sensors.forEach((sensor: Sensor) => {
-            // Ne traiter que les capteurs actifs
-            if (sensor.status !== 'active') return;
-            
+            // Ne pas filtrer par statut - utiliser la dernière lecture si disponible
             if (!sensorMap.has(sensor.type)) {
               if (sensor.latestReading) {
                 sensorMap.set(sensor.type, sensor.latestReading);
@@ -1624,20 +1615,15 @@ export function MonitoringPage() {
           const lumReading = sensorMap.get('luminosity');
           const waterReading = sensorMap.get('waterLevel');
 
-          // Vérifier que les capteurs sont actifs avant d'assigner les valeurs
-          const isTemperatureActive = plantationData.sensors.some(s => s.type === 'temperature' && s.status === 'active');
-          const isSoilMoistureActive = plantationData.sensors.some(s => s.type === 'soilMoisture' && s.status === 'active');
-          const isCo2Active = plantationData.sensors.some(s => s.type === 'co2Level' && s.status === 'active');
-          const isLuminosityActive = plantationData.sensors.some(s => s.type === 'luminosity' && s.status === 'active');
-          const isWaterLevelActive = plantationData.sensors.some(s => s.type === 'waterLevel' && s.status === 'active');
-
+          // Utiliser les valeurs disponibles même si le capteur est inactif
+          // La jauge affichera la dernière valeur captée, qu'elle soit récente ou ancienne
           const newSensorData = {
-            temperature: isTemperatureActive && tempReading ? tempReading.value : 0,
-            soilHumidity: isSoilMoistureActive && soilReading ? soilReading.value : 0,
-            co2: isCo2Active && co2Reading ? co2Reading.value : 0,
-            luminosity: isLuminosityActive && lumReading ? lumReading.value : 0,
-            waterLevel: isWaterLevelActive && waterReading ? waterReading.value : 0,
-            co2Level: isCo2Active && co2Reading ? co2Reading.value : undefined,
+            temperature: tempReading ? tempReading.value : 0,
+            soilHumidity: soilReading ? soilReading.value : 0,
+            co2: co2Reading ? co2Reading.value : 0,
+            luminosity: lumReading ? lumReading.value : 0,
+            waterLevel: waterReading ? waterReading.value : 0,
+            co2Level: co2Reading ? co2Reading.value : undefined,
           };
           
           // Debug: afficher les nouvelles valeurs
@@ -1848,44 +1834,23 @@ export function MonitoringPage() {
           const plantationData = await plantationService.getById(plantationId);
           if (plantationData.sensors && plantationData.sensors.length > 0) {
             // Créer une map des capteurs actifs par type pour vérifier le statut
-            const activeSensorsByType = new Map<string, boolean>();
-            plantationData.sensors.forEach((sensor: Sensor) => {
-              if (sensor.status === 'active') {
-                activeSensorsByType.set(sensor.type, true);
-              }
-            });
-            
-            // Extraire les dernières lectures de chaque type de capteur (uniquement actifs)
+            // Extraire les dernières lectures de chaque type de capteur
+            // IMPORTANT: Inclure les capteurs inactifs s'ils ont une dernière lecture disponible
             const sensorMap = new Map<string, SensorReading>();
-            plantationData.sensors.forEach((sensor: Sensor) => {
-              // Ne traiter que les capteurs actifs
-              if (sensor.status !== 'active') return;
-              
-              if (sensor.latestReading) {
-                sensorMap.set(sensor.type, sensor.latestReading);
-              } else if (sensor.readings && sensor.readings.length > 0) {
-                const sortedReadings = [...sensor.readings].sort((a, b) => 
-                  new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-                );
-                sensorMap.set(sensor.type, sortedReadings[0]);
-              }
-            });
-
+            
             // D'abord, utiliser latestReadings si disponible (format backend)
-            // Ne prendre que les lectures des capteurs actifs
+            // Prendre toutes les lectures disponibles, même pour les capteurs inactifs
             if ((plantationData as any).latestReadings && Array.isArray((plantationData as any).latestReadings)) {
               (plantationData as any).latestReadings.forEach((item: any) => {
-                if (item.latestReading && item.sensorType && activeSensorsByType.get(item.sensorType)) {
+                if (item.latestReading && item.sensorType) {
                   sensorMap.set(item.sensorType, item.latestReading);
                 }
               });
             }
             
-            // Sinon, utiliser les lectures des capteurs individuels (uniquement si actifs)
+            // Sinon, utiliser les lectures des capteurs individuels (actifs ou inactifs s'ils ont une lecture)
             plantationData.sensors.forEach((sensor: Sensor) => {
-              // Ne traiter que les capteurs actifs
-              if (sensor.status !== 'active') return;
-              
+              // Ne pas filtrer par statut - utiliser la dernière lecture si disponible
               if (!sensorMap.has(sensor.type)) {
                 if (sensor.latestReading) {
                   sensorMap.set(sensor.type, sensor.latestReading);
@@ -1904,20 +1869,15 @@ export function MonitoringPage() {
             const lumReading = sensorMap.get('luminosity');
             const waterReading = sensorMap.get('waterLevel');
 
-            // Vérifier que les capteurs sont actifs avant d'assigner les valeurs
-            const isTemperatureActive = plantationData.sensors.some(s => s.type === 'temperature' && s.status === 'active');
-            const isSoilMoistureActive = plantationData.sensors.some(s => s.type === 'soilMoisture' && s.status === 'active');
-            const isCo2Active = plantationData.sensors.some(s => s.type === 'co2Level' && s.status === 'active');
-            const isLuminosityActive = plantationData.sensors.some(s => s.type === 'luminosity' && s.status === 'active');
-            const isWaterLevelActive = plantationData.sensors.some(s => s.type === 'waterLevel' && s.status === 'active');
-
-      const newData = {
-              temperature: availableSensors.temperature && isTemperatureActive && tempReading ? tempReading.value : 0,
-              soilHumidity: availableSensors.soilHumidity && isSoilMoistureActive && soilReading ? soilReading.value : 0,
-              co2: availableSensors.co2 && isCo2Active && co2Reading ? co2Reading.value : 0,
-              luminosity: availableSensors.luminosity && isLuminosityActive && lumReading ? lumReading.value : 0,
-              waterLevel: availableSensors.waterLevel && isWaterLevelActive && waterReading ? waterReading.value : 0,
-              co2Level: isCo2Active && co2Reading ? co2Reading.value : undefined,
+            // Utiliser les valeurs disponibles même si le capteur est inactif
+            // La jauge affichera la dernière valeur captée, qu'elle soit récente ou ancienne
+            const newData = {
+              temperature: availableSensors.temperature && tempReading ? tempReading.value : 0,
+              soilHumidity: availableSensors.soilHumidity && soilReading ? soilReading.value : 0,
+              co2: availableSensors.co2 && co2Reading ? co2Reading.value : 0,
+              luminosity: availableSensors.luminosity && lumReading ? lumReading.value : 0,
+              waterLevel: availableSensors.waterLevel && waterReading ? waterReading.value : 0,
+              co2Level: co2Reading ? co2Reading.value : undefined,
             };
       setSensorData(newData);
       // L'animation sera gérée automatiquement par le useEffect

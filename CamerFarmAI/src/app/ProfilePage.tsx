@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -9,14 +10,19 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
-import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaShieldAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGlobe, FaEdit, FaSave, FaTimes, FaCamera, FaShieldAlt, FaCheckCircle, FaTimesCircle, FaArrowLeft } from 'react-icons/fa';
 import { TwoFactorModal } from '@/components/ui/TwoFactorModal/TwoFactorModal';
 import styles from './ProfilePage.module.css';
 
 export function ProfilePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const loadUser = useAuthStore((s) => s.loadUser);
+  
+  // Détecter si l'utilisateur est un technicien
+  const isTechnician = user?.role === 'technician';
+  const canEdit = !isTechnician; // Les techniciens ne peuvent pas éditer
   
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -37,13 +43,19 @@ export function ProfilePage() {
   
 
   const profileNavItems = useMemo(
-    () => [
+    () => {
+      // Pour les techniciens, ne pas passer de navItems pour que le Header utilise le variant technicien
+      if (isTechnician) {
+        return undefined;
+      }
+      return [
       { label: t('nav.home'), href: '/' },
       { label: t('nav.plantations'), href: '/plantations' },
       { label: t('nav.ai'), href: '/ai' },
       { label: t('nav.support'), href: '/support' },
-    ],
-    [t]
+      ];
+    },
+    [t, isTechnician]
   );
 
   // Charger les données utilisateur au montage du composant seulement si pas déjà chargé
@@ -222,7 +234,7 @@ export function ProfilePage() {
   };
 
   const handleImageClick = () => {
-    if (isEditing && fileInputRef.current) {
+    if (isEditing && canEdit && fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
@@ -289,10 +301,21 @@ export function ProfilePage() {
 
     return (
       <div className={styles.content}>
+          {isTechnician && (
+            <div className={styles.backButtonContainer}>
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => navigate('/technicien')}
+              >
+                <FaArrowLeft /> {t('profile.backToDashboard') || 'Retour au dashboard'}
+              </Button>
+            </div>
+          )}
           <div className={styles.profileSection}>
             <div className={styles.profileImageContainer}>
               <div
-                className={`${styles.profileImage} ${isEditing ? styles.profileImageEditable : ''}`}
+                className={`${styles.profileImage} ${isEditing && canEdit ? styles.profileImageEditable : ''}`}
                 onClick={handleImageClick}
                 style={{
                   backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
@@ -301,7 +324,7 @@ export function ProfilePage() {
                 }}
               >
                 {!imagePreview && !profileImage && <FaUser size={60} />}
-                {isEditing && (
+                {isEditing && canEdit && (
                   <div className={styles.profileImageOverlay}>
                     {isUploading ? (
                       <div className={styles.uploadingSpinner}>⏳</div>
@@ -320,7 +343,7 @@ export function ProfilePage() {
                 accept="image/*"
                 onChange={handleImageChange}
                 className={styles.fileInput}
-                disabled={!isEditing || isUploading}
+                disabled={!isEditing || isUploading || !canEdit}
               />
             </div>
             <div className={styles.profileInfo}>
@@ -344,11 +367,11 @@ export function ProfilePage() {
               )}
             </div>
             <div className={styles.profileActions}>
-              {!isEditing ? (
+              {canEdit && !isEditing ? (
                 <Button variant="primary" onClick={() => setIsEditing(true)} className={styles.editButton}>
                   <FaEdit /> {t('profile.editButton')}
                 </Button>
-              ) : (
+              ) : canEdit && isEditing ? (
                 <div className={styles.editActions}>
                   <Button variant="primary" onClick={handleSave} disabled={isSaving} className={styles.saveButton}>
                     <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
@@ -356,6 +379,11 @@ export function ProfilePage() {
                   <Button variant="secondary" onClick={handleCancel} disabled={isSaving} className={styles.cancelButton}>
                     <FaTimes /> {t('profile.cancelButton')}
                   </Button>
+                </div>
+              ) : null}
+              {isTechnician && (
+                <div className={styles.readonlyMessage}>
+                  <p>{t('profile.readonlyMessage') || 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.'}</p>
                 </div>
               )}
             </div>
@@ -374,7 +402,7 @@ export function ProfilePage() {
                   value={formData.firstName}
                   onChange={(e) => handleChange('firstName', e.target.value)}
                   error={errors.firstName}
-                  disabled={!isEditing}
+                  disabled={!isEditing || isTechnician}
                 />
 
                 <FormField
@@ -385,7 +413,7 @@ export function ProfilePage() {
                   value={formData.lastName}
                   onChange={(e) => handleChange('lastName', e.target.value)}
                   error={errors.lastName}
-                  disabled={!isEditing}
+                  disabled={!isEditing || isTechnician}
                 />
 
                 <div className={styles.selectField}>
@@ -396,7 +424,7 @@ export function ProfilePage() {
                     className={styles.select}
                     value={formData.language}
                     onChange={(e) => handleChange('language', e.target.value)}
-                    disabled={!isEditing}
+                    disabled={!isEditing || isTechnician}
                   >
                     <option value="fr">{t('language.fr')}</option>
                     <option value="en">{t('language.en')}</option>
@@ -417,7 +445,7 @@ export function ProfilePage() {
                         <span className={styles.emailDate}>{t('profile.notConfigured')}</span>
                       </div>
                     </div>
-                    {isEditing && (
+                    {isEditing && canEdit && (
                       <Button variant="ghost" size="sm" className={styles.addEmailButton}>
                         + {t('profile.addEmail')}
                       </Button>
@@ -441,7 +469,7 @@ export function ProfilePage() {
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   error={errors.phone}
-                  disabled={!isEditing}
+                  disabled={!isEditing || isTechnician}
                 />
 
                 <div className={styles.infoField}>
@@ -475,6 +503,7 @@ export function ProfilePage() {
                     <p className={styles.twoFactorDescription}>
                       {t('profile.twoFactor.description')}
                     </p>
+                    {canEdit && (
                     <Button
                       variant={(user as any).twoFactorEnabled ? 'secondary' : 'primary'}
                       size="sm"
@@ -488,6 +517,7 @@ export function ProfilePage() {
                         ? t('profile.twoFactor.disableButton')
                         : t('profile.twoFactor.enableButton')}
                     </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -500,7 +530,7 @@ export function ProfilePage() {
   return (
     <>
       <Background3D />
-      <Header navItems={profileNavItems} currentPath="/profile" showAuthIcons />
+      <Header navItems={profileNavItems} currentPath="/profile" showAuthIcons={true} />
       <main className={styles.profilePage}>
         <div className={styles.profileContainer}>{renderContent()}</div>
       </main>

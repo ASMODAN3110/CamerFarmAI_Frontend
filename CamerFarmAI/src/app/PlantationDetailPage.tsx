@@ -99,16 +99,10 @@ export function PlantationDetailPage() {
 
       // Charger les readings pour chaque capteur
       // On récupère toujours depuis l'API pour avoir l'historique complet
+      // IMPORTANT: Charger les readings même si le capteur est inactif car l'historique peut exister
       for (const sensor of plantation.sensors) {
         if (!sensor.id || !id) {
           loadingMap[sensor.id || ''] = false;
-          continue;
-        }
-
-        // Ne charger les readings que si le capteur est actif
-        if (sensor.status !== 'active') {
-          loadingMap[sensor.id] = false;
-          readingsMap[sensor.id] = [];
           continue;
         }
 
@@ -131,9 +125,10 @@ export function PlantationDetailPage() {
           }
 
           // Trier par timestamp décroissant (plus récent en premier)
-          readingsMap[sensor.id] = readings.sort((a, b) => 
+          const sortedReadings = readings.sort((a, b) => 
             new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
           );
+          readingsMap[sensor.id] = sortedReadings;
         } catch (err) {
           console.error(`❌ PlantationDetailPage - Erreur lors du chargement des readings pour capteur ${sensor.id}:`, err);
           readingsMap[sensor.id] = [];
@@ -400,7 +395,7 @@ export function PlantationDetailPage() {
                             </>
                           ) : (
                             <span style={{ color: '#ef4444', fontStyle: 'italic' }}>
-                              {t('plantations.detail.sensors.noReading') || 'Aucune lecture'}
+                              {t('plantations.detail.sensors.noReading')}
                             </span>
                           )}
                         </span>

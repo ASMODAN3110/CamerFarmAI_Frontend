@@ -3,7 +3,7 @@ import { AuthProvider } from './services/authProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
-// import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
+import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';
@@ -95,9 +95,9 @@ function App() {
             <Route
           path="/technicien"
           element={
-            <ProtectedRoute >
+            <RoleBasedRoute allowedRoles={['technician']} redirectTo="/">
               <TechnicianDashboardPage />
-            </ProtectedRoute>
+            </RoleBasedRoute>
           }
         />
             <Route 

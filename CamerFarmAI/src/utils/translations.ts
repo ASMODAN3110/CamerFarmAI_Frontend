@@ -8,10 +8,13 @@ export type TranslationKey =
   | 'nav.plantations'
   | 'nav.ai'
   | 'nav.guide'
+  | 'nav.technician'
   | 'auth.login'
   | 'auth.signup'
   | 'auth.logout'
   | 'auth.profile'
+  | 'header.close'
+  | 'header.menu'
   | 'login.title'
   | 'login.emailLabel'
   | 'login.emailPlaceholder'
@@ -148,6 +151,7 @@ export type TranslationKey =
   | 'plantations.detail.sensors.recentReadings'
   | 'plantations.detail.sensors.loadingReadings'
   | 'plantations.detail.sensors.noReadings'
+  | 'plantations.detail.sensors.noReading'
   | 'plantations.detail.errors.invalidId'
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
@@ -273,7 +277,47 @@ export type TranslationKey =
   | 'sensor.status.offline'
   | 'sensor.status.unknown'
   | 'profile.back'
+  | 'profile.backToDashboard'
   | 'profile.pageLabel'
+  | 'technician.loading.stats'
+  | 'technician.loading.farmers'
+  | 'technician.loading.plantations'
+  | 'technician.loading.details'
+  | 'technician.stats.farmers'
+  | 'technician.stats.plantations'
+  | 'technician.stats.activeSensors'
+  | 'technician.stats.actuators'
+  | 'technician.search.placeholder'
+  | 'technician.search.loading'
+  | 'technician.section.farmers'
+  | 'technician.section.plantations'
+  | 'technician.empty.noFarmers'
+  | 'technician.empty.noFarmersFound'
+  | 'technician.empty.selectFarmer'
+  | 'technician.details.sensors'
+  | 'technician.details.actuators'
+  | 'technician.details.locationNotSet'
+  | 'technician.errors.loadData'
+  | 'technician.errors.search'
+  | 'technician.errors.loadPlantations'
+  | 'technician.errors.loadDetails'
+  | 'technician.retry'
+  | 'technician.farmer.label'
+  | 'technician.plantation.singular'
+  | 'technician.plantation.plural'
+  | 'technician.details.owner'
+  | 'technician.details.activeCount'
+  | 'technician.details.thresholds'
+  | 'technician.details.noSensors'
+  | 'technician.details.noActuators'
+  | 'technician.details.manyInactiveSensors'
+  | 'technician.details.selectPlantation'
+  | 'technician.details.noPlantationsAvailable'
+  | 'technician.details.lastUpdate'
+  | 'technician.details.notAvailable'
+  | 'technician.details.cropType'
+  | 'technician.details.area'
+  | 'technician.details.location'
   | 'profile.welcome'
   | 'profile.loading'
   | 'profile.loadingHint'
@@ -324,6 +368,7 @@ export type TranslationKey =
   | 'profile.errors.imageSizeExceeded'
   | 'profile.errors.uploadFailed'
   | 'profile.errors.updateFailed'
+  | 'profile.readonlyMessage'
   | 'profile.role.farmer'
   | 'profile.role.technician'
   | 'profile.role.admin'
@@ -530,10 +575,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'IA',
     'nav.guide': 'Guide',
+    'nav.technician': 'Tableau de bord',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
     'auth.profile': 'Profil',
+    'header.close': 'Fermer',
+    'header.menu': 'Menu',
     'login.title': 'CONNEXION',
     'login.emailLabel': 'Adresse email',
     'login.emailPlaceholder': 'Adresse email',
@@ -791,11 +839,52 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
     'plantations.detail.sensors.loadingReadings': 'Chargement des valeurs...',
     'plantations.detail.sensors.noReadings': 'Aucune valeur enregistrée',
+    'plantations.detail.sensors.noReading': 'Aucune lecture',
     'plantations.detail.errors.invalidId': 'ID de plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Impossible de charger les détails de la plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
     'profile.back': 'Retour',
+    'profile.backToDashboard': 'Retour au dashboard',
     'profile.pageLabel': 'Profil utilisateur',
+    'technician.loading.stats': 'Chargement des statistiques…',
+    'technician.loading.farmers': 'Chargement des agriculteurs…',
+    'technician.loading.plantations': 'Chargement des plantations…',
+    'technician.loading.details': 'Chargement des détails…',
+    'technician.stats.farmers': 'AGRICULTEURS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'CAPTEURS ACTIFS',
+    'technician.stats.actuators': 'ACTIONNEURS',
+    'technician.search.placeholder': 'Rechercher un agriculteur...',
+    'technician.search.loading': 'Recherche...',
+    'technician.section.farmers': 'Agriculteurs',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'Aucun agriculteur',
+    'technician.empty.noFarmersFound': 'Aucun agriculteur trouvé',
+    'technician.empty.selectFarmer': 'Sélectionnez un agriculteur',
+    'technician.details.sensors': 'Capteurs',
+    'technician.details.actuators': 'Actionneurs',
+    'technician.details.locationNotSet': 'Non renseignée',
+    'technician.errors.loadData': 'Impossible de charger les données',
+    'technician.errors.search': 'Erreur lors de la recherche',
+    'technician.errors.loadPlantations': 'Impossible de charger les plantations',
+    'technician.errors.loadDetails': 'Impossible de charger les détails de la plantation',
+    'technician.retry': 'Réessayer',
+    'technician.farmer.label': 'AGRICULTEUR',
+    'technician.plantation.singular': 'plantation',
+    'technician.plantation.plural': 'plantations',
+    'technician.details.owner': 'Propriétaire:',
+    'technician.details.activeCount': 'Actifs:',
+    'technician.details.thresholds': 'Seuils:',
+    'technician.details.noSensors': 'Aucun capteur sur cette plantation',
+    'technician.details.noActuators': 'Aucun actionneur sur cette plantation',
+    'technician.details.manyInactiveSensors': 'Plus de 50% des capteurs sont inactifs',
+    'technician.details.selectPlantation': 'Sélectionnez une plantation',
+    'technician.details.noPlantationsAvailable': 'Aucune plantation disponible',
+    'technician.details.lastUpdate': 'Dernière mise à jour:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Culture',
+    'technician.details.area': 'Superficie',
+    'technician.details.location': 'Localisation',
     'profile.welcome': 'Bienvenue, {name}',
     'profile.loading': 'Chargement du profil...',
     'profile.loadingHint': 'Si le chargement prend trop de temps, vérifiez la console pour les erreurs.',
@@ -846,6 +935,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'L\'image ne doit pas dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur lors de l\'upload de la photo',
     'profile.errors.updateFailed': 'Erreur lors de la mise à jour du profil',
+    'profile.readonlyMessage': 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.',
     'profile.role.farmer': 'Agriculteur',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
@@ -1051,10 +1141,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.technician': 'Dashboard',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
     'auth.profile': 'Profile',
+    'header.close': 'Close',
+    'header.menu': 'Menu',
     'login.title': 'LOGIN',
     'login.emailLabel': 'Email address',
     'login.emailPlaceholder': 'Email address',
@@ -1228,6 +1321,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Recent Readings',
     'plantations.detail.sensors.loadingReadings': 'Loading readings...',
     'plantations.detail.sensors.noReadings': 'No readings recorded',
+    'plantations.detail.sensors.noReading': 'No reading',
     'plantations.detail.errors.invalidId': 'Invalid plantation ID',
     'plantations.detail.errors.fetchFailed': 'Unable to load plantation details.',
     'plantations.detail.errors.notFound': 'Plantation not found',
@@ -1316,7 +1410,62 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'sensor.status.offline': 'Offline',
     'sensor.status.unknown': 'Unknown',
     'profile.back': 'Back',
+    'profile.backToDashboard': 'Back to dashboard',
     'profile.pageLabel': 'User profile',
+    'technician.loading.stats': 'Loading statistics…',
+    'technician.loading.farmers': 'Loading farmers…',
+    'technician.loading.plantations': 'Loading plantations…',
+    'technician.loading.details': 'Loading details…',
+    'technician.stats.farmers': 'FARMERS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'ACTIVE SENSORS',
+    'technician.stats.actuators': 'ACTUATORS',
+    'technician.search.placeholder': 'Search for a farmer...',
+    'technician.search.loading': 'Searching...',
+    'technician.section.farmers': 'Farmers',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'No farmers',
+    'technician.empty.noFarmersFound': 'No farmers found',
+    'technician.empty.selectFarmer': 'Select a farmer',
+    'technician.details.sensors': 'Sensors',
+    'technician.details.actuators': 'Actuators',
+    'technician.details.locationNotSet': 'Not set',
+    'technician.errors.loadData': 'Unable to load data',
+    'technician.errors.search': 'Search error',
+    'technician.errors.loadPlantations': 'Unable to load plantations',
+    'technician.errors.loadDetails': 'Unable to load plantation details',
+    'technician.retry': 'Retry',
+    'technician.farmer.label': 'FARMER',
+    'technician.plantation.singular': 'plantation',
+    'technician.plantation.plural': 'plantations',
+    'technician.details.owner': 'Owner:',
+    'technician.details.activeCount': 'Active:',
+    'technician.details.thresholds': 'Thresholds:',
+    'technician.details.noSensors': 'No sensors on this plantation',
+    'technician.details.noActuators': 'No actuators on this plantation',
+    'technician.details.manyInactiveSensors': 'More than 50% of sensors are inactive',
+    'technician.details.selectPlantation': 'Select a plantation',
+    'technician.details.noPlantationsAvailable': 'No plantations available',
+    'technician.details.lastUpdate': 'Last update:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Crop',
+    'technician.details.area': 'Area',
+    'technician.details.location': 'Location',
+    'technician.plantation.singular': 'plantation',
+    'technician.plantation.plural': 'plantations',
+    'technician.details.owner': 'Owner:',
+    'technician.details.activeCount': 'Active:',
+    'technician.details.thresholds': 'Thresholds:',
+    'technician.details.noSensors': 'No sensors on this plantation',
+    'technician.details.noActuators': 'No actuators on this plantation',
+    'technician.details.manyInactiveSensors': 'More than 50% of sensors are inactive',
+    'technician.details.selectPlantation': 'Select a plantation',
+    'technician.details.noPlantationsAvailable': 'No plantations available',
+    'technician.details.lastUpdate': 'Last update:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Crop',
+    'technician.details.area': 'Area',
+    'technician.details.location': 'Location',
     'profile.welcome': 'Welcome, {name}',
     'profile.loading': 'Loading profile...',
     'profile.loadingHint': 'If loading takes too long, check the console for errors.',
@@ -1367,6 +1516,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Image must not exceed 5MB',
     'profile.errors.uploadFailed': 'Error uploading photo',
     'profile.errors.updateFailed': 'Error updating profile',
+    'profile.readonlyMessage': 'This profile is read-only. Technicians cannot modify their information.',
     'profile.role.farmer': 'Farmer',
     'profile.role.technician': 'Technician',
     'profile.role.admin': 'Administrator',
@@ -1572,10 +1722,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Nguurndam',
     'nav.ai': 'AI',
     'nav.guide': 'Jangirde',
+    'nav.technician': 'Dashboard',
     'auth.login': 'Seŋo',
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
     'auth.profile': 'Jokkondiral kuutoro',
+    'header.close': 'Uddu',
+    'header.menu': 'Menu',
     'login.title': 'SEŊO',
     'login.emailLabel': 'Nder email',
     'login.emailPlaceholder': 'Nder email',
@@ -1749,6 +1902,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Keɓe sakkitiɗe',
     'plantations.detail.sensors.loadingReadings': 'Jokkondir keɓe...',
     'plantations.detail.sensors.noReadings': 'Alaa keɓe binndaaɗe',
+    'plantations.detail.sensors.noReading': 'Alaa jokkondiral',
     'plantations.detail.errors.invalidId': 'ID nguurndam alaa goonga',
     'plantations.detail.errors.fetchFailed': 'Waawaa nattude keɓe nguurndam.',
     'plantations.detail.errors.notFound': 'Nguurndam njiyataa',
@@ -1837,7 +1991,47 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'monitoring.mode.automaticInfo': 'Wattinɗam naatnɗam: Kuuɗe ɗe toppataa e wattinɗam ngam keɓe jokkondirɗe.',
     'monitoring.mode.updateError': 'Firde e huutoreede wattinɗam. Tiiɗno yeewto.',
     'profile.back': 'Rutto',
+    'profile.backToDashboard': 'Rutto e dashboard',
     'profile.pageLabel': 'Jokkondiral kuutoro',
+    'technician.loading.stats': 'Nawtude statistik…',
+    'technician.loading.farmers': 'Nawtude ngurɓe…',
+    'technician.loading.plantations': 'Nawtude nguurndam…',
+    'technician.loading.details': 'Nawtude firooji…',
+    'technician.stats.farmers': 'NGURɓE',
+    'technician.stats.plantations': 'NGUURNDAM',
+    'technician.stats.activeSensors': 'JOKKONDIRɗE KUUɗE',
+    'technician.stats.actuators': 'TOPPU KUUɗE',
+    'technician.search.placeholder': 'Yiylo ngurɓe...',
+    'technician.search.loading': 'Yiylo...',
+    'technician.section.farmers': 'Ngurɓe',
+    'technician.section.plantations': 'Nguurndam',
+    'technician.empty.noFarmers': 'Alaa ngurɓe',
+    'technician.empty.noFarmersFound': 'Alaa ngurɓe yiɓɓe',
+    'technician.empty.selectFarmer': 'Labo ngurɓo',
+    'technician.details.sensors': 'Jokkondirɗe',
+    'technician.details.actuators': 'Toppu kuuɗe',
+    'technician.details.locationNotSet': 'Alaa nokkuure',
+    'technician.errors.loadData': 'Alaa kuuɗe nawtude dataa',
+    'technician.errors.search': 'Juumre e yiylo',
+    'technician.errors.loadPlantations': 'Alaa kuuɗe nawtude nguurndam',
+    'technician.errors.loadDetails': 'Alaa kuuɗe nawtude firooji nguurndam',
+    'technician.retry': 'Yeewto',
+    'technician.farmer.label': 'NGURɓO',
+    'technician.plantation.singular': 'nguurndam',
+    'technician.plantation.plural': 'nguurndam',
+    'technician.details.owner': 'Jom:',
+    'technician.details.activeCount': 'Kuuɗe:',
+    'technician.details.thresholds': 'Seuils:',
+    'technician.details.noSensors': 'Alaa jokkondirɗe e nguurndam ngal',
+    'technician.details.noActuators': 'Alaa toppu kuuɗe e nguurndam ngal',
+    'technician.details.manyInactiveSensors': 'Ɓurɗe 50% jokkondirɗe alaa kuuɗe',
+    'technician.details.selectPlantation': 'Labo nguurndam',
+    'technician.details.noPlantationsAvailable': 'Alaa nguurndam heɓɓe',
+    'technician.details.lastUpdate': 'Bennawtude sakkitiingo:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Culture',
+    'technician.details.area': 'Superficie',
+    'technician.details.location': 'Nokkuure',
     'profile.welcome': 'Aɗa naatii, {name}',
     'profile.loading': 'Jokkondir jokkondiral...',
     'profile.loadingHint': 'Si jokkondiral ina ɗaɓɓa, ɓaŋngu konsool ngam koɗɗe Ɓaawɗe.',
@@ -1888,6 +2082,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Limoore ina tawaa 5MB ɓuri',
     'profile.errors.uploadFailed': 'Koɗɗe Ɓaawɗe ngam naatnude foto',
     'profile.errors.updateFailed': 'Koɗɗe Ɓaawɗe ngam ɓeydugol jokkondiral',
+    'profile.readonlyMessage': 'Jokkondiral ngal no foti tan ko jokkondiral. Kuutowɓe ɓe hokkataa ɓeydugol keɓe maɓɓe.',
     'profile.role.farmer': 'Ngaynaajo',
     'profile.role.technician': 'Kuutowo',
     'profile.role.admin': 'Toppitoowo',
@@ -2093,10 +2288,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Bisó',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.technician': 'Tableau de bord',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
     'auth.logout': 'Bwá',
     'auth.profile': 'Profil',
+    'header.close': 'Fermer',
+    'header.menu': 'Menu',
     'login.title': 'KÓMBÍ',
     'login.emailLabel': 'Email wá',
     'login.emailPlaceholder': 'Sígní email wá',
@@ -2354,11 +2552,67 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'plantations.detail.sensors.recentReadings': 'Valeurs récentes',
     'plantations.detail.sensors.loadingReadings': 'Chargement valeurs...',
     'plantations.detail.sensors.noReadings': 'Alé valeurs enregistrées',
+    'plantations.detail.sensors.noReading': 'Alé lecture',
     'plantations.detail.errors.invalidId': 'ID plantation invalide',
     'plantations.detail.errors.fetchFailed': 'Alé charger détails plantation.',
     'plantations.detail.errors.notFound': 'Plantation non trouvée',
     'profile.back': 'Bwá',
+    'profile.backToDashboard': 'Bwá dashboard',
     'profile.pageLabel': 'Profil utilisateur',
+    'technician.loading.stats': 'Nawtude statistiques…',
+    'technician.loading.farmers': 'Nawtude agriculteurs…',
+    'technician.loading.plantations': 'Nawtude plantations…',
+    'technician.loading.details': 'Nawtude détails…',
+    'technician.stats.farmers': 'AGRICULTEURS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'CAPTEURS ACTIFS',
+    'technician.stats.actuators': 'ACTIONNEURS',
+    'technician.search.placeholder': 'Yiylo agriculteur...',
+    'technician.search.loading': 'Yiylo...',
+    'technician.section.farmers': 'Agriculteurs',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'Alaa agriculteurs',
+    'technician.empty.noFarmersFound': 'Alaa agriculteurs yiɓɓe',
+    'technician.empty.selectFarmer': 'Labo agriculteur',
+    'technician.details.sensors': 'Capteurs',
+    'technician.details.actuators': 'Actionneurs',
+    'technician.details.locationNotSet': 'Alaa nokkuure',
+    'technician.errors.loadData': 'Alaa kuuɗe nawtude dataa',
+    'technician.errors.search': 'Juumre e yiylo',
+    'technician.errors.loadPlantations': 'Alaa kuuɗe nawtude plantations',
+    'technician.errors.loadDetails': 'Alaa kuuɗe nawtude détails plantation',
+    'technician.retry': 'Yeewto',
+    'technician.farmer.label': 'AGRICULTEUR',
+    'technician.plantation.singular': 'plantation',
+    'technician.plantation.plural': 'plantations',
+    'technician.details.owner': 'Propriétaire:',
+    'technician.details.activeCount': 'Actifs:',
+    'technician.details.thresholds': 'Seuils:',
+    'technician.details.noSensors': 'Alaa capteurs e plantation wá',
+    'technician.details.noActuators': 'Alaa actionneurs e plantation wá',
+    'technician.details.manyInactiveSensors': 'Ɓurɗe 50% capteurs alaa kuuɗe',
+    'technician.details.selectPlantation': 'Labo plantation',
+    'technician.details.noPlantationsAvailable': 'Alaa plantations heɓɓe',
+    'technician.details.lastUpdate': 'Bennawtude sakkitiingo:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Culture',
+    'technician.details.area': 'Superficie',
+    'technician.details.location': 'Localisation',
+    'technician.plantation.singular': 'plantation',
+    'technician.plantation.plural': 'plantations',
+    'technician.details.owner': 'Propriétaire:',
+    'technician.details.activeCount': 'Actifs:',
+    'technician.details.thresholds': 'Seuils:',
+    'technician.details.noSensors': 'Alaa capteurs e plantation wá',
+    'technician.details.noActuators': 'Alaa actionneurs e plantation wá',
+    'technician.details.manyInactiveSensors': 'Ɓurɗe 50% capteurs alaa kuuɗe',
+    'technician.details.selectPlantation': 'Labo plantation',
+    'technician.details.noPlantationsAvailable': 'Alaa plantations heɓɓe',
+    'technician.details.lastUpdate': 'Bennawtude sakkitiingo:',
+    'technician.details.notAvailable': 'N/A',
+    'technician.details.cropType': 'Culture',
+    'technician.details.area': 'Superficie',
+    'technician.details.location': 'Localisation',
     'profile.welcome': 'Bwá, {name}',
     'profile.loading': 'Chargement profil...',
     'profile.loadingHint': 'Si chargement prend trop temps, vérifiez console erreurs.',
@@ -2409,6 +2663,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.imageSizeExceeded': 'Image alé dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur upload photo',
     'profile.errors.updateFailed': 'Erreur mise à jour profil',
+    'profile.readonlyMessage': 'Profil lecture seule. Techniciens ne peuvent pas modifier informations.',
     'profile.role.farmer': 'Agriculteur',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
