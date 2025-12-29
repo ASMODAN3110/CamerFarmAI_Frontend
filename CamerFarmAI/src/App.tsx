@@ -15,6 +15,7 @@ import { ProfilePage } from './app/ProfilePage';
 import { ChatboxPage } from './app/ChatboxPage';
 import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
+import { DocumentationPage } from './app/DocumentationPage';
 function App() {
   return (
     <AuthProvider>
@@ -105,6 +106,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <GuidePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/docs" 
+              element={
+                <ProtectedRoute>
+                  <DocumentationPage />
                 </ProtectedRoute>
               } 
             />

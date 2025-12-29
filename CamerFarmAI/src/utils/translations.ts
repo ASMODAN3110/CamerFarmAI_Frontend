@@ -8,6 +8,7 @@ export type TranslationKey =
   | 'nav.plantations'
   | 'nav.ai'
   | 'nav.guide'
+  | 'nav.docs'
   | 'nav.technician'
   | 'auth.login'
   | 'auth.signup'
@@ -564,7 +565,95 @@ export type TranslationKey =
   | 'guide.language.option1'
   | 'guide.language.option2'
   | 'guide.language.option3'
-  | 'guide.language.option4';
+  | 'guide.language.option4'
+  | 'docs.title'
+  | 'docs.subtitle'
+  | 'docs.tableOfContents'
+  | 'docs.sections.introduction'
+  | 'docs.sections.architecture'
+  | 'docs.sections.services'
+  | 'docs.sections.components'
+  | 'docs.sections.hooks'
+  | 'docs.sections.contexts'
+  | 'docs.sections.pages'
+  | 'docs.sections.api'
+  | 'docs.sections.i18n'
+  | 'docs.sections.utils'
+  | 'docs.sections.devGuide'
+  | 'docs.sections.deployment'
+  | 'docs.introduction.overview.title'
+  | 'docs.introduction.overview.content'
+  | 'docs.introduction.tech.title'
+  | 'docs.introduction.architecture.title'
+  | 'docs.introduction.architecture.content'
+  | 'docs.introduction.prerequisites.title'
+  | 'docs.introduction.installation.title'
+  | 'docs.architecture.structure.title'
+  | 'docs.architecture.patterns.title'
+  | 'docs.architecture.dataFlow.title'
+  | 'docs.architecture.dataFlow.content'
+  | 'docs.services.config.title'
+  | 'docs.services.config.content'
+  | 'docs.services.auth.title'
+  | 'docs.services.auth.description'
+  | 'docs.services.plantation.title'
+  | 'docs.services.plantation.description'
+  | 'docs.services.technician.title'
+  | 'docs.services.technician.description'
+  | 'docs.services.notification.title'
+  | 'docs.services.notification.description'
+  | 'docs.services.errors.title'
+  | 'docs.services.errors.content'
+  | 'docs.services.refresh.title'
+  | 'docs.services.refresh.content'
+  | 'docs.components.auth.title'
+  | 'docs.components.ui.title'
+  | 'docs.components.layout.title'
+  | 'docs.hooks.translation.description'
+  | 'docs.hooks.language.description'
+  | 'docs.hooks.notifications.description'
+  | 'docs.hooks.scroll.description'
+  | 'docs.contexts.auth.description'
+  | 'docs.contexts.language.description'
+  | 'docs.contexts.notification.description'
+  | 'docs.pages.list.title'
+  | 'docs.pages.routes.title'
+  | 'docs.pages.routes.content'
+  | 'docs.pages.protection.title'
+  | 'docs.pages.protection.content'
+  | 'docs.api.endpoints.title'
+  | 'docs.api.endpoints.content'
+  | 'docs.api.auth.title'
+  | 'docs.api.plantations.title'
+  | 'docs.api.format.title'
+  | 'docs.api.format.content'
+  | 'docs.i18n.system.title'
+  | 'docs.i18n.system.content'
+  | 'docs.i18n.languages.title'
+  | 'docs.i18n.files.title'
+  | 'docs.i18n.files.content'
+  | 'docs.i18n.adding.title'
+  | 'docs.i18n.adding.content'
+  | 'docs.utils.sensorStatus.description'
+  | 'docs.utils.paramsSerializer.description'
+  | 'docs.utils.notificationFormatters.description'
+  | 'docs.utils.emailDiagnostic.description'
+  | 'docs.devGuide.standards.title'
+  | 'docs.devGuide.standards.typescript'
+  | 'docs.devGuide.standards.components'
+  | 'docs.devGuide.standards.naming'
+  | 'docs.devGuide.standards.styles'
+  | 'docs.devGuide.conventions.title'
+  | 'docs.devGuide.conventions.files'
+  | 'docs.devGuide.conventions.components'
+  | 'docs.devGuide.conventions.hooks'
+  | 'docs.devGuide.conventions.services'
+  | 'docs.devGuide.structure.title'
+  | 'docs.devGuide.structure.content'
+  | 'docs.deployment.build.title'
+  | 'docs.deployment.env.title'
+  | 'docs.deployment.config.title'
+  | 'docs.deployment.config.content';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -575,6 +664,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'IA',
     'nav.guide': 'Guide',
+    'nav.docs': 'Documentation',
     'nav.technician': 'Tableau de bord',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
@@ -1132,6 +1222,94 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'guide.language.option2': 'English : Pour les utilisateurs anglophones',
     'guide.language.option3': 'Fulfulde : Langue locale du nord du Cameroun',
     'guide.language.option4': 'Ewondo : Langue locale du centre et sud du Cameroun',
+    'docs.title': 'Documentation Développeur',
+    'docs.subtitle': 'Documentation complète pour les développeurs de CamerFarm AI',
+    'docs.tableOfContents': 'Table des matières',
+    'docs.sections.introduction': 'Introduction',
+    'docs.sections.architecture': 'Architecture',
+    'docs.sections.services': 'Services API',
+    'docs.sections.components': 'Composants',
+    'docs.sections.hooks': 'Hooks',
+    'docs.sections.contexts': 'Contextes',
+    'docs.sections.pages': 'Pages',
+    'docs.sections.api': 'API Backend',
+    'docs.sections.i18n': 'Internationalisation',
+    'docs.sections.utils': 'Utilitaires',
+    'docs.sections.devGuide': 'Guide de développement',
+    'docs.sections.deployment': 'Déploiement',
+    'docs.introduction.overview.title': 'Vue d\'ensemble',
+    'docs.introduction.overview.content': 'CamerFarm AI est une plateforme intelligente pour une agriculture camerounaise moderne et durable. Cette application web React permet aux producteurs de suivre leurs cultures en temps réel grâce à l\'IoT et l\'intelligence artificielle.',
+    'docs.introduction.tech.title': 'Technologies utilisées',
+    'docs.introduction.architecture.title': 'Architecture générale',
+    'docs.introduction.architecture.content': 'L\'application utilise une architecture basée sur React avec TypeScript pour le typage statique, Vite comme build tool, et React Router pour le routage. Les appels API sont gérés via Axios avec une configuration centralisée.',
+    'docs.introduction.prerequisites.title': 'Prérequis',
+    'docs.introduction.installation.title': 'Installation',
+    'docs.architecture.structure.title': 'Structure du projet',
+    'docs.architecture.patterns.title': 'Patterns utilisés',
+    'docs.architecture.dataFlow.title': 'Flux de données',
+    'docs.architecture.dataFlow.content': 'Les données circulent depuis les services API vers les composants via les hooks et contextes. Les états globaux sont gérés par Zustand (auth) et les contextes React (language, notifications).',
+    'docs.services.config.title': 'Configuration Axios',
+    'docs.services.config.content': 'Le fichier api.ts configure Axios avec le baseURL, les interceptors pour le refresh token automatique, et la gestion des erreurs.',
+    'docs.services.auth.title': 'Service d\'authentification',
+    'docs.services.auth.description': 'Gère l\'authentification, l\'inscription, la connexion, le refresh token, et la gestion du profil utilisateur.',
+    'docs.services.plantation.title': 'Service des plantations',
+    'docs.services.plantation.description': 'Gère la création, la récupération, et la mise à jour des plantations, ainsi que les capteurs et actionneurs associés.',
+    'docs.services.technician.title': 'Service technicien',
+    'docs.services.technician.description': 'Gère le dashboard technicien avec les statistiques, la liste des agriculteurs, et les plantations.',
+    'docs.services.notification.title': 'Service de notifications',
+    'docs.services.notification.description': 'Gère la récupération, la mise à jour, et la suppression des notifications.',
+    'docs.services.errors.title': 'Gestion des erreurs',
+    'docs.services.errors.content': 'Tous les services gèrent les erreurs de manière centralisée via les interceptors Axios, avec affichage des messages d\'erreur appropriés.',
+    'docs.services.refresh.title': 'Refresh token automatique',
+    'docs.services.refresh.content': 'Le système de refresh token est géré automatiquement via les interceptors Axios, avec mise en queue des requêtes en cas de refresh en cours.',
+    'docs.components.auth.title': 'Composants d\'authentification',
+    'docs.components.ui.title': 'Composants UI',
+    'docs.components.layout.title': 'Composants de layout',
+    'docs.hooks.translation.description': 'Hook pour accéder aux traductions multilingues de l\'application.',
+    'docs.hooks.language.description': 'Hook pour gérer le changement de langue et accéder à la langue actuelle.',
+    'docs.hooks.notifications.description': 'Hook pour gérer les notifications : récupération, marquage comme lue, suppression.',
+    'docs.hooks.scroll.description': 'Hook pour animer les éléments au scroll de la page.',
+    'docs.contexts.auth.description': 'Contexte React pour gérer l\'état d\'authentification global de l\'application.',
+    'docs.contexts.language.description': 'Contexte React pour gérer la langue sélectionnée et les traductions.',
+    'docs.contexts.notification.description': 'Contexte React pour gérer les notifications en temps réel.',
+    'docs.pages.list.title': 'Liste des pages',
+    'docs.pages.routes.title': 'Routes',
+    'docs.pages.routes.content': 'Les routes sont définies dans App.tsx avec React Router. Certaines routes sont publiques, d\'autres nécessitent une authentification.',
+    'docs.pages.protection.title': 'Protection des routes',
+    'docs.pages.protection.content': 'Les routes protégées utilisent ProtectedRoute, PublicRoute, ou RoleBasedRoute selon le niveau d\'accès requis.',
+    'docs.api.endpoints.title': 'Endpoints disponibles',
+    'docs.api.endpoints.content': 'L\'API backend expose plusieurs endpoints pour l\'authentification, les plantations, les capteurs, les notifications, etc.',
+    'docs.api.auth.title': 'Endpoints d\'authentification',
+    'docs.api.plantations.title': 'Endpoints des plantations',
+    'docs.api.format.title': 'Format des requêtes/réponses',
+    'docs.api.format.content': 'Les requêtes utilisent JSON pour le body, et les réponses sont également en JSON. L\'authentification se fait via Bearer token dans le header Authorization.',
+    'docs.i18n.system.title': 'Système de traductions',
+    'docs.i18n.system.content': 'L\'application utilise un système de traductions centralisé avec support de 4 langues : Français, English, Fulfulde, et Ewondo.',
+    'docs.i18n.languages.title': 'Langues supportées',
+    'docs.i18n.files.title': 'Fichiers de traduction',
+    'docs.i18n.files.content': 'Toutes les traductions sont centralisées dans src/utils/translations.ts avec un type TypeScript pour la sécurité des clés.',
+    'docs.i18n.adding.title': 'Ajout de nouvelles traductions',
+    'docs.i18n.adding.content': 'Pour ajouter une nouvelle traduction, ajoutez la clé dans le type TranslationKey, puis ajoutez les traductions dans les 4 langues dans l\'objet translations.',
+    'docs.utils.sensorStatus.description': 'Utilitaires pour déterminer le statut des capteurs (actif, inactif, hors ligne) basé sur les dernières lectures.',
+    'docs.utils.paramsSerializer.description': 'Sérialiseur personnalisé pour les paramètres de requête, notamment pour les tableaux (ex: search[]=mot1&search[]=mot2).',
+    'docs.utils.notificationFormatters.description': 'Fonctions pour formater les notifications selon leur type et leur contenu.',
+    'docs.utils.emailDiagnostic.description': 'Utilitaires pour diagnostiquer les problèmes de notifications email.',
+    'docs.devGuide.standards.title': 'Standards de code',
+    'docs.devGuide.standards.typescript': 'Utiliser TypeScript pour tous les fichiers, avec typage strict.',
+    'docs.devGuide.standards.components': 'Composants fonctionnels avec hooks React, pas de classes.',
+    'docs.devGuide.standards.naming': 'Nommage en camelCase pour les variables/fonctions, PascalCase pour les composants.',
+    'docs.devGuide.standards.styles': 'Utiliser CSS Modules pour tous les styles, avec nommage BEM-like.',
+    'docs.devGuide.conventions.title': 'Conventions',
+    'docs.devGuide.conventions.files': 'Un composant = un fichier .tsx + un fichier .module.css',
+    'docs.devGuide.conventions.components': 'Composants dans src/components/, pages dans src/app/',
+    'docs.devGuide.conventions.hooks': 'Hooks personnalisés dans src/hooks/ avec préfixe use',
+    'docs.devGuide.conventions.services': 'Services API dans src/services/ avec suffixe Service',
+    'docs.devGuide.structure.title': 'Structure des composants',
+    'docs.devGuide.structure.content': 'Chaque composant doit être modulaire, réutilisable, et bien documenté. Utiliser les props TypeScript pour la sécurité des types.',
+    'docs.deployment.build.title': 'Build de production',
+    'docs.deployment.env.title': 'Variables d\'environnement',
+    'docs.deployment.config.title': 'Configuration',
+    'docs.deployment.config.content': 'Le build de production génère un dossier dist/ avec les fichiers optimisés. Configurer VITE_API_URL pour pointer vers l\'API de production.',
   },
   en: {
     'nav.home': 'Home',
@@ -1713,6 +1891,94 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'guide.language.option2': 'English: For English-speaking users',
     'guide.language.option3': 'Fulfulde: Local language of northern Cameroon',
     'guide.language.option4': 'Ewondo: Local language of central and southern Cameroon',
+    'docs.title': 'Developer Documentation',
+    'docs.subtitle': 'Complete documentation for CamerFarm AI developers',
+    'docs.tableOfContents': 'Table of Contents',
+    'docs.sections.introduction': 'Introduction',
+    'docs.sections.architecture': 'Architecture',
+    'docs.sections.services': 'API Services',
+    'docs.sections.components': 'Components',
+    'docs.sections.hooks': 'Hooks',
+    'docs.sections.contexts': 'Contexts',
+    'docs.sections.pages': 'Pages',
+    'docs.sections.api': 'Backend API',
+    'docs.sections.i18n': 'Internationalization',
+    'docs.sections.utils': 'Utilities',
+    'docs.sections.devGuide': 'Development Guide',
+    'docs.sections.deployment': 'Deployment',
+    'docs.introduction.overview.title': 'Overview',
+    'docs.introduction.overview.content': 'CamerFarm AI is an intelligent platform for modern and sustainable Cameroonian agriculture. This React web application allows producers to monitor their crops in real-time through IoT and artificial intelligence.',
+    'docs.introduction.tech.title': 'Technologies Used',
+    'docs.introduction.architecture.title': 'General Architecture',
+    'docs.introduction.architecture.content': 'The application uses a React-based architecture with TypeScript for static typing, Vite as build tool, and React Router for routing. API calls are managed via Axios with centralized configuration.',
+    'docs.introduction.prerequisites.title': 'Prerequisites',
+    'docs.introduction.installation.title': 'Installation',
+    'docs.architecture.structure.title': 'Project Structure',
+    'docs.architecture.patterns.title': 'Patterns Used',
+    'docs.architecture.dataFlow.title': 'Data Flow',
+    'docs.architecture.dataFlow.content': 'Data flows from API services to components via hooks and contexts. Global states are managed by Zustand (auth) and React contexts (language, notifications).',
+    'docs.services.config.title': 'Axios Configuration',
+    'docs.services.config.content': 'The api.ts file configures Axios with baseURL, interceptors for automatic token refresh, and error handling.',
+    'docs.services.auth.title': 'Authentication Service',
+    'docs.services.auth.description': 'Handles authentication, registration, login, token refresh, and user profile management.',
+    'docs.services.plantation.title': 'Plantation Service',
+    'docs.services.plantation.description': 'Handles creation, retrieval, and update of plantations, as well as associated sensors and actuators.',
+    'docs.services.technician.title': 'Technician Service',
+    'docs.services.technician.description': 'Handles the technician dashboard with statistics, farmer list, and plantations.',
+    'docs.services.notification.title': 'Notification Service',
+    'docs.services.notification.description': 'Handles retrieval, update, and deletion of notifications.',
+    'docs.services.errors.title': 'Error Handling',
+    'docs.services.errors.content': 'All services handle errors centrally via Axios interceptors, with appropriate error messages displayed.',
+    'docs.services.refresh.title': 'Automatic Token Refresh',
+    'docs.services.refresh.content': 'The token refresh system is managed automatically via Axios interceptors, with request queuing during refresh.',
+    'docs.components.auth.title': 'Authentication Components',
+    'docs.components.ui.title': 'UI Components',
+    'docs.components.layout.title': 'Layout Components',
+    'docs.hooks.translation.description': 'Hook to access multilingual translations of the application.',
+    'docs.hooks.language.description': 'Hook to manage language change and access the current language.',
+    'docs.hooks.notifications.description': 'Hook to manage notifications: retrieval, marking as read, deletion.',
+    'docs.hooks.scroll.description': 'Hook to animate elements on page scroll.',
+    'docs.contexts.auth.description': 'React context to manage the global authentication state of the application.',
+    'docs.contexts.language.description': 'React context to manage the selected language and translations.',
+    'docs.contexts.notification.description': 'React context to manage real-time notifications.',
+    'docs.pages.list.title': 'Page List',
+    'docs.pages.routes.title': 'Routes',
+    'docs.pages.routes.content': 'Routes are defined in App.tsx with React Router. Some routes are public, others require authentication.',
+    'docs.pages.protection.title': 'Route Protection',
+    'docs.pages.protection.content': 'Protected routes use ProtectedRoute, PublicRoute, or RoleBasedRoute depending on the required access level.',
+    'docs.api.endpoints.title': 'Available Endpoints',
+    'docs.api.endpoints.content': 'The backend API exposes several endpoints for authentication, plantations, sensors, notifications, etc.',
+    'docs.api.auth.title': 'Authentication Endpoints',
+    'docs.api.plantations.title': 'Plantation Endpoints',
+    'docs.api.format.title': 'Request/Response Format',
+    'docs.api.format.content': 'Requests use JSON for the body, and responses are also in JSON. Authentication is done via Bearer token in the Authorization header.',
+    'docs.i18n.system.title': 'Translation System',
+    'docs.i18n.system.content': 'The application uses a centralized translation system with support for 4 languages: French, English, Fulfulde, and Ewondo.',
+    'docs.i18n.languages.title': 'Supported Languages',
+    'docs.i18n.files.title': 'Translation Files',
+    'docs.i18n.files.content': 'All translations are centralized in src/utils/translations.ts with a TypeScript type for key safety.',
+    'docs.i18n.adding.title': 'Adding New Translations',
+    'docs.i18n.adding.content': 'To add a new translation, add the key to the TranslationKey type, then add translations in all 4 languages in the translations object.',
+    'docs.utils.sensorStatus.description': 'Utilities to determine sensor status (active, inactive, offline) based on latest readings.',
+    'docs.utils.paramsSerializer.description': 'Custom serializer for request parameters, especially for arrays (e.g., search[]=word1&search[]=word2).',
+    'docs.utils.notificationFormatters.description': 'Functions to format notifications according to their type and content.',
+    'docs.utils.emailDiagnostic.description': 'Utilities to diagnose email notification issues.',
+    'docs.devGuide.standards.title': 'Code Standards',
+    'docs.devGuide.standards.typescript': 'Use TypeScript for all files, with strict typing.',
+    'docs.devGuide.standards.components': 'Functional components with React hooks, no classes.',
+    'docs.devGuide.standards.naming': 'camelCase naming for variables/functions, PascalCase for components.',
+    'docs.devGuide.standards.styles': 'Use CSS Modules for all styles, with BEM-like naming.',
+    'docs.devGuide.conventions.title': 'Conventions',
+    'docs.devGuide.conventions.files': 'One component = one .tsx file + one .module.css file',
+    'docs.devGuide.conventions.components': 'Components in src/components/, pages in src/app/',
+    'docs.devGuide.conventions.hooks': 'Custom hooks in src/hooks/ with use prefix',
+    'docs.devGuide.conventions.services': 'API services in src/services/ with Service suffix',
+    'docs.devGuide.structure.title': 'Component Structure',
+    'docs.devGuide.structure.content': 'Each component should be modular, reusable, and well documented. Use TypeScript props for type safety.',
+    'docs.deployment.build.title': 'Production Build',
+    'docs.deployment.env.title': 'Environment Variables',
+    'docs.deployment.config.title': 'Configuration',
+    'docs.deployment.config.content': 'The production build generates a dist/ folder with optimized files. Configure VITE_API_URL to point to the production API.',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -2279,6 +2545,94 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'guide.language.option2': 'Inngilinkoore: Ngam kuutoroje Inngilinkoore',
     'guide.language.option3': 'Fulfulde: Ɗemngal nokkuure worgo Kameruun',
     'guide.language.option4': 'Ewondo: Ɗemngal nokkuure caka e les Kameruun',
+    'docs.title': 'Jokkondiral Bayɗe',
+    'docs.subtitle': 'Jokkondiral timminde ngam bayɗe CamerFarm AI',
+    'docs.tableOfContents': 'Tabel Keɓe',
+    'docs.sections.introduction': 'Fuɗɗo',
+    'docs.sections.architecture': 'Laamngo',
+    'docs.sections.services': 'Jokkondiral API',
+    'docs.sections.components': 'Ɓeynguuji',
+    'docs.sections.hooks': 'Hooks',
+    'docs.sections.contexts': 'Contextes',
+    'docs.sections.pages': 'Helloji',
+    'docs.sections.api': 'API Backend',
+    'docs.sections.i18n': 'Ɗemngal',
+    'docs.sections.utils': 'Kuutorɗe',
+    'docs.sections.devGuide': 'Jokkondiral Bayɗe',
+    'docs.sections.deployment': 'Jokkondiral',
+    'docs.introduction.overview.title': 'Fón',
+    'docs.introduction.overview.content': 'CamerFarm AI ko platforme ngam bisó Kameruun hesɗi é kuutoraade. App React ɗee walla bisó jokkondirde bisó wá e wakati goonga e IoT é AI.',
+    'docs.introduction.tech.title': 'Kuutorɗe Teknoloji',
+    'docs.introduction.architecture.title': 'Laamngo Fuɗɗo',
+    'docs.introduction.architecture.content': 'App ina kuutora React e TypeScript, Vite, é React Router. API ina jokkondiraade e Axios.',
+    'docs.introduction.prerequisites.title': 'Keɓe Hesɗi',
+    'docs.introduction.installation.title': 'Jokkondiral',
+    'docs.architecture.structure.title': 'Laamngo Projet',
+    'docs.architecture.patterns.title': 'Patterns Kuutorɗe',
+    'docs.architecture.dataFlow.title': 'Jokkondiral Keɓe',
+    'docs.architecture.dataFlow.content': 'Keɓe ina jokkondira e services API ɓe ɓeynguuji e hooks é contextes. État global ina laamngo e Zustand é React contexts.',
+    'docs.services.config.title': 'Laamngo Axios',
+    'docs.services.config.content': 'Fichier api.ts ina laamngo Axios e baseURL, interceptors ngam refresh token, é laamngo errors.',
+    'docs.services.auth.title': 'Service Authentification',
+    'docs.services.auth.description': 'Laamngo authentification, inscription, connexion, refresh token, é profil utilisateur.',
+    'docs.services.plantation.title': 'Service Plantations',
+    'docs.services.plantation.description': 'Laamngo sígní, fón, é waylude plantations, é capteurs é actionneurs.',
+    'docs.services.technician.title': 'Service Technicien',
+    'docs.services.technician.description': 'Laamngo dashboard technicien e statistiques, liste agriculteurs, é plantations.',
+    'docs.services.notification.title': 'Service Notifications',
+    'docs.services.notification.description': 'Laamngo fón, waylude, é mbatu notifications.',
+    'docs.services.errors.title': 'Laamngo Errors',
+    'docs.services.errors.content': 'Services fof ina laamngo errors e interceptors Axios, e hollirde messages errors.',
+    'docs.services.refresh.title': 'Refresh Token Otomatik',
+    'docs.services.refresh.content': 'Sistem refresh token ina laamngo otomatik e interceptors Axios, e queue requests so refresh e les.',
+    'docs.components.auth.title': 'Ɓeynguuji Authentification',
+    'docs.components.ui.title': 'Ɓeynguuji UI',
+    'docs.components.layout.title': 'Ɓeynguuji Layout',
+    'docs.hooks.translation.description': 'Hook ngam heɓde traductions multilingues app.',
+    'docs.hooks.language.description': 'Hook ngam laamngo waylu ɗemngal é heɓde ɗemngal jooni.',
+    'docs.hooks.notifications.description': 'Hook ngam laamngo notifications: fón, marquer lue, mbatu.',
+    'docs.hooks.scroll.description': 'Hook ngam animer ɓeynguuji e scroll hello.',
+    'docs.contexts.auth.description': 'Contexte React ngam laamngo état authentification global app.',
+    'docs.contexts.language.description': 'Contexte React ngam laamngo ɗemngal sélectionnée é traductions.',
+    'docs.contexts.notification.description': 'Contexte React ngam laamngo notifications wakati goonga.',
+    'docs.pages.list.title': 'Liste Helloji',
+    'docs.pages.routes.title': 'Routes',
+    'docs.pages.routes.content': 'Routes ina laamngo e App.tsx e React Router. Routes ɗuuɗɗe ko publiques, ɗuuɗɗe ina ɗaɓɓa authentification.',
+    'docs.pages.protection.title': 'Laamngo Routes',
+    'docs.pages.protection.content': 'Routes protégées ina kuutora ProtectedRoute, PublicRoute, walla RoleBasedRoute e nder access level.',
+    'docs.api.endpoints.title': 'Endpoints Hesɗi',
+    'docs.api.endpoints.content': 'API backend ina hollir endpoints ɗuuɗɗe ngam authentification, plantations, capteurs, notifications, é ɗuuɗɗe.',
+    'docs.api.auth.title': 'Endpoints Authentification',
+    'docs.api.plantations.title': 'Endpoints Plantations',
+    'docs.api.format.title': 'Format Requests/Responses',
+    'docs.api.format.content': 'Requests ina kuutora JSON ngam body, é responses ko e JSON. Authentification ina waɗaade e Bearer token e header Authorization.',
+    'docs.i18n.system.title': 'Sistem Traductions',
+    'docs.i18n.system.content': 'App ina kuutora sistem traductions centralisé e wallitorde 4 ɗemngal: Français, English, Fulfulde, é Ewondo.',
+    'docs.i18n.languages.title': 'Ɗemngal Wallitɗe',
+    'docs.i18n.files.title': 'Fichiers Traductions',
+    'docs.i18n.files.content': 'Traductions fof ina centralisé e src/utils/translations.ts e type TypeScript ngam laamngo clés.',
+    'docs.i18n.adding.title': 'Ɓeydude Traductions Hesɗi',
+    'docs.i18n.adding.content': 'Ngam ɓeydude traduction hesɗi, ɓeydu clé e type TranslationKey, ɓaawo ɓeydu traductions e 4 ɗemngal e objet translations.',
+    'docs.utils.sensorStatus.description': 'Kuutorɗe ngam fannude statut capteurs (actif, inactif, hors ligne) e nder dernières lectures.',
+    'docs.utils.paramsSerializer.description': 'Sérialiseur personnalisé ngam paramètres requests, ɓurɗe ngam tableaux (ex: search[]=mot1&search[]=mot2).',
+    'docs.utils.notificationFormatters.description': 'Fonctions ngam formater notifications e nder type é contenu maɓɓe.',
+    'docs.utils.emailDiagnostic.description': 'Kuutorɗe ngam diagnostiquer laawol notifications email.',
+    'docs.devGuide.standards.title': 'Standards Code',
+    'docs.devGuide.standards.typescript': 'Kuutora TypeScript ngam fichiers fof, e typage strict.',
+    'docs.devGuide.standards.components': 'Ɓeynguuji fonctionnels e hooks React, alaa classes.',
+    'docs.devGuide.standards.naming': 'Nommage camelCase ngam variables/fonctions, PascalCase ngam ɓeynguuji.',
+    'docs.devGuide.standards.styles': 'Kuutora CSS Modules ngam styles fof, e nommage BEM-like.',
+    'docs.devGuide.conventions.title': 'Conventions',
+    'docs.devGuide.conventions.files': 'Ɓeynguuji gooto = fichier .tsx gooto + fichier .module.css gooto',
+    'docs.devGuide.conventions.components': 'Ɓeynguuji e src/components/, helloji e src/app/',
+    'docs.devGuide.conventions.hooks': 'Hooks personnalisés e src/hooks/ e préfixe use',
+    'docs.devGuide.conventions.services': 'Services API e src/services/ e suffixe Service',
+    'docs.devGuide.structure.title': 'Laamngo Ɓeynguuji',
+    'docs.devGuide.structure.content': 'Ɓeynguuji kala ina foti modulaire, réutilisable, é jokkondiraade ɓurɗe. Kuutora props TypeScript ngam laamngo types.',
+    'docs.deployment.build.title': 'Build Production',
+    'docs.deployment.env.title': 'Variables Environnement',
+    'docs.deployment.config.title': 'Laamngo',
+    'docs.deployment.config.content': 'Build production ina ɓeydude dossier dist/ e fichiers optimisés. Laamngo VITE_API_URL ngam pointer e API production.',
   },
   ew: {
     'nav.home': 'Ndé',
@@ -2288,6 +2642,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Bisó',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.docs': 'Jokkondiral',
     'nav.technician': 'Tableau de bord',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
@@ -2860,6 +3215,94 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'guide.language.option2': 'English: Ngam kuutoroje anglophones',
     'guide.language.option3': 'Fulfulde: Langue locale nord Cameroun',
     'guide.language.option4': 'Ewondo: Langue locale centre é sud Cameroun',
+    'docs.title': 'Jokkondiral Bayɗe',
+    'docs.subtitle': 'Jokkondiral timminde ngam bayɗe CamerFarm AI',
+    'docs.tableOfContents': 'Tabel Keɓe',
+    'docs.sections.introduction': 'Fuɗɗo',
+    'docs.sections.architecture': 'Laamngo',
+    'docs.sections.services': 'Jokkondiral API',
+    'docs.sections.components': 'Ɓeynguuji',
+    'docs.sections.hooks': 'Hooks',
+    'docs.sections.contexts': 'Contextes',
+    'docs.sections.pages': 'Helloji',
+    'docs.sections.api': 'API Backend',
+    'docs.sections.i18n': 'Ɗemngal',
+    'docs.sections.utils': 'Kuutorɗe',
+    'docs.sections.devGuide': 'Jokkondiral Bayɗe',
+    'docs.sections.deployment': 'Jokkondiral',
+    'docs.introduction.overview.title': 'Fón',
+    'docs.introduction.overview.content': 'CamerFarm AI é platforme intelligente ngam agriculture camerounaise moderne é durable. App React ɗee walla producteurs suivre cultures wá e wakati goonga e IoT é intelligence artificielle.',
+    'docs.introduction.tech.title': 'Kuutorɗe Teknoloji',
+    'docs.introduction.architecture.title': 'Laamngo Fuɗɗo',
+    'docs.introduction.architecture.content': 'App ina kuutora architecture React e TypeScript, Vite, é React Router. API calls ina laamngo e Axios e configuration centralisée.',
+    'docs.introduction.prerequisites.title': 'Keɓe Hesɗi',
+    'docs.introduction.installation.title': 'Jokkondiral',
+    'docs.architecture.structure.title': 'Laamngo Projet',
+    'docs.architecture.patterns.title': 'Patterns Kuutorɗe',
+    'docs.architecture.dataFlow.title': 'Jokkondiral Keɓe',
+    'docs.architecture.dataFlow.content': 'Données ina jokkondira e services API ɓe composants e hooks é contextes. États globaux ina laamngo e Zustand (auth) é React contexts (language, notifications).',
+    'docs.services.config.title': 'Laamngo Axios',
+    'docs.services.config.content': 'Fichier api.ts ina laamngo Axios e baseURL, interceptors ngam refresh token automatique, é laamngo errors.',
+    'docs.services.auth.title': 'Service Authentification',
+    'docs.services.auth.description': 'Laamngo authentification, inscription, connexion, refresh token, é profil utilisateur.',
+    'docs.services.plantation.title': 'Service Plantations',
+    'docs.services.plantation.description': 'Laamngo création, récupération, é mise à jour plantations, é capteurs é actionneurs associés.',
+    'docs.services.technician.title': 'Service Technicien',
+    'docs.services.technician.description': 'Laamngo dashboard technicien e statistiques, liste agriculteurs, é plantations.',
+    'docs.services.notification.title': 'Service Notifications',
+    'docs.services.notification.description': 'Laamngo récupération, mise à jour, é suppression notifications.',
+    'docs.services.errors.title': 'Laamngo Errors',
+    'docs.services.errors.content': 'Services fof ina laamngo errors e manière centralisée e interceptors Axios, e hollirde messages errors appropriés.',
+    'docs.services.refresh.title': 'Refresh Token Otomatik',
+    'docs.services.refresh.content': 'Sistem refresh token ina laamngo automatiquement e interceptors Axios, e queue requests so refresh e les.',
+    'docs.components.auth.title': 'Ɓeynguuji Authentification',
+    'docs.components.ui.title': 'Ɓeynguuji UI',
+    'docs.components.layout.title': 'Ɓeynguuji Layout',
+    'docs.hooks.translation.description': 'Hook ngam accéder traductions multilingues app.',
+    'docs.hooks.language.description': 'Hook ngam laamngo changement langue é accéder langue actuelle.',
+    'docs.hooks.notifications.description': 'Hook ngam laamngo notifications: récupération, marquer lue, suppression.',
+    'docs.hooks.scroll.description': 'Hook ngam animer éléments e scroll page.',
+    'docs.contexts.auth.description': 'Contexte React ngam laamngo état authentification global app.',
+    'docs.contexts.language.description': 'Contexte React ngam laamngo langue sélectionnée é traductions.',
+    'docs.contexts.notification.description': 'Contexte React ngam laamngo notifications wakati goonga.',
+    'docs.pages.list.title': 'Liste Helloji',
+    'docs.pages.routes.title': 'Routes',
+    'docs.pages.routes.content': 'Routes ina laamngo e App.tsx e React Router. Routes ɗuuɗɗe ko publiques, ɗuuɗɗe ina ɗaɓɓa authentification.',
+    'docs.pages.protection.title': 'Laamngo Routes',
+    'docs.pages.protection.content': 'Routes protégées ina kuutora ProtectedRoute, PublicRoute, walla RoleBasedRoute e nder access level requis.',
+    'docs.api.endpoints.title': 'Endpoints Hesɗi',
+    'docs.api.endpoints.content': 'API backend ina hollir endpoints ɗuuɗɗe ngam authentification, plantations, capteurs, notifications, é ɗuuɗɗe.',
+    'docs.api.auth.title': 'Endpoints Authentification',
+    'docs.api.plantations.title': 'Endpoints Plantations',
+    'docs.api.format.title': 'Format Requests/Responses',
+    'docs.api.format.content': 'Requêtes ina kuutora JSON ngam body, é réponses ko e JSON. Authentification ina waɗaade e Bearer token e header Authorization.',
+    'docs.i18n.system.title': 'Sistem Traductions',
+    'docs.i18n.system.content': 'App ina kuutora sistem traductions centralisé e wallitorde 4 ɗemngal: Français, English, Fulfulde, é Ewondo.',
+    'docs.i18n.languages.title': 'Ɗemngal Wallitɗe',
+    'docs.i18n.files.title': 'Fichiers Traductions',
+    'docs.i18n.files.content': 'Traductions fof ina centralisé e src/utils/translations.ts e type TypeScript ngam sécurité clés.',
+    'docs.i18n.adding.title': 'Ɓeydude Traductions Hesɗi',
+    'docs.i18n.adding.content': 'Ngam ɓeydude traduction hesɗi, ɓeydu clé e type TranslationKey, ɓaawo ɓeydu traductions e 4 ɗemngal e objet translations.',
+    'docs.utils.sensorStatus.description': 'Kuutorɗe ngam fannude statut capteurs (actif, inactif, hors ligne) e nder dernières lectures.',
+    'docs.utils.paramsSerializer.description': 'Sérialiseur personnalisé ngam paramètres requête, notamment ngam tableaux (ex: search[]=mot1&search[]=mot2).',
+    'docs.utils.notificationFormatters.description': 'Fonctions ngam formater notifications e nder type é contenu maɓɓe.',
+    'docs.utils.emailDiagnostic.description': 'Kuutorɗe ngam diagnostiquer laawol notifications email.',
+    'docs.devGuide.standards.title': 'Standards Code',
+    'docs.devGuide.standards.typescript': 'Kuutora TypeScript ngam fichiers fof, e typage strict.',
+    'docs.devGuide.standards.components': 'Ɓeynguuji fonctionnels e hooks React, alaa classes.',
+    'docs.devGuide.standards.naming': 'Nommage camelCase ngam variables/fonctions, PascalCase ngam ɓeynguuji.',
+    'docs.devGuide.standards.styles': 'Kuutora CSS Modules ngam styles fof, e nommage BEM-like.',
+    'docs.devGuide.conventions.title': 'Conventions',
+    'docs.devGuide.conventions.files': 'Ɓeynguuji gooto = fichier .tsx gooto + fichier .module.css gooto',
+    'docs.devGuide.conventions.components': 'Ɓeynguuji e src/components/, helloji e src/app/',
+    'docs.devGuide.conventions.hooks': 'Hooks personnalisés e src/hooks/ e préfixe use',
+    'docs.devGuide.conventions.services': 'Services API e src/services/ e suffixe Service',
+    'docs.devGuide.structure.title': 'Laamngo Ɓeynguuji',
+    'docs.devGuide.structure.content': 'Ɓeynguuji kala ina foti modulaire, réutilisable, é jokkondiraade ɓurɗe. Kuutora props TypeScript ngam sécurité types.',
+    'docs.deployment.build.title': 'Build Production',
+    'docs.deployment.env.title': 'Variables Environnement',
+    'docs.deployment.config.title': 'Laamngo',
+    'docs.deployment.config.content': 'Build production ina ɓeydude dossier dist/ e fichiers optimisés. Laamngo VITE_API_URL ngam pointer e API production.',
   },
 };
 
