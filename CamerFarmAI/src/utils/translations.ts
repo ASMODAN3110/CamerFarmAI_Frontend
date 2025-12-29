@@ -13,6 +13,8 @@ export type TranslationKey =
   | 'auth.signup'
   | 'auth.logout'
   | 'auth.profile'
+  | 'header.close'
+  | 'header.menu'
   | 'login.title'
   | 'login.emailLabel'
   | 'login.emailPlaceholder'
@@ -277,6 +279,28 @@ export type TranslationKey =
   | 'profile.back'
   | 'profile.backToDashboard'
   | 'profile.pageLabel'
+  | 'technician.loading.stats'
+  | 'technician.loading.farmers'
+  | 'technician.loading.plantations'
+  | 'technician.loading.details'
+  | 'technician.stats.farmers'
+  | 'technician.stats.plantations'
+  | 'technician.stats.activeSensors'
+  | 'technician.stats.actuators'
+  | 'technician.search.placeholder'
+  | 'technician.search.loading'
+  | 'technician.section.farmers'
+  | 'technician.section.plantations'
+  | 'technician.empty.noFarmers'
+  | 'technician.empty.noFarmersFound'
+  | 'technician.empty.selectFarmer'
+  | 'technician.details.sensors'
+  | 'technician.details.actuators'
+  | 'technician.details.locationNotSet'
+  | 'technician.errors.loadData'
+  | 'technician.errors.search'
+  | 'technician.errors.loadPlantations'
+  | 'technician.errors.loadDetails'
   | 'profile.welcome'
   | 'profile.loading'
   | 'profile.loadingHint'
@@ -539,6 +563,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
     'auth.profile': 'Profil',
+    'header.close': 'Fermer',
+    'header.menu': 'Menu',
     'login.title': 'CONNEXION',
     'login.emailLabel': 'Adresse email',
     'login.emailPlaceholder': 'Adresse email',
@@ -803,6 +829,28 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.back': 'Retour',
     'profile.backToDashboard': 'Retour au dashboard',
     'profile.pageLabel': 'Profil utilisateur',
+    'technician.loading.stats': 'Chargement des statistiques…',
+    'technician.loading.farmers': 'Chargement des agriculteurs…',
+    'technician.loading.plantations': 'Chargement des plantations…',
+    'technician.loading.details': 'Chargement des détails…',
+    'technician.stats.farmers': 'AGRICULTEURS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'CAPTEURS ACTIFS',
+    'technician.stats.actuators': 'ACTIONNEURS',
+    'technician.search.placeholder': 'Rechercher un agriculteur...',
+    'technician.search.loading': 'Recherche...',
+    'technician.section.farmers': 'Agriculteurs',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'Aucun agriculteur',
+    'technician.empty.noFarmersFound': 'Aucun agriculteur trouvé',
+    'technician.empty.selectFarmer': 'Sélectionnez un agriculteur',
+    'technician.details.sensors': 'Capteurs',
+    'technician.details.actuators': 'Actionneurs',
+    'technician.details.locationNotSet': 'Non renseignée',
+    'technician.errors.loadData': 'Impossible de charger les données',
+    'technician.errors.search': 'Erreur lors de la recherche',
+    'technician.errors.loadPlantations': 'Impossible de charger les plantations',
+    'technician.errors.loadDetails': 'Impossible de charger les détails de la plantation',
     'profile.welcome': 'Bienvenue, {name}',
     'profile.loading': 'Chargement du profil...',
     'profile.loadingHint': 'Si le chargement prend trop de temps, vérifiez la console pour les erreurs.',
@@ -1064,6 +1112,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
     'auth.profile': 'Profile',
+    'header.close': 'Close',
+    'header.menu': 'Menu',
     'login.title': 'LOGIN',
     'login.emailLabel': 'Email address',
     'login.emailPlaceholder': 'Email address',
@@ -1328,6 +1378,28 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.back': 'Back',
     'profile.backToDashboard': 'Back to dashboard',
     'profile.pageLabel': 'User profile',
+    'technician.loading.stats': 'Loading statistics…',
+    'technician.loading.farmers': 'Loading farmers…',
+    'technician.loading.plantations': 'Loading plantations…',
+    'technician.loading.details': 'Loading details…',
+    'technician.stats.farmers': 'FARMERS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'ACTIVE SENSORS',
+    'technician.stats.actuators': 'ACTUATORS',
+    'technician.search.placeholder': 'Search for a farmer...',
+    'technician.search.loading': 'Searching...',
+    'technician.section.farmers': 'Farmers',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'No farmers',
+    'technician.empty.noFarmersFound': 'No farmers found',
+    'technician.empty.selectFarmer': 'Select a farmer',
+    'technician.details.sensors': 'Sensors',
+    'technician.details.actuators': 'Actuators',
+    'technician.details.locationNotSet': 'Not set',
+    'technician.errors.loadData': 'Unable to load data',
+    'technician.errors.search': 'Search error',
+    'technician.errors.loadPlantations': 'Unable to load plantations',
+    'technician.errors.loadDetails': 'Unable to load plantation details',
     'profile.welcome': 'Welcome, {name}',
     'profile.loading': 'Loading profile...',
     'profile.loadingHint': 'If loading takes too long, check the console for errors.',
@@ -1589,6 +1661,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
     'auth.profile': 'Jokkondiral kuutoro',
+    'header.close': 'Uddu',
+    'header.menu': 'Menu',
     'login.title': 'SEŊO',
     'login.emailLabel': 'Nder email',
     'login.emailPlaceholder': 'Nder email',
@@ -1853,6 +1927,28 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.back': 'Rutto',
     'profile.backToDashboard': 'Rutto e dashboard',
     'profile.pageLabel': 'Jokkondiral kuutoro',
+    'technician.loading.stats': 'Nawtude statistik…',
+    'technician.loading.farmers': 'Nawtude ngurɓe…',
+    'technician.loading.plantations': 'Nawtude nguurndam…',
+    'technician.loading.details': 'Nawtude firooji…',
+    'technician.stats.farmers': 'NGURɓE',
+    'technician.stats.plantations': 'NGUURNDAM',
+    'technician.stats.activeSensors': 'JOKKONDIRɗE KUUɗE',
+    'technician.stats.actuators': 'TOPPU KUUɗE',
+    'technician.search.placeholder': 'Yiylo ngurɓe...',
+    'technician.search.loading': 'Yiylo...',
+    'technician.section.farmers': 'Ngurɓe',
+    'technician.section.plantations': 'Nguurndam',
+    'technician.empty.noFarmers': 'Alaa ngurɓe',
+    'technician.empty.noFarmersFound': 'Alaa ngurɓe yiɓɓe',
+    'technician.empty.selectFarmer': 'Labo ngurɓo',
+    'technician.details.sensors': 'Jokkondirɗe',
+    'technician.details.actuators': 'Toppu kuuɗe',
+    'technician.details.locationNotSet': 'Alaa nokkuure',
+    'technician.errors.loadData': 'Alaa kuuɗe nawtude dataa',
+    'technician.errors.search': 'Juumre e yiylo',
+    'technician.errors.loadPlantations': 'Alaa kuuɗe nawtude nguurndam',
+    'technician.errors.loadDetails': 'Alaa kuuɗe nawtude firooji nguurndam',
     'profile.welcome': 'Aɗa naatii, {name}',
     'profile.loading': 'Jokkondir jokkondiral...',
     'profile.loadingHint': 'Si jokkondiral ina ɗaɓɓa, ɓaŋngu konsool ngam koɗɗe Ɓaawɗe.',
@@ -2114,6 +2210,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'auth.signup': 'Sígní',
     'auth.logout': 'Bwá',
     'auth.profile': 'Profil',
+    'header.close': 'Fermer',
+    'header.menu': 'Menu',
     'login.title': 'KÓMBÍ',
     'login.emailLabel': 'Email wá',
     'login.emailPlaceholder': 'Sígní email wá',
@@ -2378,6 +2476,28 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.back': 'Bwá',
     'profile.backToDashboard': 'Bwá dashboard',
     'profile.pageLabel': 'Profil utilisateur',
+    'technician.loading.stats': 'Nawtude statistiques…',
+    'technician.loading.farmers': 'Nawtude agriculteurs…',
+    'technician.loading.plantations': 'Nawtude plantations…',
+    'technician.loading.details': 'Nawtude détails…',
+    'technician.stats.farmers': 'AGRICULTEURS',
+    'technician.stats.plantations': 'PLANTATIONS',
+    'technician.stats.activeSensors': 'CAPTEURS ACTIFS',
+    'technician.stats.actuators': 'ACTIONNEURS',
+    'technician.search.placeholder': 'Yiylo agriculteur...',
+    'technician.search.loading': 'Yiylo...',
+    'technician.section.farmers': 'Agriculteurs',
+    'technician.section.plantations': 'Plantations',
+    'technician.empty.noFarmers': 'Alaa agriculteurs',
+    'technician.empty.noFarmersFound': 'Alaa agriculteurs yiɓɓe',
+    'technician.empty.selectFarmer': 'Labo agriculteur',
+    'technician.details.sensors': 'Capteurs',
+    'technician.details.actuators': 'Actionneurs',
+    'technician.details.locationNotSet': 'Alaa nokkuure',
+    'technician.errors.loadData': 'Alaa kuuɗe nawtude dataa',
+    'technician.errors.search': 'Juumre e yiylo',
+    'technician.errors.loadPlantations': 'Alaa kuuɗe nawtude plantations',
+    'technician.errors.loadDetails': 'Alaa kuuɗe nawtude détails plantation',
     'profile.welcome': 'Bwá, {name}',
     'profile.loading': 'Chargement profil...',
     'profile.loadingHint': 'Si chargement prend trop temps, vérifiez console erreurs.',

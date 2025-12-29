@@ -400,21 +400,21 @@ export function Header({
                 {/* Version spéciale pour les techniciens */}
                 {user?.role === 'technician' ? (
                   <>
-                    <Link to="/profile" className={styles.header__iconButton} aria-label="Profil">
+                    <Link to="/profile" className={styles.header__iconButton} aria-label={t('auth.profile')}>
                       <Icon icon={FaUser} size={22} />
                     </Link>
 
                     <div className={styles.header__technicianSeparator}></div>
 
                     <div className={styles.header__technicianUser}>
-                      <span className={styles.header__technicianUserLabel}>Technicien</span>
+                      <span className={styles.header__technicianUserLabel}>{t('profile.role.technician')}</span>
                       <button
                         onClick={handleLogout}
                         className={styles.header__technicianLogout}
-                        aria-label="Déconnexion"
+                        aria-label={t('auth.logout')}
                       >
                         <Icon icon={FaArrowUp} size={14} />
-                        <span>Déconnexion</span>
+                        <span>{t('auth.logout')}</span>
                       </button>
                     </div>
                   </>
@@ -425,7 +425,7 @@ export function Header({
                       <button
                         className={styles.header__iconButton}
                         onClick={() => setNotificationsOpen(!notificationsOpen)}
-                        aria-label="Notifications"
+                        aria-label={t('notifications.title')}
                       >
                         <Icon icon={FaBell} size={22} />
                         {unreadWebCount > 0 && (
@@ -445,7 +445,7 @@ export function Header({
                             <button
                               className={styles.header__closeButton}
                               onClick={() => setNotificationsOpen(false)}
-                              aria-label="Fermer"
+                              aria-label={t('header.close')}
                             >
                               ×
                             </button>
@@ -500,7 +500,7 @@ export function Header({
                       <button
                         className={styles.header__iconButton}
                         onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                        aria-label="Profil"
+                        aria-label={t('auth.profile')}
                       >
                         <Icon icon={FaUser} size={22} />
                       </button>
@@ -551,7 +551,7 @@ export function Header({
           <button
             className={styles.header__hamburger}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Menu"
+            aria-label={t('header.menu')}
             aria-expanded={mobileMenuOpen}
           >
             <Icon icon={mobileMenuOpen ? FaTimes : FaBars} size={32} />
@@ -586,7 +586,7 @@ export function Header({
                   setNotificationsOpen(!notificationsOpen);
                   setMobileMenuOpen(false);
                 }}
-                aria-label="Notifications"
+                aria-label={t('notifications.title')}
               >
                 <Icon icon={FaBell} size={24} />
                 {unreadWebCount > 0 && (
@@ -595,13 +595,13 @@ export function Header({
                   </span>
                 )}
               </button>
-              <button
-                className={styles.header__mobileIconButton}
-                onClick={() => {
-                  setProfileMenuOpen(!profileMenuOpen);
-                }}
-                aria-label="Profil"
-              >
+                        <button
+                          className={styles.header__mobileIconButton}
+                          onClick={() => {
+                            setProfileMenuOpen(!profileMenuOpen);
+                          }}
+                          aria-label={t('auth.profile')}
+                        >
                 <Icon icon={FaUser} size={24} />
               </button>
             </div>

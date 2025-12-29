@@ -7,6 +7,7 @@ import styles from "./TechnicianDashboardPage.module.css"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Background3D } from "@/components/ui/Background3D/Background3D"
+import { useTranslation } from "@/hooks/useTranslation"
 
 import {
   technicianService,
@@ -18,6 +19,7 @@ import {
 import { type Sensor } from "@/services/plantationService"
 
 export default function TechnicianDashboardPage() {
+  const { t } = useTranslation()
   // États pour les données principales
   const [stats, setStats] = useState<TechnicianStats | null>(null)
   const [farmers, setFarmers] = useState<FarmerListItem[]>([])
@@ -68,7 +70,7 @@ export default function TechnicianDashboardPage() {
         }
       } catch (err: any) {
         console.error("Erreur lors du chargement initial:", err)
-        setError(err?.response?.data?.message || "Impossible de charger les données")
+        setError(err?.response?.data?.message || t('technician.errors.loadData'))
       } finally {
         setIsLoadingStats(false)
         setIsLoadingFarmers(false)
@@ -107,7 +109,7 @@ export default function TechnicianDashboardPage() {
         }
       } catch (err: any) {
         console.error("Erreur lors de la recherche:", err)
-        setError(err?.response?.data?.message || "Erreur lors de la recherche")
+        setError(err?.response?.data?.message || t('technician.errors.search'))
       } finally {
         setIsLoadingFarmers(false)
       }
@@ -150,7 +152,7 @@ export default function TechnicianDashboardPage() {
         }
       } catch (err: any) {
         console.error("Erreur lors du chargement des plantations:", err)
-        setError(err?.response?.data?.message || "Impossible de charger les plantations")
+        setError(err?.response?.data?.message || t('technician.errors.loadPlantations'))
         setPlantations([])
       } finally {
         setIsLoadingPlantations(false)
@@ -179,7 +181,7 @@ export default function TechnicianDashboardPage() {
         setLastRefresh(new Date())
       } catch (err: any) {
         console.error("Erreur lors du chargement des détails:", err)
-        setError(err?.response?.data?.message || "Impossible de charger les détails de la plantation")
+        setError(err?.response?.data?.message || t('technician.errors.loadDetails'))
         setPlantationDetails(null)
       } finally {
         setIsLoadingPlantationDetails(false)
@@ -259,7 +261,7 @@ export default function TechnicianDashboardPage() {
             STATISTIQUES
         ======================= */}
         {isLoadingStats ? (
-          <div className={styles.loading}>Chargement des statistiques…</div>
+          <div className={styles.loading}>{t('technician.loading.stats')}</div>
         ) : stats && (
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
@@ -267,7 +269,7 @@ export default function TechnicianDashboardPage() {
                 <FaUser />
               </div>
               <div className={styles.statContent}>
-                <div className={styles.statLabel}>AGRICULTEURS</div>
+                <div className={styles.statLabel}>{t('technician.stats.farmers')}</div>
                 <div className={styles.statValue}>{stats.farmers}</div>
               </div>
             </div>
@@ -276,7 +278,7 @@ export default function TechnicianDashboardPage() {
                 <FaTractor />
               </div>
               <div className={styles.statContent}>
-                <div className={styles.statLabel}>PLANTATIONS</div>
+                <div className={styles.statLabel}>{t('technician.stats.plantations')}</div>
                 <div className={styles.statValue}>{stats.plantations}</div>
               </div>
             </div>
@@ -285,7 +287,7 @@ export default function TechnicianDashboardPage() {
                 <FaWifi />
               </div>
               <div className={styles.statContent}>
-                <div className={styles.statLabel}>CAPTEURS ACTIFS</div>
+                <div className={styles.statLabel}>{t('technician.stats.activeSensors')}</div>
                 <div className={styles.statValue}>
                   {stats.activeSensors}/{stats.totalSensors}
                 </div>
@@ -296,7 +298,7 @@ export default function TechnicianDashboardPage() {
                 <FaToggleOn />
               </div>
               <div className={styles.statContent}>
-                <div className={styles.statLabel}>ACTIONNEURS</div>
+                <div className={styles.statLabel}>{t('technician.stats.actuators')}</div>
                 <div className={styles.statValue}>{stats.actuators}</div>
               </div>
             </div>
@@ -310,12 +312,12 @@ export default function TechnicianDashboardPage() {
           <FaSearch className={styles.searchIcon} />
           <input
             type="text"
-            placeholder="Rechercher un agriculteur..."
+            placeholder={t('technician.search.placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
           />
-          {isLoadingFarmers && <span className={styles.searchLoading}>Recherche...</span>}
+          {isLoadingFarmers && <span className={styles.searchLoading}>{t('technician.search.loading')}</span>}
         </div>
 
         {/* =======================
@@ -326,14 +328,14 @@ export default function TechnicianDashboardPage() {
           <div className={styles.farmersSection}>
             <div className={styles.sectionHeader}>
               <FaUser className={styles.sectionIcon} />
-              <h2 className={styles.sectionTitle}>Agriculteurs</h2>
+              <h2 className={styles.sectionTitle}>{t('technician.section.farmers')}</h2>
               <span className={styles.sectionBadge}>{farmers.length}</span>
             </div>
             {isLoadingFarmers ? (
-              <div className={styles.loading}>Chargement des agriculteurs…</div>
+              <div className={styles.loading}>{t('technician.loading.farmers')}</div>
             ) : farmers.length === 0 ? (
               <div className={styles.emptyMessage}>
-                {searchTerm ? "Aucun agriculteur trouvé" : "Aucun agriculteur"}
+                {searchTerm ? t('technician.empty.noFarmersFound') : t('technician.empty.noFarmers')}
               </div>
             ) : (
               <div className={styles.farmersList}>
@@ -375,17 +377,17 @@ export default function TechnicianDashboardPage() {
               <h3 className={styles.panelSubtitle}>
                 {selectedFarmer
                   ? `${selectedFarmer.firstName} ${selectedFarmer.lastName}`
-                  : "Sélectionnez un agriculteur"}
+                  : t('technician.empty.selectFarmer')}
               </h3>
             </div>
             <div className={styles.panelContent}>
               <div className={styles.fieldsHeader}>
                 <FaLeaf className={styles.fieldsIcon} />
-                <span className={styles.fieldsTitle}>Plantations</span>
+                <span className={styles.fieldsTitle}>{t('technician.section.plantations')}</span>
                 <span className={styles.fieldsBadge}>{plantations.length}</span>
               </div>
               {isLoadingPlantations ? (
-                <div className={styles.loading}>Chargement des plantations…</div>
+                <div className={styles.loading}>{t('technician.loading.plantations')}</div>
               ) : selectedFarmer ? (
                 plantations.length > 0 ? (
                   <div className={styles.fieldsList}>
@@ -419,7 +421,7 @@ export default function TechnicianDashboardPage() {
                           <div className={styles.fieldDetail}>
                             <span className={styles.fieldLabel}>Localisation</span>
                             <span className={styles.fieldValue}>
-                              {plantation.location || "Non renseignée"}
+                              {plantation.location || t('technician.details.locationNotSet')}
                             </span>
                           </div>
                         </div>
@@ -439,7 +441,7 @@ export default function TechnicianDashboardPage() {
           <div className={styles.equipmentSection}>
             {selectedPlantationId ? (
               isLoadingPlantationDetails ? (
-                <div className={styles.loading}>Chargement des détails…</div>
+                <div className={styles.loading}>{t('technician.loading.details')}</div>
               ) : plantationDetails ? (
                 <div className={styles.plantationDetails}>
                   <div className={styles.detailsHeader}>
@@ -461,7 +463,7 @@ export default function TechnicianDashboardPage() {
                   {/* CAPTEURS */}
                   <div className={styles.sensorsSection}>
                     <h4 className={styles.sensorsTitle}>
-                      Capteurs ({plantationDetails.sensors.length})
+                      {t('technician.details.sensors')} ({plantationDetails.sensors.length})
                     </h4>
                     {plantationDetails.sensors.length > 0 && (
                       <div className={styles.sensorsStats}>
@@ -509,7 +511,7 @@ export default function TechnicianDashboardPage() {
                   {/* ACTIONNEURS */}
                   <div className={styles.actuatorsSection}>
                     <h4 className={styles.actuatorsTitle}>
-                      Actionneurs ({plantationDetails.actuators.length})
+                      {t('technician.details.actuators')} ({plantationDetails.actuators.length})
                     </h4>
                     {plantationDetails.actuators.length === 0 ? (
                       <p className={styles.emptyMessage}>Aucun actionneur sur cette plantation</p>
@@ -536,7 +538,7 @@ export default function TechnicianDashboardPage() {
                 </div>
               ) : (
                 <div className={styles.placeholderText}>
-                  Impossible de charger les détails de la plantation
+                  {t('technician.errors.loadDetails')}
                 </div>
               )
             ) : (
