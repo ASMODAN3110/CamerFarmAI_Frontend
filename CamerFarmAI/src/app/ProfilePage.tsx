@@ -49,10 +49,10 @@ export function ProfilePage() {
         return undefined;
       }
       return [
-        { label: t('nav.home'), href: '/' },
-        { label: t('nav.plantations'), href: '/plantations' },
-        { label: t('nav.ai'), href: '/ai' },
-        { label: t('nav.support'), href: '/support' },
+      { label: t('nav.home'), href: '/' },
+      { label: t('nav.plantations'), href: '/plantations' },
+      { label: t('nav.ai'), href: '/ai' },
+      { label: t('nav.support'), href: '/support' },
       ];
     },
     [t, isTechnician]
@@ -504,19 +504,19 @@ export function ProfilePage() {
                       {t('profile.twoFactor.description')}
                     </p>
                     {canEdit && (
-                      <Button
-                        variant={(user as any).twoFactorEnabled ? 'secondary' : 'primary'}
-                        size="sm"
-                        onClick={() => {
-                          setTwoFactorMode((user as any).twoFactorEnabled ? 'disable' : 'enable');
-                          setIsTwoFactorModalOpen(true);
-                        }}
-                        className={styles.twoFactorButton}
-                      >
-                        {(user as any).twoFactorEnabled
-                          ? t('profile.twoFactor.disableButton')
-                          : t('profile.twoFactor.enableButton')}
-                      </Button>
+                    <Button
+                      variant={(user as any).twoFactorEnabled ? 'secondary' : 'primary'}
+                      size="sm"
+                      onClick={() => {
+                        setTwoFactorMode((user as any).twoFactorEnabled ? 'disable' : 'enable');
+                        setIsTwoFactorModalOpen(true);
+                      }}
+                      className={styles.twoFactorButton}
+                    >
+                      {(user as any).twoFactorEnabled
+                        ? t('profile.twoFactor.disableButton')
+                        : t('profile.twoFactor.enableButton')}
+                    </Button>
                     )}
                   </div>
                 </div>

@@ -1,5 +1,6 @@
 import { api } from './api'
-import { plantationService, type Plantation, type Sensor, type Actuator } from './plantationService'
+import { plantationService, type Sensor, type Actuator } from './plantationService'
+import { serializeParams } from '@/utils/paramsSerializer'
 
 /* =======================
    TYPES
@@ -172,9 +173,58 @@ export const technicianService = {
   },
 
   /* ---- Liste des agriculteurs avec recherche ---- */
-  async getFarmers(search?: string): Promise<FarmerListItem[]> {
-    const params = search ? { search } : {}
-    const res = await api.get('/technician/farmers', { params })
+  async getFarmers(search?: string | string[]): Promise<FarmerListItem[]> {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:175',message:'getFarmers called',data:{search,searchType:Array.isArray(search)?'array':typeof search,searchLength:Array.isArray(search)?search.length:search?.length,isEmpty:Array.isArray(search)?search.length===0:!search},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H4'})}).catch(()=>{});
+    // #endregion
+    let params: any = {}
+    let paramsSerializer: ((params: any) => string) | undefined = undefined
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:179',message:'Before if(search) check',data:{hasSearch:!!search,searchValue:search},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H4'})}).catch(()=>{});
+    // #endregion
+    
+    if (search) {
+      if (Array.isArray(search)) {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:183',message:'Array path taken',data:{searchArray:search,arrayLength:search.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H2'})}).catch(()=>{});
+        // #endregion
+        // Format recommandé: search[]=mot1&search[]=mot2
+        // Utiliser params avec paramsSerializer pour garantir le format exact attendu par le backend
+        params['search[]'] = search
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:194',message:'After params assignment',data:{params,paramsKeys:Object.keys(params),hasSearchArray:!!params['search[]'],searchArrayValue:params['search[]']},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'H9'})}).catch(()=>{});
+        // #endregion
+        paramsSerializer = serializeParams
+      } else {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:201',message:'String path taken',data:{searchString:search},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H3'})}).catch(()=>{});
+        // #endregion
+        // Format rétrocompatible: search=mot
+        params.search = search
+      }
+    }
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:215',message:'Config before API call',data:{hasParamsSerializer:!!paramsSerializer,params,paramsKeys:Object.keys(params)},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'H6'})}).catch(()=>{});
+    // #endregion
+    
+    const config: any = {
+      params: Object.keys(params).length > 0 ? params : undefined
+    }
+    
+    if (paramsSerializer) {
+      config.paramsSerializer = {
+        serialize: paramsSerializer
+      }
+    }
+    
+    const res = await api.get('/technician/farmers', config)
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:230',message:'API response received',data:{status:res.status,dataLength:Array.isArray(res.data)?res.data.length:0,isArray:Array.isArray(res.data),firstItem:Array.isArray(res.data)&&res.data.length>0?res.data[0]:null},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
+    
     return Array.isArray(res.data)
       ? res.data.map(normalizeFarmerListItem)
       : []

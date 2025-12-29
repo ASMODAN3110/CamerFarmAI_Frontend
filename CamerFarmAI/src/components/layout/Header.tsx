@@ -421,115 +421,115 @@ export function Header({
                 ) : (
                   <>
                     {/* Version normale pour les autres utilisateurs */}
-                    <div className={styles.header__iconButtonContainer}>
-                      <button
-                        className={styles.header__iconButton}
-                        onClick={() => setNotificationsOpen(!notificationsOpen)}
+                <div className={styles.header__iconButtonContainer}>
+                  <button
+                    className={styles.header__iconButton}
+                    onClick={() => setNotificationsOpen(!notificationsOpen)}
                         aria-label={t('notifications.title')}
-                      >
-                        <Icon icon={FaBell} size={22} />
-                        {unreadWebCount > 0 && (
-                          <span className={styles.header__notificationBadge}>
-                            {unreadWebCount > 99 ? '99+' : unreadWebCount}
-                          </span>
-                        )}
-                      </button>
-                      <Dropdown
-                        isOpen={notificationsOpen}
-                        onClose={() => setNotificationsOpen(false)}
-                        align="right"
-                      >
-                        <div className={styles.header__notificationsDropdown}>
-                          <div className={styles.header__notificationsHeader}>
-                            <h3 className={styles.header__notificationsTitle}>{t('notifications.title')}</h3>
-                            <button
-                              className={styles.header__closeButton}
-                              onClick={() => setNotificationsOpen(false)}
+                  >
+                    <Icon icon={FaBell} size={22} />
+                    {unreadWebCount > 0 && (
+                      <span className={styles.header__notificationBadge}>
+                        {unreadWebCount > 99 ? '99+' : unreadWebCount}
+                      </span>
+                    )}
+                  </button>
+                  <Dropdown
+                    isOpen={notificationsOpen}
+                    onClose={() => setNotificationsOpen(false)}
+                    align="right"
+                  >
+                    <div className={styles.header__notificationsDropdown}>
+                      <div className={styles.header__notificationsHeader}>
+                        <h3 className={styles.header__notificationsTitle}>{t('notifications.title')}</h3>
+                        <button
+                          className={styles.header__closeButton}
+                          onClick={() => setNotificationsOpen(false)}
                               aria-label={t('header.close')}
-                            >
-                              ×
-                            </button>
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className={styles.header__notificationsList}>
+                        {isLoadingNotifications ? (
+                          <div className={styles.header__notificationEmpty}>
+                            {t('notifications.loading') || 'Chargement...'}
                           </div>
-                          <div className={styles.header__notificationsList}>
-                            {isLoadingNotifications ? (
-                              <div className={styles.header__notificationEmpty}>
-                                {t('notifications.loading') || 'Chargement...'}
-                              </div>
-                            ) : notifications.length > 0 ? (
-                              <>
-                                {notifications.map((notif) => (
-                                  <div 
-                                    key={notif.id} 
-                                    className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
-                                    onClick={() => {
-                                      if (!notif.isRead) {
-                                        handleMarkAsRead(notif.id);
-                                      }
-                                    }}
-                                  >
-                                    <div className={styles.header__notificationContent}>
-                                      <div className={styles.header__notificationMessage}>
-                                        {getNotificationDescription(notif)}
-                                      </div>
-                                      <div className={styles.header__notificationTime}>
-                                        {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
-                                      </div>
-                                    </div>
-                                    <button
-                                      className={styles.header__notificationDelete}
-                                      onClick={(e) => handleDelete(notif.id, e)}
-                                      aria-label={t('notifications.delete') || 'Supprimer la notification'}
-                                      title={t('notifications.delete') || 'Supprimer'}
-                                    >
-                                      <Icon icon={FaTrash} size={14} />
-                                    </button>
+                        ) : notifications.length > 0 ? (
+                          <>
+                            {notifications.map((notif) => (
+                              <div 
+                                key={notif.id} 
+                                className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
+                                onClick={() => {
+                                  if (!notif.isRead) {
+                                    handleMarkAsRead(notif.id);
+                                  }
+                                }}
+                              >
+                                <div className={styles.header__notificationContent}>
+                                  <div className={styles.header__notificationMessage}>
+                                    {getNotificationDescription(notif)}
                                   </div>
-                                ))}
-                              </>
-                            ) : (
-                              <div className={styles.header__notificationEmpty}>
-                                {t('notifications.empty')}
+                                  <div className={styles.header__notificationTime}>
+                                    {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
+                                  </div>
+                                </div>
+                                <button
+                                  className={styles.header__notificationDelete}
+                                  onClick={(e) => handleDelete(notif.id, e)}
+                                  aria-label={t('notifications.delete') || 'Supprimer la notification'}
+                                  title={t('notifications.delete') || 'Supprimer'}
+                                >
+                                  <Icon icon={FaTrash} size={14} />
+                                </button>
                               </div>
-                            )}
+                            ))}
+                          </>
+                        ) : (
+                          <div className={styles.header__notificationEmpty}>
+                            {t('notifications.empty')}
                           </div>
-                        </div>
-                      </Dropdown>
+                        )}
+                      </div>
                     </div>
+                  </Dropdown>
+                </div>
 
-                    <div className={styles.header__iconButtonContainer}>
-                      <button
-                        className={styles.header__iconButton}
-                        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                <div className={styles.header__iconButtonContainer}>
+                  <button
+                    className={styles.header__iconButton}
+                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                         aria-label={t('auth.profile')}
+                  >
+                    <Icon icon={FaUser} size={22} />
+                  </button>
+                  <Dropdown
+                    isOpen={profileMenuOpen}
+                    onClose={() => setProfileMenuOpen(false)}
+                    align="right"
+                  >
+                    <div className={styles.header__profileDropdown}>
+                      <button
+                        className={styles.header__profileMenuItem}
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          navigate('/profile');
+                        }}
                       >
-                        <Icon icon={FaUser} size={22} />
+                        <Icon icon={FaUser} size={18} />
+                        {t('auth.profile')}
                       </button>
-                      <Dropdown
-                        isOpen={profileMenuOpen}
-                        onClose={() => setProfileMenuOpen(false)}
-                        align="right"
+                      <button
+                        className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
+                        onClick={handleLogout}
                       >
-                        <div className={styles.header__profileDropdown}>
-                          <button
-                            className={styles.header__profileMenuItem}
-                            onClick={() => {
-                              setProfileMenuOpen(false);
-                              navigate('/profile');
-                            }}
-                          >
-                            <Icon icon={FaUser} size={18} />
-                            {t('auth.profile')}
-                          </button>
-                          <button
-                            className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
-                            onClick={handleLogout}
-                          >
-                            <Icon icon={FaSignOutAlt} size={18} />
-                            {t('auth.logout')}
-                          </button>
-                        </div>
-                      </Dropdown>
+                        <Icon icon={FaSignOutAlt} size={18} />
+                        {t('auth.logout')}
+                      </button>
                     </div>
+                  </Dropdown>
+                </div>
                   </>
                 )}
               </>
@@ -595,13 +595,13 @@ export function Header({
                   </span>
                 )}
               </button>
-                        <button
-                          className={styles.header__mobileIconButton}
-                          onClick={() => {
-                            setProfileMenuOpen(!profileMenuOpen);
-                          }}
+              <button
+                className={styles.header__mobileIconButton}
+                onClick={() => {
+                  setProfileMenuOpen(!profileMenuOpen);
+                }}
                           aria-label={t('auth.profile')}
-                        >
+              >
                 <Icon icon={FaUser} size={24} />
               </button>
             </div>

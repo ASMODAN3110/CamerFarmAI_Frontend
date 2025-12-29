@@ -95,8 +95,10 @@ useEffect(() => {
       setError(null)
 
       try {
-        const searchQuery = searchTerm.trim()
-        const farmersData = await technicianService.getFarmers(searchQuery || undefined)
+        // Utiliser le terme de recherche complet (avec espaces) pour une recherche caractère par caractère
+        const trimmedSearch = searchTerm.trim()
+        const searchQuery = trimmedSearch.length > 0 ? trimmedSearch : undefined
+        const farmersData = await technicianService.getFarmers(searchQuery)
         setFarmers(farmersData)
         setLastRefresh(new Date())
 
