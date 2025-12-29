@@ -82,8 +82,8 @@ export default function TechnicianDashboardPage() {
 
   /* =======================
      RECHERCHE D'AGRICULTEURS (BACKEND)
-  ======================= */
-  useEffect(() => {
+======================= */
+useEffect(() => {
     // Nettoyer le timer précédent
     if (searchDebounceTimer) {
       clearTimeout(searchDebounceTimer)
@@ -243,7 +243,7 @@ export default function TechnicianDashboardPage() {
           <div className={styles.error}>
             <FaExclamationTriangle />
             <span>{error}</span>
-            <button onClick={() => window.location.reload()}>Réessayer</button>
+            <button onClick={() => window.location.reload()}>{t('technician.retry')}</button>
           </div>
         </main>
         <Footer />
@@ -338,42 +338,42 @@ export default function TechnicianDashboardPage() {
                 {searchTerm ? t('technician.empty.noFarmersFound') : t('technician.empty.noFarmers')}
               </div>
             ) : (
-              <div className={styles.farmersList}>
+            <div className={styles.farmersList}>
                 {farmers.map((farmer) => (
-                  <div
-                    key={farmer.id}
-                    className={`${styles.farmerCard} ${
-                      farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedFarmerId(farmer.id)
+                <div
+                  key={farmer.id}
+                  className={`${styles.farmerCard} ${
+                    farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedFarmerId(farmer.id)
                       setSelectedPlantationId(null)
-                    }}
-                  >
-                    <div className={styles.farmerStatus}></div>
-                    <div className={styles.farmerInfo}>
+                  }}
+                >
+                  <div className={styles.farmerStatus}></div>
+                  <div className={styles.farmerInfo}>
                       <div className={styles.farmerName}>
                         {farmer.firstName} {farmer.lastName}
                       </div>
                       {farmer.location && (
-                        <div className={styles.farmerLocation}>
+                    <div className={styles.farmerLocation}>
                           <FaMapMarkerAlt /> {farmer.location}
                         </div>
                       )}
                       <div className={styles.farmerFields}>
-                        {farmer.plantationsCount} plantation{farmer.plantationsCount > 1 ? "s" : ""}
+                        {farmer.plantationsCount} {farmer.plantationsCount > 1 ? t('technician.plantation.plural') : t('technician.plantation.singular')}
                       </div>
-                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
             )}
           </div>
 
           {/* PLANTATIONS */}
           <div className={styles.fieldsSection}>
             <div className={styles.panelHeader}>
-              <span className={styles.panelTitle}>AGRICULTEUR</span>
+              <span className={styles.panelTitle}>{t('technician.farmer.label')}</span>
               <h3 className={styles.panelSubtitle}>
                 {selectedFarmer
                   ? `${selectedFarmer.firstName} ${selectedFarmer.lastName}`
@@ -390,7 +390,7 @@ export default function TechnicianDashboardPage() {
                 <div className={styles.loading}>{t('technician.loading.plantations')}</div>
               ) : selectedFarmer ? (
                 plantations.length > 0 ? (
-                  <div className={styles.fieldsList}>
+              <div className={styles.fieldsList}>
                     {plantations.map((plantation) => (
                       <div
                         key={plantation.id}
@@ -406,34 +406,34 @@ export default function TechnicianDashboardPage() {
                           <div className={styles.fieldName}>{plantation.name}</div>
                           <div className={styles.fieldDetails}>
                             <div className={styles.fieldDetail}>
-                              <span className={styles.fieldLabel}>Culture</span>
+                              <span className={styles.fieldLabel}>{t('technician.details.cropType')}</span>
                               <span className={styles.fieldValue}>
-                                {plantation.cropType || "N/A"}
+                                {plantation.cropType || t('technician.details.notAvailable')}
                               </span>
                             </div>
                             <div className={styles.fieldDetail}>
-                              <span className={styles.fieldLabel}>Superficie</span>
+                              <span className={styles.fieldLabel}>{t('technician.details.area')}</span>
                               <span className={styles.fieldValue}>
-                                {plantation.area ? `${plantation.area} m²` : "N/A"}
+                                {plantation.area ? `${plantation.area} m²` : t('technician.details.notAvailable')}
                               </span>
                             </div>
                           </div>
                           <div className={styles.fieldDetail}>
-                            <span className={styles.fieldLabel}>Localisation</span>
+                            <span className={styles.fieldLabel}>{t('technician.details.location')}</span>
                             <span className={styles.fieldValue}>
                               {plantation.location || t('technician.details.locationNotSet')}
                             </span>
-                          </div>
+  </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className={styles.emptyMessage}>Aucune plantation disponible</p>
+                  <p className={styles.emptyMessage}>{t('technician.details.noPlantationsAvailable')}</p>
                 )
-              ) : (
-                <p className={styles.emptyMessage}>Sélectionnez un agriculteur</p>
-              )}
+                ) : (
+                  <p className={styles.emptyMessage}>{t('technician.empty.selectFarmer')}</p>
+                )}
             </div>
           </div>
 
@@ -449,7 +449,7 @@ export default function TechnicianDashboardPage() {
                     {plantationDetails.owner && (
                       <div className={styles.ownerInfo}>
                         <div className={styles.ownerName}>
-                          Propriétaire: {plantationDetails.owner.firstName} {plantationDetails.owner.lastName}
+                          {t('technician.details.owner')} {plantationDetails.owner.firstName} {plantationDetails.owner.lastName}
                         </div>
                         {plantationDetails.owner.phone && (
                           <div className={styles.ownerPhone}>
@@ -468,7 +468,7 @@ export default function TechnicianDashboardPage() {
                     {plantationDetails.sensors.length > 0 && (
                       <div className={styles.sensorsStats}>
                         <span>
-                          Actifs: {plantationDetails.sensors.filter(s => s.status === 'active').length} / {plantationDetails.sensors.length}
+                          {t('technician.details.activeCount')} {plantationDetails.sensors.filter(s => s.status === 'active').length} / {plantationDetails.sensors.length}
                         </span>
                         <span className={styles.percentage}>
                           ({getActiveSensorsPercentage(plantationDetails.sensors)}%)
@@ -478,11 +478,11 @@ export default function TechnicianDashboardPage() {
                     {hasManyInactiveSensors(plantationDetails.sensors) && (
                       <div className={styles.alert}>
                         <FaExclamationTriangle />
-                        <span>Plus de 50% des capteurs sont inactifs</span>
+                        <span>{t('technician.details.manyInactiveSensors')}</span>
                       </div>
                     )}
                     {plantationDetails.sensors.length === 0 ? (
-                      <p className={styles.emptyMessage}>Aucun capteur sur cette plantation</p>
+                      <p className={styles.emptyMessage}>{t('technician.details.noSensors')}</p>
                     ) : (
                       <div className={styles.sensorsList}>
                         {plantationDetails.sensors.map((sensor) => (
@@ -491,7 +491,7 @@ export default function TechnicianDashboardPage() {
                               <span className={styles.sensorName}>{sensor.type}</span>
                               {sensor.seuilMin !== undefined && sensor.seuilMax !== undefined && (
                                 <span className={styles.sensorThresholds}>
-                                  Seuils: {sensor.seuilMin} - {sensor.seuilMax}
+                                  {t('technician.details.thresholds')} {sensor.seuilMin} - {sensor.seuilMax}
                                 </span>
                               )}
                             </div>
@@ -500,7 +500,7 @@ export default function TechnicianDashboardPage() {
                                 sensor.status === 'active' ? styles.statusActive : styles.statusInactive
                               }`}
                             >
-                              {sensor.status === 'active' ? '🟢 Actif' : '🔴 Inactif'}
+                              {sensor.status === 'active' ? `🟢 ${t('sensor.status.active')}` : `🔴 ${t('sensor.status.inactive')}`}
                             </span>
                           </div>
                         ))}
@@ -514,7 +514,7 @@ export default function TechnicianDashboardPage() {
                       {t('technician.details.actuators')} ({plantationDetails.actuators.length})
                     </h4>
                     {plantationDetails.actuators.length === 0 ? (
-                      <p className={styles.emptyMessage}>Aucun actionneur sur cette plantation</p>
+                      <p className={styles.emptyMessage}>{t('technician.details.noActuators')}</p>
                     ) : (
                       <div className={styles.actuatorsList}>
                         {plantationDetails.actuators.map((actuator) => (
@@ -523,26 +523,26 @@ export default function TechnicianDashboardPage() {
                               <span className={styles.actuatorName}>{actuator.name || actuator.type}</span>
                               <span className={styles.actuatorType}>{actuator.type}</span>
                             </div>
-                            <span
-                              className={`${styles.statusBadge} ${
+            <span
+              className={`${styles.statusBadge} ${
                                 actuator.status === 'active' ? styles.statusActive : styles.statusInactive
-                              }`}
-                            >
-                              {actuator.status === 'active' ? '🟢 Actif' : '🔴 Inactif'}
-                            </span>
-                          </div>
+              }`}
+            >
+                              {actuator.status === 'active' ? `🟢 ${t('sensor.status.active')}` : `🔴 ${t('sensor.status.inactive')}`}
+            </span>
+          </div>
                         ))}
-                      </div>
-                    )}
+    </div>
+  )}
                   </div>
-                </div>
+</div>
               ) : (
                 <div className={styles.placeholderText}>
                   {t('technician.errors.loadDetails')}
                 </div>
               )
             ) : (
-              <div className={styles.placeholderText}>Sélectionnez une plantation</div>
+              <div className={styles.placeholderText}>{t('technician.details.selectPlantation')}</div>
             )}
           </div>
         </div>
@@ -550,7 +550,7 @@ export default function TechnicianDashboardPage() {
         {/* Indicateur de dernière mise à jour */}
         {lastRefresh && (
           <div className={styles.lastRefresh}>
-            Dernière mise à jour: {lastRefresh.toLocaleTimeString()}
+            {t('technician.details.lastUpdate')} {lastRefresh.toLocaleTimeString()}
           </div>
         )}
       </main>
