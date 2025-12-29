@@ -5,7 +5,6 @@ import { FaSearch, FaUser, FaTractor, FaWifi, FaToggleOn, FaLeaf, FaPhoneAlt, Fa
 
 import styles from "./TechnicianDashboardPage.module.css"
 import { Header } from "@/components/layout/Header"
-import { Footer } from "@/components/layout/Footer"
 import { Background3D } from "@/components/ui/Background3D/Background3D"
 import { useTranslation } from "@/hooks/useTranslation"
 
@@ -256,7 +255,6 @@ useEffect(() => {
             <button onClick={() => window.location.reload()}>{t('technician.retry')}</button>
           </div>
         </main>
-        <Footer />
       </>
     )
   }
@@ -569,8 +567,6 @@ useEffect(() => {
           </div>
         )}
       </main>
-
-      <Footer />
     </>
   )
 }
