@@ -16,6 +16,7 @@ import { ChatboxPage } from './app/ChatboxPage';
 import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
 import { DocumentationPage } from './app/DocumentationPage';
+import { PrivacyPage } from './app/PrivacyPage';
 function App() {
   return (
     <AuthProvider>
@@ -116,6 +117,10 @@ function App() {
                   <DocumentationPage />
                 </ProtectedRoute>
               } 
+            />
+            <Route 
+              path="/privacy" 
+              element={<PrivacyPage />} 
             />
             
             {/* Route catch-all - redirige vers la page d'accueil */}

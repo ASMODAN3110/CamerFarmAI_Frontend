@@ -9,6 +9,7 @@ export type TranslationKey =
   | 'nav.ai'
   | 'nav.guide'
   | 'nav.docs'
+  | 'nav.privacy'
   | 'nav.technician'
   | 'auth.login'
   | 'auth.signup'
@@ -653,7 +654,63 @@ export type TranslationKey =
   | 'docs.deployment.build.title'
   | 'docs.deployment.env.title'
   | 'docs.deployment.config.title'
-  | 'docs.deployment.config.content';
+  | 'docs.deployment.config.content'
+  | 'privacy.title'
+  | 'privacy.subtitle'
+  | 'privacy.tableOfContents'
+  | 'privacy.sections.introduction'
+  | 'privacy.sections.dataCollection'
+  | 'privacy.sections.dataUsage'
+  | 'privacy.sections.dataSharing'
+  | 'privacy.sections.dataSecurity'
+  | 'privacy.sections.yourRights'
+  | 'privacy.sections.cookies'
+  | 'privacy.sections.changes'
+  | 'privacy.sections.contact'
+  | 'privacy.introduction.content'
+  | 'privacy.introduction.lastUpdated'
+  | 'privacy.dataCollection.personalData.title'
+  | 'privacy.dataCollection.personalData.content'
+  | 'privacy.dataCollection.personalData.item1'
+  | 'privacy.dataCollection.personalData.item2'
+  | 'privacy.dataCollection.personalData.item3'
+  | 'privacy.dataCollection.personalData.item4'
+  | 'privacy.dataCollection.personalData.item5'
+  | 'privacy.dataCollection.usageData.title'
+  | 'privacy.dataCollection.usageData.content'
+  | 'privacy.dataCollection.usageData.item1'
+  | 'privacy.dataCollection.usageData.item2'
+  | 'privacy.dataCollection.usageData.item3'
+  | 'privacy.dataUsage.content'
+  | 'privacy.dataUsage.item1'
+  | 'privacy.dataUsage.item2'
+  | 'privacy.dataUsage.item3'
+  | 'privacy.dataUsage.item4'
+  | 'privacy.dataUsage.item5'
+  | 'privacy.dataSharing.content'
+  | 'privacy.dataSharing.thirdParties.title'
+  | 'privacy.dataSharing.thirdParties.content'
+  | 'privacy.dataSharing.legal.title'
+  | 'privacy.dataSharing.legal.content'
+  | 'privacy.dataSecurity.content'
+  | 'privacy.dataSecurity.item1'
+  | 'privacy.dataSecurity.item2'
+  | 'privacy.dataSecurity.item3'
+  | 'privacy.dataSecurity.item4'
+  | 'privacy.yourRights.content'
+  | 'privacy.yourRights.item1'
+  | 'privacy.yourRights.item2'
+  | 'privacy.yourRights.item3'
+  | 'privacy.yourRights.item4'
+  | 'privacy.yourRights.item5'
+  | 'privacy.cookies.content'
+  | 'privacy.cookies.types.title'
+  | 'privacy.cookies.types.content'
+  | 'privacy.cookies.management.title'
+  | 'privacy.cookies.management.content'
+  | 'privacy.changes.content'
+  | 'privacy.contact.content'
+  | 'privacy.contact.email';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -665,6 +722,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.ai': 'IA',
     'nav.guide': 'Guide',
     'nav.docs': 'Documentation',
+    'nav.privacy': 'Confidentialité',
     'nav.technician': 'Tableau de bord',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
@@ -1310,6 +1368,62 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.deployment.env.title': 'Variables d\'environnement',
     'docs.deployment.config.title': 'Configuration',
     'docs.deployment.config.content': 'Le build de production génère un dossier dist/ avec les fichiers optimisés. Configurer VITE_API_URL pour pointer vers l\'API de production.',
+    'privacy.title': 'Politique de Confidentialité',
+    'privacy.subtitle': 'Découvrez comment nous collectons, utilisons et protégeons vos données personnelles.',
+    'privacy.tableOfContents': 'Table des matières',
+    'privacy.sections.introduction': 'Introduction',
+    'privacy.sections.dataCollection': 'Collecte de données',
+    'privacy.sections.dataUsage': 'Utilisation des données',
+    'privacy.sections.dataSharing': 'Partage des données',
+    'privacy.sections.dataSecurity': 'Sécurité des données',
+    'privacy.sections.yourRights': 'Vos droits',
+    'privacy.sections.cookies': 'Cookies',
+    'privacy.sections.changes': 'Modifications',
+    'privacy.sections.contact': 'Contact',
+    'privacy.introduction.content': 'CamerFarm AI s\'engage à protéger votre vie privée et vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos informations lorsque vous utilisez notre plateforme.',
+    'privacy.introduction.lastUpdated': 'Dernière mise à jour : Janvier 2025',
+    'privacy.dataCollection.personalData.title': 'Données personnelles',
+    'privacy.dataCollection.personalData.content': 'Nous collectons les informations suivantes lorsque vous créez un compte ou utilisez nos services :',
+    'privacy.dataCollection.personalData.item1': 'Nom et prénom',
+    'privacy.dataCollection.personalData.item2': 'Adresse e-mail',
+    'privacy.dataCollection.personalData.item3': 'Numéro de téléphone',
+    'privacy.dataCollection.personalData.item4': 'Informations sur vos plantations (localisation, superficie, type de culture)',
+    'privacy.dataCollection.personalData.item5': 'Données de capteurs et actionneurs associés à vos plantations',
+    'privacy.dataCollection.usageData.title': 'Données d\'utilisation',
+    'privacy.dataCollection.usageData.content': 'Nous collectons automatiquement certaines informations lorsque vous utilisez notre plateforme :',
+    'privacy.dataCollection.usageData.item1': 'Adresse IP et informations sur votre appareil',
+    'privacy.dataCollection.usageData.item2': 'Pages visitées et actions effectuées',
+    'privacy.dataCollection.usageData.item3': 'Données de connexion et horaires d\'utilisation',
+    'privacy.dataUsage.content': 'Nous utilisons vos données pour :',
+    'privacy.dataUsage.item1': 'Fournir et améliorer nos services',
+    'privacy.dataUsage.item2': 'Personnaliser votre expérience utilisateur',
+    'privacy.dataUsage.item3': 'Vous envoyer des notifications importantes concernant vos plantations',
+    'privacy.dataUsage.item4': 'Analyser l\'utilisation de la plateforme pour améliorer nos services',
+    'privacy.dataUsage.item5': 'Respecter nos obligations légales',
+    'privacy.dataSharing.content': 'Nous ne vendons jamais vos données personnelles. Nous pouvons partager vos informations uniquement dans les cas suivants :',
+    'privacy.dataSharing.thirdParties.title': 'Prestataires de services',
+    'privacy.dataSharing.thirdParties.content': 'Nous pouvons partager vos données avec des prestataires de services de confiance qui nous aident à exploiter notre plateforme (hébergement, analyse, notifications). Ces prestataires sont tenus de protéger vos données.',
+    'privacy.dataSharing.legal.title': 'Obligations légales',
+    'privacy.dataSharing.legal.content': 'Nous pouvons divulguer vos informations si la loi l\'exige ou pour protéger nos droits et la sécurité de nos utilisateurs.',
+    'privacy.dataSecurity.content': 'Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos données :',
+    'privacy.dataSecurity.item1': 'Chiffrement des données sensibles',
+    'privacy.dataSecurity.item2': 'Authentification sécurisée avec mots de passe forts',
+    'privacy.dataSecurity.item3': 'Accès restreint aux données personnelles',
+    'privacy.dataSecurity.item4': 'Surveillance régulière de nos systèmes de sécurité',
+    'privacy.yourRights.content': 'Vous avez le droit de :',
+    'privacy.yourRights.item1': 'Accéder à vos données personnelles',
+    'privacy.yourRights.item2': 'Corriger ou mettre à jour vos informations',
+    'privacy.yourRights.item3': 'Demander la suppression de vos données',
+    'privacy.yourRights.item4': 'Vous opposer au traitement de vos données',
+    'privacy.yourRights.item5': 'Demander une copie de vos données',
+    'privacy.cookies.content': 'Nous utilisons des cookies pour améliorer votre expérience sur notre plateforme. Les cookies sont de petits fichiers texte stockés sur votre appareil.',
+    'privacy.cookies.types.title': 'Types de cookies',
+    'privacy.cookies.types.content': 'Nous utilisons des cookies essentiels pour le fonctionnement de la plateforme et des cookies analytiques pour comprendre comment vous utilisez notre service.',
+    'privacy.cookies.management.title': 'Gestion des cookies',
+    'privacy.cookies.management.content': 'Vous pouvez gérer vos préférences de cookies via les paramètres de votre navigateur. Notez que la désactivation de certains cookies peut affecter le fonctionnement de la plateforme.',
+    'privacy.changes.content': 'Nous pouvons mettre à jour cette politique de confidentialité de temps à autre. Nous vous informerons de tout changement important en publiant la nouvelle politique sur cette page et en mettant à jour la date de "Dernière mise à jour".',
+    'privacy.contact.content': 'Si vous avez des questions concernant cette politique de confidentialité ou souhaitez exercer vos droits, veuillez nous contacter :',
+    'privacy.contact.email': 'contact@camerfarmai.com',
   },
   en: {
     'nav.home': 'Home',
@@ -1319,6 +1433,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Plantations',
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
+    'nav.docs': 'Documentation',
+    'nav.privacy': 'Privacy',
     'nav.technician': 'Dashboard',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
@@ -1979,6 +2095,62 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.deployment.env.title': 'Environment Variables',
     'docs.deployment.config.title': 'Configuration',
     'docs.deployment.config.content': 'The production build generates a dist/ folder with optimized files. Configure VITE_API_URL to point to the production API.',
+    'privacy.title': 'Privacy Policy',
+    'privacy.subtitle': 'Learn how we collect, use, and protect your personal data.',
+    'privacy.tableOfContents': 'Table of Contents',
+    'privacy.sections.introduction': 'Introduction',
+    'privacy.sections.dataCollection': 'Data Collection',
+    'privacy.sections.dataUsage': 'Data Usage',
+    'privacy.sections.dataSharing': 'Data Sharing',
+    'privacy.sections.dataSecurity': 'Data Security',
+    'privacy.sections.yourRights': 'Your Rights',
+    'privacy.sections.cookies': 'Cookies',
+    'privacy.sections.changes': 'Changes',
+    'privacy.sections.contact': 'Contact',
+    'privacy.introduction.content': 'CamerFarm AI is committed to protecting your privacy and personal data. This privacy policy explains how we collect, use, share, and protect your information when you use our platform.',
+    'privacy.introduction.lastUpdated': 'Last updated: January 2025',
+    'privacy.dataCollection.personalData.title': 'Personal Data',
+    'privacy.dataCollection.personalData.content': 'We collect the following information when you create an account or use our services:',
+    'privacy.dataCollection.personalData.item1': 'First and last name',
+    'privacy.dataCollection.personalData.item2': 'Email address',
+    'privacy.dataCollection.personalData.item3': 'Phone number',
+    'privacy.dataCollection.personalData.item4': 'Information about your plantations (location, area, crop type)',
+    'privacy.dataCollection.personalData.item5': 'Sensor and actuator data associated with your plantations',
+    'privacy.dataCollection.usageData.title': 'Usage Data',
+    'privacy.dataCollection.usageData.content': 'We automatically collect certain information when you use our platform:',
+    'privacy.dataCollection.usageData.item1': 'IP address and device information',
+    'privacy.dataCollection.usageData.item2': 'Pages visited and actions taken',
+    'privacy.dataCollection.usageData.item3': 'Login data and usage times',
+    'privacy.dataUsage.content': 'We use your data to:',
+    'privacy.dataUsage.item1': 'Provide and improve our services',
+    'privacy.dataUsage.item2': 'Personalize your user experience',
+    'privacy.dataUsage.item3': 'Send you important notifications about your plantations',
+    'privacy.dataUsage.item4': 'Analyze platform usage to improve our services',
+    'privacy.dataUsage.item5': 'Comply with our legal obligations',
+    'privacy.dataSharing.content': 'We never sell your personal data. We may share your information only in the following cases:',
+    'privacy.dataSharing.thirdParties.title': 'Service Providers',
+    'privacy.dataSharing.thirdParties.content': 'We may share your data with trusted service providers who help us operate our platform (hosting, analytics, notifications). These providers are required to protect your data.',
+    'privacy.dataSharing.legal.title': 'Legal Obligations',
+    'privacy.dataSharing.legal.content': 'We may disclose your information if required by law or to protect our rights and the safety of our users.',
+    'privacy.dataSecurity.content': 'We implement appropriate security measures to protect your data:',
+    'privacy.dataSecurity.item1': 'Encryption of sensitive data',
+    'privacy.dataSecurity.item2': 'Secure authentication with strong passwords',
+    'privacy.dataSecurity.item3': 'Restricted access to personal data',
+    'privacy.dataSecurity.item4': 'Regular monitoring of our security systems',
+    'privacy.yourRights.content': 'You have the right to:',
+    'privacy.yourRights.item1': 'Access your personal data',
+    'privacy.yourRights.item2': 'Correct or update your information',
+    'privacy.yourRights.item3': 'Request deletion of your data',
+    'privacy.yourRights.item4': 'Object to the processing of your data',
+    'privacy.yourRights.item5': 'Request a copy of your data',
+    'privacy.cookies.content': 'We use cookies to improve your experience on our platform. Cookies are small text files stored on your device.',
+    'privacy.cookies.types.title': 'Types of Cookies',
+    'privacy.cookies.types.content': 'We use essential cookies for platform functionality and analytical cookies to understand how you use our service.',
+    'privacy.cookies.management.title': 'Cookie Management',
+    'privacy.cookies.management.content': 'You can manage your cookie preferences through your browser settings. Note that disabling certain cookies may affect platform functionality.',
+    'privacy.changes.content': 'We may update this privacy policy from time to time. We will notify you of any significant changes by posting the new policy on this page and updating the "Last updated" date.',
+    'privacy.contact.content': 'If you have questions about this privacy policy or wish to exercise your rights, please contact us:',
+    'privacy.contact.email': 'contact@camerfarmai.com',
   },
   ff: {
     'nav.home': 'Fuɗɗo',
@@ -1988,6 +2160,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.plantations': 'Nguurndam',
     'nav.ai': 'AI',
     'nav.guide': 'Jangirde',
+    'nav.docs': 'Jokkondiral Bayɗe',
+    'nav.privacy': 'Suuduɓe',
     'nav.technician': 'Dashboard',
     'auth.login': 'Seŋo',
     'auth.signup': 'Winndito',
@@ -2633,6 +2807,62 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.deployment.env.title': 'Variables Environnement',
     'docs.deployment.config.title': 'Laamngo',
     'docs.deployment.config.content': 'Build production ina ɓeydude dossier dist/ e fichiers optimisés. Laamngo VITE_API_URL ngam pointer e API production.',
+    'privacy.title': 'Koɗɗe Suuduɓe',
+    'privacy.subtitle': 'Ɓeydu no min ɓeydude, kuutorɗe, é laamngo keɓe maa.',
+    'privacy.tableOfContents': 'Tabel Keɓe',
+    'privacy.sections.introduction': 'Fuɗɗo',
+    'privacy.sections.dataCollection': 'Ɓeydude Keɓe',
+    'privacy.sections.dataUsage': 'Kuutoraade Keɓe',
+    'privacy.sections.dataSharing': 'Jokkondiral Keɓe',
+    'privacy.sections.dataSecurity': 'Laamngo Keɓe',
+    'privacy.sections.yourRights': 'Haɓɓe Maɓɓe',
+    'privacy.sections.cookies': 'Cookies',
+    'privacy.sections.changes': 'Waylude',
+    'privacy.sections.contact': 'Jokkondiral',
+    'privacy.introduction.content': 'CamerFarm AI ina foti laamngo suuduɓe maa é keɓe maa. Koɗɗe oo ina hollira no min ɓeydude, kuutorɗe, jokkondiraade, é laamngo keɓe maa so a kuutoraade platforme amen.',
+    'privacy.introduction.lastUpdated': 'Bennawtude sakkitiingo: Yanwiye 2025',
+    'privacy.dataCollection.personalData.title': 'Keɓe Kuutoro',
+    'privacy.dataCollection.personalData.content': 'Min ina ɓeydude keɓe ɗee so a waɗde kontó walla kuutoraade jokkondiral amen:',
+    'privacy.dataCollection.personalData.item1': 'Innde é innde fuɗɗorde',
+    'privacy.dataCollection.personalData.item2': 'Adresse email',
+    'privacy.dataCollection.personalData.item3': 'Núméro téléphone',
+    'privacy.dataCollection.personalData.item4': 'Keɓe e nder nguurndam maa (nokkuure, laawol, type culture)',
+    'privacy.dataCollection.personalData.item5': 'Keɓe capteurs é actionneurs e nder nguurndam maa',
+    'privacy.dataCollection.usageData.title': 'Keɓe Kuutoraade',
+    'privacy.dataCollection.usageData.content': 'Min ina ɓeydude keɓe ɗuuɗɗe otomatik so a kuutoraade platforme amen:',
+    'privacy.dataCollection.usageData.item1': 'Adresse IP é keɓe ɓeyngu maa',
+    'privacy.dataCollection.usageData.item2': 'Helloji yiɓɓe é ɓeynguuji waɗɗe',
+    'privacy.dataCollection.usageData.item3': 'Keɓe kómbí é wakati kuutoraade',
+    'privacy.dataUsage.content': 'Min ina kuutora keɓe maa ngam:',
+    'privacy.dataUsage.item1': 'Hokki é ɓeydude jokkondiral amen',
+    'privacy.dataUsage.item2': 'Waɗde kuutoraade maa mán',
+    'privacy.dataUsage.item3': 'Nelde tintine hesɗi e nder nguurndam maa',
+    'privacy.dataUsage.item4': 'Fannude kuutoraade platforme ngam ɓeydude jokkondiral amen',
+    'privacy.dataUsage.item5': 'Laamngo koɗɗe laawol',
+    'privacy.dataSharing.content': 'Min alaa reende keɓe kuutoro maa. Min waawi jokkondiraade keɓe maa tan e nder ɓeynguuji ɗee:',
+    'privacy.dataSharing.thirdParties.title': 'Prestataires Services',
+    'privacy.dataSharing.thirdParties.content': 'Min waawi jokkondiraade keɓe maa e prestataires services kisal ɓe walla min waɗde platforme amen (hébergement, analyse, tintine). Prestataires ɗee ina foti laamngo keɓe maa.',
+    'privacy.dataSharing.legal.title': 'Koɗɗe Laawol',
+    'privacy.dataSharing.legal.content': 'Min waawi hollirde keɓe maa so laawol ina ɗaɓɓa walla ngam laamngo haɓɓe amen é kisal kuutoroje amen.',
+    'privacy.dataSecurity.content': 'Min ina waɗde ɓeynguuji laamngo hesɗi ngam laamngo keɓe maa:',
+    'privacy.dataSecurity.item1': 'Chiffrement keɓe kisal',
+    'privacy.dataSecurity.item2': 'Tiimtinde kisal e mótí ɓurɗe',
+    'privacy.dataSecurity.item3': 'Jokkondiral keɓe kuutoro e nder laamngo',
+    'privacy.dataSecurity.item4': 'Jokkondiral wakati goonga sistem laamngo amen',
+    'privacy.yourRights.content': 'A jogii haɓɓe ngam:',
+    'privacy.yourRights.item1': 'Heɓde keɓe kuutoro maa',
+    'privacy.yourRights.item2': 'Waylude walla bennawtude keɓe maa',
+    'privacy.yourRights.item3': 'Ƴeewto mbatu keɓe maa',
+    'privacy.yourRights.item4': 'Ƴeewto laamngo keɓe maa',
+    'privacy.yourRights.item5': 'Ƴeewto kopi keɓe maa',
+    'privacy.cookies.content': 'Min ina kuutora cookies ngam ɓeydude kuutoraade maa e platforme amen. Cookies ko fayluji tekstuuji ɗuuɗɗe e nder ɓeyngu maa.',
+    'privacy.cookies.types.title': 'Fannuuji Cookies',
+    'privacy.cookies.types.content': 'Min ina kuutora cookies hesɗi ngam waɗde platforme é cookies fannuuji ngam anndude no a kuutoraade jokkondiral amen.',
+    'privacy.cookies.management.title': 'Laamngo Cookies',
+    'privacy.cookies.management.content': 'A waawi laamngo cookies maa e laamngo navigator maa. Anndu ko mbatu cookies ɗuuɗɗe waawi ɓeydude waɗde platforme.',
+    'privacy.changes.content': 'Min waawi bennawtude koɗɗe oo e wakati ɗuuɗɗe. Min ina hollirde maa waylude hesɗi e ɓeydude koɗɗe hesɗi e hello oo é bennawtude "Bennawtude sakkitiingo".',
+    'privacy.contact.content': 'So a jogii laawol e nder koɗɗe oo walla a waawi waɗde haɓɓe maa, jokkondir amen:',
+    'privacy.contact.email': 'contact@camerfarmai.com',
   },
   ew: {
     'nav.home': 'Ndé',
@@ -2643,6 +2873,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.ai': 'AI',
     'nav.guide': 'Guide',
     'nav.docs': 'Jokkondiral',
+    'nav.privacy': 'Confidentialité',
     'nav.technician': 'Tableau de bord',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
@@ -3303,6 +3534,62 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.deployment.env.title': 'Variables Environnement',
     'docs.deployment.config.title': 'Laamngo',
     'docs.deployment.config.content': 'Build production ina ɓeydude dossier dist/ e fichiers optimisés. Laamngo VITE_API_URL ngam pointer e API production.',
+    'privacy.title': 'Politique Confidentialité',
+    'privacy.subtitle': 'Fón no min ɓeydude, kuutorɗe, é laamngo keɓe wá.',
+    'privacy.tableOfContents': 'Tabel Keɓe',
+    'privacy.sections.introduction': 'Fuɗɗo',
+    'privacy.sections.dataCollection': 'Ɓeydude Keɓe',
+    'privacy.sections.dataUsage': 'Kuutoraade Keɓe',
+    'privacy.sections.dataSharing': 'Jokkondiral Keɓe',
+    'privacy.sections.dataSecurity': 'Laamngo Keɓe',
+    'privacy.sections.yourRights': 'Haɓɓe Wá',
+    'privacy.sections.cookies': 'Cookies',
+    'privacy.sections.changes': 'Waylude',
+    'privacy.sections.contact': 'Jokkondiral',
+    'privacy.introduction.content': 'CamerFarm AI ina foti laamngo suuduɓe wá é keɓe wá. Koɗɗe oo ina hollira no min ɓeydude, kuutorɗe, jokkondiraade, é laamngo keɓe wá so wá kuutoraade platforme amen.',
+    'privacy.introduction.lastUpdated': 'Bennawtude sakkitiingo: Yanwiye 2025',
+    'privacy.dataCollection.personalData.title': 'Keɓe Kuutoro',
+    'privacy.dataCollection.personalData.content': 'Min ina ɓeydude keɓe ɗee so wá waɗde kontó walla kuutoraade jokkondiral amen:',
+    'privacy.dataCollection.personalData.item1': 'Innde é innde fuɗɗorde',
+    'privacy.dataCollection.personalData.item2': 'Adresse email',
+    'privacy.dataCollection.personalData.item3': 'Núméro téléphone',
+    'privacy.dataCollection.personalData.item4': 'Keɓe e nder bisó wá (nokkuure, laawol, type culture)',
+    'privacy.dataCollection.personalData.item5': 'Keɓe capteurs é actionneurs e nder bisó wá',
+    'privacy.dataCollection.usageData.title': 'Keɓe Kuutoraade',
+    'privacy.dataCollection.usageData.content': 'Min ina ɓeydude keɓe ɗuuɗɗe otomatik so wá kuutoraade platforme amen:',
+    'privacy.dataCollection.usageData.item1': 'Adresse IP é keɓe ɓeyngu wá',
+    'privacy.dataCollection.usageData.item2': 'Helloji yiɓɓe é ɓeynguuji waɗɗe',
+    'privacy.dataCollection.usageData.item3': 'Keɓe kómbí é wakati kuutoraade',
+    'privacy.dataUsage.content': 'Min ina kuutora keɓe wá ngam:',
+    'privacy.dataUsage.item1': 'Hokki é ɓeydude jokkondiral amen',
+    'privacy.dataUsage.item2': 'Waɗde kuutoraade wá mán',
+    'privacy.dataUsage.item3': 'Nelde tintine hesɗi e nder bisó wá',
+    'privacy.dataUsage.item4': 'Fannude kuutoraade platforme ngam ɓeydude jokkondiral amen',
+    'privacy.dataUsage.item5': 'Laamngo koɗɗe laawol',
+    'privacy.dataSharing.content': 'Min alaa reende keɓe kuutoro wá. Min waawi jokkondiraade keɓe wá tan e nder ɓeynguuji ɗee:',
+    'privacy.dataSharing.thirdParties.title': 'Prestataires Services',
+    'privacy.dataSharing.thirdParties.content': 'Min waawi jokkondiraade keɓe wá e prestataires services kisal ɓe walla min waɗde platforme amen (hébergement, analyse, tintine). Prestataires ɗee ina foti laamngo keɓe wá.',
+    'privacy.dataSharing.legal.title': 'Koɗɗe Laawol',
+    'privacy.dataSharing.legal.content': 'Min waawi hollirde keɓe wá so laawol ina ɗaɓɓa walla ngam laamngo haɓɓe amen é kisal kuutoroje amen.',
+    'privacy.dataSecurity.content': 'Min ina waɗde ɓeynguuji laamngo hesɗi ngam laamngo keɓe wá:',
+    'privacy.dataSecurity.item1': 'Chiffrement keɓe kisal',
+    'privacy.dataSecurity.item2': 'Tiimtinde kisal e mótí ɓurɗe',
+    'privacy.dataSecurity.item3': 'Jokkondiral keɓe kuutoro e nder laamngo',
+    'privacy.dataSecurity.item4': 'Jokkondiral wakati goonga sistem laamngo amen',
+    'privacy.yourRights.content': 'Wá jogii haɓɓe ngam:',
+    'privacy.yourRights.item1': 'Heɓde keɓe kuutoro wá',
+    'privacy.yourRights.item2': 'Waylude walla bennawtude keɓe wá',
+    'privacy.yourRights.item3': 'Ƴeewto mbatu keɓe wá',
+    'privacy.yourRights.item4': 'Ƴeewto laamngo keɓe wá',
+    'privacy.yourRights.item5': 'Ƴeewto kopi keɓe wá',
+    'privacy.cookies.content': 'Min ina kuutora cookies ngam ɓeydude kuutoraade wá e platforme amen. Cookies ko fayluji tekstuuji ɗuuɗɗe e nder ɓeyngu wá.',
+    'privacy.cookies.types.title': 'Fannuuji Cookies',
+    'privacy.cookies.types.content': 'Min ina kuutora cookies hesɗi ngam waɗde platforme é cookies fannuuji ngam anndude no wá kuutoraade jokkondiral amen.',
+    'privacy.cookies.management.title': 'Laamngo Cookies',
+    'privacy.cookies.management.content': 'Wá waawi laamngo cookies wá e laamngo navigator wá. Anndu ko mbatu cookies ɗuuɗɗe waawi ɓeydude waɗde platforme.',
+    'privacy.changes.content': 'Min waawi bennawtude koɗɗe oo e wakati ɗuuɗɗe. Min ina hollirde wá waylude hesɗi e ɓeydude koɗɗe hesɗi e hello oo é bennawtude "Bennawtude sakkitiingo".',
+    'privacy.contact.content': 'So wá jogii laawol e nder koɗɗe oo walla wá waawi waɗde haɓɓe wá, jokkondir amen:',
+    'privacy.contact.email': 'contact@camerfarmai.com',
   },
 };
 
