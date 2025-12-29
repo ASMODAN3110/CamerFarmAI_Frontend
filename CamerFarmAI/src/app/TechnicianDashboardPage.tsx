@@ -99,6 +99,14 @@ useEffect(() => {
         const trimmedSearch = searchTerm.trim()
         const searchQuery = trimmedSearch.length > 0 ? trimmedSearch : undefined
         const farmersData = await technicianService.getFarmers(searchQuery)
+        
+        // Log pour vérifier les données reçues
+        console.log('📋 Farmers data received:', farmersData.map(f => ({ 
+          name: `${f.firstName} ${f.lastName}`, 
+          phone: f.phone,
+          hasPhone: !!f.phone 
+        })))
+        
         setFarmers(farmersData)
         setLastRefresh(new Date())
 
@@ -357,6 +365,11 @@ useEffect(() => {
                       <div className={styles.farmerName}>
                         {farmer.firstName} {farmer.lastName}
                       </div>
+                      {farmer.phone && (
+                        <div className={styles.farmerPhone}>
+                          <FaPhoneAlt /> {farmer.phone}
+                        </div>
+                      )}
                       {farmer.location && (
                     <div className={styles.farmerLocation}>
                           <FaMapMarkerAlt /> {farmer.location}

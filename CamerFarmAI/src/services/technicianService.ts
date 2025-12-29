@@ -20,6 +20,7 @@ export interface FarmerListItem {
   id: string
   firstName: string        // Au lieu de name combiné
   lastName: string
+  phone: string | null     // Numéro de téléphone
   location: string | null
   plantationsCount: number
 }
@@ -90,13 +91,21 @@ const normalizeStats = (data: any): TechnicianStats => ({
   actuators: Number(data.actuators) || 0
 })
 
-const normalizeFarmerListItem = (data: any): FarmerListItem => ({
-  id: data.id,
-  firstName: data.firstName || '',
-  lastName: data.lastName || '',
-  location: data.location || null,
-  plantationsCount: Number(data.plantationsCount) || 0
-})
+const normalizeFarmerListItem = (data: any): FarmerListItem => {
+  // Log pour déboguer
+  if (data.id && !data.phone) {
+    console.warn('⚠️ Farmer without phone:', { id: data.id, name: `${data.firstName} ${data.lastName}`, rawData: data })
+  }
+  
+  return {
+    id: data.id,
+    firstName: data.firstName || '',
+    lastName: data.lastName || '',
+    phone: data.phone && data.phone.trim() ? data.phone.trim() : null,
+    location: data.location || null,
+    plantationsCount: Number(data.plantationsCount) || 0
+  }
+}
 
 const normalizePlantationListItem = (data: any): PlantationListItem => ({
   id: data.id,
@@ -222,12 +231,19 @@ export const technicianService = {
     const res = await api.get('/technician/farmers', config)
     
     // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:230',message:'API response received',data:{status:res.status,dataLength:Array.isArray(res.data)?res.data.length:0,isArray:Array.isArray(res.data),firstItem:Array.isArray(res.data)&&res.data.length>0?res.data[0]:null},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'E'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7242/ingest/160298b2-1cd0-45e0-a157-b1b9a1712855',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'technicianService.ts:230',message:'API response received',data:{status:res.status,dataLength:Array.isArray(res.data)?res.data.length:0,isArray:Array.isArray(res.data),firstItem:Array.isArray(res.data)&&res.data.length>0?res.data[0]:null,firstItemPhone:Array.isArray(res.data)&&res.data.length>0?res.data[0]?.phone:null},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'E'})}).catch(()=>{});
     // #endregion
     
-    return Array.isArray(res.data)
+    const normalized = Array.isArray(res.data)
       ? res.data.map(normalizeFarmerListItem)
       : []
+    
+    // Log pour vérifier les données normalisées
+    if (normalized.length > 0) {
+      console.log('📞 Farmers with phone:', normalized.map(f => ({ name: `${f.firstName} ${f.lastName}`, phone: f.phone })))
+    }
+    
+    return normalized
   },
 
   /* ---- Plantations d'un agriculteur ---- */
