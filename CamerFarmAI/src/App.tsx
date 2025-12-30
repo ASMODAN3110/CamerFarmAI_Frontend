@@ -17,6 +17,7 @@ import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
 import { DocumentationPage } from './app/DocumentationPage';
 import { PrivacyPage } from './app/PrivacyPage';
+import { TermsPage } from './app/TermsPage';
 function App() {
   return (
     <AuthProvider>
@@ -121,6 +122,10 @@ function App() {
             <Route 
               path="/privacy" 
               element={<PrivacyPage />} 
+            />
+            <Route 
+              path="/terms" 
+              element={<TermsPage />} 
             />
             
             {/* Route catch-all - redirige vers la page d'accueil */}

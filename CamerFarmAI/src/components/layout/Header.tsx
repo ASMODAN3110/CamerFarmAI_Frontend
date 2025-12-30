@@ -28,16 +28,17 @@ interface HeaderProps {
 }
 
 // Les labels seront traduits dynamiquement dans le composant
-const defaultNavItemsConfig: Array<{ key: 'nav.home' | 'nav.support' | 'nav.guide' | 'nav.docs' | 'nav.privacy'; href: string }> = [
+const defaultNavItemsConfig: Array<{ key: 'nav.home' | 'nav.support' | 'nav.guide' | 'nav.docs' | 'nav.privacy' | 'nav.terms'; href: string }> = [
   { key: 'nav.home', href: '/' },
   { key: 'nav.guide', href: '/guide' },
   { key: 'nav.docs', href: '/docs' },
   { key: 'nav.privacy', href: '/privacy' },
+  { key: 'nav.terms', href: '/terms' },
   { key: 'nav.support', href: '/support' },
 ];
 
 const authenticatedNavItemsConfig: Array<{ 
-  key: 'nav.home' | 'nav.plantations' | 'nav.support' | 'nav.ai' | 'nav.guide' | 'nav.docs' | 'nav.privacy'; 
+  key: 'nav.home' | 'nav.plantations' | 'nav.support' | 'nav.ai' | 'nav.guide' | 'nav.docs' | 'nav.privacy' | 'nav.terms'; 
   href: string 
 }> = [
   { key: 'nav.home', href: '/' },
@@ -46,6 +47,7 @@ const authenticatedNavItemsConfig: Array<{
   { key: 'nav.guide', href: '/guide' },
   { key: 'nav.docs', href: '/docs' },
   { key: 'nav.privacy', href: '/privacy' },
+  { key: 'nav.terms', href: '/terms' },
   { key: 'nav.support', href: '/support' },
 ];
 
@@ -356,6 +358,7 @@ export function Header({
     // Afficher "Guide" uniquement sur /guide
     // Afficher "Documentation" uniquement sur /docs
     // Afficher "Confidentialité" uniquement sur /privacy
+    // Afficher "Conditions" uniquement sur /terms
     activeNavItemsConfig = activeNavItemsConfig.filter(item => {
       if (item.href === '/guide' && currentPath !== '/guide') {
         return false;
@@ -364,6 +367,9 @@ export function Header({
         return false;
       }
       if (item.href === '/privacy' && currentPath !== '/privacy') {
+        return false;
+      }
+      if (item.href === '/terms' && currentPath !== '/terms') {
         return false;
       }
       return true;
