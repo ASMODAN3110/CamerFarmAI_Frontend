@@ -2,19 +2,22 @@
  * Utilitaires pour la gestion des statuts des capteurs
  */
 
-export type SensorStatus = 'active' | 'inactive' | 'offline';
+import { SensorStatus } from '@/types/enums';
+
+// Réexporter pour compatibilité
+export { SensorStatus };
 
 /**
  * Retourne la couleur associée à un statut de capteur
  */
-export function getSensorStatusColor(status: SensorStatus): string {
-  switch (status) {
+export function getSensorStatusColor(status: SensorStatus | string): string {
+  const normalizedStatus = String(status).toLowerCase();
+  switch (normalizedStatus) {
     case 'active':
       return '#10b981'; // Vert
     case 'inactive':
+    case 'offline': // Gérer gracieusement 'offline' pour compatibilité
       return '#ef4444'; // Rouge
-    case 'offline':
-      return '#6b7280'; // Gris
     default:
       return '#6b7280'; // Gris par défaut
   }
@@ -23,28 +26,28 @@ export function getSensorStatusColor(status: SensorStatus): string {
 /**
  * Retourne le label associé à un statut de capteur
  */
-export function getSensorStatusLabel(status: SensorStatus, t?: (key: string) => string): string {
+export function getSensorStatusLabel(status: SensorStatus | string, t?: (key: string) => string): string {
+  const normalizedStatus = String(status).toLowerCase();
+  
   if (t) {
-    switch (status) {
+    switch (normalizedStatus) {
       case 'active':
         return t('sensor.status.active');
       case 'inactive':
+      case 'offline': // Gérer gracieusement 'offline' pour compatibilité
         return t('sensor.status.inactive');
-      case 'offline':
-        return t('sensor.status.offline');
       default:
         return t('sensor.status.unknown');
     }
   }
   
   // Fallback sans traduction
-  switch (status) {
+  switch (normalizedStatus) {
     case 'active':
       return 'Actif';
     case 'inactive':
+    case 'offline': // Gérer gracieusement 'offline' pour compatibilité
       return 'Inactif';
-    case 'offline':
-      return 'Hors ligne';
     default:
       return 'Inconnu';
   }
@@ -123,14 +126,14 @@ export function isSensorInactiveTooLong(
 /**
  * Retourne une classe CSS pour le statut d'un capteur
  */
-export function getSensorStatusClass(status: SensorStatus): string {
-  switch (status) {
+export function getSensorStatusClass(status: SensorStatus | string): string {
+  const normalizedStatus = String(status).toLowerCase();
+  switch (normalizedStatus) {
     case 'active':
       return 'sensor-status-active';
     case 'inactive':
+    case 'offline': // Gérer gracieusement 'offline' pour compatibilité
       return 'sensor-status-inactive';
-    case 'offline':
-      return 'sensor-status-offline';
     default:
       return 'sensor-status-unknown';
   }

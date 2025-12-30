@@ -1,13 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { api } from '@/services/api'
-
-export type UserRole = 'ADMIN' | 'TECHNICIAN' | 'FARMER'
-
-interface User {
-  id: string
-  phone?: string
-  role: UserRole
-}
+import type { User } from '@/services/authService'
+import { authService } from '@/services/authService'
 
 interface AuthContextType {
   user: User | null
@@ -26,8 +20,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await api.get('/auth/me') // route protégée
-        setUser(res.data)
+        // Utiliser authService.me() qui normalise correctement les données
+        const user = await authService.me()
+        setUser(user)
       } catch {
         setUser(null)
       } finally {

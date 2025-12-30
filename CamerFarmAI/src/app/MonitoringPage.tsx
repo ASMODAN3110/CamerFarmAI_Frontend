@@ -2212,7 +2212,7 @@ export function MonitoringPage() {
                         <div 
                           className={styles.monitoringPage__thresholdStatus}
                           style={{ 
-                            color: getSensorStatusColor(sensor.status as 'active' | 'inactive' | 'offline'),
+                            color: getSensorStatusColor(sensor.status),
                             marginLeft: '8px'
                           }}
                         >
@@ -2424,8 +2424,8 @@ export function MonitoringPage() {
                 isOn={equipmentState.irrigationPump}
                 onToggle={() => handleEquipmentToggle('irrigationPump')}
                 disabled={isAutomaticMode}
-                          isActive={pumpActuator.status !== 'offline'}
-                          offlineLabel={pumpActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                          isActive={pumpActuator.status === 'active'}
+                          offlineLabel={pumpActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                       {fanActuator && (
@@ -2434,8 +2434,8 @@ export function MonitoringPage() {
                 isOn={equipmentState.fans}
                 onToggle={() => handleEquipmentToggle('fans')}
                 disabled={isAutomaticMode}
-                          isActive={fanActuator.status !== 'offline'}
-                          offlineLabel={fanActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                          isActive={fanActuator.status === 'active'}
+                          offlineLabel={fanActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                       {lightActuator && (
@@ -2444,8 +2444,8 @@ export function MonitoringPage() {
                 isOn={equipmentState.lighting}
                 onToggle={() => handleEquipmentToggle('lighting')}
                 disabled={isAutomaticMode}
-                          isActive={lightActuator.status !== 'offline'}
-                          offlineLabel={lightActuator.status === 'offline' ? t('monitoring.equipment.offline') : undefined}
+                          isActive={lightActuator.status === 'active'}
+                          offlineLabel={lightActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                     </>

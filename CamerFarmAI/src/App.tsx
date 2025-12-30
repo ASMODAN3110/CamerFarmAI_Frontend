@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './services/authProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { CookieProvider } from './contexts/CookieContext';
+import { CookieBanner } from './components/cookies/CookieBanner';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
 import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
+import { UserRole } from './types/enums';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';
@@ -18,12 +21,14 @@ import { GuidePage } from './app/GuidePage';
 import { DocumentationPage } from './app/DocumentationPage';
 import { PrivacyPage } from './app/PrivacyPage';
 import { TermsPage } from './app/TermsPage';
+import { CookiesPage } from './app/CookiesPage';
 function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <BrowserRouter>
-          <Routes>
+        <CookieProvider>
+          <BrowserRouter>
+            <Routes>
             {/* Routes publiques */}
             <Route 
               path="/" 
@@ -98,7 +103,7 @@ function App() {
             <Route
           path="/technicien"
           element={
-            <RoleBasedRoute allowedRoles={['technician']} redirectTo="/">
+            <RoleBasedRoute allowedRoles={[UserRole.TECHNICIAN]} redirectTo="/">
               <TechnicianDashboardPage />
             </RoleBasedRoute>
           }
@@ -127,12 +132,18 @@ function App() {
               path="/terms" 
               element={<TermsPage />} 
             />
+            <Route 
+              path="/cookies" 
+              element={<CookiesPage />} 
+            />
             
             {/* Route catch-all - redirige vers la page d'accueil */}
             <Route path="*" element={<Navigate to="/" replace />} />
             {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+          <CookieBanner />
+        </CookieProvider>
       </NotificationProvider>
     </AuthProvider>
   );

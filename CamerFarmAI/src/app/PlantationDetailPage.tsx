@@ -316,7 +316,6 @@ export function PlantationDetailPage() {
                   const getSensorLabel = (type: string) => {
                     const labels: Record<string, string> = {
                       temperature: t('plantations.detail.sensors.temperature'),
-                      humidity: t('plantations.detail.sensors.humidity'),
                       soilMoisture: t('plantations.detail.sensors.soilMoisture'),
                       co2Level: t('plantations.detail.sensors.co2Level'),
                       waterLevel: t('plantations.detail.sensors.waterLevel'),
@@ -327,7 +326,6 @@ export function PlantationDetailPage() {
                   
                   const getSensorIcon = (type: string) => {
                     if (type === 'temperature') return FaThermometerHalf;
-                    if (type === 'humidity') return FaCloud;
                     if (type === 'soilMoisture' || type === 'waterLevel') return FaTint;
                     if (type === 'luminosity') return FaSun;
                     return FaCloud;
@@ -335,14 +333,14 @@ export function PlantationDetailPage() {
                   
                   const getSensorUnit = (type: string) => {
                     if (type === 'temperature') return '°C';
-                    if (type === 'humidity' || type === 'soilMoisture' || type === 'waterLevel') return '%';
+                    if (type === 'soilMoisture' || type === 'waterLevel') return '%';
                     if (type === 'co2Level') return ' ppm';
                     if (type === 'luminosity') return ' lux';
                     return '';
                   };
                   
-                  const statusColor = getSensorStatusColor(sensor.status as 'active' | 'inactive' | 'offline');
-                  const statusLabel = getSensorStatusLabel(sensor.status as 'active' | 'inactive' | 'offline', t);
+                  const statusColor = getSensorStatusColor(sensor.status);
+                  const statusLabel = getSensorStatusLabel(sensor.status, t);
                   const timeSinceReading = getTimeSinceLastReading(sensor.latestReading?.timestamp);
                   
                   return (

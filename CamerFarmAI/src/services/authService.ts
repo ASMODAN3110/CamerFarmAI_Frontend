@@ -1,5 +1,7 @@
 // src/services/authService.ts
 import { api } from './api';
+import type { UserRole } from '@/types/enums';
+import type { RegisterDto, LoginDto, UpdateProfileDto } from '@/types/dto';
 
 export interface LoginResponse {
   accessToken?: string;
@@ -10,8 +12,8 @@ export interface LoginResponse {
     phone: string;
     firstName: string;
     lastName: string;
-    role: 'farmer' | 'technician' | 'admin';
-    language: string;
+    role: UserRole;
+    language?: string; // Non-backend, pour compatibilité frontend
   };
   // Le backend peut aussi retourner {success: true, data: {...}}
   data?: {
@@ -22,8 +24,8 @@ export interface LoginResponse {
       phone: string;
       firstName: string;
       lastName: string;
-      role: 'farmer' | 'technician' | 'admin';
-      language: string;
+      role: UserRole;
+      language?: string; // Non-backend, pour compatibilité frontend
     };
     accessToken?: string;
   };
@@ -34,21 +36,30 @@ export interface TwoFactorSecretResponse {
   qrCodeUrl: string;
 }
 
+/**
+ * Interface User correspondant au modèle de données du backend
+ * Champs marqués comme "Non-backend" sont utilisés uniquement côté frontend
+ */
 export interface User {
   id: string;
-  phone: string;
+  phone: string; // Requis
   firstName: string;
   lastName: string;
-  role: 'farmer' | 'technician' | 'admin';
-  language: string;
-  email?: string;
-  avatarUrl?: string | null;
-  twoFactorEnabled?: boolean;
+  role: UserRole;
+  email?: string | null; // Optionnel selon backend
+  twoFactorEnabled: boolean; // Default: false
+  isActive: boolean; // Default: true, nouveau champ backend
+  // Champs non-backend (pour compatibilité frontend uniquement)
+  language?: string; // Non-backend, utilisé pour les préférences UI
+  avatarUrl?: string | null; // Non-backend, utilisé pour l'affichage
 }
 
 export const authService = {
-  register: (data: { phone: string; password: string; firstName?: string; lastName?: string; email?: string; language?: string }) =>
-    api.post('/auth/register', data),
+  register: (data: RegisterDto & { language?: string }) => {
+    // Extraire language (non-backend) du payload avant l'envoi
+    const { language, ...registerData } = data;
+    return api.post('/auth/register', registerData);
+  },
 
   login: (email: string, password: string): Promise<LoginResponse> => {
     // Normaliser l'email (trim et lowercase)
@@ -167,14 +178,16 @@ export const authService = {
           firstName: userData.firstName || userData.first_name || '',
           lastName: userData.lastName || userData.last_name || '',
           phone: userData.phone || '',
-          role: userData.role || 'farmer',
-          language: userData.language || 'fr',
-          email: userData.email || '',
-          avatarUrl: userData.avatarUrl || userData.avatar_url || null,
+          role: (userData.role || 'farmer') as UserRole,
+          email: userData.email !== undefined ? userData.email : null,
           twoFactorEnabled: userData.twoFactorEnabled || userData.two_factor_enabled || false,
+          isActive: userData.isActive !== undefined ? userData.isActive : (userData.is_active !== undefined ? userData.is_active : true),
+          // Champs non-backend (pour compatibilité frontend)
+          language: userData.language || 'fr',
+          avatarUrl: userData.avatarUrl || userData.avatar_url || null,
         };
         console.log('🔄 Données normalisées:', normalized);
-        console.log('✅ ID final normalisé:', normalized.id, 'Rôle:', normalized.role, '2FA:', normalized.twoFactorEnabled);
+        console.log('✅ ID final normalisé:', normalized.id, 'Rôle:', normalized.role, '2FA:', normalized.twoFactorEnabled, 'isActive:', normalized.isActive);
         return normalized;
       }
       
@@ -183,8 +196,10 @@ export const authService = {
     });
   }, // retourne user + role
 
-  updateProfile: (data: { firstName?: string; lastName?: string; phone?: string; language?: string }) =>
-    api.put('/auth/profile', data).then(res => {
+  updateProfile: (data: UpdateProfileDto & { language?: string }) => {
+    // Extraire language (non-backend) du payload avant l'envoi
+    const { language, ...profileData } = data;
+    return api.put('/auth/profile', profileData).then(res => {
       console.log('✅ Réponse de updateProfile:', res.data);
       // Le backend retourne {success: true, data: {...}} ou { user: {...} } ou directement {...}
       const updatedUser = res.data.data || res.data.user || res.data;
@@ -193,14 +208,17 @@ export const authService = {
       
       // Si le backend retourne les données utilisateur mises à jour, les normaliser
       if (updatedUser && typeof updatedUser === 'object') {
-        const normalized = {
+        const normalized: User = {
           id: updatedUser.id || updatedUser._id || '',
           firstName: updatedUser.firstName || updatedUser.first_name || '',
           lastName: updatedUser.lastName || updatedUser.last_name || '',
           phone: updatedUser.phone || '',
-          role: updatedUser.role || 'farmer',
-          language: updatedUser.language || 'fr',
-          email: updatedUser.email || '',
+          role: (updatedUser.role || 'farmer') as UserRole,
+          email: updatedUser.email !== undefined ? updatedUser.email : null,
+          twoFactorEnabled: updatedUser.twoFactorEnabled || updatedUser.two_factor_enabled || false,
+          isActive: updatedUser.isActive !== undefined ? updatedUser.isActive : (updatedUser.is_active !== undefined ? updatedUser.is_active : true),
+          // Champs non-backend (pour compatibilité frontend)
+          language: language || updatedUser.language || 'fr',
           avatarUrl: updatedUser.avatarUrl || updatedUser.avatar_url || null,
         };
         console.log('🔄 Données normalisées après update:', normalized);
@@ -208,7 +226,8 @@ export const authService = {
       }
       
       return updatedUser;
-    }),
+    });
+  },
 
   uploadProfilePicture: (file: File) => {
     const formData = new FormData();
