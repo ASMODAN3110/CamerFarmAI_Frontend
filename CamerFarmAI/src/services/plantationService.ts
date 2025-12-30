@@ -1,29 +1,24 @@
 import { api } from './api';
+import type { SensorType, SensorStatus, ActuatorStatus, PlantationMode } from '@/types/enums';
+import type { CreatePlantationDto, UpdatePlantationDto, CreateSensorDto, UpdateSensorThresholdsDto, AddSensorReadingDto, CreateActuatorDto, UpdateActuatorDto } from '@/types/dto';
 
-export interface PlantationPayload {
-  name: string;
-  location: string;
-  area: number;
-  cropType?: string;
-}
+// Alias pour compatibilité ascendante
+export type { SensorType, SensorStatus, ActuatorStatus, PlantationMode };
 
-export type SensorType = 
-  | 'temperature'
-  | 'humidity'
-  | 'soilMoisture'
-  | 'co2Level'
-  | 'waterLevel'
-  | 'luminosity';
+/**
+ * @deprecated Utiliser CreatePlantationDto à la place
+ */
+export interface PlantationPayload extends CreatePlantationDto {}
 
 export interface Sensor {
   id: string;
-  type: SensorType | string;
-  status: 'active' | 'inactive' | 'offline';
+  type: SensorType | string; // Permet aussi les strings pour compatibilité
+  status: SensorStatus; // 'active' | 'inactive' (pas 'offline')
   plantationId: string;
   seuilMin?: number;
   seuilMax?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string; // Format ISO 8601
+  updatedAt: string; // Format ISO 8601
   latestReading?: SensorReading;
   readings?: SensorReading[];
 }
@@ -38,28 +33,44 @@ export interface SensorReading {
 
 export interface Actuator {
   id: string;
-  type: string;
-  name: string;
-  status: 'active' | 'inactive' | 'offline';
-  isOn?: boolean;
+  type: string; // Requis (ex: "pompe", "ventilateur", "éclairage")
+  name: string; // Requis
+  status: ActuatorStatus; // 'active' | 'inactive' (pas 'offline')
   plantationId: string;
-  lastUpdate?: string;
+  metadata?: Record<string, any>; // Optionnel, JSON
+  createdAt: string; // Format ISO 8601
+  updatedAt: string; // Format ISO 8601
+  // Propriété calculée (non-backend) pour compatibilité frontend
+  isOn?: boolean; // Calculé depuis status === 'active'
 }
 
 export interface Plantation {
-  id: string;
-  name: string;
-  location: string;
-  area: number;
-  cropType?: string;
-  ownerId?: string;
-  createdAt: string;
-  updatedAt: string;
-  mode?: 'automatic' | 'manual'; // Mode de contrôle de la plantation (valeurs en minuscules comme stockées en base)
+  id: string; // UUID
+  name: string; // Requis
+  location: string | null; // Nullable selon backend
+  area?: number; // Optionnel, en m²
+  cropType: string; // Requis
+  coordinates?: { // Optionnel
+    lat: number;
+    lng: number;
+  };
+  mode: PlantationMode; // 'automatic' | 'manual', default: 'automatic'
+  ownerId?: string; // UUID du propriétaire
   sensors?: Sensor[];
   actuators?: Actuator[];
-  hasSensors?: boolean;
-  hasActuators?: boolean;
+  hasSensors?: boolean; // Calculé (non-backend)
+  hasActuators?: boolean; // Calculé (non-backend)
+  createdAt: string; // Format ISO 8601
+  updatedAt: string; // Format ISO 8601
+  // État calculé par le backend
+  etat?: {
+    status: 'healthy' | 'warning' | 'critical' | 'unknown';
+    activeSensors: number;
+    totalSensors: number;
+    activeActuators: number;
+    totalActuators: number;
+    message: string;
+  };
   // Pour compatibilité avec l'ancienne structure
   latestSensorData?: any;
 }
@@ -72,33 +83,53 @@ const normalizeSensorReading = (data: any): SensorReading => ({
   createdAt: data.createdAt,
 });
 
-const normalizeSensor = (data: any): Sensor => ({
-  id: data.id,
-  type: data.type || data.sensorType || '',
-  status: data.status || 'inactive',
-  plantationId: data.plantationId,
-  seuilMin: typeof data.seuilMin === 'number' ? data.seuilMin : data.seuilMin !== undefined ? Number(data.seuilMin) : undefined,
-  seuilMax: typeof data.seuilMax === 'number' ? data.seuilMax : data.seuilMax !== undefined ? Number(data.seuilMax) : undefined,
-  createdAt: data.createdAt,
-  updatedAt: data.updatedAt,
-  latestReading: data.latestReading ? normalizeSensorReading(data.latestReading) : undefined,
-  readings: Array.isArray(data.readings) ? data.readings.map(normalizeSensorReading) : undefined,
-});
+const normalizeSensor = (data: any): Sensor => {
+  // Normaliser le status : retirer 'offline' si présent, utiliser 'inactive' à la place
+  let status: SensorStatus = SensorStatus.INACTIVE;
+  const statusRaw = String(data.status || '').toLowerCase().trim();
+  if (statusRaw === 'active') {
+    status = SensorStatus.ACTIVE;
+  } else if (statusRaw === 'inactive' || statusRaw === 'offline') {
+    // Gérer gracieusement 'offline' pour compatibilité
+    status = SensorStatus.INACTIVE;
+  }
+
+  return {
+    id: data.id,
+    type: data.type || data.sensorType || '',
+    status,
+    plantationId: data.plantationId,
+    seuilMin: typeof data.seuilMin === 'number' ? data.seuilMin : data.seuilMin !== undefined ? Number(data.seuilMin) : undefined,
+    seuilMax: typeof data.seuilMax === 'number' ? data.seuilMax : data.seuilMax !== undefined ? Number(data.seuilMax) : undefined,
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.updatedAt || new Date().toISOString(),
+    latestReading: data.latestReading ? normalizeSensorReading(data.latestReading) : undefined,
+    readings: Array.isArray(data.readings) ? data.readings.map(normalizeSensorReading) : undefined,
+  };
+};
 
 const normalizeActuator = (data: any): Actuator => {
-  // Le backend retourne exactement "pump", "fan", "light" comme type
-  const type = data.type || '';
-  const name = data.name || '';
-  const status: 'active' | 'inactive' | 'offline' = data.status === 'active' || data.isOn === true ? 'active' : data.status === 'inactive' || data.isOn === false ? 'inactive' : 'offline';
+  // Normaliser le status : retirer 'offline' si présent, utiliser 'inactive' à la place
+  let status: ActuatorStatus = ActuatorStatus.INACTIVE;
+  const statusRaw = String(data.status || '').toLowerCase().trim();
+  if (statusRaw === 'active' || data.isOn === true) {
+    status = ActuatorStatus.ACTIVE;
+  } else if (statusRaw === 'inactive' || statusRaw === 'offline' || data.isOn === false) {
+    // Gérer gracieusement 'offline' pour compatibilité
+    status = ActuatorStatus.INACTIVE;
+  }
   
   const normalized: Actuator = {
     id: data.id,
-    type: type, // Préserver le type exact du backend ("pump", "fan", "light")
-    name: name, // Préserver le nom exact du backend
-    status: status,
-    isOn: data.isOn !== undefined ? data.isOn : (data.status === 'active'),
+    type: data.type || '',
+    name: data.name || '',
+    status,
     plantationId: data.plantationId,
-    lastUpdate: data.lastUpdate || data.updatedAt || data.timestamp,
+    metadata: data.metadata || undefined,
+    createdAt: data.createdAt || data.lastUpdate || new Date().toISOString(),
+    updatedAt: data.updatedAt || data.lastUpdate || new Date().toISOString(),
+    // Propriété calculée (non-backend) pour compatibilité frontend
+    isOn: status === ActuatorStatus.ACTIVE,
   };
   
   console.log('🔧 Actionneur normalisé:', { raw: data, normalized });
@@ -163,18 +194,30 @@ const normalizePlantation = (data: any): Plantation => {
 
   return {
     id: data.id,
-    name: data.name,
-    location: data.location,
-    area: typeof data.area === 'number' ? data.area : Number(data.area) || 0,
-    cropType: data.cropType,
+    name: data.name || '',
+    location: data.location !== undefined ? data.location : null, // Nullable
+    area: data.area !== undefined && data.area !== null ? (typeof data.area === 'number' ? data.area : Number(data.area)) : undefined,
+    cropType: data.cropType || '', // Requis
+    coordinates: data.coordinates ? {
+      lat: typeof data.coordinates.lat === 'number' ? data.coordinates.lat : Number(data.coordinates.lat),
+      lng: typeof data.coordinates.lng === 'number' ? data.coordinates.lng : Number(data.coordinates.lng),
+    } : undefined,
+    mode: (data.mode || PlantationMode.AUTOMATIC) as PlantationMode,
     ownerId: data.ownerId,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    mode: data.mode || 'automatic', // Mode de contrôle (automatic ou manual)
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.updatedAt || new Date().toISOString(),
     sensors,
     actuators,
-    hasSensors: data.hasSensors === true || (sensors && sensors.length > 0),
-    hasActuators: data.hasActuators === true || (actuators && actuators.length > 0),
+    hasSensors: data.hasSensors === true || (sensors && sensors.length > 0), // Calculé (non-backend)
+    hasActuators: data.hasActuators === true || (actuators && actuators.length > 0), // Calculé (non-backend)
+    etat: data.etat ? {
+      status: data.etat.status || 'unknown',
+      activeSensors: Number(data.etat.activeSensors) || 0,
+      totalSensors: Number(data.etat.totalSensors) || 0,
+      activeActuators: Number(data.etat.activeActuators) || 0,
+      totalActuators: Number(data.etat.totalActuators) || 0,
+      message: data.etat.message || '',
+    } : undefined,
     // Pour compatibilité avec l'ancienne structure
     latestSensorData: data.latestSensorData,
   };
@@ -203,7 +246,7 @@ export const plantationService = {
     return normalizePlantation(data);
   },
 
-  async create(payload: PlantationPayload): Promise<Plantation> {
+  async create(payload: CreatePlantationDto): Promise<Plantation> {
     const res = await api.post('/plantations', payload);
     const data = res.data?.data || res.data;
     return normalizePlantation(data);
@@ -244,12 +287,13 @@ export const plantationService = {
     sensorId: string,
     value: number
   ): Promise<SensorReading> {
+    const payload: AddSensorReadingDto = { value };
     const res = await api.post(
       `/plantations/${plantationId}/sensors/${sensorId}/readings`,
-      { value }
+      payload
     );
-    const payload = res.data?.data || res.data;
-    return normalizeSensorReading(payload);
+    const data = res.data?.data || res.data;
+    return normalizeSensorReading(data);
   },
 
   /**
@@ -262,7 +306,7 @@ export const plantationService = {
   async updateSensorThresholds(
     plantationId: string,
     sensorId: string,
-    seuils: { seuilMin: number; seuilMax: number }
+    seuils: UpdateSensorThresholdsDto
   ): Promise<Sensor> {
     const res = await api.patch(
       `/plantations/${plantationId}/sensors/${sensorId}/thresholds`,
@@ -300,12 +344,13 @@ export const plantationService = {
   async updateActuator(
     plantationId: string,
     actuatorId: string,
-    status: 'active' | 'inactive'
+    status: ActuatorStatus
   ): Promise<Actuator> {
     try {
+      const payload: UpdateActuatorDto = { status };
       const res = await api.patch(
         `/plantations/${plantationId}/actuators/${actuatorId}`,
-        { status }
+        payload
       );
       const data = res.data?.data || res.data;
       return normalizeActuator(data);
@@ -323,14 +368,14 @@ export const plantationService = {
    */
   async updateControlMode(
     plantationId: string,
-    mode: 'automatic' | 'manual'
+    mode: PlantationMode
   ): Promise<Plantation> {
     try {
       // Le backend utilise PATCH /plantations/:id avec { mode } dans le payload
-      // Le backend attend les valeurs 'automatic' ou 'manual' (minuscules) comme stockées en base
+      const payload: UpdatePlantationDto = { mode };
       await api.patch(
         `/plantations/${plantationId}`,
-        { mode }
+        payload
       );
       
       // Recharger la plantation complète après la mise à jour

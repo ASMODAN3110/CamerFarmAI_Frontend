@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/services/useAuthStore';
-
-type UserRole = 'farmer' | 'technician' | 'admin';
+import type { UserRole } from '@/types/enums';
 
 interface RoleBasedRouteProps {
   children: React.ReactNode;

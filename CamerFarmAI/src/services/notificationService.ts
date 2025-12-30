@@ -1,16 +1,12 @@
 import { api } from './api';
+import { NotificationCanal, NotificationStatut, EventType, SensorStatus } from '@/types/enums';
 
-export type NotificationChannel = 'web' | 'email' | 'whatsapp';
-export type NotificationStatus = 'EN_ATTENTE' | 'ENVOYEE' | 'ERREUR';
+// Exporter les types pour compatibilité
+export type NotificationChannel = NotificationCanal;
+export type NotificationStatus = NotificationStatut;
 
-export enum EventType {
-  SEUIL_DEPASSE = 'seuil_depasse',
-  ACTIONNEUR_ACTIVE = 'actionneur_active',
-  ACTIONNEUR_DESACTIVE = 'actionneur_desactive',
-  MODE_CHANGED = 'mode_changed',
-  SENSOR_ACTIVE = 'sensor_active',
-  SENSOR_INACTIVE = 'sensor_inactive',
-}
+// Réexporter EventType pour compatibilité
+export { EventType };
 
 export interface NotificationEvent {
   id: string;
@@ -23,7 +19,7 @@ export interface NotificationEvent {
   sensor?: {
     id: string;
     type: string;
-    status?: 'active' | 'inactive' | 'offline'; // Statut du capteur
+    status?: SensorStatus; // 'active' | 'inactive' (pas 'offline')
     plantationId: string;
   } | null;
   actuator?: {
@@ -36,13 +32,13 @@ export interface NotificationEvent {
 
 export interface Notification {
   id: string;
-  canal: NotificationChannel;
-  statut: NotificationStatus;
+  canal: NotificationCanal; // 'web' | 'email' | 'whatsapp'
+  statut: NotificationStatut; // 'envoyee' | 'en_attente' | 'erreur' (minuscules)
   eventId: string;
   userId: string;
-  dateEnvoi: string;
+  dateEnvoi: string; // Format ISO 8601
   isRead: boolean;
-  dateLu: string | null;
+  dateLu: string | null; // Format ISO 8601
   event?: NotificationEvent;
 }
 
@@ -63,17 +59,17 @@ export interface NotificationStats {
 
 const normalizeNotification = (data: any): Notification => {
   // Normaliser le statut depuis le backend
-  // Le backend peut retourner: "envoyee", "en_attente", "erreur" (minuscules)
-  // ou "ENVOYEE", "EN_ATTENTE", "ERREUR" (majuscules)
+  // Le backend retourne: "envoyee", "en_attente", "erreur" (minuscules)
+  // On normalise vers les valeurs en minuscules (selon le modèle backend)
   const statutRaw = String(data.statut || '').toLowerCase().trim();
-  let statut: NotificationStatus = 'EN_ATTENTE';
+  let statut: NotificationStatut = NotificationStatut.EN_ATTENTE;
   
   if (statutRaw === 'envoyee' || statutRaw === 'envoyée' || statutRaw === 'sent' || statutRaw === 'envoi') {
-    statut = 'ENVOYEE';
+    statut = NotificationStatut.ENVOYEE;
   } else if (statutRaw === 'erreur' || statutRaw === 'error' || statutRaw === 'failed' || statutRaw === 'echec') {
-    statut = 'ERREUR';
+    statut = NotificationStatut.ERREUR;
   } else if (statutRaw === 'en_attente' || statutRaw === 'pending' || statutRaw === 'attente' || statutRaw === '') {
-    statut = 'EN_ATTENTE';
+    statut = NotificationStatut.EN_ATTENTE;
   }
   
   if (import.meta.env.DEV && data.id) {
@@ -88,13 +84,13 @@ const normalizeNotification = (data: any): Notification => {
   
   // Normaliser le canal (backend peut retourner 'email', 'web', 'whatsapp')
   const canalRaw = String(data.canal || 'web').toLowerCase().trim();
-  let canal: NotificationChannel = 'web';
+  let canal: NotificationCanal = NotificationCanal.WEB;
   if (canalRaw === 'email') {
-    canal = 'email';
-  } else if (canalRaw === 'whatsapp' || canalRaw === 'whatsapp') {
-    canal = 'whatsapp';
+    canal = NotificationCanal.EMAIL;
+  } else if (canalRaw === 'whatsapp') {
+    canal = NotificationCanal.WHATSAPP;
   } else {
-    canal = 'web';
+    canal = NotificationCanal.WEB;
   }
   
   return {
@@ -127,7 +123,9 @@ const normalizeNotification = (data: any): Notification => {
       sensor: data.event.sensor ? {
         id: data.event.sensor.id,
         type: data.event.sensor.type,
-        status: data.event.sensor.status || undefined,
+        status: (data.event.sensor.status === 'active' ? SensorStatus.ACTIVE : 
+                 data.event.sensor.status === 'inactive' ? SensorStatus.INACTIVE : 
+                 undefined) as SensorStatus | undefined,
         plantationId: data.event.sensor.plantationId,
       } : null,
       actuator: data.event.actuator || null,

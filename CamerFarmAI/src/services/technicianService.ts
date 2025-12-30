@@ -1,6 +1,7 @@
 import { api } from './api'
 import { plantationService, type Sensor, type Actuator } from './plantationService'
 import { serializeParams } from '@/utils/paramsSerializer'
+import { SensorStatus, ActuatorStatus } from '@/types/enums'
 
 /* =======================
    TYPES
@@ -121,27 +122,41 @@ const normalizePlantationListItem = (data: any): PlantationListItem => ({
 
 const normalizePlantationDetails = (data: any): PlantationDetails => {
   // Normaliser les capteurs
-  const normalizeSensor = (s: any): Sensor => ({
-    id: s.id,
-    type: s.type || '',
-    status: s.status === 'active' ? 'active' : 'inactive',
-    plantationId: s.plantationId || data.id,
-    seuilMin: s.seuilMin !== undefined ? Number(s.seuilMin) : undefined,
-    seuilMax: s.seuilMax !== undefined ? Number(s.seuilMax) : undefined,
-    createdAt: s.createdAt,
-    updatedAt: s.updatedAt
-  })
+  const normalizeSensor = (s: any): Sensor => {
+    const statusRaw = String(s.status || '').toLowerCase().trim();
+    const status = statusRaw === 'active' ? SensorStatus.ACTIVE : SensorStatus.INACTIVE;
+    
+    return {
+      id: s.id,
+      type: s.type || '',
+      status,
+      plantationId: s.plantationId || data.id,
+      seuilMin: s.seuilMin !== undefined ? Number(s.seuilMin) : undefined,
+      seuilMax: s.seuilMax !== undefined ? Number(s.seuilMax) : undefined,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt
+    };
+  }
 
   // Normaliser les actionneurs
-  const normalizeActuator = (a: any): Actuator => ({
-    id: a.id,
-    type: a.type || '',
-    name: a.name || '',
-    status: a.status === 'active' ? 'active' : (a.status === 'inactive' ? 'inactive' : 'offline'),
-    isOn: a.isOn !== undefined ? a.isOn : (a.status === 'active'),
-    plantationId: a.plantationId || data.id,
-    lastUpdate: a.lastUpdate || a.updatedAt
-  })
+  const normalizeActuator = (a: any): Actuator => {
+    // Normaliser le status : retirer 'offline' si présent
+    const statusRaw = String(a.status || '').toLowerCase().trim();
+    const status = statusRaw === 'active' ? ActuatorStatus.ACTIVE : ActuatorStatus.INACTIVE; // Gérer gracieusement 'offline'
+    
+    return {
+      id: a.id,
+      type: a.type || '',
+      name: a.name || '',
+      status,
+      plantationId: a.plantationId || data.id,
+      metadata: a.metadata || undefined,
+      createdAt: a.createdAt || a.lastUpdate || new Date().toISOString(),
+      updatedAt: a.updatedAt || a.lastUpdate || new Date().toISOString(),
+      // Propriété calculée (non-backend) pour compatibilité frontend
+      isOn: a.isOn !== undefined ? a.isOn : (status === ActuatorStatus.ACTIVE),
+    };
+  }
   
   return {
     id: data.id || '',
