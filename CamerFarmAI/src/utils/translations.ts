@@ -160,6 +160,7 @@ export type TranslationKey =
   | 'plantations.detail.errors.fetchFailed'
   | 'plantations.detail.errors.notFound'
   | 'notifications.title'
+  | 'notifications.pageTitle'
   | 'notifications.empty'
   | 'notifications.loading'
   | 'notifications.noDescription'
@@ -170,6 +171,35 @@ export type TranslationKey =
   | 'notifications.hoursAgo'
   | 'notifications.daysAgo'
   | 'notifications.delete'
+  | 'notifications.markAsRead'
+  | 'notifications.confirmDelete'
+  | 'notifications.plantation'
+  | 'notifications.stats.title'
+  | 'notifications.stats.total'
+  | 'notifications.stats.envoyees'
+  | 'notifications.stats.enAttente'
+  | 'notifications.stats.erreurs'
+  | 'notifications.stats.nonLues'
+  | 'notifications.stats.parCanal'
+  | 'notifications.stats.loading'
+  | 'notifications.filters.all'
+  | 'notifications.filters.web'
+  | 'notifications.filters.email'
+  | 'notifications.filters.unread'
+  | 'notifications.canal.email'
+  | 'notifications.canal.web'
+  | 'notifications.canal.whatsapp'
+  | 'notifications.status.envoyee'
+  | 'notifications.status.enAttente'
+  | 'notifications.status.erreur'
+  | 'notifications.emailError.hint'
+  | 'notifications.emailErrors.title'
+  | 'notifications.emailErrors.message'
+  | 'notifications.emailErrors.check1'
+  | 'notifications.emailErrors.check2'
+  | 'notifications.emailErrors.check3'
+  | 'notifications.emailErrors.runDiagnostic'
+  | 'notifications.emailErrors.dismiss'
   | 'hero.heading'
   | 'features.automation.title'
   | 'features.automation.description'
@@ -889,8 +919,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'Prénom',
     'signup.emailLabel': 'Adresse email',
     'signup.emailPlaceholder': 'Adresse email',
-    'signup.phoneLabel': 'Numéro de tel (Whatsapp)',
-    'signup.phonePlaceholder': 'Numéro de tel (Whatsapp)',
+    'signup.phoneLabel': 'Numéro de téléphone',
+    'signup.phonePlaceholder': 'Numéro de téléphone',
     'signup.passwordLabel': 'Mot de passe',
     'signup.passwordPlaceholder': 'Mot de passe',
     'signup.confirmPasswordLabel': 'Confirmation de mot de passe',
@@ -921,6 +951,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.passwordsMismatch': 'Les mots de passe ne correspondent pas',
     'signup.errors.signupFailed': 'Échec de l\'inscription. Veuillez réessayer.',
     'notifications.title': 'Notifications',
+    'notifications.pageTitle': 'Notifications',
     'notifications.empty': 'Aucune notification',
     'notifications.loading': 'Chargement...',
     'notifications.noDescription': 'Notification',
@@ -931,6 +962,35 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.hoursAgo': 'h',
     'notifications.daysAgo': 'j',
     'notifications.delete': 'Supprimer',
+    'notifications.markAsRead': 'Marquer comme lu',
+    'notifications.confirmDelete': 'Voulez-vous vraiment supprimer cette notification ?',
+    'notifications.plantation': 'Plantation',
+    'notifications.stats.title': 'Statistiques des notifications',
+    'notifications.stats.total': 'Total',
+    'notifications.stats.envoyees': 'Envoyées',
+    'notifications.stats.enAttente': 'En attente',
+    'notifications.stats.erreurs': 'Erreurs',
+    'notifications.stats.nonLues': 'Non lues',
+    'notifications.stats.parCanal': 'Par canal',
+    'notifications.stats.loading': 'Chargement des statistiques...',
+    'notifications.filters.all': 'Toutes',
+    'notifications.filters.web': 'Web',
+    'notifications.filters.email': 'Email',
+    'notifications.filters.unread': 'Non lues',
+    'notifications.canal.email': 'Email',
+    'notifications.canal.web': 'Web',
+    'notifications.canal.whatsapp': 'WhatsApp',
+    'notifications.status.envoyee': 'Envoyée',
+    'notifications.status.enAttente': 'En attente',
+    'notifications.status.erreur': 'Erreur',
+    'notifications.emailError.hint': '💡 Cette notification email n\'a pas pu être envoyée. Vérifiez la configuration SMTP du backend.',
+    'notifications.emailErrors.title': 'Erreurs d\'envoi d\'email détectées',
+    'notifications.emailErrors.message': 'notification(s) email n\'ont pas pu être envoyée(s). Cela indique généralement un problème de configuration SMTP côté backend.',
+    'notifications.emailErrors.check1': 'Vérifiez que votre profil contient une adresse email valide',
+    'notifications.emailErrors.check2': 'Vérifiez la configuration SMTP du backend (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)',
+    'notifications.emailErrors.check3': 'Consultez les logs du backend pour plus de détails',
+    'notifications.emailErrors.runDiagnostic': 'Lancer le diagnostic',
+    'notifications.emailErrors.dismiss': 'Fermer',
     'hero.heading': 'Tous ensemble pour une <span class="hero__highlight">agriculture intelligente</span>, <span class="hero__highlight">connectée</span> et <span class="hero__highlight">automatisée</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Gérez Votre Irrigation, Ventilation Et Éclairage Sans Effort. Notre Système Autonome, Alimenté Par Énergie Solaire, Garantit Que Les Tâches Essentielles S\'exécutent Même En Cas De Coupure De Courant.',
@@ -1259,7 +1319,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.fakers.entities.sensorReading': 'Lectures de capteurs avec variations temporelles cohérentes',
     'admin.fakers.entities.actuator': 'Actionneurs (pompe, ventilateur, arroseur, vanne, chauffage, éclairage)',
     'admin.fakers.entities.event': 'Événements (seuil dépassé, actionneur activé/désactivé, changement de mode)',
-    'admin.fakers.entities.notification': 'Notifications (web, email, WhatsApp) avec statuts',
+    'admin.fakers.entities.notification': 'Notifications (web, email) avec statuts',
     'admin.fakers.seasonal.title': 'Situations saisonnières',
     'admin.fakers.seasonal.description': 'Les valeurs des capteurs varient selon les saisons camerounaises',
     'admin.fakers.seasonal.dry_season': 'Saison sèche',
@@ -1716,8 +1776,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'First Name',
     'signup.emailLabel': 'Email address',
     'signup.emailPlaceholder': 'Email address',
-    'signup.phoneLabel': 'Phone number (Whatsapp)',
-    'signup.phonePlaceholder': 'Phone number (Whatsapp)',
+    'signup.phoneLabel': 'Phone number',
+    'signup.phonePlaceholder': 'Phone number',
     'signup.passwordLabel': 'Password',
     'signup.passwordPlaceholder': 'Password',
     'signup.confirmPasswordLabel': 'Confirm password',
@@ -1748,6 +1808,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.passwordsMismatch': 'Passwords do not match',
     'signup.errors.signupFailed': 'Sign up failed. Please try again.',
     'notifications.title': 'Notifications',
+    'notifications.pageTitle': 'Notifications',
     'notifications.empty': 'No notifications',
     'notifications.loading': 'Loading...',
     'notifications.noDescription': 'Notification',
@@ -1758,6 +1819,35 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.hoursAgo': 'h',
     'notifications.daysAgo': 'd',
     'notifications.delete': 'Delete',
+    'notifications.markAsRead': 'Mark as read',
+    'notifications.confirmDelete': 'Are you sure you want to delete this notification?',
+    'notifications.plantation': 'Plantation',
+    'notifications.stats.title': 'Notification Statistics',
+    'notifications.stats.total': 'Total',
+    'notifications.stats.envoyees': 'Sent',
+    'notifications.stats.enAttente': 'Pending',
+    'notifications.stats.erreurs': 'Errors',
+    'notifications.stats.nonLues': 'Unread',
+    'notifications.stats.parCanal': 'By channel',
+    'notifications.stats.loading': 'Loading statistics...',
+    'notifications.filters.all': 'All',
+    'notifications.filters.web': 'Web',
+    'notifications.filters.email': 'Email',
+    'notifications.filters.unread': 'Unread',
+    'notifications.canal.email': 'Email',
+    'notifications.canal.web': 'Web',
+    'notifications.canal.whatsapp': 'WhatsApp',
+    'notifications.status.envoyee': 'Sent',
+    'notifications.status.enAttente': 'Pending',
+    'notifications.status.erreur': 'Error',
+    'notifications.emailError.hint': '💡 This email notification could not be sent. Check the backend SMTP configuration.',
+    'notifications.emailErrors.title': 'Email sending errors detected',
+    'notifications.emailErrors.message': 'email notification(s) could not be sent. This usually indicates a backend SMTP configuration issue.',
+    'notifications.emailErrors.check1': 'Check that your profile contains a valid email address',
+    'notifications.emailErrors.check2': 'Check the backend SMTP configuration (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)',
+    'notifications.emailErrors.check3': 'Check the backend logs for more details',
+    'notifications.emailErrors.runDiagnostic': 'Run diagnostic',
+    'notifications.emailErrors.dismiss': 'Close',
     'hero.heading': 'CamerFarm AI Connects Producers To Their Land Through IoT, Offering Precise Crop Monitoring And Rapid Disease Detection Through Artificial Intelligence To Sustainably Transform Cameroonian Agriculture.',
     'features.automation.title': 'Automation',
     'features.automation.description': 'Manage Your Irrigation, Ventilation And Lighting Effortlessly. Our Autonomous System, Powered By Solar Energy, Ensures That Essential Tasks Are Executed Even In Case Of Power Outage.',
@@ -2575,6 +2665,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.passwordsMismatch': 'Finnde ɗe njaatondiraani',
     'signup.errors.signupFailed': 'Winndito Ɓaawtaani. Ɗaɓɓu yeewto.',
     'notifications.title': 'Tindinɗe',
+    'notifications.pageTitle': 'Tindinɗe',
     'notifications.empty': 'Alaa tindinɗe',
     'notifications.loading': 'Nawtude...',
     'notifications.noDescription': 'Tindinɗe',
@@ -2585,6 +2676,35 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.hoursAgo': 'h',
     'notifications.daysAgo': 'ñal',
     'notifications.delete': 'Momtu',
+    'notifications.markAsRead': 'Maayde e jaangooɗe',
+    'notifications.confirmDelete': 'Aɗa yiɗi momtude tindinɗe ngal?',
+    'notifications.plantation': 'Plantation',
+    'notifications.stats.title': 'Statistiques Tindinɗe',
+    'notifications.stats.total': 'Fuɗɗam',
+    'notifications.stats.envoyees': 'Neldi',
+    'notifications.stats.enAttente': 'E les',
+    'notifications.stats.erreurs': 'Faljirɗe',
+    'notifications.stats.nonLues': 'Alaa jaangooɗe',
+    'notifications.stats.parCanal': 'E canal',
+    'notifications.stats.loading': 'Nawtude statistiques...',
+    'notifications.filters.all': 'Fof',
+    'notifications.filters.web': 'Web',
+    'notifications.filters.email': 'Email',
+    'notifications.filters.unread': 'Alaa jaangooɗe',
+    'notifications.canal.email': 'Email',
+    'notifications.canal.web': 'Web',
+    'notifications.canal.whatsapp': 'WhatsApp',
+    'notifications.status.envoyee': 'Neldi',
+    'notifications.status.enAttente': 'E les',
+    'notifications.status.erreur': 'Faljirɗe',
+    'notifications.emailError.hint': '💡 Tindinɗe email ngal faytii neldude. Ƴeewto teelte SMTP backend.',
+    'notifications.emailErrors.title': 'Faljirɗe neldude email yiytiɗe',
+    'notifications.emailErrors.message': 'tindinɗe email faytii neldude. Ɗuum holli koɗɗe maaɗa ko faljirɗe teelte SMTP backend.',
+    'notifications.emailErrors.check1': 'Ƴeewto ko profil maa ina jogii adires email goonga',
+    'notifications.emailErrors.check2': 'Ƴeewto teelte SMTP backend (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)',
+    'notifications.emailErrors.check3': 'Yilto loguji backend ngam bayɗe ɓurɗe',
+    'notifications.emailErrors.runDiagnostic': 'Fuɗɗo yiytude',
+    'notifications.emailErrors.dismiss': 'Uddu',
     'hero.heading': 'CamerFarm AI Haɓɓanaa Ngaynaaɓe e Leyɗe Maɓɓe Ngam IoT, Hokki Jokkondiral Goonga e Yiytude Baawɗe Caggal ɓaawo Ngam Aamde Ngaari Ngam Waylude Ngaynaaɗe Kameruun.',
     'features.automation.title': 'Wattinde',
     'features.automation.description': 'Toppu Irrigasion, Ventilation e Ndaariɗe Hakkunde. Siistem Amen Eɗen, Jokkondirɗam e Njeewi Njeewi, Feddanaa Ko Tawaa Koɗɗe Mawɗe Waɗataa Hatta Si Njeewi Njeewi Ɓaawtaa.',
@@ -3402,6 +3522,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.errors.passwordsMismatch': 'Mótí alé mán',
     'signup.errors.signupFailed': 'Sígní alé mán. Bwá sígní.',
     'notifications.title': 'Notifications',
+    'notifications.pageTitle': 'Notifications',
     'notifications.empty': 'Alé notifications',
     'notifications.loading': 'Chargement...',
     'notifications.noDescription': 'Notification',
@@ -3412,6 +3533,35 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.hoursAgo': 'h',
     'notifications.daysAgo': 'j',
     'notifications.delete': 'Sóbí',
+    'notifications.markAsRead': 'Máŋgá bóŋ bíŋ',
+    'notifications.confirmDelete': 'Ó bóŋ bíŋ sóbí notification éyí?',
+    'notifications.plantation': 'Plantation',
+    'notifications.stats.title': 'Statistiques Notifications',
+    'notifications.stats.total': 'Total',
+    'notifications.stats.envoyees': 'Envoyées',
+    'notifications.stats.enAttente': 'E attente',
+    'notifications.stats.erreurs': 'Erreurs',
+    'notifications.stats.nonLues': 'Alé lues',
+    'notifications.stats.parCanal': 'E canal',
+    'notifications.stats.loading': 'Chargement statistiques...',
+    'notifications.filters.all': 'Fof',
+    'notifications.filters.web': 'Web',
+    'notifications.filters.email': 'Email',
+    'notifications.filters.unread': 'Alé lues',
+    'notifications.canal.email': 'Email',
+    'notifications.canal.web': 'Web',
+    'notifications.canal.whatsapp': 'WhatsApp',
+    'notifications.status.envoyee': 'Envoyée',
+    'notifications.status.enAttente': 'E attente',
+    'notifications.status.erreur': 'Erreur',
+    'notifications.emailError.hint': '💡 Notification email wá faytí sígní. Yéwtó configuration SMTP backend.',
+    'notifications.emailErrors.title': 'Erreurs sígní email détectées',
+    'notifications.emailErrors.message': 'notification(s) email faytí sígní. Ɗúúm hollí koɗɗé máádá ko problème configuration SMTP côté backend.',
+    'notifications.emailErrors.check1': 'Yéwtó ko profil máá jókí adresse email valide',
+    'notifications.emailErrors.check2': 'Yéwtó configuration SMTP backend (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)',
+    'notifications.emailErrors.check3': 'Yíltó logs backend ngam bayɗé ɓúrɗé',
+    'notifications.emailErrors.runDiagnostic': 'Lancer diagnostic',
+    'notifications.emailErrors.dismiss': 'Fermer',
     'hero.heading': 'Bisó jókón <span class="hero__highlight">bisó mán</span>, <span class="hero__highlight">jókón</span> é <span class="hero__highlight">automatiser</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Bwá Irrigation, Ventilation É Éclairage Alé Effort. Système Wá, Alimenté Par Énergie Solaire, Garantit Ko Tâches Essentielles S\'exécutent Même En Cas De Coupure De Courant.',

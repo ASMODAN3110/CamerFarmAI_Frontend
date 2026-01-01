@@ -20,13 +20,19 @@ export interface NotificationEvent {
     id: string;
     type: string;
     status?: SensorStatus; // 'active' | 'inactive' (pas 'offline')
-    plantationId: string;
+    plantationId?: string;
+    plantation?: {
+      name: string;
+    };
   } | null;
   actuator?: {
     id: string;
     type: string;
     name: string;
-    plantationId: string;
+    plantationId?: string;
+    plantation?: {
+      name: string;
+    };
   } | null;
 }
 
@@ -127,8 +133,19 @@ const normalizeNotification = (data: any): Notification => {
                  data.event.sensor.status === 'inactive' ? SensorStatus.INACTIVE : 
                  undefined) as SensorStatus | undefined,
         plantationId: data.event.sensor.plantationId,
+        plantation: data.event.sensor.plantation ? {
+          name: data.event.sensor.plantation.name,
+        } : undefined,
       } : null,
-      actuator: data.event.actuator || null,
+      actuator: data.event.actuator ? {
+        id: data.event.actuator.id,
+        type: data.event.actuator.type,
+        name: data.event.actuator.name,
+        plantationId: data.event.actuator.plantationId,
+        plantation: data.event.actuator.plantation ? {
+          name: data.event.actuator.plantation.name,
+        } : undefined,
+      } : null,
     } : undefined,
   };
 };
@@ -136,6 +153,7 @@ const normalizeNotification = (data: any): Notification => {
 export const notificationService = {
   /**
    * Récupère toutes les notifications de l'utilisateur connecté
+   * Note: Le backend retourne les 50 dernières notifications par défaut
    * @param unreadOnly - Si true, récupère uniquement les notifications non lues
    */
   async getAll(unreadOnly?: boolean): Promise<Notification[]> {
@@ -149,7 +167,23 @@ export const notificationService = {
       }
       
       return [];
-    } catch (error) {
+    } catch (error: any) {
+      // Gestion des erreurs selon la documentation
+      if (error.response?.status === 401) {
+        // Token invalide ou expiré - redirection gérée par l'interceptor
+        if (import.meta.env.DEV) {
+          console.error('❌ Erreur 401: Token invalide ou expiré');
+        }
+      } else if (error.response?.status === 404) {
+        if (import.meta.env.DEV) {
+          console.error('❌ Erreur 404: Endpoint non trouvé');
+        }
+      } else if (error.response?.status === 500) {
+        if (import.meta.env.DEV) {
+          console.error('❌ Erreur 500: Erreur interne du serveur');
+        }
+      }
+      
       // En cas d'erreur, retourner un tableau vide plutôt que de faire planter l'application
       if (import.meta.env.DEV) {
         console.error('Erreur lors de la récupération des notifications:', error);
@@ -169,6 +203,19 @@ export const notificationService = {
       .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
     
     return webNotifications;
+  },
+
+  /**
+   * Récupère uniquement les notifications email de l'utilisateur connecté
+   */
+  async getAllEmail(): Promise<Notification[]> {
+    const allNotifications = await this.getAll();
+    // Filtrer uniquement les notifications email et trier par date décroissante
+    const emailNotifications = allNotifications
+      .filter(notif => notif.canal === 'email')
+      .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
+    
+    return emailNotifications;
   },
 
 
@@ -242,13 +289,22 @@ export const notificationService = {
 
   /**
    * Récupère une notification spécifique par son ID
+   * @param id - UUID de la notification
+   * @throws Error avec status 404 si la notification n'existe pas
    */
   async getById(id: string): Promise<Notification> {
     try {
       const res = await api.get(`/notifications/${id}`);
       const data = res.data?.data || res.data;
       return normalizeNotification(data);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        const errorMessage = error.response?.data?.message || 'Notification non trouvée';
+        if (import.meta.env.DEV) {
+          console.error(`❌ Notification ${id} non trouvée:`, errorMessage);
+        }
+        throw new Error(errorMessage);
+      }
       if (import.meta.env.DEV) {
         console.error(`Erreur lors de la récupération de la notification ${id}:`, error);
       }
@@ -259,6 +315,8 @@ export const notificationService = {
   /**
    * Marque une notification comme lue
    * Utilise PATCH selon la documentation API
+   * @param id - UUID de la notification
+   * @throws Error avec status 404 si la notification n'existe pas
    */
   async markAsRead(id: string): Promise<Notification> {
     try {
@@ -300,8 +358,8 @@ export const notificationService = {
 
   /**
    * Supprime une notification
-   * @param id - ID de la notification à supprimer
-   * @throws Error si la notification n'existe pas, n'appartient pas à l'utilisateur, ou en cas d'erreur réseau
+   * @param id - UUID de la notification à supprimer
+   * @throws Error avec status 404 si la notification n'existe pas ou n'appartient pas à l'utilisateur
    */
   async delete(id: string): Promise<void> {
     try {
@@ -325,6 +383,15 @@ export const notificationService = {
         throw new Error(errorMessage);
       }
     } catch (error: any) {
+      // Gestion des erreurs selon la documentation
+      if (error.response?.status === 404) {
+        const errorMessage = error.response?.data?.message || 'Notification non trouvée ou accès refusé';
+        if (import.meta.env.DEV) {
+          console.error(`❌ Notification ${id} non trouvée:`, errorMessage);
+        }
+        throw new Error(errorMessage);
+      }
+      
       if (import.meta.env.DEV) {
         console.error(`❌ Erreur lors de la suppression de la notification ${id}:`, {
           status: error?.response?.status,

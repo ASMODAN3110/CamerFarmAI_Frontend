@@ -117,8 +117,11 @@ Le frontend convertit automatiquement les unités de superficie :
 - **Gestion des notifications** : Marquer comme lue, supprimer, filtrer
 - **Statistiques** : Compteurs de notifications (total, envoyées, non lues, etc.)
 - **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
-- **Multi-canal** : Support des notifications web, email et SMS
+- **Multi-canal** : Support des notifications web, email et WhatsApp
 - **Affichage dans le header** : Badge avec compteur de notifications non lues
+- **Notifications email** : Affichage des notifications email avec détection des erreurs d'envoi
+- **Diagnostic email** : Outil de diagnostic disponible en développement pour identifier les problèmes SMTP
+- **Filtrage par canal** : Filtres pour afficher uniquement les notifications web, email, ou toutes
 
 ### Intelligence Artificielle
 - **Chatbot IA** : Assistant conversationnel pour répondre aux questions sur l'agriculture
@@ -180,20 +183,27 @@ src/
 │   └── ChatboxPage.tsx           # Page de chat IA
 ├── components/                    # Composants réutilisables
 │   ├── auth/                     # Composants d'authentification
-│   │   └── ProtectedRoute.tsx   # Route protégée
+│   │   ├── ProtectedRoute.tsx   # Route protégée
+│   │   ├── PublicRoute.tsx     # Route publique
+│   │   └── RoleBasedRoute.tsx   # Route basée sur les rôles
 │   ├── layout/                   # Layout (Header, Footer)
 │   ├── blocks/                   # Blocs de contenu
+│   ├── notifications/            # Composants de notifications
+│   │   ├── NotificationList.tsx # Liste des notifications
+│   │   └── NotificationStats.tsx # Statistiques des notifications
+│   ├── cookies/                  # Gestion des cookies
 │   └── ui/                       # Composants UI
 │       ├── Button/              # Bouton
 │       ├── Card/                # Carte
 │       ├── FormField/           # Champ de formulaire
 │       ├── Icon/                # Icône
 │       ├── Modal/               # Modal
-│       ├── Dropdown/            # Menu déroulant
+│       ├── Dropdown/            # Menu déroulant (responsive)
 │       ├── LanguageSwitcher/    # Sélecteur de langue
 │       ├── FloatingButton/      # Bouton flottant
 │       ├── CreatePlantationModal/ # Modal de création de plantation
-│       └── TwoFactorModal/      # Modal d'authentification à deux facteurs
+│       ├── TwoFactorModal/      # Modal d'authentification à deux facteurs
+│       └── Background3D/        # Arrière-plan 3D
 ├── services/                      # Services API
 │   ├── api.ts                    # Configuration Axios
 │   ├── authService.ts           # Service d'authentification
@@ -207,6 +217,8 @@ src/
 │   ├── useScrollAnimation.ts     # Hook d'animation au scroll
 │   └── useNotifications.ts      # Hook de gestion des notifications
 ├── contexts/                     # Contextes React
+│   ├── AuthContext.tsx          # Contexte d'authentification
+│   ├── CookieContext.tsx        # Contexte de gestion des cookies
 │   ├── LanguageContext.tsx      # Contexte de langue
 │   └── NotificationContext.tsx  # Contexte de notifications
 ├── types/                         # Types TypeScript centralisés
@@ -218,7 +230,7 @@ src/
 │   ├── unitConverter.ts          # Conversion d'unités de superficie (m², ha, acre, km²)
 │   ├── notificationFormatters.ts # Formatage des notifications
 │   ├── paramsSerializer.ts       # Sérialisation des paramètres URL
-│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email
+│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email (dev uniquement)
 └── styles/                        # Styles globaux
     ├── global.css
     └── theme.ts
@@ -848,7 +860,13 @@ Cette approche reflète l'usage réel de la langue Ewondo dans un contexte techn
 
 ## 📚 Documentation supplémentaire
 
+Le projet inclut plusieurs documents de référence pour faciliter le développement et l'intégration :
+
 - **MODELE_DONNEES_BACKEND.md** : Documentation complète des modèles de données attendus par le frontend depuis le backend, incluant tous les types, DTOs, et formats de réponse API.
+
+- **CONFIGURATION_BACKEND_NOTIFICATIONS.md** : Guide complet pour configurer le backend afin que les notifications fonctionnent correctement. Inclut les endpoints requis, structures de données, types d'événements, canaux de notification, et exemples de réponses.
+
+- **DOCUMENTATION_NOTIFICATIONS_EMAIL.md** : Documentation détaillée de l'implémentation des notifications par email dans le frontend. Décrit l'architecture, les services, composants UI, gestion des erreurs, diagnostic, et flux de données.
 
 **Dernière mise à jour** : Décembre 2025
 

@@ -628,15 +628,45 @@ export function Header({
                   </span>
                 )}
               </button>
-              <button
-                className={styles.header__mobileIconButton}
-                onClick={() => {
-                  setProfileMenuOpen(!profileMenuOpen);
-                }}
-                          aria-label={t('auth.profile')}
-              >
-                <Icon icon={FaUser} size={24} />
-              </button>
+              <div className={styles.header__iconButtonContainer}>
+                <button
+                  className={styles.header__mobileIconButton}
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                            aria-label={t('auth.profile')}
+                >
+                  <Icon icon={FaUser} size={24} />
+                </button>
+                <Dropdown
+                  isOpen={profileMenuOpen}
+                  onClose={() => setProfileMenuOpen(false)}
+                  align="right"
+                >
+                  <div className={styles.header__profileDropdown}>
+                    <button
+                      className={styles.header__profileMenuItem}
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        setMobileMenuOpen(false);
+                        navigate('/profile');
+                      }}
+                    >
+                      <Icon icon={FaUser} size={18} />
+                      {t('auth.profile')}
+                    </button>
+                    <button
+                      className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        setMobileMenuOpen(false);
+                        handleLogout();
+                      }}
+                    >
+                      <Icon icon={FaSignOutAlt} size={18} />
+                      {t('auth.logout')}
+                    </button>
+                  </div>
+                </Dropdown>
+              </div>
             </div>
           ) : (
             <div className={styles.header__mobileAuthButtons}>

@@ -76,7 +76,6 @@ export async function diagnoseEmailNotifications() {
       console.log('\nStatistiques par canal:');
       console.log(`   - Web: ${stats.parCanal?.web || 0}`);
       console.log(`   - Email: ${stats.parCanal?.email || 0}`);
-      console.log(`   - WhatsApp: ${stats.parCanal?.whatsapp || 0}`);
       
       if (stats.parCanal?.email === 0 && allNotifications.filter(n => n.canal === 'email').length > 0) {
         console.log('⚠️ Note: Les statistiques par canal ne sont pas à jour');
@@ -87,7 +86,7 @@ export async function diagnoseEmailNotifications() {
 
     // 4. Vérifier les notifications en erreur
     console.log('\n⚠️ Étape 4: Vérification des notifications en erreur');
-    const errorNotifications = allNotifications.filter(n => n.canal === 'email' && n.statut === 'ERREUR');
+    const errorNotifications = allNotifications.filter(n => n.canal === 'email' && n.statut === 'erreur');
     if (errorNotifications.length > 0) {
       console.log(`❌ PROBLÈME #3: ${errorNotifications.length} notification(s) email en erreur`);
       errorNotifications.forEach((notif, index) => {
@@ -109,7 +108,7 @@ export async function diagnoseEmailNotifications() {
 
     // 5. Vérifier les notifications en attente
     console.log('\n⏳ Étape 5: Vérification des notifications en attente');
-    const pendingNotifications = allNotifications.filter(n => n.canal === 'email' && n.statut === 'EN_ATTENTE');
+    const pendingNotifications = allNotifications.filter(n => n.canal === 'email' && n.statut === 'en_attente');
     if (pendingNotifications.length > 0) {
       console.log(`⏳ ${pendingNotifications.length} notification(s) email en attente d\'envoi`);
       console.log('   → Ces notifications seront envoyées prochainement (traitement asynchrone)');
