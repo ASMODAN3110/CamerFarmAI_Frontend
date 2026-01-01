@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
@@ -67,6 +67,7 @@ export function Header({
   const logout = useAuthStore((s) => s.logout);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Utiliser le contexte de notifications
   const {
@@ -531,7 +532,7 @@ export function Header({
 
                 <div className={styles.header__iconButtonContainer}>
                   <button
-                    className={styles.header__iconButton}
+                    className={`${styles.header__iconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                         aria-label={t('auth.profile')}
                   >
@@ -630,7 +631,7 @@ export function Header({
               </button>
               <div className={styles.header__iconButtonContainer}>
                 <button
-                  className={styles.header__mobileIconButton}
+                  className={`${styles.header__mobileIconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                             aria-label={t('auth.profile')}
                 >

@@ -111,6 +111,10 @@
   color: var(--color-primary);
 }
 
+.header__iconButtonActive {
+  color: var(--color-primary) !important;
+}
+
 .header__notificationBadge {
   position: absolute;
   top: -4px;
