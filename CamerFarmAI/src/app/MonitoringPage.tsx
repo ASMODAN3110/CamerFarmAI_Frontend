@@ -1277,13 +1277,6 @@ function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
           <div className={styles.monitoringPage__waterGlassReflection} />
         </div>
         
-        {/* Pipe with water flow indicator */}
-        <div className={styles.monitoringPage__waterPipe}>
-          {clampedValue > effectiveMin && (
-            <div className={styles.monitoringPage__waterFlow} />
-          )}
-        </div>
-        
         {/* Value and status display */}
         <div className={styles.monitoringPage__waterLevelDisplay}>
           <span className={styles.monitoringPage__waterLevelValue}>

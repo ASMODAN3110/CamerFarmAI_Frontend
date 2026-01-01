@@ -457,8 +457,12 @@ export function Header({
                     {/* Version normale pour les autres utilisateurs */}
                 <div className={styles.header__iconButtonContainer}>
                   <button
-                    className={styles.header__iconButton}
+                    className={`${styles.header__iconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    onDoubleClick={() => {
+                      setNotificationsOpen(false);
+                      navigate('/notifications');
+                    }}
                         aria-label={t('notifications.title')}
                   >
                     <Icon icon={FaBell} size={22} />
@@ -615,10 +619,15 @@ export function Header({
           {(isAuthenticated || showAuthIcons) ? (
             <div className={styles.header__mobileActions}>
               <button
-                className={styles.header__mobileIconButton}
+                className={`${styles.header__mobileIconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                 onClick={() => {
                   setNotificationsOpen(!notificationsOpen);
                   setMobileMenuOpen(false);
+                }}
+                onDoubleClick={() => {
+                  setNotificationsOpen(false);
+                  setMobileMenuOpen(false);
+                  navigate('/notifications');
                 }}
                 aria-label={t('notifications.title')}
               >

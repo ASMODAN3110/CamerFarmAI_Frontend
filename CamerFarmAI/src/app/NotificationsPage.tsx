@@ -9,7 +9,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
-import { FaExclamationTriangle, FaInfoCircle, FaTimes } from 'react-icons/fa';
+import { FaExclamationTriangle, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
+import { Button } from '@/components/ui/Button/Button';
 import styles from './NotificationsPage.module.css';
 
 type FilterType = 'all' | 'web' | 'email' | 'unread';
@@ -20,6 +21,7 @@ export function NotificationsPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [notifications, setNotifications] = useState(contextNotifications);
   const [isLoadingFiltered, setIsLoadingFiltered] = useState(false);
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
 
   // Charger les notifications selon le filtre
   useEffect(() => {
@@ -85,6 +87,31 @@ export function NotificationsPage() {
     setFilter(newFilter);
   };
 
+  const handleDeleteAll = async () => {
+    if (notifications.length === 0) return;
+    
+    const confirmMessage = `${t('notifications.deleteAll.confirm') || 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.'}\n\n${notifications.length} notification(s) seront supprimée(s).`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    setIsDeletingAll(true);
+    try {
+      // Supprimer toutes les notifications une par une
+      const deletePromises = notifications.map(notif => deleteNotification(notif.id));
+      await Promise.all(deletePromises);
+      
+      // Rafraîchir après la suppression
+      await refresh();
+    } catch (error) {
+      console.error('Erreur lors de la suppression de toutes les notifications:', error);
+      alert(t('notifications.deleteAll.error') || 'Une erreur est survenue lors de la suppression. Certaines notifications n\'ont peut-être pas été supprimées.');
+    } finally {
+      setIsDeletingAll(false);
+    }
+  };
+
   // Détecter les erreurs email
   const emailErrors = useMemo(() => {
     return notifications.filter(
@@ -107,10 +134,8 @@ export function NotificationsPage() {
   const navItems = [
     { href: '/', label: t('nav.home') || 'Accueil' },
     { href: '/plantations', label: t('nav.plantations') || 'Plantations' },
-    { href: '/monitoring', label: t('nav.monitoring') || 'Surveillance' },
-    { href: '/graphs', label: t('nav.graphs') || 'Graphiques' },
     { href: '/ai', label: t('nav.ai') || 'IA' },
-    { href: '/notifications', label: t('nav.notifications') || 'Notifications', active: true },
+    // Ne pas afficher "Surveillance", "Graphiques" et "Notifications" dans le header quand on est sur la page notifications
   ];
 
   return (
@@ -119,7 +144,25 @@ export function NotificationsPage() {
       <Header navItems={navItems} currentPath="/notifications" showAuthIcons={true} />
       <main className={styles.page}>
         <div className={styles.container}>
-          <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
+          <div className={styles.headerSection}>
+            <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
+            {notifications.length > 0 && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleDeleteAll}
+                disabled={isDeletingAll || isLoading || isLoadingFiltered}
+                className={styles.deleteAllButton}
+                aria-label={t('notifications.deleteAll.button') || 'Supprimer toutes les notifications'}
+              >
+                <FaTrash size={14} />
+                {isDeletingAll 
+                  ? (t('notifications.deleteAll.deleting') || 'Suppression...')
+                  : (t('notifications.deleteAll.button') || 'Tout supprimer')
+                }
+              </Button>
+            )}
+          </div>
           
           {/* Alerte pour les erreurs email */}
           {hasEmailErrors && !dismissedAlert && (

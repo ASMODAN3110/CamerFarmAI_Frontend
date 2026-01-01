@@ -200,6 +200,10 @@ export type TranslationKey =
   | 'notifications.emailErrors.check3'
   | 'notifications.emailErrors.runDiagnostic'
   | 'notifications.emailErrors.dismiss'
+  | 'notifications.deleteAll.button'
+  | 'notifications.deleteAll.confirm'
+  | 'notifications.deleteAll.deleting'
+  | 'notifications.deleteAll.error'
   | 'hero.heading'
   | 'features.automation.title'
   | 'features.automation.description'
@@ -991,6 +995,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.emailErrors.check3': 'Consultez les logs du backend pour plus de détails',
     'notifications.emailErrors.runDiagnostic': 'Lancer le diagnostic',
     'notifications.emailErrors.dismiss': 'Fermer',
+    'notifications.deleteAll.button': 'Tout supprimer',
+    'notifications.deleteAll.confirm': 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.',
+    'notifications.deleteAll.deleting': 'Suppression...',
+    'notifications.deleteAll.error': 'Une erreur est survenue lors de la suppression. Certaines notifications n\'ont peut-être pas été supprimées.',
     'hero.heading': 'Tous ensemble pour une <span class="hero__highlight">agriculture intelligente</span>, <span class="hero__highlight">connectée</span> et <span class="hero__highlight">automatisée</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Gérez Votre Irrigation, Ventilation Et Éclairage Sans Effort. Notre Système Autonome, Alimenté Par Énergie Solaire, Garantit Que Les Tâches Essentielles S\'exécutent Même En Cas De Coupure De Courant.',
@@ -1848,6 +1856,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.emailErrors.check3': 'Check the backend logs for more details',
     'notifications.emailErrors.runDiagnostic': 'Run diagnostic',
     'notifications.emailErrors.dismiss': 'Close',
+    'notifications.deleteAll.button': 'Delete all',
+    'notifications.deleteAll.confirm': 'Are you sure you want to delete all notifications? This action cannot be undone.',
+    'notifications.deleteAll.deleting': 'Deleting...',
+    'notifications.deleteAll.error': 'An error occurred while deleting. Some notifications may not have been deleted.',
     'hero.heading': 'CamerFarm AI Connects Producers To Their Land Through IoT, Offering Precise Crop Monitoring And Rapid Disease Detection Through Artificial Intelligence To Sustainably Transform Cameroonian Agriculture.',
     'features.automation.title': 'Automation',
     'features.automation.description': 'Manage Your Irrigation, Ventilation And Lighting Effortlessly. Our Autonomous System, Powered By Solar Energy, Ensures That Essential Tasks Are Executed Even In Case Of Power Outage.',
@@ -2705,6 +2717,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.emailErrors.check3': 'Yilto loguji backend ngam bayɗe ɓurɗe',
     'notifications.emailErrors.runDiagnostic': 'Fuɗɗo yiytude',
     'notifications.emailErrors.dismiss': 'Uddu',
+    'notifications.deleteAll.button': 'Momtu fof',
+    'notifications.deleteAll.confirm': 'Aɗa yiɗi momtude tintine fof? Ɗuum faytii ruttoowo.',
+    'notifications.deleteAll.deleting': 'Momtude...',
+    'notifications.deleteAll.error': 'Faljirɗe waɗi e momtude. Tintine ɗiɗi mbaawi wanaa momtaaɗe.',
     'hero.heading': 'CamerFarm AI Haɓɓanaa Ngaynaaɓe e Leyɗe Maɓɓe Ngam IoT, Hokki Jokkondiral Goonga e Yiytude Baawɗe Caggal ɓaawo Ngam Aamde Ngaari Ngam Waylude Ngaynaaɗe Kameruun.',
     'features.automation.title': 'Wattinde',
     'features.automation.description': 'Toppu Irrigasion, Ventilation e Ndaariɗe Hakkunde. Siistem Amen Eɗen, Jokkondirɗam e Njeewi Njeewi, Feddanaa Ko Tawaa Koɗɗe Mawɗe Waɗataa Hatta Si Njeewi Njeewi Ɓaawtaa.',
@@ -3562,6 +3578,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'notifications.emailErrors.check3': 'Yíltó logs backend ngam bayɗé ɓúrɗé',
     'notifications.emailErrors.runDiagnostic': 'Lancer diagnostic',
     'notifications.emailErrors.dismiss': 'Fermer',
+    'notifications.deleteAll.button': 'Sóbí fof',
+    'notifications.deleteAll.confirm': 'Ó bóŋ bíŋ sóbí notifications fof? Ɗúúm faytí ruttoowó.',
+    'notifications.deleteAll.deleting': 'Sóbí...',
+    'notifications.deleteAll.error': 'Faljirɗé wáɗí e sóbí. Notifications ɗíɗí mbaawí wanaa sóbí.',
     'hero.heading': 'Bisó jókón <span class="hero__highlight">bisó mán</span>, <span class="hero__highlight">jókón</span> é <span class="hero__highlight">automatiser</span>',
     'features.automation.title': 'Automatisation',
     'features.automation.description': 'Bwá Irrigation, Ventilation É Éclairage Alé Effort. Système Wá, Alimenté Par Énergie Solaire, Garantit Ko Tâches Essentielles S\'exécutent Même En Cas De Coupure De Courant.',

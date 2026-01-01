@@ -10,12 +10,30 @@
   width: 100%;
 }
 
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .title {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--text-primary, #1f2937);
-  margin-bottom: 32px;
+  margin: 0;
   text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.deleteAllButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 .emailErrorAlert {
@@ -118,9 +136,21 @@
     padding: 80px 20px 40px;
   }
 
+  .headerSection {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 24px;
+  }
+
   .title {
     font-size: 2rem;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .deleteAllButton {
+    width: 100%;
+    justify-content: center;
   }
 
   .emailErrorAlert {
