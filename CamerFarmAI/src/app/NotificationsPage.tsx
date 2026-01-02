@@ -135,6 +135,7 @@ export function NotificationsPage() {
     { href: '/', label: t('nav.home') || 'Accueil' },
     { href: '/plantations', label: t('nav.plantations') || 'Plantations' },
     { href: '/ai', label: t('nav.ai') || 'IA' },
+    { href: '/support', label: t('nav.support') || 'Support' },
     // Ne pas afficher "Surveillance", "Graphiques" et "Notifications" dans le header quand on est sur la page notifications
   ];
 
