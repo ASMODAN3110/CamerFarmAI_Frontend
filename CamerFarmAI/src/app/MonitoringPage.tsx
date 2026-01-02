@@ -1277,13 +1277,6 @@ function WaterLevelWidget({ value, updatedAt, isActive = true, seuilMin, seuilMa
           <div className={styles.monitoringPage__waterGlassReflection} />
         </div>
         
-        {/* Pipe with water flow indicator */}
-        <div className={styles.monitoringPage__waterPipe}>
-          {clampedValue > effectiveMin && (
-            <div className={styles.monitoringPage__waterFlow} />
-          )}
-        </div>
-        
         {/* Value and status display */}
         <div className={styles.monitoringPage__waterLevelDisplay}>
           <span className={styles.monitoringPage__waterLevelValue}>
@@ -1304,32 +1297,19 @@ function EquipmentControlWidget({
   isOn,
   onToggle,
   disabled,
-  isActive,
-  offlineLabel,
 }: {
   title: string;
   isOn: boolean;
   onToggle: () => void;
   disabled?: boolean;
-  isActive?: boolean;
-  offlineLabel?: string;
 }) {
   return (
     <div className={styles.monitoringPage__equipmentCard}>
       <div className={styles.monitoringPage__equipmentIcon}>
-        {isActive !== false ? (
-          <Icon icon={FaCheckCircle} size={32} className={isOn ? styles.monitoringPage__equipmentIconActive : styles.monitoringPage__equipmentIconInactive} />
-        ) : (
-          <Icon icon={FaTimesCircle} size={32} className={styles.monitoringPage__equipmentIconOffline} />
-        )}
+        <Icon icon={FaCheckCircle} size={32} className={isOn ? styles.monitoringPage__equipmentIconActive : styles.monitoringPage__equipmentIconInactive} />
       </div>
       <h3 className={styles.monitoringPage__equipmentTitle}>
         {title}
-        {isActive === false && offlineLabel && (
-          <span className={styles.monitoringPage__equipmentStatusBadge}>
-            {offlineLabel}
-          </span>
-        )}
       </h3>
       <div className={styles.monitoringPage__equipmentControls}>
         <button
@@ -1337,7 +1317,7 @@ function EquipmentControlWidget({
             isOn ? styles.monitoringPage__equipmentButtonActive : ''
           }`}
           onClick={onToggle}
-          disabled={disabled || isActive === false}
+          disabled={disabled}
         >
           ON
         </button>
@@ -1346,7 +1326,7 @@ function EquipmentControlWidget({
             !isOn ? styles.monitoringPage__equipmentButtonOff : ''
           }`}
           onClick={onToggle}
-          disabled={disabled || isActive === false}
+          disabled={disabled}
         >
           OFF
         </button>
@@ -1487,6 +1467,7 @@ export function MonitoringPage() {
       };
 
       actuators.forEach((actuator) => {
+        // Pour les actionneurs, 'active' = allumé, 'inactive' = éteint (pas de notion de "hors ligne")
         const isActive = actuator.status === 'active' || actuator.isOn === true;
         const type = (actuator.type || '').toLowerCase();
         const name = (actuator.name || '').toLowerCase();
@@ -2424,8 +2405,6 @@ export function MonitoringPage() {
                 isOn={equipmentState.irrigationPump}
                 onToggle={() => handleEquipmentToggle('irrigationPump')}
                 disabled={isAutomaticMode}
-                          isActive={pumpActuator.status === 'active'}
-                          offlineLabel={pumpActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                       {fanActuator && (
@@ -2434,8 +2413,6 @@ export function MonitoringPage() {
                 isOn={equipmentState.fans}
                 onToggle={() => handleEquipmentToggle('fans')}
                 disabled={isAutomaticMode}
-                          isActive={fanActuator.status === 'active'}
-                          offlineLabel={fanActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                       {lightActuator && (
@@ -2444,8 +2421,6 @@ export function MonitoringPage() {
                 isOn={equipmentState.lighting}
                 onToggle={() => handleEquipmentToggle('lighting')}
                 disabled={isAutomaticMode}
-                          isActive={lightActuator.status === 'active'}
-                          offlineLabel={lightActuator.status !== 'active' ? t('monitoring.equipment.offline') : undefined}
               />
                       )}
                     </>

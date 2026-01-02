@@ -18,3 +18,11 @@
   right: 0;
 }
 
+/* Responsive adjustments for small screens */
+@media (max-width: 900px) {
+  .dropdown {
+    min-width: 180px;
+    max-width: calc(100vw - var(--spacing-lg) * 2);
+  }
+}
+

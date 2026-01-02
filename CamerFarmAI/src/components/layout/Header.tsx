@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Dropdown } from '@/components/ui/Dropdown/Dropdown';
@@ -67,6 +67,7 @@ export function Header({
   const logout = useAuthStore((s) => s.logout);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Utiliser le contexte de notifications
   const {
@@ -456,8 +457,12 @@ export function Header({
                     {/* Version normale pour les autres utilisateurs */}
                 <div className={styles.header__iconButtonContainer}>
                   <button
-                    className={styles.header__iconButton}
+                    className={`${styles.header__iconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    onDoubleClick={() => {
+                      setNotificationsOpen(false);
+                      navigate('/notifications');
+                    }}
                         aria-label={t('notifications.title')}
                   >
                     <Icon icon={FaBell} size={22} />
@@ -531,7 +536,7 @@ export function Header({
 
                 <div className={styles.header__iconButtonContainer}>
                   <button
-                    className={styles.header__iconButton}
+                    className={`${styles.header__iconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                         aria-label={t('auth.profile')}
                   >
@@ -614,10 +619,15 @@ export function Header({
           {(isAuthenticated || showAuthIcons) ? (
             <div className={styles.header__mobileActions}>
               <button
-                className={styles.header__mobileIconButton}
+                className={`${styles.header__mobileIconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                 onClick={() => {
                   setNotificationsOpen(!notificationsOpen);
                   setMobileMenuOpen(false);
+                }}
+                onDoubleClick={() => {
+                  setNotificationsOpen(false);
+                  setMobileMenuOpen(false);
+                  navigate('/notifications');
                 }}
                 aria-label={t('notifications.title')}
               >
@@ -628,15 +638,45 @@ export function Header({
                   </span>
                 )}
               </button>
-              <button
-                className={styles.header__mobileIconButton}
-                onClick={() => {
-                  setProfileMenuOpen(!profileMenuOpen);
-                }}
-                          aria-label={t('auth.profile')}
-              >
-                <Icon icon={FaUser} size={24} />
-              </button>
+              <div className={styles.header__iconButtonContainer}>
+                <button
+                  className={`${styles.header__mobileIconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                            aria-label={t('auth.profile')}
+                >
+                  <Icon icon={FaUser} size={24} />
+                </button>
+                <Dropdown
+                  isOpen={profileMenuOpen}
+                  onClose={() => setProfileMenuOpen(false)}
+                  align="right"
+                >
+                  <div className={styles.header__profileDropdown}>
+                    <button
+                      className={styles.header__profileMenuItem}
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        setMobileMenuOpen(false);
+                        navigate('/profile');
+                      }}
+                    >
+                      <Icon icon={FaUser} size={18} />
+                      {t('auth.profile')}
+                    </button>
+                    <button
+                      className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        setMobileMenuOpen(false);
+                        handleLogout();
+                      }}
+                    >
+                      <Icon icon={FaSignOutAlt} size={18} />
+                      {t('auth.logout')}
+                    </button>
+                  </div>
+                </Dropdown>
+              </div>
             </div>
           ) : (
             <div className={styles.header__mobileAuthButtons}>

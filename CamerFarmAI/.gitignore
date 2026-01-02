@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 texput.log
+# Keep .cursor/debug.log for debug mode (see .cursor/ section)
 
 # Dependencies
 node_modules
@@ -149,6 +150,8 @@ sourcemap.json
 
 # IDE - Cursor
 .cursor/
+# Note: .cursor/debug.log is used for debug mode and should be kept
+# but can be cleared manually if needed
 
 # OS specific - Windows
 $RECYCLE.BIN/
@@ -162,3 +165,13 @@ Icon
 # OS specific - Linux
 *~
 .directory
+
+# Documentation build outputs (if any)
+docs/.vuepress/dist
+docs/.vitepress/dist
+site/
+
+# Local configuration overrides
+.env.production.local
+.env.development.local
+.env.test.local

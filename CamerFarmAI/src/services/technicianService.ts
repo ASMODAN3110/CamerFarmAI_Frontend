@@ -127,29 +127,30 @@ const normalizePlantationDetails = (data: any): PlantationDetails => {
     const status = statusRaw === 'active' ? SensorStatus.ACTIVE : SensorStatus.INACTIVE;
     
     return {
-      id: s.id,
-      type: s.type || '',
+    id: s.id,
+    type: s.type || '',
       status,
-      plantationId: s.plantationId || data.id,
-      seuilMin: s.seuilMin !== undefined ? Number(s.seuilMin) : undefined,
-      seuilMax: s.seuilMax !== undefined ? Number(s.seuilMax) : undefined,
-      createdAt: s.createdAt,
-      updatedAt: s.updatedAt
+    plantationId: s.plantationId || data.id,
+    seuilMin: s.seuilMin !== undefined ? Number(s.seuilMin) : undefined,
+    seuilMax: s.seuilMax !== undefined ? Number(s.seuilMax) : undefined,
+    createdAt: s.createdAt,
+    updatedAt: s.updatedAt
     };
   }
 
   // Normaliser les actionneurs
   const normalizeActuator = (a: any): Actuator => {
-    // Normaliser le status : retirer 'offline' si présent
+    // Normaliser le status : 'active' = allumé, 'inactive' = éteint
+    // Note: Contrairement aux capteurs, les actionneurs n'ont pas de notion de "hors ligne"
     const statusRaw = String(a.status || '').toLowerCase().trim();
-    const status = statusRaw === 'active' ? ActuatorStatus.ACTIVE : ActuatorStatus.INACTIVE; // Gérer gracieusement 'offline'
+    const status = statusRaw === 'active' ? ActuatorStatus.ACTIVE : ActuatorStatus.INACTIVE;
     
     return {
-      id: a.id,
-      type: a.type || '',
-      name: a.name || '',
+    id: a.id,
+    type: a.type || '',
+    name: a.name || '',
       status,
-      plantationId: a.plantationId || data.id,
+    plantationId: a.plantationId || data.id,
       metadata: a.metadata || undefined,
       createdAt: a.createdAt || a.lastUpdate || new Date().toISOString(),
       updatedAt: a.updatedAt || a.lastUpdate || new Date().toISOString(),

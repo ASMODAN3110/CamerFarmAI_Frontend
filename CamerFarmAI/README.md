@@ -17,6 +17,33 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **CSS Modules** : Styles modulaires et encapsulés
 - **ESLint** : Linter pour la qualité du code
 
+## 📐 Architecture des types
+
+Le projet utilise une architecture de types centralisée et alignée avec le backend :
+
+### Enums centralisés (`src/types/enums.ts`)
+- `UserRole` : 'farmer' | 'technician' | 'admin'
+- `PlantationMode` : 'automatic' | 'manual'
+- `SensorType` : 'temperature' | 'soilMoisture' | 'co2Level' | 'waterLevel' | 'luminosity'
+- `SensorStatus` : 'active' | 'inactive'
+- `ActuatorStatus` : 'active' | 'inactive'
+- `NotificationCanal` : 'web' | 'email' | 'whatsapp'
+- `NotificationStatut` : 'envoyee' | 'en_attente' | 'erreur'
+- `EventType` : Types d'événements pour les notifications
+
+### DTOs (`src/types/dto.ts`)
+Tous les DTOs pour les requêtes API sont centralisés :
+- `RegisterDto`, `LoginDto`, `UpdateProfileDto`
+- `CreatePlantationDto`, `UpdatePlantationDto`
+- `CreateSensorDto`, `UpdateSensorThresholdsDto`, `AddSensorReadingDto`
+- `CreateActuatorDto`, `UpdateActuatorDto`
+
+### Conversion d'unités (`src/utils/unitConverter.ts`)
+Le frontend convertit automatiquement les unités de superficie :
+- Le backend attend toujours `area` en m²
+- Conversions supportées : m², ha, acre, km²
+- Fonctions : `convertToM2()`, `convertFromM2()`, `formatArea()`
+
 ## 🚀 Fonctionnalités
 
 ### Authentification
@@ -25,6 +52,8 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Authentification à deux facteurs (2FA)** : Sécurisation supplémentaire avec codes de vérification (Google Authenticator, Authy, etc.)
 - **Gestion de session** : Refresh token automatique, déconnexion
 - **Protection des routes** : Routes protégées nécessitant une authentification
+- **Routes basées sur les rôles** : Accès restreint selon le rôle (farmer, technician, admin)
+- **Statut des comptes** : Gestion du statut actif/inactif des comptes utilisateurs
 
 ### Profil utilisateur
 - **Page de profil** : Visualisation et modification des informations personnelles
@@ -34,12 +63,14 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 
 ### Gestion des plantations
 - **Liste des plantations** : Visualisation de toutes les plantations de l'utilisateur
-- **Création de plantation** : Formulaire de création avec nom, localisation, superficie, type de culture
+- **Création de plantation** : Formulaire de création avec nom, localisation, superficie (avec conversion d'unités), type de culture, coordonnées GPS optionnelles
 - **Détails de plantation** : 
-  - Informations complètes (nom, localisation, superficie, type de culture)
+  - Informations complètes (nom, localisation, superficie, type de culture, coordonnées)
+  - État de santé calculé (healthy, warning, critical, unknown)
   - Liste des capteurs assignés avec leurs dernières lectures
   - Navigation vers les pages de monitoring et graphiques
   - Affichage conditionnel basé sur la présence de capteurs/actionneurs
+  - Mode de contrôle (automatique ou manuel)
 
 ### Monitoring en temps réel
 - **Tableau de bord** : Visualisation en temps réel des données des capteurs
@@ -49,10 +80,9 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
   - **Niveau de CO₂** : Jauge semi-circulaire horizontale (0-2500 ppm) avec dégradé vert-lime-jaune-orange-rouge et seuils de qualité
   - **Niveau d'eau** : Réservoir 3D avec dégradé rouge-jaune-vert, bulles remontantes, ondes de surface et indicateur de flux
   - **Luminosité** : Widget avec effet de glow dynamique, soleil rotatif avec rayons animés, particules de lumière flottantes
-- **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif, inactif ou hors ligne
+- **Indicateurs de statut** : Voyants visuels pour indiquer si chaque capteur est actif ou inactif
   - **Statut actif** : Capteur fonctionnel et envoyant des données régulièrement
   - **Statut inactif** : Capteur n'ayant pas envoyé de données depuis plus d'1 heure
-  - **Statut hors ligne** : Capteur déconnecté ou non disponible
 - **Alertes de capteurs inactifs** : Notification visuelle lorsqu'un ou plusieurs capteurs sont inactifs
 - **Animations fluides** : Transitions et animations pour tous les widgets de capteurs
 - **Dégradés de couleur** : Indicateurs visuels de couleur selon les valeurs (rouge = danger, jaune = attention, vert = optimal)
@@ -87,8 +117,11 @@ Plateforme intelligente pour une agriculture camerounaise moderne et durable. Ap
 - **Gestion des notifications** : Marquer comme lue, supprimer, filtrer
 - **Statistiques** : Compteurs de notifications (total, envoyées, non lues, etc.)
 - **Rafraîchissement automatique** : Mise à jour automatique toutes les 45 secondes
-- **Multi-canal** : Support des notifications web, email et SMS
+- **Multi-canal** : Support des notifications web, email et WhatsApp
 - **Affichage dans le header** : Badge avec compteur de notifications non lues
+- **Notifications email** : Affichage des notifications email avec détection des erreurs d'envoi
+- **Diagnostic email** : Outil de diagnostic disponible en développement pour identifier les problèmes SMTP
+- **Filtrage par canal** : Filtres pour afficher uniquement les notifications web, email, ou toutes
 
 ### Intelligence Artificielle
 - **Chatbot IA** : Assistant conversationnel pour répondre aux questions sur l'agriculture
@@ -150,20 +183,27 @@ src/
 │   └── ChatboxPage.tsx           # Page de chat IA
 ├── components/                    # Composants réutilisables
 │   ├── auth/                     # Composants d'authentification
-│   │   └── ProtectedRoute.tsx   # Route protégée
+│   │   ├── ProtectedRoute.tsx   # Route protégée
+│   │   ├── PublicRoute.tsx     # Route publique
+│   │   └── RoleBasedRoute.tsx   # Route basée sur les rôles
 │   ├── layout/                   # Layout (Header, Footer)
 │   ├── blocks/                   # Blocs de contenu
+│   ├── notifications/            # Composants de notifications
+│   │   ├── NotificationList.tsx # Liste des notifications
+│   │   └── NotificationStats.tsx # Statistiques des notifications
+│   ├── cookies/                  # Gestion des cookies
 │   └── ui/                       # Composants UI
 │       ├── Button/              # Bouton
 │       ├── Card/                # Carte
 │       ├── FormField/           # Champ de formulaire
 │       ├── Icon/                # Icône
 │       ├── Modal/               # Modal
-│       ├── Dropdown/            # Menu déroulant
+│       ├── Dropdown/            # Menu déroulant (responsive)
 │       ├── LanguageSwitcher/    # Sélecteur de langue
 │       ├── FloatingButton/      # Bouton flottant
 │       ├── CreatePlantationModal/ # Modal de création de plantation
-│       └── TwoFactorModal/      # Modal d'authentification à deux facteurs
+│       ├── TwoFactorModal/      # Modal d'authentification à deux facteurs
+│       └── Background3D/        # Arrière-plan 3D
 ├── services/                      # Services API
 │   ├── api.ts                    # Configuration Axios
 │   ├── authService.ts           # Service d'authentification
@@ -177,12 +217,20 @@ src/
 │   ├── useScrollAnimation.ts     # Hook d'animation au scroll
 │   └── useNotifications.ts      # Hook de gestion des notifications
 ├── contexts/                     # Contextes React
+│   ├── AuthContext.tsx          # Contexte d'authentification
+│   ├── CookieContext.tsx        # Contexte de gestion des cookies
 │   ├── LanguageContext.tsx      # Contexte de langue
 │   └── NotificationContext.tsx  # Contexte de notifications
+├── types/                         # Types TypeScript centralisés
+│   ├── enums.ts                  # Enums (UserRole, SensorType, SensorStatus, etc.)
+│   └── dto.ts                    # DTOs pour les requêtes API
 ├── utils/                         # Utilitaires
 │   ├── translations.ts           # Fichiers de traduction (4 langues)
 │   ├── sensorStatus.ts           # Utilitaires pour les statuts des capteurs
-│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email
+│   ├── unitConverter.ts          # Conversion d'unités de superficie (m², ha, acre, km²)
+│   ├── notificationFormatters.ts # Formatage des notifications
+│   ├── paramsSerializer.ts       # Sérialisation des paramètres URL
+│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email (dev uniquement)
 └── styles/                        # Styles globaux
     ├── global.css
     └── theme.ts
@@ -201,6 +249,7 @@ src/
 | `/graphs?plantationId=:id` | Graphiques et statistiques | Protégée |
 | `/monitoring?plantationId=:id` | Monitoring en temps réel | Protégée |
 | `/ai` | Chatbot IA | Protégée |
+| `/technicien` | Tableau de bord technicien | Protégée (technicien uniquement) |
 
 ## 📡 API Backend
 
@@ -221,17 +270,26 @@ src/
 - `GET /plantations/my` - Liste des plantations de l'utilisateur
 - `GET /plantations/:id` - Détails d'une plantation (avec capteurs et actionneurs)
 - `POST /plantations` - Création d'une nouvelle plantation
+- `PATCH /plantations/:id` - Mise à jour d'une plantation (notamment le mode)
 - `GET /plantations/:id/sensors` - Liste des capteurs d'une plantation
 - `GET /plantations/:id/actuators` - Liste des actionneurs d'une plantation
 - `GET /plantations/:id/sensors/:sensorId/readings` - Lectures d'un capteur
+- `POST /plantations/:id/sensors/:sensorId/readings` - Ajout d'une lecture de capteur
 - `PATCH /plantations/:id/sensors/:sensorId/thresholds` - Mise à jour des seuils d'un capteur
+- `PATCH /plantations/:id/actuators/:actuatorId` - Mise à jour d'un actionneur
+
+### Endpoints technicien
+- `GET /technician/stats` - Statistiques globales
+- `GET /technician/farmers` - Liste des agriculteurs (avec recherche optionnelle)
+- `GET /technician/farmers/:farmerId/plantations` - Plantations d'un agriculteur
 
 ### Endpoints des notifications
 - `GET /notifications/my` - Liste de toutes les notifications de l'utilisateur
 - `GET /notifications/my?unreadOnly=true` - Liste des notifications non lues uniquement
 - `GET /notifications/web` - Liste des notifications web uniquement
 - `GET /notifications/stats` - Statistiques des notifications
-- `PUT /notifications/:id/read` - Marquer une notification comme lue
+- `GET /notifications/:id` - Détails d'une notification
+- `PATCH /notifications/:id/read` - Marquer une notification comme lue
 - `DELETE /notifications/:id` - Supprimer une notification
 
 ### Structure des données
@@ -239,47 +297,74 @@ src/
 #### Plantation
 ```typescript
 interface Plantation {
-  id: string;
-  name: string;
-  location: string;
-  area: number;
-  cropType?: string;
-  ownerId?: string;
+  id: string;                    // UUID
+  name: string;                  // Requis
+  location: string | null;       // Nullable
+  area?: number;                 // Optionnel, en m²
+  cropType: string;              // Requis
+  coordinates?: {                 // Optionnel
+    lat: number;
+    lng: number;
+  };
+  mode: 'automatic' | 'manual';  // Default: 'automatic'
+  ownerId?: string;              // UUID du propriétaire
   sensors?: Sensor[];
   actuators?: Actuator[];
-  hasSensors?: boolean;
-  hasActuators?: boolean;
+  hasSensors?: boolean;          // Calculé (non-backend)
+  hasActuators?: boolean;        // Calculé (non-backend)
+  createdAt: string;             // Format ISO 8601
+  updatedAt: string;             // Format ISO 8601
+  etat?: {                       // État calculé par le backend
+    status: 'healthy' | 'warning' | 'critical' | 'unknown';
+    activeSensors: number;
+    totalSensors: number;
+    activeActuators: number;
+    totalActuators: number;
+    message: string;
+  };
 }
 ```
+
+**Note:** Le champ `area` doit toujours être en m². Le frontend convertit automatiquement depuis d'autres unités (ha, acre, km²) avant l'envoi.
 
 #### Capteur
 ```typescript
 interface Sensor {
-  id: string;
-  type: 'temperature' | 'humidity' | 'soilMoisture' | 'co2Level' | 'waterLevel' | 'luminosity';
-  status: 'active' | 'inactive' | 'offline';  // Statut du capteur
-  plantationId: string;
-  seuilMin?: number;  // Seuil minimum pour les alertes
-  seuilMax?: number;  // Seuil maximum pour les alertes
-  latestReading?: SensorReading;  // Dernière lecture du capteur
+  id: string;                    // UUID
+  type: 'temperature' | 'soilMoisture' | 'co2Level' | 'waterLevel' | 'luminosity';
+  status: 'active' | 'inactive';  // 'active' | 'inactive' (pas 'offline')
+  plantationId: string;          // UUID
+  seuilMin?: number;             // Optionnel, decimal(10,2)
+  seuilMax?: number;             // Optionnel, decimal(10,2)
+  createdAt: string;             // Format ISO 8601
+  updatedAt: string;             // Format ISO 8601
+  latestReading?: SensorReading; // Dernière lecture du capteur
+  readings?: SensorReading[];     // Historique des lectures
 }
 
 // Statuts des capteurs :
 // - 'active' : Capteur fonctionnel et envoyant des données régulièrement
 // - 'inactive' : Capteur n'ayant pas envoyé de données depuis plus d'1 heure
-// - 'offline' : Capteur déconnecté ou non disponible
 ```
+
+**Note:** Le type `'humidity'` n'existe plus. Utiliser `'soilMoisture'` ou `'waterLevel'` à la place.
 
 #### Actionneur
 ```typescript
 interface Actuator {
-  id: string;
-  type: 'pump' | 'fan' | 'light';
-  name: string;
-  status: 'active' | 'inactive' | 'offline';
-  plantationId: string;
+  id: string;                    // UUID
+  type: string;                  // Requis (ex: "pompe", "ventilateur", "éclairage")
+  name: string;                  // Requis
+  status: 'active' | 'inactive';  // 'active' | 'inactive' (pas 'offline')
+  plantationId: string;          // UUID
+  metadata?: Record<string, any>; // Optionnel, JSON
+  createdAt: string;             // Format ISO 8601
+  updatedAt: string;             // Format ISO 8601
+  isOn?: boolean;                // Calculé depuis status === 'active' (non-backend)
 }
 ```
+
+**Note:** Le statut `'offline'` n'existe plus. Utiliser `'inactive'` à la place.
 
 ## 🎨 Système de variation des couleurs des jauges
 
@@ -773,24 +858,35 @@ Pour l'Ewondo, une approche hybride a été adoptée :
 
 Cette approche reflète l'usage réel de la langue Ewondo dans un contexte technologique moderne.
 
+## 📚 Documentation supplémentaire
+
+Le projet inclut plusieurs documents de référence pour faciliter le développement et l'intégration :
+
+- **MODELE_DONNEES_BACKEND.md** : Documentation complète des modèles de données attendus par le frontend depuis le backend, incluant tous les types, DTOs, et formats de réponse API.
+
+- **CONFIGURATION_BACKEND_NOTIFICATIONS.md** : Guide complet pour configurer le backend afin que les notifications fonctionnent correctement. Inclut les endpoints requis, structures de données, types d'événements, canaux de notification, et exemples de réponses.
+
+- **DOCUMENTATION_NOTIFICATIONS_EMAIL.md** : Documentation détaillée de l'implémentation des notifications par email dans le frontend. Décrit l'architecture, les services, composants UI, gestion des erreurs, diagnostic, et flux de données.
+
 **Dernière mise à jour** : Décembre 2025
 
 ## 🔍 Statuts des capteurs
 
-Le système gère trois statuts pour les capteurs :
+Le système gère deux statuts pour les capteurs :
 
 | Statut | Description | Couleur | Signification |
 |--------|-------------|---------|---------------|
 | **Actif** | Capteur fonctionnel et envoyant des données régulièrement | 🟢 Vert | Le capteur fonctionne normalement et transmet des données |
 | **Inactif** | Capteur n'ayant pas envoyé de données depuis plus d'1 heure | 🔴 Rouge | Le capteur n'a pas transmis de données récemment (défaut de communication ou problème technique) |
-| **Hors ligne** | Capteur déconnecté ou non disponible | ⚫ Gris | Le capteur est complètement déconnecté ou non configuré |
+
+**Note:** Le statut `'offline'` n'existe plus dans le backend. Les capteurs déconnectés sont considérés comme `'inactive'`. Le frontend gère gracieusement les anciennes valeurs `'offline'` en les convertissant en `'inactive'` pour compatibilité.
 
 ### Détection automatique
 
 Le système détecte automatiquement le statut d'un capteur en fonction de :
 - **Timestamp de la dernière lecture** : Si aucune lecture n'a été reçue depuis plus d'1 heure, le capteur est marqué comme inactif
-- **Connexion réseau** : Si le capteur est déconnecté du réseau, il est marqué comme hors ligne
-- **Configuration** : Si le capteur n'est pas correctement configuré, il peut être marqué comme hors ligne
+- **Connexion réseau** : Si le capteur est déconnecté du réseau, il est marqué comme inactif
+- **Configuration** : Si le capteur n'est pas correctement configuré, il peut être marqué comme inactif
 
 ### Alertes visuelles
 

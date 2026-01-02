@@ -1,0 +1,125 @@
+.statsContainer {
+  background: var(--card-background, #ffffff);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text-primary, #1f2937);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: var(--background-secondary, #f9fafb);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statCardSuccess {
+  background: #d1fae5;
+  border-left: 4px solid #10b981;
+}
+
+.statCardWarning {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+}
+
+.statCardError {
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+}
+
+.statCardUnread {
+  background: #dbeafe;
+  border-left: 4px solid #3b82f6;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 8px;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #1f2937);
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.channelStats {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.channelTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary, #1f2937);
+}
+
+.channelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.channelItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--background-secondary, #f9fafb);
+  border-radius: 6px;
+}
+
+.channelLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+}
+
+.channelValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .channelGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

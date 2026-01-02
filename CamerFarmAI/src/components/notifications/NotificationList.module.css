@@ -1,0 +1,240 @@
+.container {
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--background-secondary, #f9fafb);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterButton:hover {
+  background: var(--background-hover, #f3f4f6);
+  border-color: var(--border-hover, #d1d5db);
+}
+
+.filterActive {
+  padding: 8px 16px;
+  border: 1px solid var(--primary-color, #3b82f6);
+  background: var(--primary-color, #3b82f6);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterActive:hover {
+  background: var(--primary-hover, #2563eb);
+  border-color: var(--primary-hover, #2563eb);
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary, #6b7280);
+  font-size: 1rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationItem {
+  background: var(--card-background, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.notificationItem:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--border-hover, #d1d5db);
+}
+
+.notificationItemUnread {
+  border-left: 4px solid var(--primary-color, #3b82f6);
+  background: var(--background-unread, #eff6ff);
+}
+
+.notificationHeader {
+  margin-bottom: 12px;
+}
+
+.notificationTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notificationTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.notificationBadges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badgeSuccess {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badgeWarning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badgeError {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badgeDefault {
+  background: var(--background-secondary, #f9fafb);
+  color: var(--text-secondary, #6b7280);
+}
+
+.badgeCanal {
+  background: var(--background-secondary, #f9fafb);
+  color: var(--text-secondary, #6b7280);
+}
+
+.notificationContent {
+  margin-bottom: 12px;
+}
+
+.notificationDescription {
+  font-size: 0.875rem;
+  color: var(--text-primary, #1f2937);
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.notificationPlantation {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0 0 4px 0;
+}
+
+.notificationDate {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  margin: 0;
+}
+
+.errorInfo {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: #991b1b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.notificationActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--background-secondary, #f9fafb);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionButton:hover:not(:disabled) {
+  background: var(--background-hover, #f3f4f6);
+  border-color: var(--border-hover, #d1d5db);
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionButtonDelete {
+  color: #ef4444;
+  border-color: #fee2e2;
+  background: #fee2e2;
+}
+
+.actionButtonDelete:hover:not(:disabled) {
+  background: #fecaca;
+  border-color: #fca5a5;
+}
+
+@media (max-width: 768px) {
+  .notificationTitleRow {
+    flex-direction: column;
+  }
+
+  .notificationBadges {
+    width: 100%;
+  }
+
+  .notificationActions {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

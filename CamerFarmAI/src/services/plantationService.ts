@@ -1,5 +1,6 @@
 import { api } from './api';
-import type { SensorType, SensorStatus, ActuatorStatus, PlantationMode } from '@/types/enums';
+import { SensorStatus, ActuatorStatus, PlantationMode } from '@/types/enums';
+import type { SensorType } from '@/types/enums';
 import type { CreatePlantationDto, UpdatePlantationDto, CreateSensorDto, UpdateSensorThresholdsDto, AddSensorReadingDto, CreateActuatorDto, UpdateActuatorDto } from '@/types/dto';
 
 // Alias pour compatibilité ascendante
@@ -35,7 +36,7 @@ export interface Actuator {
   id: string;
   type: string; // Requis (ex: "pompe", "ventilateur", "éclairage")
   name: string; // Requis
-  status: ActuatorStatus; // 'active' | 'inactive' (pas 'offline')
+  status: ActuatorStatus; // 'active' = allumé, 'inactive' = éteint (pas de notion de "hors ligne" comme pour les capteurs)
   plantationId: string;
   metadata?: Record<string, any>; // Optionnel, JSON
   createdAt: string; // Format ISO 8601
@@ -95,27 +96,29 @@ const normalizeSensor = (data: any): Sensor => {
   }
 
   return {
-    id: data.id,
-    type: data.type || data.sensorType || '',
+  id: data.id,
+  type: data.type || data.sensorType || '',
     status,
-    plantationId: data.plantationId,
-    seuilMin: typeof data.seuilMin === 'number' ? data.seuilMin : data.seuilMin !== undefined ? Number(data.seuilMin) : undefined,
-    seuilMax: typeof data.seuilMax === 'number' ? data.seuilMax : data.seuilMax !== undefined ? Number(data.seuilMax) : undefined,
+  plantationId: data.plantationId,
+  seuilMin: typeof data.seuilMin === 'number' ? data.seuilMin : data.seuilMin !== undefined ? Number(data.seuilMin) : undefined,
+  seuilMax: typeof data.seuilMax === 'number' ? data.seuilMax : data.seuilMax !== undefined ? Number(data.seuilMax) : undefined,
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: data.updatedAt || new Date().toISOString(),
-    latestReading: data.latestReading ? normalizeSensorReading(data.latestReading) : undefined,
-    readings: Array.isArray(data.readings) ? data.readings.map(normalizeSensorReading) : undefined,
+  latestReading: data.latestReading ? normalizeSensorReading(data.latestReading) : undefined,
+  readings: Array.isArray(data.readings) ? data.readings.map(normalizeSensorReading) : undefined,
   };
 };
 
 const normalizeActuator = (data: any): Actuator => {
-  // Normaliser le status : retirer 'offline' si présent, utiliser 'inactive' à la place
+  // Normaliser le status : 'active' = allumé, 'inactive' = éteint
+  // Note: Contrairement aux capteurs, les actionneurs n'ont pas de notion de "hors ligne"
+  // Le statut indique simplement si l'actionneur est allumé (active) ou éteint (inactive)
   let status: ActuatorStatus = ActuatorStatus.INACTIVE;
   const statusRaw = String(data.status || '').toLowerCase().trim();
   if (statusRaw === 'active' || data.isOn === true) {
     status = ActuatorStatus.ACTIVE;
   } else if (statusRaw === 'inactive' || statusRaw === 'offline' || data.isOn === false) {
-    // Gérer gracieusement 'offline' pour compatibilité
+    // Gérer gracieusement 'offline' pour compatibilité avec d'anciennes données
     status = ActuatorStatus.INACTIVE;
   }
   

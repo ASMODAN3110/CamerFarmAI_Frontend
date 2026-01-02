@@ -1,4 +1,4 @@
-import type { Notification } from '@/services/notificationService';
+import type { Notification, NotificationEvent } from '@/services/notificationService';
 import type { TranslationKey } from '@/utils/translations';
 import { EventType } from '@/services/notificationService';
 
@@ -111,5 +111,40 @@ export function getNotificationStyle(eventType: string): {
         bgColor: '#f3f4f6',
       };
   }
+}
+
+/**
+ * Obtient le label formaté avec emoji pour un type d'événement
+ * Selon la documentation backend
+ */
+export function getEventTypeLabel(eventType: string): string {
+  const labels: Record<string, string> = {
+    [EventType.SEUIL_DEPASSE]: '🚨 Alerte : Seuil Dépassé',
+    [EventType.ACTIONNEUR_ACTIVE]: '✅ Actionneur Activé',
+    [EventType.ACTIONNEUR_DESACTIVE]: '⏸️ Actionneur Désactivé',
+    [EventType.MODE_CHANGED]: '🔄 Changement de Mode',
+    [EventType.SENSOR_ACTIVE]: '✅ Capteur Actif',
+    [EventType.SENSOR_INACTIVE]: '⚠️ Capteur Inactif',
+  };
+  
+  return labels[eventType] || `Notification : ${eventType}`;
+}
+
+/**
+ * Extrait le nom de la plantation depuis l'événement
+ * Vérifie sensor.plantation.name puis actuator.plantation.name
+ */
+export function getPlantationName(event: NotificationEvent | undefined): string | null {
+  if (!event) return null;
+  
+  if (event.sensor?.plantation?.name) {
+    return event.sensor.plantation.name;
+  }
+  
+  if (event.actuator?.plantation?.name) {
+    return event.actuator.plantation.name;
+  }
+  
+  return null;
 }
 

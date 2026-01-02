@@ -16,6 +16,7 @@ import { GraphsPage } from './app/GraphsPage';
 import { MonitoringPage } from './app/MonitoringPage';
 import { ProfilePage } from './app/ProfilePage';
 import { ChatboxPage } from './app/ChatboxPage';
+import { NotificationsPage } from './app/NotificationsPage';
 import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
 import { DocumentationPage } from './app/DocumentationPage';
@@ -97,6 +98,14 @@ function App() {
               element={
                 <ProtectedRoute >
                   <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/notifications" 
+              element={
+                <ProtectedRoute >
+                  <NotificationsPage />
                 </ProtectedRoute>
               } 
             />
