@@ -12,7 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className, children, href, ...props }, ref) => {
+  ({ variant = 'primary', size = 'md', className, children, href, onClick, ...rest }, ref) => {
     const classes = [
       styles.button,
       styles[`button--${variant}`],
@@ -29,15 +29,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className={classes} 
           role="button" 
           aria-label={props['aria-label']}
-          onClick={props.onClick as React.MouseEventHandler<HTMLAnchorElement>}
+          onClick={onClick as React.MouseEventHandler<HTMLAnchorElement>}
         >
           {children}
         </a>
       );
     }
 
+    const buttonProps = rest as ButtonHTMLAttributes<HTMLButtonElement>;
     return (
-      <button ref={ref} type={props.type || 'button'} className={classes} {...props}>
+      <button ref={ref} type={buttonProps.type || 'button'} className={classes} {...buttonProps} onClick={onClick}>
         {children}
       </button>
     );

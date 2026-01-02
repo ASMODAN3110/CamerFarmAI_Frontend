@@ -21,10 +21,6 @@ import { ChatboxPage } from './app/ChatboxPage';
 import { NotificationsPage } from './app/NotificationsPage';
 import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
 import { GuidePage } from './app/GuidePage';
-import { DocumentationPage } from './app/DocumentationPage';
-import { PrivacyPage } from './app/PrivacyPage';
-import { TermsPage } from './app/TermsPage';
-import { CookiesPage } from './app/CookiesPage';
 function App() {
   return (
     <AuthProvider>
@@ -142,26 +138,6 @@ function App() {
                   <GuidePage />
                 </ProtectedRoute>
               } 
-            />
-            <Route 
-              path="/docs" 
-              element={
-                <ProtectedRoute>
-                  <DocumentationPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/privacy" 
-              element={<PrivacyPage />} 
-            />
-            <Route 
-              path="/terms" 
-              element={<TermsPage />} 
-            />
-            <Route 
-              path="/cookies" 
-              element={<CookiesPage />} 
             />
             
             {/* Route catch-all - redirige vers la page d'accueil */}
