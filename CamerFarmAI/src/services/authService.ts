@@ -36,6 +36,28 @@ export interface TwoFactorSecretResponse {
   qrCodeUrl: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data?: T;
+  errors?: Array<{
+    type: string;
+    value: any;
+    msg: string;
+    path: string;
+    location: string;
+  }>;
+}
+
 /**
  * Interface User correspondant au modèle de données du backend
  * Champs marqués comme "Non-backend" sont utilisés uniquement côté frontend
@@ -237,5 +259,49 @@ export const authService = {
         'Content-Type': 'multipart/form-data',
       },
     }).then(res => res.data);
+  },
+
+  /**
+   * Demander une réinitialisation de mot de passe
+   * @param email - Email de l'utilisateur
+   * @returns Promise avec la réponse de l'API
+   */
+  forgotPassword: (email: string): Promise<ApiResponse> => {
+    // Normaliser l'email (trim et lowercase)
+    const normalizedEmail = email.trim().toLowerCase();
+    
+    return api.post<ApiResponse>('/auth/forgot-password', { email: normalizedEmail })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        // Si le backend retourne une erreur de validation, la retourner
+        if (error.response?.data) {
+          return error.response.data;
+        }
+        // Sinon, propager l'erreur
+        throw error;
+      });
+  },
+
+  /**
+   * Réinitialiser le mot de passe avec token
+   * @param token - Token JWT reçu dans l'URL de l'email
+   * @param newPassword - Nouveau mot de passe
+   * @returns Promise avec la réponse de l'API
+   */
+  resetPassword: (token: string, newPassword: string): Promise<ApiResponse> => {
+    return api.post<ApiResponse>('/auth/reset-password', { token, newPassword })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        // Si le backend retourne une erreur, la retourner
+        if (error.response?.data) {
+          return error.response.data;
+        }
+        // Sinon, propager l'erreur
+        throw error;
+      });
   },
 };

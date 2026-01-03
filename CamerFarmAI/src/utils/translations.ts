@@ -54,6 +54,40 @@ export type TranslationKey =
   | 'login.motivational.line1'
   | 'login.motivational.line2'
   | 'login.motivational.line3'
+  | 'forgotPassword.title'
+  | 'forgotPassword.subtitle'
+  | 'forgotPassword.emailLabel'
+  | 'forgotPassword.emailPlaceholder'
+  | 'forgotPassword.submitButton'
+  | 'forgotPassword.submitting'
+  | 'forgotPassword.successMessage'
+  | 'forgotPassword.successHint'
+  | 'forgotPassword.backToLogin'
+  | 'forgotPassword.errors.emailRequired'
+  | 'forgotPassword.errors.emailInvalid'
+  | 'resetPassword.title'
+  | 'resetPassword.subtitle'
+  | 'resetPassword.newPasswordLabel'
+  | 'resetPassword.newPasswordPlaceholder'
+  | 'resetPassword.confirmPasswordLabel'
+  | 'resetPassword.confirmPasswordPlaceholder'
+  | 'resetPassword.submitButton'
+  | 'resetPassword.submitting'
+  | 'resetPassword.successMessage'
+  | 'resetPassword.redirecting'
+  | 'resetPassword.validation.title'
+  | 'resetPassword.validation.minLength'
+  | 'resetPassword.validation.hasUpperCase'
+  | 'resetPassword.validation.hasLowerCase'
+  | 'resetPassword.validation.hasNumber'
+  | 'resetPassword.validation.hasSpecialChar'
+  | 'resetPassword.errors.tokenMissing'
+  | 'resetPassword.errors.tokenExpired'
+  | 'resetPassword.errors.passwordMismatch'
+  | 'resetPassword.errors.passwordInvalid'
+  | 'resetPassword.errors.accountDisabled'
+  | 'resetPassword.requestNewLink'
+  | 'resetPassword.backToLogin'
   | 'signup.title'
   | 'signup.lastNameLabel'
   | 'signup.lastNamePlaceholder'
@@ -916,6 +950,40 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.motivational.line1': 'Modernisez vos cultures, automatisez',
     'login.motivational.line2': 'vos tâches et améliorez vos récoltes',
     'login.motivational.line3': 'L\'agriculture connectée et automatisée c\'est l\'avenir',
+    'forgotPassword.title': 'MOT DE PASSE OUBLIÉ',
+    'forgotPassword.subtitle': 'Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
+    'forgotPassword.emailLabel': 'Adresse email',
+    'forgotPassword.emailPlaceholder': 'votre.email@example.com',
+    'forgotPassword.submitButton': 'Envoyer le lien de réinitialisation',
+    'forgotPassword.submitting': 'Envoi en cours...',
+    'forgotPassword.successMessage': 'Si cet email existe dans notre système, un lien de réinitialisation a été envoyé.',
+    'forgotPassword.successHint': 'Vérifiez votre boîte de réception (et les spams) pour le lien de réinitialisation. Le lien expire dans 1 heure.',
+    'forgotPassword.backToLogin': 'Retour à la connexion',
+    'forgotPassword.errors.emailRequired': 'L\'adresse email est requise',
+    'forgotPassword.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'resetPassword.title': 'RÉINITIALISER VOTRE MOT DE PASSE',
+    'resetPassword.subtitle': 'Créez un nouveau mot de passe sécurisé pour votre compte.',
+    'resetPassword.newPasswordLabel': 'Nouveau mot de passe',
+    'resetPassword.newPasswordPlaceholder': 'Nouveau mot de passe',
+    'resetPassword.confirmPasswordLabel': 'Confirmer le mot de passe',
+    'resetPassword.confirmPasswordPlaceholder': 'Confirmer le mot de passe',
+    'resetPassword.submitButton': 'Réinitialiser le mot de passe',
+    'resetPassword.submitting': 'Réinitialisation en cours...',
+    'resetPassword.successMessage': 'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.',
+    'resetPassword.redirecting': 'Redirection vers la page de connexion...',
+    'resetPassword.validation.title': 'Le mot de passe doit contenir :',
+    'resetPassword.validation.minLength': 'Au moins 8 caractères',
+    'resetPassword.validation.hasUpperCase': 'Une lettre majuscule',
+    'resetPassword.validation.hasLowerCase': 'Une lettre minuscule',
+    'resetPassword.validation.hasNumber': 'Un chiffre',
+    'resetPassword.validation.hasSpecialChar': 'Un caractère spécial',
+    'resetPassword.errors.tokenMissing': 'Token de réinitialisation manquant. Veuillez utiliser le lien reçu par email.',
+    'resetPassword.errors.tokenExpired': 'Token de réinitialisation invalide ou expiré. Veuillez demander un nouveau lien.',
+    'resetPassword.errors.passwordMismatch': 'Les mots de passe ne correspondent pas',
+    'resetPassword.errors.passwordInvalid': 'Le mot de passe ne respecte pas toutes les règles requises',
+    'resetPassword.errors.accountDisabled': 'Impossible de réinitialiser le mot de passe d\'un compte désactivé',
+    'resetPassword.requestNewLink': 'Demander un nouveau lien',
+    'resetPassword.backToLogin': 'Retour à la connexion',
     'signup.title': 'INSCRIPTION',
     'signup.lastNameLabel': 'Nom',
     'signup.lastNamePlaceholder': 'Nom',
@@ -1777,6 +1845,40 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.motivational.line1': 'Modernize your crops, automate',
     'login.motivational.line2': 'your tasks and improve your harvests',
     'login.motivational.line3': 'Connected and automated agriculture is the future',
+    'forgotPassword.title': 'FORGOT PASSWORD',
+    'forgotPassword.subtitle': 'Enter your email address and we will send you a link to reset your password.',
+    'forgotPassword.emailLabel': 'Email address',
+    'forgotPassword.emailPlaceholder': 'your.email@example.com',
+    'forgotPassword.submitButton': 'Send reset link',
+    'forgotPassword.submitting': 'Sending...',
+    'forgotPassword.successMessage': 'If this email exists in our system, a reset link has been sent.',
+    'forgotPassword.successHint': 'Check your inbox (and spam) for the reset link. The link expires in 1 hour.',
+    'forgotPassword.backToLogin': 'Back to login',
+    'forgotPassword.errors.emailRequired': 'Email address is required',
+    'forgotPassword.errors.emailInvalid': 'Email address is invalid',
+    'resetPassword.title': 'RESET YOUR PASSWORD',
+    'resetPassword.subtitle': 'Create a new secure password for your account.',
+    'resetPassword.newPasswordLabel': 'New password',
+    'resetPassword.newPasswordPlaceholder': 'New password',
+    'resetPassword.confirmPasswordLabel': 'Confirm password',
+    'resetPassword.confirmPasswordPlaceholder': 'Confirm password',
+    'resetPassword.submitButton': 'Reset password',
+    'resetPassword.submitting': 'Resetting...',
+    'resetPassword.successMessage': 'Your password has been successfully reset. You can now log in.',
+    'resetPassword.redirecting': 'Redirecting to login page...',
+    'resetPassword.validation.title': 'The password must contain:',
+    'resetPassword.validation.minLength': 'At least 8 characters',
+    'resetPassword.validation.hasUpperCase': 'One uppercase letter',
+    'resetPassword.validation.hasLowerCase': 'One lowercase letter',
+    'resetPassword.validation.hasNumber': 'One number',
+    'resetPassword.validation.hasSpecialChar': 'One special character',
+    'resetPassword.errors.tokenMissing': 'Reset token is missing. Please use the link received by email.',
+    'resetPassword.errors.tokenExpired': 'Reset token is invalid or expired. Please request a new link.',
+    'resetPassword.errors.passwordMismatch': 'Passwords do not match',
+    'resetPassword.errors.passwordInvalid': 'Password does not meet all required rules',
+    'resetPassword.errors.accountDisabled': 'Cannot reset password for a disabled account',
+    'resetPassword.requestNewLink': 'Request a new link',
+    'resetPassword.backToLogin': 'Back to login',
     'signup.title': 'SIGN UP',
     'signup.lastNameLabel': 'Last Name',
     'signup.lastNamePlaceholder': 'Last Name',
@@ -2638,6 +2740,40 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.motivational.line1': 'Ɓeyduɗe nguurndam maɓɓe, wattinde',
     'login.motivational.line2': 'koɗɗe maɓɓe e ɓeyduɗe alaaɗe maɓɓe',
     'login.motivational.line3': 'Ngaynaaɗe jokkondirɗam e wattinɗam ko koɗɗe jamaa',
+    'forgotPassword.title': 'FINNDE YEJJII',
+    'forgotPassword.subtitle': 'Naatu nder email maa e min neldu maa jokkol ngam ruttude finnde maa.',
+    'forgotPassword.emailLabel': 'Nder email',
+    'forgotPassword.emailPlaceholder': 'email.maa@example.com',
+    'forgotPassword.submitButton': 'Neldu jokkol ruttude',
+    'forgotPassword.submitting': 'Neldugol...',
+    'forgotPassword.successMessage': 'So nder email ngol no njahii e siistem amen, jokkol ruttude nelduɗo.',
+    'forgotPassword.successHint': 'Ƴeewto nder email maa (e spam) ngam jokkol ruttude. Jokkol ngal faytii e nder sahaa 1.',
+    'forgotPassword.backToLogin': 'Rutto seŋo',
+    'forgotPassword.errors.emailRequired': 'Nder email ina tawaa',
+    'forgotPassword.errors.emailInvalid': 'Nder email fotaani',
+    'resetPassword.title': 'RUTTU FINNDE MAA',
+    'resetPassword.subtitle': 'Waɗu finnde hesɗo ngam konte maa.',
+    'resetPassword.newPasswordLabel': 'Finnde hesɗo',
+    'resetPassword.newPasswordPlaceholder': 'Finnde hesɗo',
+    'resetPassword.confirmPasswordLabel': 'Fedduɗe finnde',
+    'resetPassword.confirmPasswordPlaceholder': 'Fedduɗe finnde',
+    'resetPassword.submitButton': 'Ruttu finnde',
+    'resetPassword.submitting': 'Ruttugol...',
+    'resetPassword.successMessage': 'Finnde maa ruttaama e moƴƴere. A waawi seŋo jooni.',
+    'resetPassword.redirecting': 'Rutto e hello seŋo...',
+    'resetPassword.validation.title': 'Finnde ina tawaa:',
+    'resetPassword.validation.minLength': 'Koɗɗe 8 ɓuri',
+    'resetPassword.validation.hasUpperCase': 'Harfe mawnude gooto ɓuri',
+    'resetPassword.validation.hasLowerCase': 'Harfe ɓelɗe gooto ɓuri',
+    'resetPassword.validation.hasNumber': 'Limoore gooto ɓuri',
+    'resetPassword.validation.hasSpecialChar': 'Maande gooto ɓuri',
+    'resetPassword.errors.tokenMissing': 'Token ruttude ina ɓadii. Kuutora jokkol ɗe heɓii e email.',
+    'resetPassword.errors.tokenExpired': 'Token ruttude fotaani walla faytii. Ɗaɓɓu yeewto jokkol hesɗo.',
+    'resetPassword.errors.passwordMismatch': 'Finnde ɗe njaatondiraani',
+    'resetPassword.errors.passwordInvalid': 'Finnde ngal alaa jokkondiraa koɗɗe fof',
+    'resetPassword.errors.accountDisabled': 'Waawaa ruttude finnde konte ɓaawtaaɗe',
+    'resetPassword.requestNewLink': 'Yeewto jokkol hesɗo',
+    'resetPassword.backToLogin': 'Rutto seŋo',
     'signup.title': 'WINNDITO',
     'signup.lastNameLabel': 'Innde',
     'signup.lastNamePlaceholder': 'Innde',
@@ -3499,6 +3635,40 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.motivational.line1': 'Bwá bisó wá, automatiser',
     'login.motivational.line2': 'système wá é bwá bisó wá',
     'login.motivational.line3': 'Bisó jókón é automatiser ékpé mbálá',
+    'forgotPassword.title': 'MÓTÍ ÓBÍ',
+    'forgotPassword.subtitle': 'Sígní email wá é min sígní wá jokkol ngam ruttu mótí wá.',
+    'forgotPassword.emailLabel': 'Email wá',
+    'forgotPassword.emailPlaceholder': 'email.wá@example.com',
+    'forgotPassword.submitButton': 'Sígní jokkol ruttu',
+    'forgotPassword.submitting': 'Sígní...',
+    'forgotPassword.successMessage': 'So email ékpé sígní e sistem wá, jokkol ruttu sígní.',
+    'forgotPassword.successHint': 'Bwá email wá (é spam) ngam jokkol ruttu. Jokkol faytí e 1 heure.',
+    'forgotPassword.backToLogin': 'Bwá kómbí',
+    'forgotPassword.errors.emailRequired': 'Email ékpé',
+    'forgotPassword.errors.emailInvalid': 'Email alé mán',
+    'resetPassword.title': 'RUTTU MÓTÍ WÁ',
+    'resetPassword.subtitle': 'Sígní mótí mán ngam kóntó wá.',
+    'resetPassword.newPasswordLabel': 'Mótí mán',
+    'resetPassword.newPasswordPlaceholder': 'Mótí mán',
+    'resetPassword.confirmPasswordLabel': 'Vérification mótí',
+    'resetPassword.confirmPasswordPlaceholder': 'Vérification mótí',
+    'resetPassword.submitButton': 'Ruttu mótí',
+    'resetPassword.submitting': 'Ruttu...',
+    'resetPassword.successMessage': 'Mótí wá ruttu ékpé mbálá. Wá waawi kómbí mbálá.',
+    'resetPassword.redirecting': 'Bwá hello kómbí...',
+    'resetPassword.validation.title': 'Mótí ékpé:',
+    'resetPassword.validation.minLength': 'Mbálá 8',
+    'resetPassword.validation.hasUpperCase': 'Mbálá míbalé mán',
+    'resetPassword.validation.hasLowerCase': 'Mbálá míbalé alé mán',
+    'resetPassword.validation.hasNumber': 'Mbálá nombre',
+    'resetPassword.validation.hasSpecialChar': 'Mbálá spécial',
+    'resetPassword.errors.tokenMissing': 'Token ruttu alé. Kuutora jokkol wá email.',
+    'resetPassword.errors.tokenExpired': 'Token ruttu alé mán walla faytí. Bwá sígní jokkol mán.',
+    'resetPassword.errors.passwordMismatch': 'Mótí alé mán',
+    'resetPassword.errors.passwordInvalid': 'Mótí alé jokkondira koɗɗe fof',
+    'resetPassword.errors.accountDisabled': 'Alé waawi ruttu mótí kóntó ɓaawtaaɗe',
+    'resetPassword.requestNewLink': 'Bwá sígní jokkol mán',
+    'resetPassword.backToLogin': 'Bwá kómbí',
     'signup.title': 'SÍGNÍ',
     'signup.lastNameLabel': 'Nkómbó',
     'signup.lastNamePlaceholder': 'Sígní nkómbó wá',
