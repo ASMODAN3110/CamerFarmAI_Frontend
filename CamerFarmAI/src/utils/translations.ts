@@ -95,6 +95,10 @@ export type TranslationKey =
   | 'signup.firstNamePlaceholder'
   | 'signup.emailLabel'
   | 'signup.emailPlaceholder'
+  | 'signup.emailHint'
+  | 'signup.successMessage'
+  | 'signup.successMessageWithEmail'
+  | 'signup.redirecting'
   | 'signup.phoneLabel'
   | 'signup.phonePlaceholder'
   | 'signup.passwordLabel'
@@ -991,6 +995,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'Prénom',
     'signup.emailLabel': 'Adresse email',
     'signup.emailPlaceholder': 'Adresse email',
+    'signup.emailHint': 'Un email de bienvenue vous sera envoyé si vous fournissez votre adresse email',
+    'signup.successMessage': 'Inscription réussie !',
+    'signup.successMessageWithEmail': 'Inscription réussie ! Vérifiez votre boîte email pour recevoir votre email de bienvenue.',
+    'signup.redirecting': 'Redirection vers la page de connexion...',
     'signup.phoneLabel': 'Numéro de téléphone',
     'signup.phonePlaceholder': 'Numéro de téléphone',
     'signup.passwordLabel': 'Mot de passe',
@@ -1886,6 +1894,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'First Name',
     'signup.emailLabel': 'Email address',
     'signup.emailPlaceholder': 'Email address',
+    'signup.emailHint': 'A welcome email will be sent to you if you provide your email address',
+    'signup.successMessage': 'Registration successful!',
+    'signup.successMessageWithEmail': 'Registration successful! Check your email inbox to receive your welcome email.',
+    'signup.redirecting': 'Redirecting to login page...',
     'signup.phoneLabel': 'Phone number',
     'signup.phonePlaceholder': 'Phone number',
     'signup.passwordLabel': 'Password',
@@ -2781,6 +2793,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'Innde fuɗɗo',
     'signup.emailLabel': 'Nder email',
     'signup.emailPlaceholder': 'Nder email',
+    'signup.emailHint': 'Email jokkondiral nelduɗo e maa so a hokkii nder email maa',
+    'signup.successMessage': 'Winndito moƴƴii!',
+    'signup.successMessageWithEmail': 'Winndito moƴƴii! Ƴeewto nder email maa ngam heɓde email jokkondiral maa.',
+    'signup.redirecting': 'Rutto e hello seŋo...',
     'signup.phoneLabel': 'Nder tel (Whatsapp)',
     'signup.phonePlaceholder': 'Nder tel (Whatsapp)',
     'signup.passwordLabel': 'Finnde',
@@ -3676,6 +3692,10 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'signup.firstNamePlaceholder': 'Sígní nkómbó ndé wá',
     'signup.emailLabel': 'Email wá',
     'signup.emailPlaceholder': 'Sígní email wá',
+    'signup.emailHint': 'Email jókón sígní wá so wá sígní email wá',
+    'signup.successMessage': 'Sígní mbálá!',
+    'signup.successMessageWithEmail': 'Sígní mbálá! Bwá email wá ngam heɓde email jókón wá.',
+    'signup.redirecting': 'Bwá hello kómbí...',
     'signup.phoneLabel': 'Téléfón (Whatsapp)',
     'signup.phonePlaceholder': 'Téléfón (Whatsapp)',
     'signup.passwordLabel': 'Mótí',

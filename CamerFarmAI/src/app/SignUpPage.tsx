@@ -29,6 +29,7 @@ export function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [passwordValidation, setPasswordValidation] = useState({
     minLength: false,
@@ -190,12 +191,17 @@ export function SignUpPage() {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email,
+        email: formData.email.trim(),
         language: 'fr', // TODO: Récupérer depuis le contexte de langue
       });
       
-      // Redirection après inscription réussie
-      navigate('/login', { replace: true });
+      // Afficher un message de succès avec information sur l'email de bienvenue
+      setSuccessMessage(t('signup.successMessageWithEmail') || 'Inscription réussie ! Vérifiez votre boîte email pour recevoir votre email de bienvenue.');
+      
+      // Redirection après inscription réussie (avec délai pour voir le message)
+      setTimeout(() => {
+        navigate('/login', { replace: true });
+      }, 3000);
     } catch (error: any) {
       console.error('❌ Erreur lors de l\'inscription:', error);
       console.error('📦 Détails de l\'erreur:', {
@@ -413,6 +419,7 @@ export function SignUpPage() {
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
               error={errors.email}
+              helperText={t('signup.emailHint') || 'Un email de bienvenue vous sera envoyé à cette adresse'}
               required
               autoComplete="email"
               disabled={isSubmitting}
@@ -504,12 +511,21 @@ export function SignUpPage() {
               </button>
             </div>
 
+            {successMessage && (
+              <div className={styles.signUpPage__alertSuccess}>
+                <p><strong>{successMessage}</strong></p>
+                <p className={styles.signUpPage__successRedirect}>
+                  {t('signup.redirecting') || 'Redirection vers la page de connexion...'}
+                </p>
+              </div>
+            )}
+
             <Button
               type="submit"
               variant="primary"
               size="lg"
               className={styles.signUpPage__submitButton}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!successMessage}
             >
               {isSubmitting ? t('signup.submitting') : t('signup.submitButton')}
             </Button>
