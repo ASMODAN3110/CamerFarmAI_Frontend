@@ -10,6 +10,8 @@ import { UserRole } from './types/enums';
 import { HomePage } from './app/HomePage';
 import { LoginPage } from './app/LoginPage';
 import { SignUpPage } from './app/SignUpPage';
+import { ForgotPasswordPage } from './app/ForgotPasswordPage';
+import { ResetPasswordPage } from './app/ResetPasswordPage';
 import { ListPlantationsPage } from './app/ListPlantationsPage';
 import { PlantationDetailPage } from './app/PlantationDetailPage';
 import { GraphsPage } from './app/GraphsPage';
@@ -48,6 +50,22 @@ function App() {
               element={
                 <PublicRoute>
                   <SignUpPage />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <PublicRoute>
+                  <ForgotPasswordPage />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/reset-password" 
+              element={
+                <PublicRoute>
+                  <ResetPasswordPage />
                 </PublicRoute>
               } 
             />
