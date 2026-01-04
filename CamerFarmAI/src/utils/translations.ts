@@ -443,6 +443,13 @@ export type TranslationKey =
   | 'profile.errors.invalidImage'
   | 'profile.errors.imageSizeExceeded'
   | 'profile.errors.uploadFailed'
+  | 'profile.upload.success'
+  | 'profile.errors.upload.fileMissing'
+  | 'profile.errors.upload.invalidFormat'
+  | 'profile.errors.upload.sessionExpired'
+  | 'profile.errors.upload.userNotFound'
+  | 'profile.errors.upload.serverError'
+  | 'profile.errors.upload.networkError'
   | 'profile.errors.updateFailed'
   | 'profile.readonlyMessage'
   | 'profile.role.farmer'
@@ -1343,6 +1350,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.invalidImage': 'Veuillez sélectionner une image valide',
     'profile.errors.imageSizeExceeded': 'L\'image ne doit pas dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur lors de l\'upload de la photo',
+    'profile.upload.success': 'Photo de profil mise à jour avec succès',
+    'profile.errors.upload.fileMissing': 'Aucun fichier sélectionné. Veuillez sélectionner une image.',
+    'profile.errors.upload.invalidFormat': 'Format de fichier non supporté. Utilisez PNG, JPG, JPEG, GIF ou WEBP.',
+    'profile.errors.upload.sessionExpired': 'Votre session a expiré. Veuillez vous reconnecter.',
+    'profile.errors.upload.userNotFound': 'Utilisateur non trouvé. Veuillez vous reconnecter.',
+    'profile.errors.upload.serverError': 'Erreur serveur. Veuillez réessayer plus tard.',
+    'profile.errors.upload.networkError': 'Problème de connexion. Vérifiez votre connexion internet.',
     'profile.errors.updateFailed': 'Erreur lors de la mise à jour du profil',
     'profile.readonlyMessage': 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.',
     'profile.role.farmer': 'Agriculteur',
@@ -2242,6 +2256,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.invalidImage': 'Please select a valid image',
     'profile.errors.imageSizeExceeded': 'Image must not exceed 5MB',
     'profile.errors.uploadFailed': 'Error uploading photo',
+    'profile.upload.success': 'Profile picture updated successfully',
+    'profile.errors.upload.fileMissing': 'No file selected. Please select an image.',
+    'profile.errors.upload.invalidFormat': 'File format not supported. Use PNG, JPG, JPEG, GIF or WEBP.',
+    'profile.errors.upload.sessionExpired': 'Your session has expired. Please log in again.',
+    'profile.errors.upload.userNotFound': 'User not found. Please log in again.',
+    'profile.errors.upload.serverError': 'Server error. Please try again later.',
+    'profile.errors.upload.networkError': 'Connection problem. Check your internet connection.',
     'profile.errors.updateFailed': 'Error updating profile',
     'profile.readonlyMessage': 'This profile is read-only. Technicians cannot modify their information.',
     'profile.role.farmer': 'Farmer',
@@ -3141,6 +3162,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.invalidImage': 'Toro limoore goonga',
     'profile.errors.imageSizeExceeded': 'Limoore ina tawaa 5MB ɓuri',
     'profile.errors.uploadFailed': 'Koɗɗe Ɓaawɗe ngam naatnude foto',
+    'profile.upload.success': 'Foto jokkondiral ruttaama e moƴƴere',
+    'profile.errors.upload.fileMissing': 'Fayl alaa cuɓaaɗe. Toro limoore goonga.',
+    'profile.errors.upload.invalidFormat': 'Fannu fayl fotaani. Kuutora PNG, JPG, JPEG, GIF walla WEBP.',
+    'profile.errors.upload.sessionExpired': 'Seŋo maa faytii. Seŋo kadi.',
+    'profile.errors.upload.userNotFound': 'Kuutoro alaa yiɗaaɗe. Seŋo kadi.',
+    'profile.errors.upload.serverError': 'Koɗɗe serveur. Ƴeewto kadi.',
+    'profile.errors.upload.networkError': 'Koɗɗe jokkondiral. Ƴeewto jokkondiral internet maa.',
     'profile.errors.updateFailed': 'Koɗɗe Ɓaawɗe ngam ɓeydugol jokkondiral',
     'profile.readonlyMessage': 'Jokkondiral ngal no foti tan ko jokkondiral. Kuutowɓe ɓe hokkataa ɓeydugol keɓe maɓɓe.',
     'profile.role.farmer': 'Ngaynaajo',
@@ -4040,6 +4068,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.errors.invalidImage': 'Bwá sélectionner image valide',
     'profile.errors.imageSizeExceeded': 'Image alé dépasser 5MB',
     'profile.errors.uploadFailed': 'Erreur upload photo',
+    'profile.upload.success': 'Foto jokkondiral ruttu mbálá',
+    'profile.errors.upload.fileMissing': 'Fayl alé sélectionner. Bwá sélectionner image.',
+    'profile.errors.upload.invalidFormat': 'Format fayl alé mán. Kuutora PNG, JPG, JPEG, GIF walla WEBP.',
+    'profile.errors.upload.sessionExpired': 'Kómbí wá faytí. Bwá kómbí kadi.',
+    'profile.errors.upload.userNotFound': 'Kuutoro alé mán. Bwá kómbí kadi.',
+    'profile.errors.upload.serverError': 'Erreur serveur. Bwá sígní kadi.',
+    'profile.errors.upload.networkError': 'Koɗɗe jokkondiral. Bwá vérifier jokkondiral internet wá.',
     'profile.errors.updateFailed': 'Erreur mise à jour profil',
     'profile.readonlyMessage': 'Profil lecture seule. Techniciens ne peuvent pas modifier informations.',
     'profile.role.farmer': 'Agriculteur',

@@ -19,6 +19,7 @@ interface AuthState {
   verifyTwoFactor: (temporaryToken: string, twoFactorCode: string) => Promise<void>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
+  updateAvatarUrl: (avatarUrl: string) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -209,6 +210,19 @@ export const useAuthStore = create<AuthState>((set) => ({
         // Ne pas changer l'état d'authentification si on avait déjà un utilisateur
         // Cela évite de déconnecter l'utilisateur en cas d'erreur réseau temporaire
       }
+    }
+  },
+
+  updateAvatarUrl: (avatarUrl: string) => {
+    const currentUser = useAuthStore.getState().user;
+    if (currentUser) {
+      set({
+        user: {
+          ...currentUser,
+          avatarUrl,
+        },
+      });
+      console.log('✅ Avatar URL mise à jour dans le store:', avatarUrl);
     }
   },
 }));

@@ -19,6 +19,7 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const loadUser = useAuthStore((s) => s.loadUser);
+  const updateAvatarUrl = useAuthStore((s) => s.updateAvatarUrl);
   
   // Détecter si l'utilisateur est un technicien
   const isTechnician = user?.role === 'technician';
@@ -239,18 +240,35 @@ export function ProfilePage() {
     }
   };
 
+  // Fonction de validation stricte des fichiers avatar
+  const validateAvatarFile = (file: File): { valid: boolean; error?: string } => {
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      return {
+        valid: false,
+        error: t('profile.errors.upload.invalidFormat'),
+      };
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5 Mo
+    if (file.size > maxSize) {
+      return {
+        valid: false,
+        error: t('profile.errors.imageSizeExceeded'),
+      };
+    }
+
+    return { valid: true };
+  };
+
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validation du fichier
-    if (!file.type.startsWith('image/')) {
-      setErrors({ general: t('profile.errors.invalidImage') });
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) { // 5MB max
-      setErrors({ general: t('profile.errors.imageSizeExceeded') });
+    // Validation stricte du fichier
+    const validation = validateAvatarFile(file);
+    if (!validation.valid) {
+      setErrors({ general: validation.error || t('profile.errors.invalidImage') });
       return;
     }
 
@@ -265,14 +283,50 @@ export function ProfilePage() {
       setErrors({});
 
       authService.uploadProfilePicture(file)
-        .then(() => {
-          setProfileImage(previewUrl);
-          loadUser(); // Recharger les données utilisateur
+        .then((avatarUrl: string) => {
+          // Mettre à jour immédiatement avec l'URL retournée
+          setProfileImage(avatarUrl);
+          
+          // Mettre à jour le store utilisateur
+          updateAvatarUrl(avatarUrl);
+          
+          // Afficher message de succès (optionnel, peut être ajouté plus tard avec un toast)
+          console.log('✅ Avatar uploadé avec succès:', avatarUrl);
+          
+          // Réinitialiser le preview après succès
+          setImagePreview(null);
         })
         .catch((error: any) => {
-          setErrors({
-            general: error?.response?.data?.message || t('profile.errors.uploadFailed'),
-          });
+          const status = error?.response?.status;
+          let errorMessage = t('profile.errors.uploadFailed');
+          
+          // Gestion spécifique des codes HTTP
+          switch (status) {
+            case 400:
+              errorMessage = error?.response?.data?.message || t('profile.errors.upload.fileMissing');
+              break;
+            case 401:
+              errorMessage = t('profile.errors.upload.sessionExpired');
+              // Optionnel : rediriger vers login après un délai
+              setTimeout(() => {
+                navigate('/login');
+              }, 2000);
+              break;
+            case 404:
+              errorMessage = t('profile.errors.upload.userNotFound');
+              break;
+            case 500:
+              errorMessage = t('profile.errors.upload.serverError');
+              break;
+            default:
+              if (error instanceof TypeError && error.message === 'Failed to fetch') {
+                errorMessage = t('profile.errors.upload.networkError');
+              } else {
+                errorMessage = error?.response?.data?.message || errorMessage;
+              }
+          }
+          
+          setErrors({ general: errorMessage });
           setImagePreview(null);
         })
         .finally(() => {
@@ -340,7 +394,7 @@ export function ProfilePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
                 onChange={handleImageChange}
                 className={styles.fileInput}
                 disabled={!isEditing || isUploading || !canEdit}
