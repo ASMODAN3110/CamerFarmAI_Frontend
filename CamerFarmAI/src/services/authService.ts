@@ -251,14 +251,33 @@ export const authService = {
     });
   },
 
-  uploadProfilePicture: (file: File) => {
+  /**
+   * Upload une photo de profil
+   * @param file - Fichier image à uploader
+   * @returns Promise avec l'URL de l'avatar uploadé
+   */
+  uploadProfilePicture: (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('avatar', file);
-    return api.post('/auth/profile/avatar', formData, {
+    return api.post<{
+      success: boolean;
+      message: string;
+      data: {
+        userId: string;
+        avatarUrl: string;
+      };
+    }>('/auth/profile/avatar', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    }).then(res => res.data);
+    }).then((res) => {
+      // Extraire l'avatarUrl de la réponse
+      const avatarUrl = res.data.data?.avatarUrl || res.data.data?.avatar_url;
+      if (!avatarUrl) {
+        throw new Error('URL de l\'avatar non trouvée dans la réponse');
+      }
+      return avatarUrl;
+    });
   },
 
   /**
