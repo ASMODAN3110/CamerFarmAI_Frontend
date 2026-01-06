@@ -20,6 +20,7 @@ import { ProfilePage } from './app/ProfilePage';
 import { ChatboxPage } from './app/ChatboxPage';
 import { NotificationsPage } from './app/NotificationsPage';
 import  TechnicianDashboardPage  from './app/TechnicianDashboardPage';
+import { AdminPage } from './app/AdministrationPage';
 import { GuidePage } from './app/GuidePage';
 function App() {
   return (
@@ -128,6 +129,14 @@ function App() {
           element={
             <RoleBasedRoute allowedRoles={[UserRole.TECHNICIAN]} redirectTo="/">
               <TechnicianDashboardPage />
+            </RoleBasedRoute>
+          }
+        />
+            <Route
+          path="/admin"
+          element={
+            <RoleBasedRoute allowedRoles={[UserRole.ADMIN]} redirectTo="/">
+              <AdminPage />
             </RoleBasedRoute>
           }
         />

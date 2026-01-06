@@ -146,7 +146,7 @@ export function NotificationsPage() {
       <main className={styles.page}>
         <div className={styles.container}>
           <div className={styles.headerSection}>
-            <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
+          <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
             {notifications.length > 0 && (
               <Button
                 variant="secondary"

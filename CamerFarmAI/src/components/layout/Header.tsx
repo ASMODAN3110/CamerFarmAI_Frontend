@@ -639,13 +639,13 @@ export function Header({
                 )}
               </button>
               <div className={styles.header__iconButtonContainer}>
-                <button
+              <button
                   className={`${styles.header__mobileIconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                            aria-label={t('auth.profile')}
-                >
-                  <Icon icon={FaUser} size={24} />
-                </button>
+                          aria-label={t('auth.profile')}
+              >
+                <Icon icon={FaUser} size={24} />
+              </button>
                 <Dropdown
                   isOpen={profileMenuOpen}
                   onClose={() => setProfileMenuOpen(false)}

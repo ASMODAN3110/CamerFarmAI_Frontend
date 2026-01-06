@@ -51,7 +51,12 @@ export function LoginPage() {
   // Rediriger si déjà authentifié
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/', { replace: true });
+      const user = useAuthStore.getState().user;
+      if (user?.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     }
   }, [isAuthenticated, navigate]);
 
@@ -103,16 +108,23 @@ export function LoginPage() {
       }
       
       // Redirection après connexion réussie
-      // Vérifier s'il y a une URL de retour dans les paramètres
-      const returnUrl = searchParams.get('returnUrl');
+      // Récupérer l'utilisateur depuis le store
+      const user = useAuthStore.getState().user;
       
-      // Si une URL de retour est présente et valide, rediriger vers celle-ci
-      if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
-        navigate(returnUrl, { replace: true });
+      // Déterminer la destination
+      let destination = '/';
+      if (user?.role === 'admin') {
+        destination = '/admin';
       } else {
-        // Sinon, rediriger vers la page d'accueil
-        navigate('/', { replace: true });
+        // Vérifier s'il y a une URL de retour dans les paramètres
+        const returnUrl = searchParams.get('returnUrl');
+        // Si une URL de retour est présente et valide, rediriger vers celle-ci
+        if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
+          destination = returnUrl;
+        }
       }
+      
+      navigate(destination, { replace: true });
     } catch (error: any) {
       // Afficher le message d'erreur détaillé du backend
       const errorMessage = 
@@ -156,15 +168,23 @@ export function LoginPage() {
       await verifyTwoFactor(temporaryToken, twoFactorCode);
       
       // Redirection après vérification 2FA réussie
-      const returnUrl = searchParams.get('returnUrl');
+      // Récupérer l'utilisateur depuis le store
+      const user = useAuthStore.getState().user;
       
-      // Si une URL de retour est présente et valide, rediriger vers celle-ci
-      if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
-        navigate(returnUrl, { replace: true });
+      // Déterminer la destination
+      let destination = '/';
+      if (user?.role === 'admin') {
+        destination = '/admin';
       } else {
-        // Sinon, rediriger vers la page d'accueil
-        navigate('/', { replace: true });
+        // Vérifier s'il y a une URL de retour dans les paramètres
+        const returnUrl = searchParams.get('returnUrl');
+        // Si une URL de retour est présente et valide, rediriger vers celle-ci
+        if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('/login') && !returnUrl.startsWith('/signup')) {
+          destination = returnUrl;
+        }
       }
+      
+      navigate(destination, { replace: true });
     } catch (error: any) {
       const errorMessage = 
         error?.response?.data?.message || 
