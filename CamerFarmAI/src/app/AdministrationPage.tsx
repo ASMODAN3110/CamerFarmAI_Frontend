@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Bell, User, Users, Wrench, PlusCircle, X, LogOut } from "lucide-react";
+import { Users, Wrench, PlusCircle, X } from "lucide-react";
 import styles from "./AdministrationPage.module.css";
-import { useAuthStore } from '@/services/useAuthStore';
-import { useNavigate } from 'react-router-dom';
-import { useNotificationContext } from '@/contexts/NotificationContext';
+import { Header } from '@/components/layout/Header';
 
 interface Farmer {
   name: string;
@@ -18,8 +16,6 @@ interface Technician {
 }
 
 export function AdminPage() {
-  const logout = useAuthStore((s) => s.logout);
-  const navigate = useNavigate();
   const [farmers, setFarmers] = useState<Farmer[]>([
     { name: "Abdoul", status: "Actif" },
     { name: "Pauline", status: "Actif" },
@@ -45,77 +41,9 @@ export function AdminPage() {
     setTechnicians(technicians.filter((_, i) => i !== index));
   };
 
-  const { notifications, isLoading: isLoadingNotifications, markAsRead, deleteNotification } = useNotificationContext();
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-
   return (
     <div className={styles.adminPage}>
-      {/* HEADER */}
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <img src="/logo.png" alt="CamerFarm AI" className={styles.logo} />
-        </div>
-        <div className={styles.headerRight}>
-          <div className={styles.iconButtonWrapper}>
-            <button
-              className={styles.iconButton}
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
-              aria-label="Notifications"
-            >
-              <Bell className={styles.icon} />
-              {unreadCount > 0 && (
-                <span className={styles.notificationBadge}>{unreadCount > 99 ? '99+' : unreadCount}</span>
-              )}
-            </button>
-            {notificationsOpen && (
-              <div className={styles.notificationsDropdown}>
-                <div className={styles.notificationsHeader}>
-                  <strong>Notifications</strong>
-                  <button className={styles.closeButton} onClick={() => setNotificationsOpen(false)}>×</button>
-                </div>
-                <div className={styles.notificationsList}>
-                  {isLoadingNotifications ? (
-                    <div className={styles.notificationEmpty}>Chargement...</div>
-                  ) : notifications.length === 0 ? (
-                    <div className={styles.notificationEmpty}>Aucune notification</div>
-                  ) : (
-                    notifications.map((notif) => (
-                      <div key={notif.id} className={styles.notificationItem}>
-                        <div className={styles.notificationMessage}>{notif.event?.description || 'Notification'}</div>
-                        <div className={styles.notificationActions}>
-                          {!notif.isRead && (
-                            <button onClick={() => markAsRead(notif.id)} className={styles.markReadButton}>Marquer lu</button>
-                          )}
-                          <button onClick={() => deleteNotification(notif.id)} className={styles.deleteButtonSmall}>Supprimer</button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-          <User className={styles.icon} />
-          <button
-            className={styles.logoutButton}
-            onClick={async () => {
-              try {
-                await logout();
-                // authService.logout redirects, but ensure navigation as fallback
-                navigate('/login');
-              } catch (err) {
-                console.error('Erreur lors de la déconnexion', err);
-                navigate('/login');
-              }
-            }}
-            aria-label="Déconnexion"
-          >
-            <LogOut size={18} />
-            <span className={styles.logoutLabel}>Déconnexion</span>
-          </button>
-        </div>
-      </header>
+      <Header currentPath="/admin" showAuthIcons />
 
       {/* CONTENU */}
       <main className={styles.main}>
