@@ -1,5 +1,5 @@
 import { useLanguage } from './useLanguage';
-import { getTranslation, type TranslationKey } from '@/utils/translations';
+import { getTranslation, type TranslationKey } from '@/utils/translations_clean';
 
 export function useTranslation() {
   const { language } = useLanguage();
