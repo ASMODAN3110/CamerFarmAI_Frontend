@@ -54,6 +54,8 @@ export function LoginPage() {
       const user = useAuthStore.getState().user;
       if (user?.role === 'admin') {
         navigate('/admin', { replace: true });
+      } else if (user?.role === 'technician') {
+        navigate('/technicien', { replace: true });
       } else {
         navigate('/', { replace: true });
       }
@@ -115,6 +117,8 @@ export function LoginPage() {
       let destination = '/';
       if (user?.role === 'admin') {
         destination = '/admin';
+      } else if (user?.role === 'technician') {
+        destination = '/technicien';
       } else {
         // Vérifier s'il y a une URL de retour dans les paramètres
         const returnUrl = searchParams.get('returnUrl');
@@ -175,6 +179,8 @@ export function LoginPage() {
       let destination = '/';
       if (user?.role === 'admin') {
         destination = '/admin';
+      } else if (user?.role === 'technician') {
+        destination = '/technicien';
       } else {
         // Vérifier s'il y a une URL de retour dans les paramètres
         const returnUrl = searchParams.get('returnUrl');
