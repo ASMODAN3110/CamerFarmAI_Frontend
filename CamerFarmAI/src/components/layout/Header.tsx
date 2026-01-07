@@ -350,6 +350,11 @@ export function Header({
         activeNavItemsConfig = [
           { key: 'nav.technician', href: '/technicien' },
         ];
+      } else if (user?.role === 'admin') {
+        // Si l'utilisateur est un administrateur, afficher uniquement le lien vers la page admin
+        activeNavItemsConfig = [
+          { key: 'nav.admin', href: '/admin' },
+        ];
       } else {
         activeNavItemsConfig = authenticatedNavItemsConfig;
       }
@@ -431,8 +436,8 @@ export function Header({
             <LanguageSwitcher />
             {(isAuthenticated || showAuthIcons) ? (
               <>
-                {/* Version spéciale pour les techniciens */}
-                {user?.role === 'technician' ? (
+                {/* Version spéciale pour les techniciens et administrateurs */}
+                {user?.role === 'technician' || user?.role === 'admin' ? (
                   <>
                     <Link to="/profile" className={styles.header__iconButton} aria-label={t('auth.profile')}>
                       <Icon icon={FaUser} size={22} />
@@ -441,7 +446,9 @@ export function Header({
                     <div className={styles.header__technicianSeparator}></div>
 
                     <div className={styles.header__technicianUser}>
-                      <span className={styles.header__technicianUserLabel}>{t('profile.role.technician')}</span>
+                      <span className={styles.header__technicianUserLabel}>
+                        {user?.role === 'admin' ? t('profile.role.admin') : t('profile.role.technician')}
+                      </span>
                       <button
                         onClick={handleLogout}
                         className={styles.header__technicianLogout}
@@ -639,13 +646,13 @@ export function Header({
                 )}
               </button>
               <div className={styles.header__iconButtonContainer}>
-                <button
+              <button
                   className={`${styles.header__mobileIconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                            aria-label={t('auth.profile')}
-                >
-                  <Icon icon={FaUser} size={24} />
-                </button>
+                          aria-label={t('auth.profile')}
+              >
+                <Icon icon={FaUser} size={24} />
+              </button>
                 <Dropdown
                   isOpen={profileMenuOpen}
                   onClose={() => setProfileMenuOpen(false)}

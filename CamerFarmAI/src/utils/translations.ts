@@ -117,6 +117,7 @@ export type TranslationKey =
   | 'nav.terms'
   | 'nav.cookies'
   | 'nav.technician'
+  | 'nav.admin'
   | 'auth.login'
   | 'auth.signup'
   | 'auth.logout'
@@ -1024,6 +1025,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.terms': 'Conditions',
     'nav.cookies': 'Cookies',
     'nav.technician': 'Tableau de bord',
+    'nav.admin': 'Administration',
     'auth.login': 'Se Connecter',
     'auth.signup': "S'inscrire",
     'auth.logout': 'Déconnexion',
@@ -1930,6 +1932,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.terms': 'Terms',
     'nav.cookies': 'Cookies',
     'nav.technician': 'Dashboard',
+    'nav.admin': 'Administration',
     'auth.login': 'Log In',
     'auth.signup': 'Sign Up',
     'auth.logout': 'Logout',
@@ -2836,6 +2839,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.terms': 'Koɗɗe',
     'nav.cookies': 'Cookies',
     'nav.technician': 'Dashboard',
+    'nav.admin': 'Laamngo',
     'auth.login': 'Seŋo',
     'auth.signup': 'Winndito',
     'auth.logout': 'Yaltu',
@@ -3742,6 +3746,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'nav.terms': 'Conditions',
     'nav.cookies': 'Cookies',
     'nav.technician': 'Tableau de bord',
+    'nav.admin': 'Administration',
     'auth.login': 'Kómbí',
     'auth.signup': 'Sígní',
     'auth.logout': 'Bwá',

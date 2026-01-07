@@ -200,7 +200,7 @@ export function SignUpPage() {
       
       // Redirection après inscription réussie (avec délai pour voir le message)
       setTimeout(() => {
-        navigate('/login', { replace: true });
+      navigate('/login', { replace: true });
       }, 3000);
     } catch (error: any) {
       console.error('❌ Erreur lors de l\'inscription:', error);

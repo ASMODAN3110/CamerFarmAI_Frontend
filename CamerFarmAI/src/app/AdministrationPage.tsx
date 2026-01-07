@@ -1,288 +1,356 @@
-import React, { useState } from "react";
-import { Bell, User, Users, Wrench, PlusCircle, X, LogOut } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Users, Wrench, PlusCircle, X, Loader2 } from "lucide-react";
 import styles from "./AdministrationPage.module.css";
-import { useAuthStore } from '@/services/useAuthStore';
-import { useNavigate } from 'react-router-dom';
-import { useNotificationContext } from '@/contexts/NotificationContext';
-
-interface Farmer {
-  name: string;
-  status: "Actif" | "Inactif";
-}
-
-interface Technician {
-  name: string;
-  domain: string;
-  status: "Actif" | "Inactif";
-  actions?: string[];
-}
+import { Header } from '@/components/layout/Header';
+import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { Button } from '@/components/ui/Button/Button';
+import { adminService, type UserListItem } from '@/services/adminService';
 
 export function AdminPage() {
-  const logout = useAuthStore((s) => s.logout);
-  const navigate = useNavigate();
-  const [farmers, setFarmers] = useState<Farmer[]>([
-    { name: "Abdoul", status: "Actif" },
-    { name: "Pauline", status: "Actif" },
-    { name: "Jean Pierre", status: "Inactif" },
-  ]);
-
-  const [technicians, setTechnicians] = useState<Technician[]>([
-    { name: "Mr Fouda", domain: "IoT", status: "Inactif", actions: ['Voir'] },
-  ]);
+  const [users, setUsers] = useState<UserListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Create technician modal state
   const [createOpen, setCreateOpen] = useState(false);
-  const [newTechName, setNewTechName] = useState('');
-  const [newTechDomain, setNewTechDomain] = useState('');
-  const [newTechStatus, setNewTechStatus] = useState<Technician['status']>('Actif');
-  const [newTechActions, setNewTechActions] = useState<string[]>(['Voir']);
+  const [newTechPhone, setNewTechPhone] = useState('');
+  const [newTechPassword, setNewTechPassword] = useState('');
+  const [newTechFirstName, setNewTechFirstName] = useState('');
+  const [newTechLastName, setNewTechLastName] = useState('');
+  const [newTechEmail, setNewTechEmail] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  const handleDeleteFarmer = (index: number) => {
-    setFarmers(farmers.filter((_, i) => i !== index));
+  // Charger les utilisateurs au montage
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await adminService.getAllUsers();
+      setUsers(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors du chargement des utilisateurs');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDeleteTechnician = (index: number) => {
-    setTechnicians(technicians.filter((_, i) => i !== index));
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${userName} ? Cette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      await adminService.deleteUser(userId);
+      await fetchUsers(); // Rafraîchir la liste
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Erreur lors de la suppression');
+    }
   };
 
-  const { notifications, isLoading: isLoadingNotifications, markAsRead, deleteNotification } = useNotificationContext();
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const handleToggleUserStatus = async (userId: string, currentStatus: boolean) => {
+    try {
+      await adminService.updateUserStatus(userId, !currentStatus);
+      await fetchUsers(); // Rafraîchir la liste
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Erreur lors de la mise à jour');
+    }
+  };
+
+  const handleCreateTechnician = async () => {
+    if (!newTechPhone.trim() || !newTechPassword.trim()) {
+      setCreateError('Le téléphone et le mot de passe sont requis');
+      return;
+    }
+
+    setCreating(true);
+    setCreateError(null);
+
+    try {
+      await adminService.createTechnician({
+        phone: newTechPhone.trim(),
+        password: newTechPassword,
+        firstName: newTechFirstName.trim() || undefined,
+        lastName: newTechLastName.trim() || undefined,
+        email: newTechEmail.trim() || undefined,
+      });
+
+      // Réinitialiser le formulaire
+      setNewTechPhone('');
+      setNewTechPassword('');
+      setNewTechFirstName('');
+      setNewTechLastName('');
+      setNewTechEmail('');
+      setCreateOpen(false);
+      
+      // Rafraîchir la liste
+      await fetchUsers();
+    } catch (err) {
+      setCreateError(err instanceof Error ? err.message : 'Erreur lors de la création');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // Séparer les utilisateurs par rôle
+  const farmers = users.filter(u => u.role === 'farmer');
+  const technicians = users.filter(u => u.role === 'technician');
+
+  const getUserDisplayName = (user: UserListItem) => {
+    if (user.firstName || user.lastName) {
+      return `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    }
+    return user.phone;
+  };
 
   return (
     <div className={styles.adminPage}>
-      {/* HEADER */}
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <img src="/logo.png" alt="CamerFarm AI" className={styles.logo} />
-        </div>
-        <div className={styles.headerRight}>
-          <div className={styles.iconButtonWrapper}>
-            <button
-              className={styles.iconButton}
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
-              aria-label="Notifications"
-            >
-              <Bell className={styles.icon} />
-              {unreadCount > 0 && (
-                <span className={styles.notificationBadge}>{unreadCount > 99 ? '99+' : unreadCount}</span>
-              )}
-            </button>
-            {notificationsOpen && (
-              <div className={styles.notificationsDropdown}>
-                <div className={styles.notificationsHeader}>
-                  <strong>Notifications</strong>
-                  <button className={styles.closeButton} onClick={() => setNotificationsOpen(false)}>×</button>
-                </div>
-                <div className={styles.notificationsList}>
-                  {isLoadingNotifications ? (
-                    <div className={styles.notificationEmpty}>Chargement...</div>
-                  ) : notifications.length === 0 ? (
-                    <div className={styles.notificationEmpty}>Aucune notification</div>
-                  ) : (
-                    notifications.map((notif) => (
-                      <div key={notif.id} className={styles.notificationItem}>
-                        <div className={styles.notificationMessage}>{notif.event?.description || 'Notification'}</div>
-                        <div className={styles.notificationActions}>
-                          {!notif.isRead && (
-                            <button onClick={() => markAsRead(notif.id)} className={styles.markReadButton}>Marquer lu</button>
-                          )}
-                          <button onClick={() => deleteNotification(notif.id)} className={styles.deleteButtonSmall}>Supprimer</button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-          <User className={styles.icon} />
-          <button
-            className={styles.logoutButton}
-            onClick={async () => {
-              try {
-                await logout();
-                // authService.logout redirects, but ensure navigation as fallback
-                navigate('/login');
-              } catch (err) {
-                console.error('Erreur lors de la déconnexion', err);
-                navigate('/login');
-              }
-            }}
-            aria-label="Déconnexion"
-          >
-            <LogOut size={18} />
-            <span className={styles.logoutLabel}>Déconnexion</span>
-          </button>
-        </div>
-      </header>
+      <Background3D />
+      <Header currentPath="/admin" showAuthIcons />
 
       {/* CONTENU */}
       <main className={styles.main}>
-        {/* Comptes Agriculteurs */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <Users className={styles.sectionIcon} />
-            <h2>Comptes Agriculteurs</h2>
+        {loading ? (
+          <div className={styles.loading}>
+            <Loader2 size={24} className={styles.spinner} />
+            <span>Chargement...</span>
           </div>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Noms</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {farmers.map((f, i) => (
-                <tr key={i}>
-                  <td>{f.name}</td>
-                  <td
-                    className={
-                      f.status === "Actif" ? styles.statusActive : styles.statusInactive
-                    }
-                  >
-                    {f.status}
-                  </td>
-                  <td>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleDeleteFarmer(i)}
-                    >
-                      <X size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        {/* Comptes Techniciens */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <Wrench className={styles.sectionIcon} />
-            <h2>Comptes Techniciens</h2>
+        ) : error ? (
+          <div className={styles.error}>
+            <p>{error}</p>
+            <Button variant="primary" size="sm" onClick={fetchUsers}>
+              Réessayer
+            </Button>
           </div>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Noms</th>
-                <th>Domaine</th>
-                <th>Statut</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {technicians.map((t, i) => (
-                <tr key={i}>
-                  <td>{t.name}</td>
-                  <td>{t.domain}</td>
-                  <td
-                    className={
-                      t.status === "Actif" ? styles.statusActive : styles.statusInactive
-                    }
-                  >
-                    {t.status}
-                  </td>
-                  <td>
-                    {t.actions && t.actions.length > 0 ? (
-                      <div className={styles.actionsCell}>
-                        {t.actions.map((a) => (
-                          <span key={a} className={styles.actionBadge}>{a}</span>
-                        ))}
+        ) : (
+          <>
+            {/* Comptes Agriculteurs */}
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <Users className={styles.sectionIcon} />
+                <h2 className={styles.sectionTitle}>Comptes Agriculteurs</h2>
+                <span className={styles.sectionBadge}>{farmers.length}</span>
+              </div>
+              {farmers.length === 0 ? (
+                <div className={styles.emptyMessage}>Aucun agriculteur</div>
+              ) : (
+                <div className={styles.cardsList}>
+                  {farmers.map((farmer) => (
+                    <div key={farmer.id} className={styles.card}>
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardInfo}>
+                          <div className={styles.cardName}>{getUserDisplayName(farmer)}</div>
+                          <div className={styles.cardDetails}>
+                            <span className={styles.cardDetail}>{farmer.phone}</span>
+                            {farmer.email && (
+                              <span className={styles.cardDetail}>{farmer.email}</span>
+                            )}
+                            <span className={`${styles.cardStatus} ${farmer.isActive ? styles.statusActive : styles.statusInactive}`}>
+                              {farmer.isActive ? 'Actif' : 'Inactif'}
+                            </span>
+                          </div>
+                          <div className={styles.cardDetails}>
+                            <span className={styles.cardDetail}>
+                              {farmer.plantationsCount} {farmer.plantationsCount > 1 ? 'plantations' : 'plantation'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.cardActions}>
+                          <label className={styles.toggleSwitch}>
+                            <input
+                              type="checkbox"
+                              checked={farmer.isActive}
+                              onChange={() => handleToggleUserStatus(farmer.id, farmer.isActive)}
+                            />
+                            <span className={styles.toggleSlider}></span>
+                          </label>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleDeleteUser(farmer.id, getUserDisplayName(farmer))}
+                            aria-label="Supprimer"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
                       </div>
-                    ) : (
-                      <span className={styles.actionBadge}>Aucune</span>
-                    )}
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleDeleteTechnician(i)}
-                      style={{ marginLeft: 12 }}
-                    >
-                      <X size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
 
-          <button className={styles.createButton} onClick={() => setCreateOpen(true)}>
-            <PlusCircle size={18} />
-            Créer un technicien
-          </button>
-        </section>
+            {/* Comptes Techniciens */}
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <Wrench className={styles.sectionIcon} />
+                <h2 className={styles.sectionTitle}>Comptes Techniciens</h2>
+                <span className={styles.sectionBadge}>{technicians.length}</span>
+              </div>
+              {technicians.length === 0 ? (
+                <div className={styles.emptyMessage}>Aucun technicien</div>
+              ) : (
+                <div className={styles.cardsList}>
+                  {technicians.map((technician) => (
+                    <div key={technician.id} className={styles.card}>
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardInfo}>
+                          <div className={styles.cardName}>{getUserDisplayName(technician)}</div>
+                          <div className={styles.cardDetails}>
+                            <span className={styles.cardDetail}>{technician.phone}</span>
+                            {technician.email && (
+                              <span className={styles.cardDetail}>{technician.email}</span>
+                            )}
+                            <span className={`${styles.cardStatus} ${technician.isActive ? styles.statusActive : styles.statusInactive}`}>
+                              {technician.isActive ? 'Actif' : 'Inactif'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.cardActions}>
+                          <label className={styles.toggleSwitch}>
+                            <input
+                              type="checkbox"
+                              checked={technician.isActive}
+                              onChange={() => handleToggleUserStatus(technician.id, technician.isActive)}
+                            />
+                            <span className={styles.toggleSlider}></span>
+                          </label>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleDeleteUser(technician.id, getUserDisplayName(technician))}
+                            aria-label="Supprimer"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className={styles.buttonWrapper}>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    setCreateOpen(true);
+                    setCreateError(null);
+                  }}
+                >
+                  <PlusCircle size={18} />
+                  Créer un technicien
+                </Button>
+              </div>
+            </section>
+          </>
+        )}
       </main>
 
       {createOpen && (
-        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
-          <div className={styles.modalContent}>
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true" onClick={(e) => {
+          if (e.target === e.currentTarget) setCreateOpen(false);
+        }}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3>Créer un technicien</h3>
+
+            {createError && (
+              <div className={styles.errorMessage}>{createError}</div>
+            )}
+
+            <div className={styles.formRow}>
+              <label>Téléphone *</label>
+              <input
+                type="tel"
+                value={newTechPhone}
+                onChange={(e) => setNewTechPhone(e.target.value)}
+                placeholder="+237612345678"
+                required
+              />
+            </div>
+
+            <div className={styles.formRow}>
+              <label>Mot de passe *</label>
+              <input
+                type="password"
+                value={newTechPassword}
+                onChange={(e) => setNewTechPassword(e.target.value)}
+                placeholder="Minimum 8 caractères, majuscule, minuscule, chiffre, spécial"
+                required
+              />
+            </div>
+
+            <div className={styles.formRow}>
+              <label>Prénom</label>
+              <input
+                type="text"
+                value={newTechFirstName}
+                onChange={(e) => setNewTechFirstName(e.target.value)}
+                placeholder="Optionnel"
+              />
+            </div>
 
             <div className={styles.formRow}>
               <label>Nom</label>
-              <input value={newTechName} onChange={(e) => setNewTechName(e.target.value)} />
+              <input
+                type="text"
+                value={newTechLastName}
+                onChange={(e) => setNewTechLastName(e.target.value)}
+                placeholder="Optionnel"
+              />
             </div>
 
             <div className={styles.formRow}>
-              <label>Domaine</label>
-              <input value={newTechDomain} onChange={(e) => setNewTechDomain(e.target.value)} />
-            </div>
-
-            <div className={styles.formRow}>
-              <label>Statut</label>
-              <select value={newTechStatus} onChange={(e) => setNewTechStatus(e.target.value as Technician['status'])}>
-                <option value="Actif">Actif</option>
-                <option value="Inactif">Inactif</option>
-              </select>
-            </div>
-
-            <div className={styles.formRow}>
-              <label>Actions</label>
-              <div className={styles.actionsCheckboxes}>
-                {['Voir', 'Modifier', 'Supprimer'].map((action) => (
-                  <label key={action} className={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      checked={newTechActions.includes(action)}
-                      onChange={(e) => {
-                        if (e.target.checked) setNewTechActions(prev => [...prev, action]);
-                        else setNewTechActions(prev => prev.filter(a => a !== action));
-                      }}
-                    />
-                    <span>{action}</span>
-                  </label>
-                ))}
-              </div>
+              <label>Email</label>
+              <input
+                type="email"
+                value={newTechEmail}
+                onChange={(e) => setNewTechEmail(e.target.value)}
+                placeholder="Optionnel"
+              />
             </div>
 
             <div className={styles.modalActions}>
-              <button
-                className={styles.createButton}
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleCreateTechnician}
+                disabled={creating || !newTechPhone.trim() || !newTechPassword.trim()}
+              >
+                {creating ? (
+                  <>
+                    <Loader2 size={16} className={styles.spinner} />
+                    Création...
+                  </>
+                ) : (
+                  'Créer'
+                )}
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => {
-                  if (!newTechName.trim() || !newTechDomain.trim()) return;
-                  setTechnicians(prev => [...prev, { name: newTechName.trim(), domain: newTechDomain.trim(), status: newTechStatus, actions: newTechActions }]);
-                  setNewTechName(''); setNewTechDomain(''); setNewTechStatus('Actif'); setNewTechActions(['Voir']); setCreateOpen(false);
+                  setCreateOpen(false);
+                  setCreateError(null);
+                  setNewTechPhone('');
+                  setNewTechPassword('');
+                  setNewTechFirstName('');
+                  setNewTechLastName('');
+                  setNewTechEmail('');
                 }}
-              >Créer</button>
-              <button className={styles.deleteButton} onClick={() => setCreateOpen(false)}>Annuler</button>
+                disabled={creating}
+              >
+                Annuler
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* FOOTER */}
-      <footer className={styles.footer}>
-        <p>Suivez Nous</p>
-        <div className={styles.socials}>
-          <a href="#"><img src="/icons/facebook.svg" alt="Facebook" /></a>
-          <a href="#"><img src="/icons/linkedin.svg" alt="LinkedIn" /></a>
-          <a href="#"><img src="/icons/instagram.svg" alt="Instagram" /></a>
-          <a href="#"><img src="/icons/youtube.svg" alt="YouTube" /></a>
-        </div>
-        <p>© 2025 CamerFarm AI. Tous Droits Réservés.</p>
-      </footer>
+      
     </div>
   );
 }

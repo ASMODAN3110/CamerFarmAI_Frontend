@@ -23,13 +23,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .join(' ');
 
     if (href) {
+      // Extract HTML anchor attributes from rest
+      const { type, ...anchorProps } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
       return (
         <a 
           href={href} 
           className={classes} 
           role="button" 
-          aria-label={props['aria-label']}
           onClick={onClick as React.MouseEventHandler<HTMLAnchorElement>}
+          {...anchorProps}
         >
           {children}
         </a>
