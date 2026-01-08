@@ -1,108 +1,4 @@
 ﻿import type { Language } from '@/contexts/LanguageContext';
-export type TranslationKey = string;
-const baseTranslations: Record<string, string> = {
-  'graphs.selectPlantation': 'Sélectionnez une plantation',
-  'graphs.viewMyPlantations': 'Voir mes plantations',
-  'graphs.noSensorsAvailable': 'Aucun capteur disponible pour cette plantation',
-  'graphs.noDataForSelectedSensors': 'Aucune donnée pour les capteurs sélectionnés',
-  'graphs.noSensorSelected': 'Aucun capteur sélectionné',
-  'graphs.noDataForSensor': 'Aucune donnée pour ce capteur',
-  'graphs.dataPointsLoaded': '{count} points chargés pour {sensorKey}',
-  'graphs.noSensorsWithData': 'Aucun capteur avec des données',
-  'graphs.loading': 'Chargement des données des capteurs...'
-};
-export const translations: Record<Language, Record<string, string>> = {
-  fr: baseTranslations,
-  en: {},
-  ff: {},
-  ew: {},
-export function getTranslation(key: TranslationKey | string, language: Language): string {
-  return translations[language]?.[String(key)] || String(key);
-}
-export default translations;
-import type { Language } from '@/contexts/LanguageContext';
-
-export type TranslationKey = string;
-
-const baseTranslations: Record<string, string> = {
-  'graphs.selectPlantation': 'Sélectionnez une plantation',
-  'graphs.viewMyPlantations': 'Voir mes plantations',
-  'graphs.noSensorsAvailable': 'Aucun capteur disponible pour cette plantation',
-  'graphs.noDataForSelectedSensors': 'Aucune donnée pour les capteurs sélectionnés',
-  'graphs.noSensorSelected': 'Aucun capteur sélectionné',
-  'graphs.noDataForSensor': 'Aucune donnée pour ce capteur',
-  'graphs.dataPointsLoaded': '{count} points chargés pour {sensorKey}',
-  'graphs.noSensorsWithData': 'Aucun capteur avec des données',
-  'graphs.loading': 'Chargement des données des capteurs...'
-};
-
-export const translations: Record<Language, Record<string, string>> = {
-  fr: baseTranslations,
-  en: {},
-  ff: {},
-  ew: {},
-};
-
-export function getTranslation(key: TranslationKey | string, language: Language): string {
-  return translations[language]?.[String(key)] || String(key);
-}
-
-export default translations;
-
-import type { Language } from '@/contexts/LanguageContext';
-
-export type TranslationKey = string;
-
-export const translations: Record<Language, Record<string, string>> = {
-  fr: {
-    'graphs.selectPlantation': 'Sélectionnez une plantation',
-    'graphs.viewMyPlantations': 'Voir mes plantations',
-    'graphs.noSensorsAvailable': 'Aucun capteur disponible pour cette plantation',
-    'graphs.noDataForSelectedSensors': 'Aucune donnée pour les capteurs sélectionnés',
-    'graphs.noSensorSelected': 'Aucun capteur sélectionné',
-    'graphs.noDataForSensor': 'Aucune donnée pour ce capteur',
-    'graphs.dataPointsLoaded': '{count} points chargés pour {sensorKey}',
-    'graphs.noSensorsWithData': 'Aucun capteur avec des données',
-    'graphs.loading': 'Chargement des données des capteurs...'
-  },
-  en: {},
-  ff: {},
-  ew: {},
-};
-
-export function getTranslation(key: TranslationKey | string, language: Language): string {
-  return translations[language]?.[key] || String(key);
-}
-
-export default translations;
-
-import type { Language } from '@/contexts/LanguageContext';
-
-export type TranslationKey = string;
-
-export const translations: Record<Language, Record<string, string>> = {
-  fr: {
-    'graphs.selectPlantation': 'Sélectionnez une plantation',
-    'graphs.viewMyPlantations': 'Voir mes plantations',
-    'graphs.noSensorsAvailable': 'Aucun capteur disponible pour cette plantation',
-    'graphs.noDataForSelectedSensors': 'Aucune donnée pour les capteurs sélectionnés',
-    'graphs.noSensorSelected': 'Aucun capteur sélectionné',
-    'graphs.noDataForSensor': 'Aucune donnée pour ce capteur',
-    'graphs.dataPointsLoaded': '{count} points chargés pour {sensorKey}',
-    'graphs.noSensorsWithData': 'Aucun capteur avec des données',
-    'graphs.loading': 'Chargement des données des capteurs...'
-  },
-  en: {},
-  ff: {},
-  ew: {},
-};
-
-export function getTranslation(key: TranslationKey | string, language: Language): string {
-  return translations[language]?.[key] || String(key);
-}
-
-export default translations;
-import type { Language } from '@/contexts/LanguageContext';
 
 export type TranslationKey = 
   | 'nav.home'
@@ -149,6 +45,9 @@ export type TranslationKey =
   | 'login.errors.twoFactorInvalid'
   | 'login.errors.twoFactorTokenMissing'
   | 'login.errors.twoFactorFailed'
+  | 'login.accountDisabled.title'
+  | 'login.accountDisabled.message'
+  | 'login.accountDisabled.close'
   | 'login.twoFactorTitle'
   | 'login.twoFactorDescription'
   | 'login.twoFactorCodeLabel'
@@ -1057,6 +956,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.twoFactorInvalid': 'Le code doit contenir exactement 6 chiffres',
     'login.errors.twoFactorTokenMissing': 'Jeton de vérification manquant',
     'login.errors.twoFactorFailed': 'Code d\'authentification à deux facteurs invalide. Veuillez réessayer.',
+    'login.accountDisabled.title': 'Compte désactivé',
+    'login.accountDisabled.message': 'Votre compte a été désactivé veuillez contacter l\'administrateur du système pour plus d\'info',
+    'login.accountDisabled.close': 'Fermer',
     'login.twoFactorTitle': 'Authentification à deux facteurs',
     'login.twoFactorDescription': 'Entrez le code à 6 chiffres généré par votre application d\'authentification',
     'login.twoFactorCodeLabel': 'Code de vérification',
@@ -1964,6 +1866,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.twoFactorInvalid': 'The code must contain exactly 6 digits',
     'login.errors.twoFactorTokenMissing': 'Verification token missing',
     'login.errors.twoFactorFailed': 'Invalid 2FA code. Please try again.',
+    'login.accountDisabled.title': 'Account Disabled',
+    'login.accountDisabled.message': 'Your account has been disabled. Please contact the system administrator for more information.',
+    'login.accountDisabled.close': 'Close',
     'login.twoFactorTitle': 'Two-Factor Authentication',
     'login.twoFactorDescription': 'Enter the 6-digit code generated by your authentication app',
     'login.twoFactorCodeLabel': 'Verification code',
@@ -2871,6 +2776,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.twoFactorInvalid': 'Koode ina tawaa limoore 6 goonga',
     'login.errors.twoFactorTokenMissing': 'Token jokkondirɗe ina ɓadii',
     'login.errors.twoFactorFailed': 'Koode 2FA fotaani. Ɗaɓɓu ekkit.',
+    'login.accountDisabled.title': 'Konte Ɓamtaaɗo',
+    'login.accountDisabled.message': 'Konte maa Ɓamtaama. Tawaama e jaɓɓoowo laawol ngol no feewi habaru goɗɗe.',
+    'login.accountDisabled.close': 'Uddu',
     'login.twoFactorTitle': 'Jokkondirgol ɗiɗɓe',
     'login.twoFactorDescription': 'Naatu koode limoore 6 ɗe jokkondirɗe app maa',
     'login.twoFactorCodeLabel': 'Koode jokkondirgol',
@@ -3778,6 +3686,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'login.errors.twoFactorInvalid': 'Kóde ékpé mbálá 6',
     'login.errors.twoFactorTokenMissing': 'Token vérification alé',
     'login.errors.twoFactorFailed': 'Kóde 2FA alé mán. Bwá sígní.',
+    'login.accountDisabled.title': 'Kóntá ábéngá',
+    'login.accountDisabled.message': 'Kóntá ábéngá. Bwá sígní ádminístrátór sístémá bó nkóbá nkóbá.',
+    'login.accountDisabled.close': 'Férmé',
     'login.twoFactorTitle': 'Vérification mbálá míbalé',
     'login.twoFactorDescription': 'Sígní kóde mbálá 6 wá app vérification',
     'login.twoFactorCodeLabel': 'Kóde vérification',

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { AccountDisabledModal } from '@/components/ui/AccountDisabledModal/AccountDisabledModal';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -28,6 +29,8 @@ export function LoginPage() {
   const [temporaryToken, setTemporaryToken] = useState<string | null>(null);
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAccountDisabledModal, setShowAccountDisabledModal] = useState(false);
+  const [accountDisabledMessage, setAccountDisabledMessage] = useState<string | undefined>(undefined);
   const { ref: formRef, isVisible: isFormVisible } = useScrollAnimation({ threshold: 0.1 });
   const { ref: textRef, isVisible: isTextVisible } = useScrollAnimation({ threshold: 0.1 });
 
@@ -130,23 +133,35 @@ export function LoginPage() {
       
       navigate(destination, { replace: true });
     } catch (error: any) {
-      // Afficher le message d'erreur détaillé du backend
-      const errorMessage = 
-        error?.response?.data?.message || 
-        error?.response?.data?.error || 
-        error?.message || 
-        t('login.errors.loginFailed') || 
-        'Échec de la connexion';
+      console.log('🔍 Erreur capturée dans handleSubmit:', error);
+      console.log('🔍 errorCode:', error?.errorCode, 'response errorCode:', error?.response?.data?.errorCode);
       
-      console.error('Login error details:', {
-        status: error?.response?.status,
-        data: error?.response?.data,
-        message: errorMessage
-      });
-      
-      setErrors({ 
-        email: errorMessage,
-      });
+      // Vérifier si c'est un compte désactivé
+      if (error?.errorCode === 'ACCOUNT_DISABLED' || error?.response?.data?.errorCode === 'ACCOUNT_DISABLED') {
+        console.log('🚫 Compte désactivé détecté, affichage du modal');
+        const disabledMessage = error?.message || error?.response?.data?.message || t('login.accountDisabled.message');
+        setAccountDisabledMessage(disabledMessage);
+        setShowAccountDisabledModal(true);
+        setErrors({}); // Ne pas afficher d'erreur dans le champ email
+      } else {
+        // Afficher le message d'erreur détaillé du backend pour les autres erreurs
+        const errorMessage = 
+          error?.response?.data?.message || 
+          error?.response?.data?.error || 
+          error?.message || 
+          t('login.errors.loginFailed') || 
+          'Échec de la connexion';
+        
+        console.error('Login error details:', {
+          status: error?.response?.status,
+          data: error?.response?.data,
+          message: errorMessage
+        });
+        
+        setErrors({ 
+          email: errorMessage,
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -192,14 +207,22 @@ export function LoginPage() {
       
       navigate(destination, { replace: true });
     } catch (error: any) {
-      const errorMessage = 
-        error?.response?.data?.message || 
-        error?.response?.data?.error || 
-        error?.message || 
-        t('login.errors.twoFactorFailed') || 
-        'Code 2FA invalide';
-      
-      setErrors({ twoFactor: errorMessage });
+      // Vérifier si c'est un compte désactivé
+      if (error?.errorCode === 'ACCOUNT_DISABLED' || error?.response?.data?.errorCode === 'ACCOUNT_DISABLED') {
+        const disabledMessage = error?.message || error?.response?.data?.message || t('login.accountDisabled.message');
+        setAccountDisabledMessage(disabledMessage);
+        setShowAccountDisabledModal(true);
+        setErrors({}); // Ne pas afficher d'erreur dans le champ 2FA
+      } else {
+        const errorMessage = 
+          error?.response?.data?.message || 
+          error?.response?.data?.error || 
+          error?.message || 
+          t('login.errors.twoFactorFailed') || 
+          'Code 2FA invalide';
+        
+        setErrors({ twoFactor: errorMessage });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -388,6 +411,15 @@ export function LoginPage() {
             </div>
           </div>
       </div>
+
+      <AccountDisabledModal
+        isOpen={showAccountDisabledModal}
+        onClose={() => {
+          setShowAccountDisabledModal(false);
+          setAccountDisabledMessage(undefined);
+        }}
+        message={accountDisabledMessage}
+      />
     </main>
   );
 }

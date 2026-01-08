@@ -113,7 +113,10 @@ api.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Ne pas tenter de refresh si c'est un compte désactivé
+    const isAccountDisabled = error.response?.data?.errorCode === 'ACCOUNT_DISABLED';
+    
+    if (error.response?.status === 401 && !originalRequest._retry && !isAccountDisabled) {
       if (isRefreshing) {
         // Si un refresh est déjà en cours, mettre la requête en queue
         return new Promise((resolve, reject) => {
