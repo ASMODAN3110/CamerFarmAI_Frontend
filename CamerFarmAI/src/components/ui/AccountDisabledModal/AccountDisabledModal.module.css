@@ -1,0 +1,106 @@
+.accountDisabledModal {
+  --alert-color: #d32f2f;
+  --alert-color-light: #ffebee;
+  --alert-color-dark: #b71c1c;
+}
+
+.accountDisabledModal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+}
+
+.accountDisabledModal__icon {
+  color: var(--alert-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--alert-color-light);
+  margin-bottom: var(--spacing-sm);
+}
+
+.accountDisabledModal__icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.accountDisabledModal__message {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-gray-700);
+  margin: 0;
+  max-width: 100%;
+}
+
+.accountDisabledModal__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  width: 100%;
+}
+
+.accountDisabledModal__closeButton {
+  min-width: 120px;
+  background-color: var(--alert-color);
+  color: var(--color-white);
+}
+
+.accountDisabledModal__closeButton:hover {
+  background-color: var(--alert-color-dark);
+}
+
+/* Override modal header style for alert */
+.accountDisabledModal :global(.modal__header) {
+  background: linear-gradient(135deg, rgba(211, 47, 47, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-bottom-color: var(--alert-color-light);
+}
+
+.accountDisabledModal :global(.modal__header::after) {
+  background: linear-gradient(90deg, var(--alert-color) 0%, var(--alert-color-dark) 100%);
+  opacity: 0.5;
+}
+
+.accountDisabledModal :global(.modal__title) {
+  background: linear-gradient(135deg, var(--alert-color) 0%, var(--alert-color-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .accountDisabledModal__content {
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+  }
+
+  .accountDisabledModal__icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .accountDisabledModal__icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .accountDisabledModal__message {
+    font-size: var(--font-size-sm);
+  }
+
+  .accountDisabledModal__actions {
+    flex-direction: column;
+  }
+
+  .accountDisabledModal__closeButton {
+    width: 100%;
+  }
+}
+

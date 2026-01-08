@@ -58,6 +58,28 @@ export interface ApiResponse<T = any> {
   }>;
 }
 
+export interface LoginErrorResponse {
+  success: false;
+  message: string;
+  errorCode?: 'ACCOUNT_DISABLED' | 'TOKEN_EXPIRED' | 'INVALID_CREDENTIALS';
+}
+
+export interface LoginSuccessResponse {
+  success: true;
+  message: string;
+  data: {
+    user: {
+      id: string;
+      phone: string;
+      firstName: string | null;
+      lastName: string | null;
+      role: 'farmer' | 'technician' | 'admin';
+      avatarUrl: string | null;
+    };
+    accessToken: string;
+  };
+}
+
 /**
  * Interface User correspondant au modèle de données du backend
  * Champs marqués comme "Non-backend" sont utilisés uniquement côté frontend
@@ -115,6 +137,18 @@ export const authService = {
         accessToken,
         user: responseData.user,
       };
+    }).catch((error: any) => {
+      // Vérifier si c'est un compte désactivé
+      const errorData = error.response?.data;
+      if (errorData?.errorCode === 'ACCOUNT_DISABLED') {
+        // Retourner un objet avec errorCode au lieu de lancer une exception
+        return Promise.reject({
+          errorCode: 'ACCOUNT_DISABLED',
+          message: errorData.message || 'Votre compte a été désactivé. Veuillez contacter l\'administrateur du système pour plus d\'informations.',
+        });
+      }
+      // Pour les autres erreurs, propager l'exception normalement
+      return Promise.reject(error);
     });
   },
 
@@ -137,6 +171,18 @@ export const authService = {
         accessToken,
         user: responseData.user,
       };
+    }).catch((error: any) => {
+      // Vérifier si c'est un compte désactivé
+      const errorData = error.response?.data;
+      if (errorData?.errorCode === 'ACCOUNT_DISABLED') {
+        // Retourner un objet avec errorCode au lieu de lancer une exception
+        return Promise.reject({
+          errorCode: 'ACCOUNT_DISABLED',
+          message: errorData.message || 'Votre compte a été désactivé. Veuillez contacter l\'administrateur du système pour plus d\'informations.',
+        });
+      }
+      // Pour les autres erreurs, propager l'exception normalement
+      return Promise.reject(error);
     });
   },
 

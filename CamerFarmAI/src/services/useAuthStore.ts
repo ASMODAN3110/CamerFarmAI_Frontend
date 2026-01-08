@@ -31,7 +31,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     console.log('🔄 Réinitialisation du store avant connexion...');
     set({ user: null, isAuthenticated: false });
     
-    const data = await authService.login(email, password);
+    try {
+      const data = await authService.login(email, password);
     console.log('🔐 Données de connexion reçues:', data);
     
     // Si 2FA est requis, retourner les informations nécessaires
@@ -115,6 +116,14 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.log('⚠️ Pas de données utilisateur dans la réponse de login, chargement depuis /auth/me...');
       const loadUserFn = useAuthStore.getState().loadUser;
       await loadUserFn();
+    }
+    } catch (error: any) {
+      // Propager l'erreur ACCOUNT_DISABLED telle quelle pour qu'elle soit gérée dans LoginPage
+      if (error?.errorCode === 'ACCOUNT_DISABLED') {
+        throw error;
+      }
+      // Pour les autres erreurs, les propager aussi
+      throw error;
     }
   },
 
