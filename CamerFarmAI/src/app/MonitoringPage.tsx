@@ -2301,14 +2301,6 @@ export function MonitoringPage() {
                           >
                             {thresholdEdit.loading ? t('monitoring.thresholds.saving') : t('monitoring.thresholds.save')}
                           </Button>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={handleCloseThresholdEdit}
-                            disabled={thresholdEdit.loading}
-                          >
-                            {t('monitoring.thresholds.cancel')}
-                          </Button>
                         </div>
                       </div>
                     )}

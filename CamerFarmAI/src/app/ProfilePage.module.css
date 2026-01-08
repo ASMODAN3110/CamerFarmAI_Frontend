@@ -137,6 +137,8 @@
 
 .profileInfo {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .profileRoleBadge {
@@ -159,6 +161,9 @@
   font-weight: 700;
   margin: 0 0 0.5rem 0;
   color: white;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .profileEmail {
@@ -167,6 +172,9 @@
   margin: 0.5rem 0 0 0;
   display: flex;
   align-items: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .profileEmailIcon {
@@ -260,6 +268,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0;
 }
 
 /* Select Field */
@@ -276,6 +285,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .select {
@@ -314,6 +326,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .emailList {
@@ -330,6 +345,8 @@
   background: #f3f9f3;
   border-radius: 8px;
   border: 1px solid rgba(76, 175, 80, 0.15);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emailIcon {
@@ -342,11 +359,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .emailValue {
   font-weight: 500;
   color: #333;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .emailDate {
@@ -363,12 +385,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .infoLabel {
   font-size: 0.9rem;
   font-weight: 600;
   color: #333;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .infoValue {
@@ -378,6 +405,12 @@
   border-radius: 8px;
   color: #333;
   font-weight: 500;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .twoFactorSection {
@@ -438,6 +471,10 @@
 
 .twoFactorButton {
   align-self: flex-start;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 
@@ -450,34 +487,436 @@
 /* Responsive */
 @media (max-width: 768px) {
   .profilePage {
-    padding: var(--spacing-2xl) var(--spacing-md);
+    padding: var(--spacing-xl) var(--spacing-sm);
+    min-height: calc(100vh - 70px);
+  }
+
+  .profileContainer {
+    padding: 0;
+  }
+
+  .loadingCard {
+    padding: 2rem 1.5rem;
+    margin: 0 var(--spacing-sm);
+  }
+
+  .loadingCard p {
+    font-size: 0.95rem;
+  }
+
+  .loadingHint {
+    font-size: 0.85rem;
+  }
+
+  .loadingSpinner {
+    font-size: 2.5rem;
+  }
+
+  .backButtonContainer {
+    margin-bottom: 1rem;
+    padding: 0 var(--spacing-sm);
+  }
+
+  .content {
+    padding: 0;
   }
 
   .profileSection {
     flex-direction: column;
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .profileImageContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .profileImage {
+    width: 100px;
+    height: 100px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .profileImageOverlay span {
+    font-size: 0.75rem;
+  }
+
+  .uploadingSpinner {
+    font-size: 1.25rem;
+  }
+
+  .profileInfo {
+    width: 100%;
+  }
+
+  .profileRoleBadge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .profileName {
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .profileEmail {
+    font-size: 0.95rem;
+    margin: 0.4rem 0 0 0;
+    justify-content: center;
+  }
+
+  .profileEmailIcon {
+    margin-right: 0.4rem;
   }
 
   .profileActions {
     width: 100%;
     justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .editButton {
+    width: 100%;
+    justify-content: center;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
   }
 
   .editActions {
     flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
   }
 
   .saveButton,
   .cancelButton {
     width: 100%;
     justify-content: center;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .readonlyMessage {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+
+  .formSection {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 0 var(--spacing-sm);
+  }
+
+  .errorMessage {
+    padding: 0.85rem;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
   }
 
   .formGrid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .formColumn {
+    gap: 1.25rem;
+  }
+
+  .selectField {
+    gap: 0.4rem;
+  }
+
+  .selectLabel {
+    font-size: 0.85rem;
+  }
+
+  .select {
+    padding: 0.65rem;
+    font-size: 0.95rem;
+  }
+
+  .emailSection {
+    gap: 0.75rem;
+  }
+
+  .emailSectionLabel {
+    font-size: 0.85rem;
+  }
+
+  .emailList {
+    gap: 0.75rem;
+  }
+
+  .emailItem {
+    padding: 0.85rem;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .emailIcon {
+    font-size: 1.1rem;
+  }
+
+  .emailValue {
+    font-size: 0.9rem;
+  }
+
+  .emailDate {
+    font-size: 0.8rem;
+  }
+
+  .addEmailButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .infoField {
+    gap: 0.4rem;
+  }
+
+  .infoLabel {
+    font-size: 0.85rem;
+  }
+
+  .infoValue {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .infoHint {
+    font-size: 0.8rem;
+  }
+
+  .twoFactorSection {
+    padding: 1rem;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+
+  .twoFactorLabel {
+    font-size: 0.9rem;
+  }
+
+  .twoFactorContent {
+    gap: var(--spacing-sm);
+  }
+
+  .twoFactorStatusIcon,
+  .twoFactorStatusIconInactive {
+    font-size: 1.1em;
+  }
+
+  .twoFactorStatusText {
+    font-size: 0.9rem;
+  }
+
+  .twoFactorDescription {
+    font-size: 0.85rem;
+  }
+
+  .twoFactorButton {
+    width: 100%;
+    justify-content: center;
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-sizing: border-box;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .profilePage {
+    padding: var(--spacing-lg) var(--spacing-xs);
+  }
+
+  .profileSection {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .profileImage {
+    width: 90px;
+    height: 90px;
+  }
+
+  .profileName {
+    font-size: 1.5rem;
+  }
+
+  .profileEmail {
+    font-size: 0.9rem;
+  }
+
+  .formSection {
+    padding: 1.25rem;
+    margin: 0;
+  }
+
+  .formColumn {
+    gap: 1rem;
+  }
+
+  .infoValue {
+    word-break: break-all;
+    font-size: 0.85rem;
+  }
+
+  .emailValue {
+    word-break: break-all;
+    font-size: 0.85rem;
+  }
+
+  .emailItem {
+    flex-wrap: wrap;
+  }
+
+  .emailInfo {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  .profilePage {
+    padding: var(--spacing-md) var(--spacing-xs);
+  }
+
+  .profileContainer {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .loadingCard {
+    padding: 1.5rem 1rem;
+    margin: 0;
+  }
+
+  .profileSection {
+    padding: 1rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .profileImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profileName {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .profileEmail {
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .profileRoleBadge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .formSection {
+    padding: 1rem;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .formColumn {
+    gap: 0.75rem;
+  }
+
+  .infoValue {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  .emailValue {
+    font-size: 0.8rem;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  .emailItem {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .emailInfo {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .emailDate {
+    font-size: 0.75rem;
+  }
+
+  .infoLabel,
+  .emailSectionLabel,
+  .selectLabel {
+    font-size: 0.8rem;
+    word-break: break-word;
+  }
+
+  .select {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .infoHint {
+    font-size: 0.75rem;
+  }
+
+  .twoFactorSection {
+    padding: 0.75rem;
+  }
+
+  .twoFactorLabel {
+    font-size: 0.85rem;
+  }
+
+  .twoFactorStatusText {
+    font-size: 0.85rem;
+  }
+
+  .twoFactorDescription {
+    font-size: 0.8rem;
+  }
+
+  .twoFactorButton {
+    width: 100%;
+    justify-content: center;
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    padding: var(--spacing-sm) var(--spacing-xs);
+    box-sizing: border-box;
+    min-width: 0;
+    font-size: 0.8rem;
+  }
+
+  .editButton,
+  .saveButton,
+  .cancelButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .errorMessage {
+    padding: 0.75rem;
+    font-size: 0.85rem;
   }
 }
 

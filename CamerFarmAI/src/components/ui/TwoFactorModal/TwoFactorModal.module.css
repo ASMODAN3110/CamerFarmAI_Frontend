@@ -3,6 +3,9 @@
   flex-direction: column;
   gap: var(--spacing-xl);
   padding: var(--spacing-md) 0;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .twoFactorModal__description {
@@ -11,6 +14,11 @@
   line-height: 1.6;
   margin: 0;
   text-align: center;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .twoFactorModal__qrContainer {
@@ -68,12 +76,45 @@
 }
 
 @media (max-width: 768px) {
+  .twoFactorModal {
+    padding: var(--spacing-sm) 0;
+    gap: var(--spacing-lg);
+  }
+
+  .twoFactorModal__description {
+    font-size: var(--font-size-sm);
+    padding: 0 var(--spacing-xs);
+  }
+
   .twoFactorModal__actions {
     flex-direction: column-reverse;
+    gap: var(--spacing-sm);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .twoFactorModal__actions button,
+  .twoFactorModal__actions a {
+    width: 100%;
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    padding: var(--spacing-md) var(--spacing-sm);
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .twoFactorModal__description {
+    font-size: 0.85rem;
+    line-height: 1.5;
   }
 
   .twoFactorModal__actions button {
-    width: 100%;
+    font-size: 0.9rem;
+    padding: var(--spacing-sm);
   }
 }
 

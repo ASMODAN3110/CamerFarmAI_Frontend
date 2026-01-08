@@ -30,6 +30,10 @@
   border-radius: var(--border-radius-md);
   transition: all 0.3s ease;
   outline: none;
+  box-sizing: border-box;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .formField__input:hover {
