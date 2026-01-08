@@ -61,6 +61,7 @@ export type NotificationStatut = typeof NotificationStatut[keyof typeof Notifica
 // EventType est déjà défini dans notificationService.ts, on l'exporte aussi ici pour cohérence
 export const EventType = {
   SEUIL_DEPASSE: 'seuil_depasse',
+  THRESHOLD_CHANGED: 'threshold_changed',
   ACTIONNEUR_ACTIVE: 'actionneur_active',
   ACTIONNEUR_DESACTIVE: 'actionneur_desactive',
   MODE_CHANGED: 'mode_changed',

@@ -104,6 +104,12 @@ export function getNotificationStyle(eventType: string): {
         color: '#ef4444', // Rouge
         bgColor: '#fee2e2',
       };
+    case EventType.THRESHOLD_CHANGED:
+      return {
+        icon: '📊',
+        color: '#0d9488', // Vert-bleu (teal)
+        bgColor: '#ccfbf1',
+      };
     default:
       return {
         icon: 'ℹ',
@@ -120,6 +126,7 @@ export function getNotificationStyle(eventType: string): {
 export function getEventTypeLabel(eventType: string): string {
   const labels: Record<string, string> = {
     [EventType.SEUIL_DEPASSE]: '🚨 Alerte : Seuil Dépassé',
+    [EventType.THRESHOLD_CHANGED]: '📊 Modification des Seuils',
     [EventType.ACTIONNEUR_ACTIVE]: '✅ Actionneur Activé',
     [EventType.ACTIONNEUR_DESACTIVE]: '⏸️ Actionneur Désactivé',
     [EventType.MODE_CHANGED]: '🔄 Changement de Mode',

@@ -60,7 +60,7 @@ export function LoginPage() {
       } else if (user?.role === 'technician') {
         navigate('/technicien', { replace: true });
       } else {
-        navigate('/', { replace: true });
+      navigate('/', { replace: true });
       }
     }
   }, [isAuthenticated, navigate]);
@@ -145,22 +145,22 @@ export function LoginPage() {
         setErrors({}); // Ne pas afficher d'erreur dans le champ email
       } else {
         // Afficher le message d'erreur détaillé du backend pour les autres erreurs
-        const errorMessage = 
-          error?.response?.data?.message || 
-          error?.response?.data?.error || 
-          error?.message || 
-          t('login.errors.loginFailed') || 
-          'Échec de la connexion';
-        
-        console.error('Login error details:', {
-          status: error?.response?.status,
-          data: error?.response?.data,
-          message: errorMessage
-        });
-        
-        setErrors({ 
-          email: errorMessage,
-        });
+      const errorMessage = 
+        error?.response?.data?.message || 
+        error?.response?.data?.error || 
+        error?.message || 
+        t('login.errors.loginFailed') || 
+        'Échec de la connexion';
+      
+      console.error('Login error details:', {
+        status: error?.response?.status,
+        data: error?.response?.data,
+        message: errorMessage
+      });
+      
+      setErrors({ 
+        email: errorMessage,
+      });
       }
     } finally {
       setIsSubmitting(false);
@@ -214,14 +214,14 @@ export function LoginPage() {
         setShowAccountDisabledModal(true);
         setErrors({}); // Ne pas afficher d'erreur dans le champ 2FA
       } else {
-        const errorMessage = 
-          error?.response?.data?.message || 
-          error?.response?.data?.error || 
-          error?.message || 
-          t('login.errors.twoFactorFailed') || 
-          'Code 2FA invalide';
-        
-        setErrors({ twoFactor: errorMessage });
+      const errorMessage = 
+        error?.response?.data?.message || 
+        error?.response?.data?.error || 
+        error?.message || 
+        t('login.errors.twoFactorFailed') || 
+        'Code 2FA invalide';
+      
+      setErrors({ twoFactor: errorMessage });
       }
     } finally {
       setIsSubmitting(false);
