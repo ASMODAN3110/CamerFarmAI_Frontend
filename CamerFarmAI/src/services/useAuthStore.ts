@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: null, isAuthenticated: false });
     
     try {
-      const data = await authService.login(email, password);
+    const data = await authService.login(email, password);
     console.log('🔐 Données de connexion reçues:', data);
     
     // Si 2FA est requis, retourner les informations nécessaires

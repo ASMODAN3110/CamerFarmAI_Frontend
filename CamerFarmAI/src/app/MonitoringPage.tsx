@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Icon } from '@/components/ui/Icon/Icon';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { Modal } from '@/components/ui/Modal/Modal';
+import { Toast } from '@/components/ui/Toast/Toast';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { plantationService, type Sensor, type Actuator, type SensorReading } from '@/services/plantationService';
@@ -1456,6 +1457,7 @@ export function MonitoringPage() {
     loading: false,
     error: null,
   });
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   // Mettre à jour l'état des équipements depuis les actionneurs
   useEffect(() => {
@@ -1772,8 +1774,21 @@ export function MonitoringPage() {
           sensor.id === updatedSensor.id ? { ...sensor, seuilMin: updatedSensor.seuilMin, seuilMax: updatedSensor.seuilMax } : sensor
         )
       );
-      alert(t('monitoring.thresholds.updateSuccess'));
+      setToast({ message: t('monitoring.thresholds.updateSuccess'), type: 'success' });
       handleCloseThresholdEdit();
+      
+      // Rafraîchir les notifications pour afficher la nouvelle notification générée
+      // Attendre un peu pour laisser le temps au backend de créer l'événement et les notifications
+      setTimeout(async () => {
+        try {
+          await refreshNotifications();
+        } catch (refreshError) {
+          // Ne pas bloquer l'utilisateur si le rafraîchissement échoue
+          if (import.meta.env.DEV) {
+            console.warn('⚠️ Erreur lors du rafraîchissement des notifications:', refreshError);
+          }
+        }
+      }, 1000); // Attendre 1 seconde pour laisser le temps au backend
     } catch (error: any) {
       console.error('❌ Erreur lors de la mise à jour des seuils:', error);
       const status = error?.response?.status;
@@ -2253,6 +2268,7 @@ export function MonitoringPage() {
                               step="0.1"
                               value={thresholdEdit.seuilMin}
                               onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMin: e.target.value }))}
+                              onFocus={(e) => e.target.select()}
                               placeholder={sensor.seuilMin !== undefined && sensor.seuilMin !== null ? String(sensor.seuilMin) : '0.0'}
                             />
                           </label>
@@ -2266,6 +2282,7 @@ export function MonitoringPage() {
                               step="0.1"
                               value={thresholdEdit.seuilMax}
                               onChange={(e) => setThresholdEdit((prev) => ({ ...prev, seuilMax: e.target.value }))}
+                              onFocus={(e) => e.target.select()}
                               placeholder={sensor.seuilMax !== undefined && sensor.seuilMax !== null ? String(sensor.seuilMax) : '0.0'}
                             />
                           </label>
@@ -2436,6 +2453,13 @@ export function MonitoringPage() {
         isOpen={showGaugeHelp}
         onClose={() => setShowGaugeHelp(false)}
       />
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </>
   );
 }

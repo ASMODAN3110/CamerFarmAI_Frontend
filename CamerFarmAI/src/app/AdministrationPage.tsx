@@ -128,10 +128,10 @@ export function AdminPage() {
           </div>
         ) : (
           <>
-            {/* Comptes Agriculteurs */}
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <Users className={styles.sectionIcon} />
+        {/* Comptes Agriculteurs */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <Users className={styles.sectionIcon} />
                 <h2 className={styles.sectionTitle}>Comptes Agriculteurs</h2>
                 <span className={styles.sectionBadge}>{farmers.length}</span>
               </div>
@@ -158,7 +158,7 @@ export function AdminPage() {
                               {farmer.plantationsCount} {farmer.plantationsCount > 1 ? 'plantations' : 'plantation'}
                             </span>
                           </div>
-                        </div>
+          </div>
                         <div className={styles.cardActions}>
                           <label className={styles.toggleSwitch}>
                             <input
@@ -168,28 +168,28 @@ export function AdminPage() {
                             />
                             <span className={styles.toggleSlider}></span>
                           </label>
-                          <button
-                            className={styles.deleteButton}
+                    <button
+                      className={styles.deleteButton}
                             onClick={() => handleDeleteUser(farmer.id, getUserDisplayName(farmer))}
                             aria-label="Supprimer"
-                          >
-                            <X size={16} />
-                          </button>
+                    >
+                      <X size={16} />
+                    </button>
                         </div>
                       </div>
                     </div>
-                  ))}
+              ))}
                 </div>
               )}
-            </section>
+        </section>
 
-            {/* Comptes Techniciens */}
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <Wrench className={styles.sectionIcon} />
+        {/* Comptes Techniciens */}
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <Wrench className={styles.sectionIcon} />
                 <h2 className={styles.sectionTitle}>Comptes Techniciens</h2>
                 <span className={styles.sectionBadge}>{technicians.length}</span>
-              </div>
+          </div>
               {technicians.length === 0 ? (
                 <div className={styles.emptyMessage}>Aucun technicien</div>
               ) : (
@@ -218,17 +218,17 @@ export function AdminPage() {
                             />
                             <span className={styles.toggleSlider}></span>
                           </label>
-                          <button
-                            className={styles.deleteButton}
+                    <button
+                      className={styles.deleteButton}
                             onClick={() => handleDeleteUser(technician.id, getUserDisplayName(technician))}
                             aria-label="Supprimer"
-                          >
-                            <X size={16} />
-                          </button>
+                    >
+                      <X size={16} />
+                    </button>
                         </div>
                       </div>
                     </div>
-                  ))}
+              ))}
                 </div>
               )}
 
@@ -241,11 +241,11 @@ export function AdminPage() {
                     setCreateError(null);
                   }}
                 >
-                  <PlusCircle size={18} />
-                  Créer un technicien
+            <PlusCircle size={18} />
+            Créer un technicien
                 </Button>
               </div>
-            </section>
+        </section>
           </>
         )}
       </main>
@@ -295,13 +295,13 @@ export function AdminPage() {
 
             <div className={styles.formRow}>
               <label>Nom</label>
-              <input
+                    <input
                 type="text"
                 value={newTechLastName}
                 onChange={(e) => setNewTechLastName(e.target.value)}
                 placeholder="Optionnel"
               />
-            </div>
+              </div>
 
             <div className={styles.formRow}>
               <label>Email</label>
