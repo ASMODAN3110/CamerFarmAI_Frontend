@@ -16,6 +16,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-lg);
+  position: relative;
+  z-index: 1000;
 }
 
 .header__logo {
@@ -340,7 +342,10 @@
   right: 0;
   width: 100%;
   background-color: var(--color-white);
-  padding: 90px var(--spacing-lg) var(--spacing-2xl);
+  padding-top: calc(80px + var(--spacing-xl));
+  padding-right: var(--spacing-lg);
+  padding-bottom: var(--spacing-2xl);
+  padding-left: var(--spacing-lg);
   z-index: 998;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   transition: transform 0.35s ease-in-out;
@@ -423,6 +428,10 @@
 
   .header__actions {
     display: none;
+  }
+
+  .header__container {
+    background-color: var(--color-white);
   }
 }
 
@@ -566,17 +575,18 @@
   .header__logoSlogan {
     display: none;
   }
-  
+
   .header__technicianTitle {
     font-size: 24px;
   }
-  
+
   .header__technicianSubtitle {
     font-size: 13px;
   }
 }
 
 @media (max-width: 900px) {
+
   /* Sur mobile, le header technicien n'est pas affiché, on utilise le header normal */
   .header__technician {
     display: none;
