@@ -410,10 +410,17 @@ export function Header({
   return (
     <header className={styles.header} role="banner">
       <div className={styles.header__container}>
-        <Link to="/" className={styles.header__logo}>
-          <img src={logoIcon} alt="CamerFarm AI" className={styles.header__logoImage} />
-          <span className={styles.header__logoText}>CamerFarm AI</span>
-        </Link>
+        {isAuthenticated && (user?.role === 'technician' || user?.role === 'admin') ? (
+          <div className={styles.header__logo}>
+            <img src={logoIcon} alt="CamerFarm AI" className={styles.header__logoImage} />
+            <span className={styles.header__logoText}>CamerFarm AI</span>
+          </div>
+        ) : (
+          <Link to="/" className={styles.header__logo}>
+            <img src={logoIcon} alt="CamerFarm AI" className={styles.header__logoImage} />
+            <span className={styles.header__logoText}>CamerFarm AI</span>
+          </Link>
+        )}
 
         {/* Navigation Desktop */}
         {!isMobile && (
@@ -643,11 +650,6 @@ export function Header({
               <button
                 className={`${styles.header__mobileIconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                 onClick={() => {
-                  setNotificationsOpen(!notificationsOpen);
-                  setMobileMenuOpen(false);
-                }}
-                onDoubleClick={() => {
-                  setNotificationsOpen(false);
                   setMobileMenuOpen(false);
                   navigate('/notifications');
                 }}
