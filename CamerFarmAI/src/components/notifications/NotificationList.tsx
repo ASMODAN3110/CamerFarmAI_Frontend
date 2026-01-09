@@ -23,7 +23,7 @@ export function NotificationList({
   filter = 'all',
   onFilterChange,
 }: NotificationListProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
   const [markingAsReadIds, setMarkingAsReadIds] = useState<Set<string>>(new Set());
 
@@ -47,7 +47,7 @@ export function NotificationList({
       const days = Math.floor(diffInSeconds / 86400);
       return `${days} ${t('notifications.daysAgo') || 'j'}`;
     }
-    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    return date.toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { day: 'numeric', month: 'short' });
   };
 
   const getStatusBadge = (statut: NotificationStatut) => {
@@ -220,9 +220,8 @@ export function NotificationList({
           return (
             <div
               key={notification.id}
-              className={`${styles.notificationItem} ${
-                !notification.isRead ? styles.notificationItemUnread : ''
-              }`}
+              className={`${styles.notificationItem} ${!notification.isRead ? styles.notificationItemUnread : ''
+                }`}
             >
               <div className={styles.notificationHeader}>
                 <div className={styles.notificationTitleRow}>
@@ -243,8 +242,8 @@ export function NotificationList({
                         {notification.canal === NotificationCanal.EMAIL
                           ? t('notifications.canal.email') || 'Email'
                           : notification.canal === NotificationCanal.WEB
-                          ? t('notifications.canal.web') || 'Web'
-                          : notification.canal}
+                            ? t('notifications.canal.web') || 'Web'
+                            : notification.canal}
                       </span>
                     </span>
                   </div>

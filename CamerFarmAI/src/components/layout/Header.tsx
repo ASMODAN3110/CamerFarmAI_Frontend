@@ -65,7 +65,7 @@ export function Header({
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -103,7 +103,7 @@ export function Header({
     } else if (diffDays < 7) {
       return `${diffDays} ${t('notifications.daysAgo') || 'j'}`;
     } else {
-      return date.toLocaleDateString();
+      return date.toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR');
     }
   };
 

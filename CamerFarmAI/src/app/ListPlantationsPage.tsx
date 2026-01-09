@@ -14,7 +14,7 @@ import { plantationService, type Plantation } from '@/services/plantationService
 import styles from './ListPlantationsPage.module.css';
 
 export function ListPlantationsPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -33,21 +33,21 @@ export function ListPlantationsPage() {
   const formatDate = useMemo(
     () => (value: string) => {
       const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString();
+      return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR');
     },
-    []
+    [language]
   );
 
   // Fonction pour formater la superficie (convertit de m² vers l'unité la plus appropriée)
   const formatArea = useMemo(
     () => (areaInSquareMeters: number) => {
       if (!areaInSquareMeters || areaInSquareMeters === 0) return '0 m²';
-      
+
       // Convertir en différentes unités
       const km2 = areaInSquareMeters / 1000000;
       const ha = areaInSquareMeters / 10000;
       const acre = areaInSquareMeters / 4046.86;
-      
+
       // Choisir l'unité la plus appropriée
       if (km2 >= 1) {
         return `${km2.toFixed(2)} km²`;
@@ -70,7 +70,7 @@ export function ListPlantationsPage() {
         const data = await plantationService.getAll();
         setPlantations(data);
         setFetchError(null);
-        } catch (error) {
+      } catch (error) {
         console.error('Error fetching plantations:', error);
         setFetchError(t('plantations.errors.fetchFailed'));
         setPlantations([]);
@@ -100,7 +100,7 @@ export function ListPlantationsPage() {
       name: data.name.trim(),
       location: data.location.trim(),
       area: Number(data.area),
-      cropType: data.cropType.trim() || undefined,
+      cropType: data.cropType.trim(),
     };
 
     const newPlantation = await plantationService.create(payload);
@@ -108,7 +108,7 @@ export function ListPlantationsPage() {
     setPlantations((prev) => {
       return [...prev, newPlantation];
     });
-    
+
     setIsModalOpen(false);
   };
 
@@ -116,7 +116,7 @@ export function ListPlantationsPage() {
     return (
       <>
         <Background3D />
-        <Header 
+        <Header
           navItems={plantationsNavItems}
           currentPath="/plantations"
           showAuthIcons={true}
@@ -134,7 +134,7 @@ export function ListPlantationsPage() {
   return (
     <>
       <Background3D />
-      <Header 
+      <Header
         navItems={plantationsNavItems}
         currentPath="/plantations"
         showAuthIcons={true}
