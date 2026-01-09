@@ -126,6 +126,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -371,14 +372,9 @@
   max-width: 100%;
 }
 
-.emailDate {
-  font-size: 0.85rem;
-  color: #666;
-}
 
-.addEmailButton {
-  align-self: flex-start;
-}
+
+
 
 /* Info Field */
 .infoField {
@@ -668,14 +664,9 @@
     font-size: 0.9rem;
   }
 
-  .emailDate {
-    font-size: 0.8rem;
-  }
 
-  .addEmailButton {
-    width: 100%;
-    justify-content: center;
-  }
+
+
 
   .infoField {
     gap: 0.4rem;
@@ -919,4 +910,3 @@
     font-size: 0.85rem;
   }
 }
-
