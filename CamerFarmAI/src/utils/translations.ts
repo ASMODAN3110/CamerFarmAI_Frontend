@@ -734,6 +734,7 @@ export type TranslationKey =
   | 'docs.hooks.translation.description'
   | 'docs.hooks.language.description'
   | 'docs.hooks.notifications.description'
+  | 'docs.hooks.enrichedNotifications.description'
   | 'docs.hooks.scroll.description'
   | 'docs.contexts.auth.description'
   | 'docs.contexts.language.description'
@@ -1681,6 +1682,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.hooks.translation.description': 'Hook pour accéder aux traductions multilingues de l\'application.',
     'docs.hooks.language.description': 'Hook pour gérer le changement de langue et accéder à la langue actuelle.',
     'docs.hooks.notifications.description': 'Hook pour gérer les notifications : récupération, marquage comme lue, suppression.',
+    'docs.hooks.enrichedNotifications.description': 'Hook pour enrichir les notifications avec les noms des plantations.',
     'docs.hooks.scroll.description': 'Hook pour animer les éléments au scroll de la page.',
     'docs.contexts.auth.description': 'Contexte React pour gérer l\'état d\'authentification global de l\'application.',
     'docs.contexts.language.description': 'Contexte React pour gérer la langue sélectionnée et les traductions.',
@@ -2627,6 +2629,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.hooks.translation.description': 'Hook to access multilingual translations of the application.',
     'docs.hooks.language.description': 'Hook to manage language change and access the current language.',
     'docs.hooks.notifications.description': 'Hook to manage notifications: retrieval, marking as read, deletion.',
+    'docs.hooks.enrichedNotifications.description': 'Hook to enrich notifications with plantation names.',
     'docs.hooks.scroll.description': 'Hook to animate elements on page scroll.',
     'docs.contexts.auth.description': 'React context to manage the global authentication state of the application.',
     'docs.contexts.language.description': 'React context to manage the selected language and translations.',
@@ -3573,6 +3576,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.hooks.translation.description': 'Hook ngam heɓde traductions multilingues app.',
     'docs.hooks.language.description': 'Hook ngam laamngo waylu ɗemngal é heɓde ɗemngal jooni.',
     'docs.hooks.notifications.description': 'Hook ngam laamngo notifications: fón, maarke lue, mbatu.',
+    'docs.hooks.enrichedNotifications.description': 'Hook ngam ɓeydude notifications e innde plantations.',
     'docs.hooks.scroll.description': 'Hook ngam animer ɓeynguuji e scroll hello.',
     'docs.contexts.auth.description': 'Nokkuure React ngam laamngo nokkuure tiimtinde global app.',
     'docs.contexts.language.description': 'Nokkuure React ngam laamngo ɗemngal labɗo é traductions.',
@@ -4520,6 +4524,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'docs.hooks.translation.description': 'Hook ngam accéder traductions multilingues app.',
     'docs.hooks.language.description': 'Hook ngam laamngo changement langue é accéder langue actuelle.',
     'docs.hooks.notifications.description': 'Hook ngam laamngo notifications: récupération, marquer lue, suppression.',
+    'docs.hooks.enrichedNotifications.description': 'Hook ngam ɓeydude notifications e nkómbó plantations.',
     'docs.hooks.scroll.description': 'Hook ngam animer éléments e scroll page.',
     'docs.contexts.auth.description': 'Contexte React ngam laamngo état authentification global app.',
     'docs.contexts.language.description': 'Contexte React ngam laamngo langue sélectionnée é traductions.',

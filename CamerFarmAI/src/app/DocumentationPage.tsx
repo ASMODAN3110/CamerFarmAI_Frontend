@@ -20,7 +20,15 @@ import {
   FaBars,
   FaTimes
 } from 'react-icons/fa';
+import { TranslationKey } from '@/utils/translations';
+import { IconType } from 'react-icons';
 import styles from './DocumentationPage.module.css';
+
+interface DocumentationSection {
+  id: string;
+  icon: IconType;
+  key: TranslationKey;
+}
 
 export function DocumentationPage() {
   const { t } = useTranslation();
@@ -34,7 +42,7 @@ export function DocumentationPage() {
     }
   };
 
-  const sections = [
+  const sections: DocumentationSection[] = [
     { id: 'introduction', icon: FaHome, key: 'docs.sections.introduction' },
     { id: 'architecture', icon: FaCode, key: 'docs.sections.architecture' },
     { id: 'services', icon: FaPlug, key: 'docs.sections.services' },
@@ -288,6 +296,10 @@ npm run dev`}</code>
                   <h3><code>useNotifications</code></h3>
                   <p><strong>Fichier:</strong> <code>src/hooks/useNotifications.ts</code></p>
                   <p>{t('docs.hooks.notifications.description')}</p>
+
+                  <h3><code>useEnrichedNotifications</code></h3>
+                  <p><strong>Fichier:</strong> <code>src/hooks/useEnrichedNotifications.ts</code></p>
+                  <p>{t('docs.hooks.enrichedNotifications.description')}</p>
 
                   <h3><code>useScrollAnimation</code></h3>
                   <p><strong>Fichier:</strong> <code>src/hooks/useScrollAnimation.ts</code></p>

@@ -18,7 +18,15 @@ import {
 import { useCookiePreferences } from '@/contexts/CookieContext';
 import { CookiePreferencesModal } from '@/components/cookies/CookiePreferencesModal';
 import { Button } from '@/components/ui/Button/Button';
+import { TranslationKey } from '@/utils/translations';
+import { IconType } from 'react-icons';
 import styles from './CookiesPage.module.css';
+
+interface CookiesSection {
+  id: string;
+  icon: IconType;
+  key: TranslationKey;
+}
 
 export function CookiesPage() {
   const { t } = useTranslation();
@@ -34,7 +42,7 @@ export function CookiesPage() {
     }
   };
 
-  const sections = [
+  const sections: CookiesSection[] = [
     { id: 'introduction', icon: FaHome, key: 'cookies.sections.introduction' },
     { id: 'types', icon: FaCookie, key: 'cookies.sections.types' },
     { id: 'usage', icon: FaCog, key: 'cookies.sections.usage' },
@@ -124,13 +132,13 @@ export function CookiesPage() {
                 <div className={styles.cookiesPage__sectionContent}>
                   <h3>{t('cookies.types.essential.title')}</h3>
                   <p>{t('cookies.types.essential.content')}</p>
-                  
+
                   <h3>{t('cookies.types.analytical.title')}</h3>
                   <p>{t('cookies.types.analytical.content')}</p>
-                  
+
                   <h3>{t('cookies.types.functional.title')}</h3>
                   <p>{t('cookies.types.functional.content')}</p>
-                  
+
                   <h3>{t('cookies.types.marketing.title')}</h3>
                   <p>{t('cookies.types.marketing.content')}</p>
                 </div>
@@ -161,7 +169,7 @@ export function CookiesPage() {
                 </h2>
                 <div className={styles.cookiesPage__sectionContent}>
                   <p>{t('cookies.management.content')}</p>
-                  
+
                   <h3>{t('cookies.management.currentPreferences')}</h3>
                   <div className={styles.cookiesPage__preferencesStatus}>
                     <p>
@@ -177,7 +185,7 @@ export function CookiesPage() {
                       <strong>{t('cookies.preferences.marketing.label')}:</strong> {preferences.marketing ? t('cookies.preferences.enabled') : t('cookies.preferences.disabled')}
                     </p>
                   </div>
-                  
+
                   <div className={styles.cookiesPage__manageButtonContainer}>
                     <Button
                       variant="primary"
@@ -187,7 +195,7 @@ export function CookiesPage() {
                       {t('cookies.management.manageButton')}
                     </Button>
                   </div>
-                  
+
                   <h3>{t('cookies.management.browser.title')}</h3>
                   <p>{t('cookies.management.browser.content')}</p>
                   <h3>{t('cookies.management.impact.title')}</h3>

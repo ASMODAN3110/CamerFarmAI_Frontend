@@ -17,7 +17,15 @@ import {
   FaBars,
   FaTimes
 } from 'react-icons/fa';
+import { TranslationKey } from '@/utils/translations';
+import { IconType } from 'react-icons';
 import styles from './TermsPage.module.css';
+
+interface TermsSection {
+  id: string;
+  icon: IconType;
+  key: TranslationKey;
+}
 
 export function TermsPage() {
   const { t } = useTranslation();
@@ -31,7 +39,7 @@ export function TermsPage() {
     }
   };
 
-  const sections = [
+  const sections: TermsSection[] = [
     { id: 'introduction', icon: FaHome, key: 'terms.sections.introduction' },
     { id: 'acceptance', icon: FaCheckCircle, key: 'terms.sections.acceptance' },
     { id: 'service-usage', icon: FaCog, key: 'terms.sections.serviceUsage' },
