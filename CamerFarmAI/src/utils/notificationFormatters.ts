@@ -45,7 +45,7 @@ export function formatSensorNotification(
   t: (key: TranslationKey) => string
 ): string {
   const event = notification.event;
-  
+
   if (!event) {
     return t('notifications.noDescription');
   }
@@ -133,7 +133,7 @@ export function getEventTypeLabel(eventType: string): string {
     [EventType.SENSOR_ACTIVE]: '✅ Capteur Actif',
     [EventType.SENSOR_INACTIVE]: '⚠️ Capteur Inactif',
   };
-  
+
   return labels[eventType] || `Notification : ${eventType}`;
 }
 
@@ -143,15 +143,15 @@ export function getEventTypeLabel(eventType: string): string {
  */
 export function getPlantationName(event: NotificationEvent | undefined): string | null {
   if (!event) return null;
-  
+
   if (event.sensor?.plantation?.name) {
     return event.sensor.plantation.name;
   }
-  
+
   if (event.actuator?.plantation?.name) {
     return event.actuator.plantation.name;
   }
-  
+
   return null;
 }
 
