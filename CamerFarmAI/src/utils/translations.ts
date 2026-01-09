@@ -465,6 +465,36 @@ export type TranslationKey =
   | 'profile.role.farmer'
   | 'profile.role.technician'
   | 'profile.role.admin'
+  | 'admin.title'
+  | 'admin.loading'
+  | 'admin.retry'
+  | 'admin.farmers.title'
+  | 'admin.farmers.empty'
+  | 'admin.technicians.title'
+  | 'admin.technicians.empty'
+  | 'admin.technicians.create'
+  | 'admin.user.active'
+  | 'admin.user.inactive'
+  | 'admin.user.plantations'
+  | 'admin.user.plantation'
+  | 'admin.delete.confirm'
+  | 'admin.delete.error'
+  | 'admin.update.error'
+  | 'admin.create.title'
+  | 'admin.create.success'
+  | 'admin.create.error'
+  | 'admin.create.creating'
+  | 'admin.create.button'
+  | 'admin.create.cancel'
+  | 'admin.create.form.phone'
+  | 'admin.create.form.phonePlaceholder'
+  | 'admin.create.form.password'
+  | 'admin.create.form.passwordPlaceholder'
+  | 'admin.create.form.firstName'
+  | 'admin.create.form.lastName'
+  | 'admin.create.form.email'
+  | 'admin.create.form.optional'
+  | 'admin.create.form.required'
   | 'admin.fakers.title'
   | 'admin.fakers.subtitle'
   | 'admin.fakers.test.title'
@@ -1382,6 +1412,36 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.farmer': 'Agriculteur',
     'profile.role.admin': 'Administrateur',
     'profile.role.technician': 'Technicien',
+    'admin.title': 'Administration',
+    'admin.loading': 'Chargement...',
+    'admin.retry': 'Réessayer',
+    'admin.farmers.title': 'Comptes Agriculteurs',
+    'admin.farmers.empty': 'Aucun agriculteur',
+    'admin.technicians.title': 'Comptes Techniciens',
+    'admin.technicians.empty': 'Aucun technicien',
+    'admin.technicians.create': 'Créer un technicien',
+    'admin.user.active': 'Actif',
+    'admin.user.inactive': 'Inactif',
+    'admin.user.plantations': 'plantations',
+    'admin.user.plantation': 'plantation',
+    'admin.delete.confirm': 'Êtes-vous sûr de vouloir supprimer {name} ? Cette action est irréversible.',
+    'admin.delete.error': 'Erreur lors de la suppression',
+    'admin.update.error': 'Erreur lors de la mise à jour',
+    'admin.create.title': 'Créer un technicien',
+    'admin.create.success': 'Technicien créé avec succès',
+    'admin.create.error': 'Erreur lors de la création',
+    'admin.create.creating': 'Création...',
+    'admin.create.button': 'Créer',
+    'admin.create.cancel': 'Annuler',
+    'admin.create.form.phone': 'Téléphone *',
+    'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.password': 'Mot de passe *',
+    'admin.create.form.passwordPlaceholder': 'Minimum 8 caractères...',
+    'admin.create.form.firstName': 'Prénom',
+    'admin.create.form.lastName': 'Nom',
+    'admin.create.form.email': 'Email',
+    'admin.create.form.optional': 'Optionnel',
+    'admin.create.form.required': 'Le téléphone et le mot de passe sont requis',
     'admin.fakers.title': 'Générateur de données de test',
     'admin.fakers.subtitle': 'Générez des données factices pour tester l\'application',
     'admin.fakers.test.title': 'Tester les fakers',
@@ -2298,6 +2358,36 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.farmer': 'Farmer',
     'profile.role.technician': 'Technician',
     'profile.role.admin': 'Administrator',
+    'admin.title': 'Administration',
+    'admin.loading': 'Loading...',
+    'admin.retry': 'Retry',
+    'admin.farmers.title': 'Farmer Accounts',
+    'admin.farmers.empty': 'No farmers',
+    'admin.technicians.title': 'Technician Accounts',
+    'admin.technicians.empty': 'No technicians',
+    'admin.technicians.create': 'Create Technician',
+    'admin.user.active': 'Active',
+    'admin.user.inactive': 'Inactive',
+    'admin.user.plantations': 'plantations',
+    'admin.user.plantation': 'plantation',
+    'admin.delete.confirm': 'Are you sure you want to delete {name}? This action cannot be undone.',
+    'admin.delete.error': 'Error during deletion',
+    'admin.update.error': 'Error during update',
+    'admin.create.title': 'Create Technician',
+    'admin.create.success': 'Technician created successfully',
+    'admin.create.error': 'Error during creation',
+    'admin.create.creating': 'Creating...',
+    'admin.create.button': 'Create',
+    'admin.create.cancel': 'Cancel',
+    'admin.create.form.phone': 'Phone *',
+    'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.password': 'Password *',
+    'admin.create.form.passwordPlaceholder': 'Minimum 8 characters...',
+    'admin.create.form.firstName': 'First Name',
+    'admin.create.form.lastName': 'Last Name',
+    'admin.create.form.email': 'Email',
+    'admin.create.form.optional': 'Optional',
+    'admin.create.form.required': 'Phone and password are required',
     'admin.fakers.title': 'Test Data Generator',
     'admin.fakers.subtitle': 'Generate fake data to test the application',
     'admin.fakers.test.title': 'Test Fakers',
@@ -3214,6 +3304,36 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.farmer': 'Ngaynaajo',
     'profile.role.technician': 'Kuutowo',
     'profile.role.admin': 'Toppitoowo',
+    'admin.title': 'Njuɓɓudi',
+    'admin.loading': 'Nawtude...',
+    'admin.retry': 'Yeewto',
+    'admin.farmers.title': 'Konte Ngurɓe',
+    'admin.farmers.empty': 'Alaa ngurɓo',
+    'admin.technicians.title': 'Konte Kuutoro',
+    'admin.technicians.empty': 'Alaa kuutoro',
+    'admin.technicians.create': 'Waɗtu Kuutoro',
+    'admin.user.active': 'Kuuɗe',
+    'admin.user.inactive': 'Alaa kuuɗe',
+    'admin.user.plantations': 'nguurndam',
+    'admin.user.plantation': 'nguurndam',
+    'admin.delete.confirm': 'Aɗa yiɗi momtude {name}? Ɗuum faytii ruttoowo.',
+    'admin.delete.error': 'Koɗɗe e momtude',
+    'admin.update.error': 'Koɗɗe e ɓeydude',
+    'admin.create.title': 'Waɗtu Kuutoro',
+    'admin.create.success': 'Kuutoro waɗɗaama e moƴƴere',
+    'admin.create.error': 'Koɗɗe e waɗɗude',
+    'admin.create.creating': 'Nana waɗɗa...',
+    'admin.create.button': 'Waɗtu',
+    'admin.create.cancel': 'Dirtu',
+    'admin.create.form.phone': 'Tel *',
+    'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.password': 'Finnde *',
+    'admin.create.form.passwordPlaceholder': 'Kalaa 8 karaktere...',
+    'admin.create.form.firstName': 'Innde fuɗɗo',
+    'admin.create.form.lastName': 'Innde',
+    'admin.create.form.email': 'Email',
+    'admin.create.form.optional': 'Waɗɗa',
+    'admin.create.form.required': 'Tel e finnde ina tawaa',
     'admin.fakers.title': 'Keɓe Ɓaawɗe Ngam Ƴeewtagol',
     'admin.fakers.subtitle': 'Ɓeydu keɓe ɓaawɗe ngam Ƴeewtagol baɗɗe',
     'admin.fakers.test.title': 'Ƴeewtu Keɓe Ɓaawɗe',
@@ -4131,6 +4251,36 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'profile.role.farmer': 'Mbeyem',
     'profile.role.admin': 'Nti',
     'profile.role.technician': 'Mfa\'a',
+    'admin.title': 'Nti',
+    'admin.loading': 'Zíngí...',
+    'admin.retry': 'Tobo',
+    'admin.farmers.title': 'Konte Beyem',
+    'admin.farmers.empty': 'Teké mbeyem',
+    'admin.technicians.title': 'Konte Mfa\'a',
+    'admin.technicians.empty': 'Teké mfa\'a',
+    'admin.technicians.create': 'Tobo Mfa\'a',
+    'admin.user.active': 'Vè',
+    'admin.user.inactive': 'Teké vè',
+    'admin.user.plantations': 'bisó',
+    'admin.user.plantation': 'bisó',
+    'admin.delete.confirm': 'Wá yiɗi momtude {name}? Dze yá bwa.',
+    'admin.delete.error': 'Abé ya momtude',
+    'admin.update.error': 'Abé ya nziñ',
+    'admin.create.title': 'Tobo Mfa\'a',
+    'admin.create.success': 'Mfa\'a tobo mán',
+    'admin.create.error': 'Abé ya tobo',
+    'admin.create.creating': 'Tobo...',
+    'admin.create.button': 'Tobo',
+    'admin.create.cancel': 'Bwá',
+    'admin.create.form.phone': 'Téléfón *',
+    'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.password': 'Mótí *',
+    'admin.create.form.passwordPlaceholder': 'Kalaa 8 caractères...',
+    'admin.create.form.firstName': 'Nkómbó ndé',
+    'admin.create.form.lastName': 'Nkómbó',
+    'admin.create.form.email': 'Email',
+    'admin.create.form.optional': 'Ékpé',
+    'admin.create.form.required': 'Téléfón é mótí bía kômbô',
     'admin.fakers.title': 'Keɓe Ɓaawɗe Ngam Ƴeewtagol',
     'admin.fakers.subtitle': 'Ɓeydu keɓe ɓaawɗe ngam Ƴeewtagol baɗɗe',
     'admin.fakers.test.title': 'Ƴeewtu Keɓe Ɓaawɗe',

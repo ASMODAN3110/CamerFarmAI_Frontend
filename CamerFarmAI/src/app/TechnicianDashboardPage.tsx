@@ -455,9 +455,7 @@ export default function TechnicianDashboardPage() {
                     <h3 className={styles.detailsTitle}>{plantationDetails.name}</h3>
                     {plantationDetails.owner && (
                       <div className={styles.ownerInfo}>
-                        <div className={styles.ownerName}>
-                          {t('technician.details.owner')} {plantationDetails.owner.firstName} {plantationDetails.owner.lastName}
-                        </div>
+
                         {plantationDetails.owner.phone && (
                           <div className={styles.ownerPhone}>
                             <FaPhoneAlt /> {plantationDetails.owner.phone}
@@ -523,6 +521,16 @@ export default function TechnicianDashboardPage() {
                     <h4 className={styles.actuatorsTitle}>
                       {t('technician.details.actuators')} ({plantationDetails.actuators.length})
                     </h4>
+                    {plantationDetails.actuators.length > 0 && (
+                      <div className={styles.sensorsStats}>
+                        <span>
+                          {t('technician.details.activeCount')} {plantationDetails.actuators.filter(a => a.status === 'active').length} / {plantationDetails.actuators.length}
+                        </span>
+                        <span className={styles.percentage}>
+                          ({Math.round((plantationDetails.actuators.filter(a => a.status === 'active').length / plantationDetails.actuators.length) * 100)}%)
+                        </span>
+                      </div>
+                    )}
                     {plantationDetails.actuators.length === 0 ? (
                       <p className={styles.emptyMessage}>{t('technician.details.noActuators')}</p>
                     ) : (
