@@ -20,11 +20,11 @@ export function ProfilePage() {
   const user = useAuthStore((s) => s.user);
   const loadUser = useAuthStore((s) => s.loadUser);
   const updateAvatarUrl = useAuthStore((s) => s.updateAvatarUrl);
-  
+
   // Détecter si l'utilisateur est un technicien
   const isTechnician = user?.role === 'technician';
   const canEdit = !isTechnician; // Les techniciens ne peuvent pas éditer
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -41,7 +41,7 @@ export function ProfilePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isTwoFactorModalOpen, setIsTwoFactorModalOpen] = useState(false);
   const [twoFactorMode, setTwoFactorMode] = useState<'enable' | 'disable'>('enable');
-  
+
 
   const profileNavItems = useMemo(
     () => {
@@ -50,10 +50,10 @@ export function ProfilePage() {
         return undefined;
       }
       return [
-      { label: t('nav.home'), href: '/' },
-      { label: t('nav.plantations'), href: '/plantations' },
-      { label: t('nav.ai'), href: '/ai' },
-      { label: t('nav.support'), href: '/support' },
+        { label: t('nav.home'), href: '/' },
+        { label: t('nav.plantations'), href: '/plantations' },
+        { label: t('nav.ai'), href: '/ai' },
+        { label: t('nav.support'), href: '/support' },
       ];
     },
     [t, isTechnician]
@@ -75,14 +75,14 @@ export function ProfilePage() {
         console.log('✅ Utilisateur déjà chargé, pas besoin de recharger');
       }
     };
-    
+
     fetchUserData();
   }, []); // Seulement au montage
 
   // Fonction utilitaire pour normaliser les données utilisateur
   const normalizeUserData = (userData: any) => {
     if (!userData) return null;
-    
+
     return {
       firstName: userData.firstName || userData.first_name || '',
       lastName: userData.lastName || userData.last_name || '',
@@ -96,19 +96,19 @@ export function ProfilePage() {
   useEffect(() => {
     if (user) {
       console.log('📋 Données utilisateur chargées:', user);
-      
+
       // Normaliser les données
       const normalized = normalizeUserData(user);
-      
+
       if (normalized) {
         const newFormData = {
           ...normalized,
         };
-        
+
         console.log('📝 Formulaire mis à jour avec:', newFormData);
         setFormData(newFormData);
       }
-      
+
       // Charger l'image de profil si disponible
       if ((user as any).avatarUrl || (user as any).avatar_url) {
         setProfileImage((user as any).avatarUrl || (user as any).avatar_url);
@@ -160,7 +160,7 @@ export function ProfilePage() {
 
   const handleSave = async () => {
     setErrors({});
-    
+
     // Validation
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -177,15 +177,15 @@ export function ProfilePage() {
         phone: formData.phone.trim(),
         language: formData.language,
       });
-      
+
       console.log('✅ Profil mis à jour, réponse:', response);
-      
+
       setIsEditing(false);
-      
+
       // Recharger les données utilisateur pour avoir les dernières infos
       console.log('🔄 Rechargement des données après modification...');
       await loadUser();
-      
+
       // Forcer la mise à jour du formulaire après rechargement
       // On utilise un petit délai pour s'assurer que le store est mis à jour
       setTimeout(() => {
@@ -199,11 +199,11 @@ export function ProfilePage() {
         }
       }, 500);
     } catch (error: any) {
-      const errorMessage = 
-        error?.response?.data?.message || 
+      const errorMessage =
+        error?.response?.data?.message ||
         error?.response?.data?.error ||
         t('profile.errors.updateFailed');
-      
+
       console.error('❌ Erreur lors de la sauvegarde:', error);
       setErrors({
         general: errorMessage,
@@ -220,7 +220,7 @@ export function ProfilePage() {
       const lastName = user.lastName || (user as any).last_name || '';
       const phone = user.phone || '';
       const language = user.language || 'fr';
-      
+
       setFormData({
         firstName,
         lastName,
@@ -277,7 +277,7 @@ export function ProfilePage() {
     reader.onloadend = () => {
       const previewUrl = reader.result as string;
       setImagePreview(previewUrl);
-      
+
       // Upload immédiat de l'image après le preview
       setIsUploading(true);
       setErrors({});
@@ -286,20 +286,20 @@ export function ProfilePage() {
         .then((avatarUrl: string) => {
           // Mettre à jour immédiatement avec l'URL retournée
           setProfileImage(avatarUrl);
-          
+
           // Mettre à jour le store utilisateur
           updateAvatarUrl(avatarUrl);
-          
+
           // Afficher message de succès (optionnel, peut être ajouté plus tard avec un toast)
           console.log('✅ Avatar uploadé avec succès:', avatarUrl);
-          
+
           // Réinitialiser le preview après succès
           setImagePreview(null);
         })
         .catch((error: any) => {
           const status = error?.response?.status;
           let errorMessage = t('profile.errors.uploadFailed');
-          
+
           // Gestion spécifique des codes HTTP
           switch (status) {
             case 400:
@@ -325,7 +325,7 @@ export function ProfilePage() {
                 errorMessage = error?.response?.data?.message || errorMessage;
               }
           }
-          
+
           setErrors({ general: errorMessage });
           setImagePreview(null);
         })
@@ -355,209 +355,205 @@ export function ProfilePage() {
 
     return (
       <div className={styles.content}>
-          {isTechnician && (
-            <div className={styles.backButtonContainer}>
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={() => navigate('/technicien')}
-              >
-                <FaArrowLeft /> {t('profile.backToDashboard') || 'Retour au dashboard'}
-              </Button>
+        {isTechnician && (
+          <div className={styles.backButtonContainer}>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/technicien')}
+            >
+              <FaArrowLeft /> {t('profile.backToDashboard') || 'Retour au dashboard'}
+            </Button>
+          </div>
+        )}
+        <div className={styles.profileSection}>
+          <div className={styles.profileImageContainer}>
+            <div
+              className={`${styles.profileImage} ${isEditing && canEdit ? styles.profileImageEditable : ''}`}
+              onClick={handleImageClick}
+              style={{
+                backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {!imagePreview && !profileImage && <FaUser size={60} />}
+              {isEditing && canEdit && (
+                <div className={styles.profileImageOverlay}>
+                  {isUploading ? (
+                    <div className={styles.uploadingSpinner}>⏳</div>
+                  ) : (
+                    <>
+                      <FaCamera size={24} />
+                      <span>{t('profile.changePhoto')}</span>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
-          )}
-          <div className={styles.profileSection}>
-            <div className={styles.profileImageContainer}>
-              <div
-                className={`${styles.profileImage} ${isEditing && canEdit ? styles.profileImageEditable : ''}`}
-                onClick={handleImageClick}
-                style={{
-                  backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                {!imagePreview && !profileImage && <FaUser size={60} />}
-                {isEditing && canEdit && (
-                  <div className={styles.profileImageOverlay}>
-                    {isUploading ? (
-                      <div className={styles.uploadingSpinner}>⏳</div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+              onChange={handleImageChange}
+              className={styles.fileInput}
+              disabled={!isEditing || isUploading || !canEdit}
+            />
+          </div>
+          <div className={styles.profileInfo}>
+            <p className={styles.profileRoleBadge}>{getRoleLabel(user.role)}</p>
+            <h2 className={styles.profileName}>{fullName}</h2>
+            <p className={styles.profileEmail}>
+              {user.phone ? (
+                <>
+                  <FaPhone size={14} className={styles.profileEmailIcon} />
+                  {user.phone}
+                </>
+              ) : (
+                t('profile.noPhone')
+              )}
+            </p>
+            {user.email && (
+              <p className={styles.profileEmail}>
+                <FaEnvelope size={14} className={styles.profileEmailIcon} />
+                {user.email}
+              </p>
+            )}
+          </div>
+          <div className={styles.profileActions}>
+            {canEdit && !isEditing ? (
+              <Button variant="primary" onClick={() => setIsEditing(true)} className={styles.editButton}>
+                <FaEdit /> {t('profile.editButton')}
+              </Button>
+            ) : canEdit && isEditing ? (
+              <div className={styles.editActions}>
+                <Button variant="primary" onClick={handleSave} disabled={isSaving} className={styles.saveButton}>
+                  <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
+                </Button>
+                <Button variant="secondary" onClick={handleCancel} disabled={isSaving} className={styles.cancelButton}>
+                  <FaTimes /> {t('profile.cancelButton')}
+                </Button>
+              </div>
+            ) : null}
+            {isTechnician && (
+              <div className={styles.readonlyMessage}>
+                <p>{t('profile.readonlyMessage') || 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.'}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.formSection}>
+          {errors.general && <div className={styles.errorMessage}>{errors.general}</div>}
+
+          <div className={styles.formGrid}>
+            <div className={styles.formColumn}>
+              <FormField
+                type="text"
+                name="firstName"
+                label={t('profile.firstNameLabel')}
+                placeholder={t('profile.firstNamePlaceholder')}
+                value={formData.firstName}
+                onChange={(e) => handleChange('firstName', e.target.value)}
+                error={errors.firstName}
+                disabled={!isEditing || isTechnician}
+              />
+
+              <FormField
+                type="text"
+                name="lastName"
+                label={t('profile.lastNameLabel')}
+                placeholder={t('profile.lastNamePlaceholder')}
+                value={formData.lastName}
+                onChange={(e) => handleChange('lastName', e.target.value)}
+                error={errors.lastName}
+                disabled={!isEditing || isTechnician}
+              />
+
+              <div className={styles.selectField}>
+                <label className={styles.selectLabel}>
+                  <FaGlobe /> {t('profile.languageLabel')}
+                </label>
+                <select
+                  className={styles.select}
+                  value={formData.language}
+                  onChange={(e) => handleChange('language', e.target.value)}
+                  disabled={!isEditing || isTechnician}
+                >
+                  <option value="fr">{t('language.fr')}</option>
+                  <option value="en">{t('language.en')}</option>
+                  <option value="ff">{t('language.ff')}</option>
+                  <option value="ew">{t('language.ew')}</option>
+                </select>
+              </div>
+
+              <div className={styles.emailSection}>
+                <label className={styles.emailSectionLabel}>
+                  <FaEnvelope /> {t('profile.emailLabel')}
+                </label>
+                <div className={styles.emailList}>
+                  <div className={styles.emailItem}>
+                    <FaEnvelope className={styles.emailIcon} />
+                    <div className={styles.emailInfo}>
+                      <span className={styles.emailValue}>{formData.email || t('profile.noEmail')}</span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.formColumn}>
+              <div className={styles.infoField}>
+                <label className={styles.infoLabel}>{t('profile.roleLabel')}</label>
+                <div className={styles.infoValue}>{getRoleLabel(user.role)}</div>
+                <p className={styles.infoHint}>{t('profile.roleHint')}</p>
+              </div>
+
+              <FormField
+                type="tel"
+                name="phone"
+                label={t('profile.phoneLabel')}
+                placeholder={user?.phone || t('profile.phonePlaceholder')}
+                value={formData.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+                error={errors.phone}
+                disabled={!isEditing || isTechnician}
+              />
+
+              <div className={styles.infoField}>
+                <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
+                <div className={styles.infoValue}>{user.id}</div>
+                <p className={styles.infoHint}>{t('profile.idHint')}</p>
+              </div>
+
+              <div className={styles.twoFactorSection}>
+                <label className={styles.twoFactorLabel}>
+                  <FaShieldAlt /> {t('profile.twoFactor.title')}
+                </label>
+                <div className={styles.twoFactorContent}>
+                  <div className={styles.twoFactorStatus}>
+                    {(user as any).twoFactorEnabled ? (
+                      <>
+                        <FaCheckCircle className={styles.twoFactorStatusIcon} />
+                        <span className={styles.twoFactorStatusText}>
+                          {t('profile.twoFactor.enabled')}
+                        </span>
+                      </>
                     ) : (
                       <>
-                        <FaCamera size={24} />
-                        <span>{t('profile.changePhoto')}</span>
+                        <FaTimesCircle className={styles.twoFactorStatusIconInactive} />
+                        <span className={styles.twoFactorStatusText}>
+                          {t('profile.twoFactor.disabled')}
+                        </span>
                       </>
                     )}
                   </div>
-                )}
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
-                onChange={handleImageChange}
-                className={styles.fileInput}
-                disabled={!isEditing || isUploading || !canEdit}
-              />
-            </div>
-            <div className={styles.profileInfo}>
-              <p className={styles.profileRoleBadge}>{getRoleLabel(user.role)}</p>
-              <h2 className={styles.profileName}>{fullName}</h2>
-              <p className={styles.profileEmail}>
-                {user.phone ? (
-                  <>
-                    <FaPhone size={14} className={styles.profileEmailIcon} />
-                    {user.phone}
-                  </>
-                ) : (
-                  t('profile.noPhone')
-                )}
-              </p>
-              {user.email && (
-                <p className={styles.profileEmail}>
-                  <FaEnvelope size={14} className={styles.profileEmailIcon} />
-                  {user.email}
-                </p>
-              )}
-            </div>
-            <div className={styles.profileActions}>
-              {canEdit && !isEditing ? (
-                <Button variant="primary" onClick={() => setIsEditing(true)} className={styles.editButton}>
-                  <FaEdit /> {t('profile.editButton')}
-                </Button>
-              ) : canEdit && isEditing ? (
-                <div className={styles.editActions}>
-                  <Button variant="primary" onClick={handleSave} disabled={isSaving} className={styles.saveButton}>
-                    <FaSave /> {isSaving ? t('profile.saving') : t('profile.saveButton')}
-                  </Button>
-                  <Button variant="secondary" onClick={handleCancel} disabled={isSaving} className={styles.cancelButton}>
-                    <FaTimes /> {t('profile.cancelButton')}
-                  </Button>
-                </div>
-              ) : null}
-              {isTechnician && (
-                <div className={styles.readonlyMessage}>
-                  <p>{t('profile.readonlyMessage') || 'Ce profil est en lecture seule. Les techniciens ne peuvent pas modifier leurs informations.'}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.formSection}>
-            {errors.general && <div className={styles.errorMessage}>{errors.general}</div>}
-
-            <div className={styles.formGrid}>
-              <div className={styles.formColumn}>
-                <FormField
-                  type="text"
-                  name="firstName"
-                  label={t('profile.firstNameLabel')}
-                  placeholder={t('profile.firstNamePlaceholder')}
-                  value={formData.firstName}
-                  onChange={(e) => handleChange('firstName', e.target.value)}
-                  error={errors.firstName}
-                  disabled={!isEditing || isTechnician}
-                />
-
-                <FormField
-                  type="text"
-                  name="lastName"
-                  label={t('profile.lastNameLabel')}
-                  placeholder={t('profile.lastNamePlaceholder')}
-                  value={formData.lastName}
-                  onChange={(e) => handleChange('lastName', e.target.value)}
-                  error={errors.lastName}
-                  disabled={!isEditing || isTechnician}
-                />
-
-                <div className={styles.selectField}>
-                  <label className={styles.selectLabel}>
-                    <FaGlobe /> {t('profile.languageLabel')}
-                  </label>
-                  <select
-                    className={styles.select}
-                    value={formData.language}
-                    onChange={(e) => handleChange('language', e.target.value)}
-                    disabled={!isEditing || isTechnician}
-                  >
-                    <option value="fr">{t('language.fr')}</option>
-                    <option value="en">{t('language.en')}</option>
-                    <option value="ff">{t('language.ff')}</option>
-                    <option value="ew">{t('language.ew')}</option>
-                  </select>
-                </div>
-
-                <div className={styles.emailSection}>
-                  <label className={styles.emailSectionLabel}>
-                    <FaEnvelope /> {t('profile.emailLabel')}
-                  </label>
-                  <div className={styles.emailList}>
-                    <div className={styles.emailItem}>
-                      <FaEnvelope className={styles.emailIcon} />
-                      <div className={styles.emailInfo}>
-                        <span className={styles.emailValue}>{formData.email || t('profile.noEmail')}</span>
-                        <span className={styles.emailDate}>{t('profile.notConfigured')}</span>
-                      </div>
-                    </div>
-                    {isEditing && canEdit && (
-                      <Button variant="ghost" size="sm" className={styles.addEmailButton}>
-                        + {t('profile.addEmail')}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.formColumn}>
-                <div className={styles.infoField}>
-                  <label className={styles.infoLabel}>{t('profile.roleLabel')}</label>
-                  <div className={styles.infoValue}>{getRoleLabel(user.role)}</div>
-                  <p className={styles.infoHint}>{t('profile.roleHint')}</p>
-                </div>
-
-                <FormField
-                  type="tel"
-                  name="phone"
-                  label={t('profile.phoneLabel')}
-                  placeholder={user?.phone || t('profile.phonePlaceholder')}
-                  value={formData.phone}
-                  onChange={(e) => handleChange('phone', e.target.value)}
-                  error={errors.phone}
-                  disabled={!isEditing || isTechnician}
-                />
-
-                <div className={styles.infoField}>
-                  <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
-                  <div className={styles.infoValue}>{user.id}</div>
-                  <p className={styles.infoHint}>{t('profile.idHint')}</p>
-                </div>
-
-                <div className={styles.twoFactorSection}>
-                  <label className={styles.twoFactorLabel}>
-                    <FaShieldAlt /> {t('profile.twoFactor.title')}
-                  </label>
-                  <div className={styles.twoFactorContent}>
-                    <div className={styles.twoFactorStatus}>
-                      {(user as any).twoFactorEnabled ? (
-                        <>
-                          <FaCheckCircle className={styles.twoFactorStatusIcon} />
-                          <span className={styles.twoFactorStatusText}>
-                            {t('profile.twoFactor.enabled')}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <FaTimesCircle className={styles.twoFactorStatusIconInactive} />
-                          <span className={styles.twoFactorStatusText}>
-                            {t('profile.twoFactor.disabled')}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <p className={styles.twoFactorDescription}>
-                      {t('profile.twoFactor.description')}
-                    </p>
-                    {canEdit && (
+                  <p className={styles.twoFactorDescription}>
+                    {t('profile.twoFactor.description')}
+                  </p>
+                  {canEdit && (
                     <Button
                       variant={(user as any).twoFactorEnabled ? 'secondary' : 'primary'}
                       size="sm"
@@ -571,12 +567,12 @@ export function ProfilePage() {
                         ? t('profile.twoFactor.disableButton')
                         : t('profile.twoFactor.enableButton')}
                     </Button>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
     );
   };

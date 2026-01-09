@@ -69,7 +69,7 @@ const normalizeNotification = (data: any): Notification => {
   // On normalise vers les valeurs en minuscules (selon le modèle backend)
   const statutRaw = String(data.statut || '').toLowerCase().trim();
   let statut: NotificationStatut = NotificationStatut.EN_ATTENTE;
-  
+
   if (statutRaw === 'envoyee' || statutRaw === 'envoyée' || statutRaw === 'sent' || statutRaw === 'envoi') {
     statut = NotificationStatut.ENVOYEE;
   } else if (statutRaw === 'erreur' || statutRaw === 'error' || statutRaw === 'failed' || statutRaw === 'echec') {
@@ -77,17 +77,17 @@ const normalizeNotification = (data: any): Notification => {
   } else if (statutRaw === 'en_attente' || statutRaw === 'pending' || statutRaw === 'attente' || statutRaw === '') {
     statut = NotificationStatut.EN_ATTENTE;
   }
-  
+
   if (import.meta.env.DEV && data.id) {
-    console.log('🔍 Normalisation notification:', { 
-      id: data.id, 
-      statutRaw: data.statut, 
+    console.log('🔍 Normalisation notification:', {
+      id: data.id,
+      statutRaw: data.statut,
       statutNormalized: statut,
       isRead: data.isRead,
       dateLu: data.dateLu
     });
   }
-  
+
   // Normaliser le canal (backend peut retourner 'email', 'web', 'whatsapp')
   const canalRaw = String(data.canal || 'web').toLowerCase().trim();
   let canal: NotificationCanal = NotificationCanal.WEB;
@@ -98,7 +98,7 @@ const normalizeNotification = (data: any): Notification => {
   } else {
     canal = NotificationCanal.WEB;
   }
-  
+
   return {
     id: data.id,
     canal,
@@ -108,10 +108,10 @@ const normalizeNotification = (data: any): Notification => {
     dateEnvoi: data.dateEnvoi || data.createdAt || new Date().toISOString(),
     // Normaliser isRead : peut être boolean, string, number, null, undefined
     // Retourne true uniquement si la valeur est explicitement true, 'true', 1, ou '1'
-    isRead: data.isRead === true || 
-            data.isRead === 'true' || 
-            data.isRead === 1 || 
-            data.isRead === '1',
+    isRead: data.isRead === true ||
+      data.isRead === 'true' ||
+      data.isRead === 1 ||
+      data.isRead === '1',
     dateLu: data.dateLu || null,
     event: data.event ? {
       id: data.event.id,
@@ -119,19 +119,19 @@ const normalizeNotification = (data: any): Notification => {
       description: data.event.description,
       date: data.event.date,
       // Essayer de trouver plantationId dans plusieurs endroits possibles
-      plantationId: data.event.plantationId || 
-                    (data.event as any).plantationId || 
-                    (data.event as any).plantation?.id ||
-                    data.event.actuator?.plantationId || 
-                    data.event.sensor?.plantationId,
+      plantationId: data.event.plantationId ||
+        (data.event as any).plantationId ||
+        (data.event as any).plantation?.id ||
+        data.event.actuator?.plantationId ||
+        data.event.sensor?.plantationId,
       sensorId: data.event.sensorId || null, // ID du capteur (selon la documentation API)
       actuatorId: data.event.actuatorId || null, // ID de l'actionneur (selon la documentation API)
       sensor: data.event.sensor ? {
         id: data.event.sensor.id,
         type: data.event.sensor.type,
-        status: (data.event.sensor.status === 'active' ? SensorStatus.ACTIVE : 
-                 data.event.sensor.status === 'inactive' ? SensorStatus.INACTIVE : 
-                 undefined) as SensorStatus | undefined,
+        status: (data.event.sensor.status === 'active' ? SensorStatus.ACTIVE :
+          data.event.sensor.status === 'inactive' ? SensorStatus.INACTIVE :
+            undefined) as SensorStatus | undefined,
         plantationId: data.event.sensor.plantationId,
         plantation: data.event.sensor.plantation ? {
           name: data.event.sensor.plantation.name,
@@ -161,11 +161,11 @@ export const notificationService = {
       const url = unreadOnly ? '/notifications/my?unreadOnly=true' : '/notifications/my';
       const res = await api.get(url);
       const payload = res.data?.data || res.data;
-      
+
       if (Array.isArray(payload)) {
         return payload.map(normalizeNotification);
       }
-      
+
       return [];
     } catch (error: any) {
       // Gestion des erreurs selon la documentation
@@ -183,7 +183,7 @@ export const notificationService = {
           console.error('❌ Erreur 500: Erreur interne du serveur');
         }
       }
-      
+
       // En cas d'erreur, retourner un tableau vide plutôt que de faire planter l'application
       if (import.meta.env.DEV) {
         console.error('Erreur lors de la récupération des notifications:', error);
@@ -201,7 +201,7 @@ export const notificationService = {
     const webNotifications = allNotifications
       .filter(notif => notif.canal === 'web')
       .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
-    
+
     return webNotifications;
   },
 
@@ -214,7 +214,7 @@ export const notificationService = {
     const emailNotifications = allNotifications
       .filter(notif => notif.canal === 'email')
       .sort((a, b) => new Date(b.dateEnvoi).getTime() - new Date(a.dateEnvoi).getTime());
-    
+
     return emailNotifications;
   },
 
@@ -228,12 +228,12 @@ export const notificationService = {
     try {
       const res = await api.get('/notifications/stats');
       const data = res.data?.data || res.data;
-      
+
       const envoyees = data.envoyees || data.envoyee || 0;
       const total = data.total || 0;
       const nonLues = data.nonLues || data.non_lues || 0;
       const lues = data.lues || total - nonLues;
-      
+
       // Calculer les stats réelles à partir des notifications pour plus de précision
       // (les stats du backend peuvent ne pas être à jour, notamment parCanal)
       let realStats = {
@@ -241,7 +241,7 @@ export const notificationService = {
         email: 0,
         whatsapp: 0,
       };
-      
+
       try {
         // Utiliser les notifications fournies ou les récupérer
         const notifications = allNotifications || await this.getAll();
@@ -256,7 +256,7 @@ export const notificationService = {
           console.warn('⚠️ Impossible de calculer les stats réelles, utilisation des stats du backend');
         }
       }
-      
+
       return {
         total,
         envoyees,
@@ -322,31 +322,31 @@ export const notificationService = {
     try {
       const res = await api.patch(`/notifications/${id}/read`);
       const data = res.data?.data || res.data;
-      
+
       if (import.meta.env.DEV) {
         console.log('📬 Réponse API markAsRead - Structure complète:', JSON.stringify(res.data, null, 2));
         console.log('📬 Réponse API markAsRead - Data extraite:', JSON.stringify(data, null, 2));
       }
-      
+
       // Récupérer la notification depuis l'API pour avoir les champs isRead et dateLu mis à jour
       const getRes = await api.get(`/notifications/${id}`);
       const notificationData = getRes.data?.data || getRes.data;
-      
+
       if (import.meta.env.DEV) {
         console.log('📬 Notification récupérée après marquage:', JSON.stringify(notificationData, null, 2));
       }
-      
+
       const normalized = normalizeNotification(notificationData);
-      
+
       if (import.meta.env.DEV) {
-        console.log('✅ Notification normalisée après marquage:', { 
-          id, 
+        console.log('✅ Notification normalisée après marquage:', {
+          id,
           isRead: normalized.isRead,
           dateLu: normalized.dateLu,
           statut: normalized.statut
         });
       }
-      
+
       return normalized;
     } catch (error) {
       if (import.meta.env.DEV) {
@@ -364,10 +364,10 @@ export const notificationService = {
   async delete(id: string): Promise<void> {
     try {
       const res = await api.delete(`/notifications/${id}`);
-      
+
       // Vérifier la réponse du backend
       const responseData = res.data?.data || res.data;
-      
+
       if (import.meta.env.DEV) {
         console.log('🗑️ Notification supprimée:', {
           id,
@@ -375,7 +375,7 @@ export const notificationService = {
           status: res.status
         });
       }
-      
+
       // Le backend retourne 200 avec { success: true, message: "..." }
       // Si success est false, lever une erreur
       if (responseData && responseData.success === false) {
@@ -391,7 +391,7 @@ export const notificationService = {
         }
         throw new Error(errorMessage);
       }
-      
+
       if (import.meta.env.DEV) {
         console.error(`❌ Erreur lors de la suppression de la notification ${id}:`, {
           status: error?.response?.status,
@@ -399,19 +399,19 @@ export const notificationService = {
           message: error?.message
         });
       }
-      
+
       // Extraire le message d'erreur du backend si disponible
-      const errorMessage = 
-        error?.response?.data?.message || 
-        error?.response?.data?.error || 
-        error?.message || 
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
         'Erreur lors de la suppression de la notification';
-      
+
       // Créer une nouvelle erreur avec le message approprié
       const customError = new Error(errorMessage);
       (customError as any).status = error?.response?.status;
       (customError as any).response = error?.response;
-      
+
       throw customError;
     }
   },

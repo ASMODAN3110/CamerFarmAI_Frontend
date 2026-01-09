@@ -18,7 +18,7 @@ import {
 import { type Sensor } from "@/services/plantationService"
 
 export default function TechnicianDashboardPage() {
-  const { t } = useTranslation()
+  const { t, language } = useTranslation()
   // États pour les données principales
   const [stats, setStats] = useState<TechnicianStats | null>(null)
   const [farmers, setFarmers] = useState<FarmerListItem[]>([])
@@ -82,7 +82,7 @@ export default function TechnicianDashboardPage() {
   /* =======================
      RECHERCHE D'AGRICULTEURS (BACKEND)
 ======================= */
-useEffect(() => {
+  useEffect(() => {
     // Nettoyer le timer précédent
     if (searchDebounceTimer) {
       clearTimeout(searchDebounceTimer)
@@ -98,14 +98,14 @@ useEffect(() => {
         const trimmedSearch = searchTerm.trim()
         const searchQuery = trimmedSearch.length > 0 ? trimmedSearch : undefined
         const farmersData = await technicianService.getFarmers(searchQuery)
-        
+
         // Log pour vérifier les données reçues
-        console.log('📋 Farmers data received:', farmersData.map(f => ({ 
-          name: `${f.firstName} ${f.lastName}`, 
+        console.log('📋 Farmers data received:', farmersData.map(f => ({
+          name: `${f.firstName} ${f.lastName}`,
           phone: f.phone,
-          hasPhone: !!f.phone 
+          hasPhone: !!f.phone
         })))
-        
+
         setFarmers(farmersData)
         setLastRefresh(new Date())
 
@@ -346,20 +346,19 @@ useEffect(() => {
                 {searchTerm ? t('technician.empty.noFarmersFound') : t('technician.empty.noFarmers')}
               </div>
             ) : (
-            <div className={styles.farmersList}>
+              <div className={styles.farmersList}>
                 {farmers.map((farmer) => (
-                <div
-                  key={farmer.id}
-                  className={`${styles.farmerCard} ${
-                    farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedFarmerId(farmer.id)
+                  <div
+                    key={farmer.id}
+                    className={`${styles.farmerCard} ${farmer.id === selectedFarmerId ? styles.farmerCardActive : ""
+                      }`}
+                    onClick={() => {
+                      setSelectedFarmerId(farmer.id)
                       setSelectedPlantationId(null)
-                  }}
-                >
-                  <div className={styles.farmerStatus}></div>
-                  <div className={styles.farmerInfo}>
+                    }}
+                  >
+                    <div className={styles.farmerStatus}></div>
+                    <div className={styles.farmerInfo}>
                       <div className={styles.farmerName}>
                         {farmer.firstName} {farmer.lastName}
                       </div>
@@ -368,18 +367,14 @@ useEffect(() => {
                           <FaPhoneAlt /> {farmer.phone}
                         </div>
                       )}
-                      {farmer.location && (
-                    <div className={styles.farmerLocation}>
-                          <FaMapMarkerAlt /> {farmer.location}
-                        </div>
-                      )}
+
                       <div className={styles.farmerFields}>
                         {farmer.plantationsCount} {farmer.plantationsCount > 1 ? t('technician.plantation.plural') : t('technician.plantation.singular')}
                       </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             )}
           </div>
 
@@ -403,13 +398,12 @@ useEffect(() => {
                 <div className={styles.loading}>{t('technician.loading.plantations')}</div>
               ) : selectedFarmer ? (
                 plantations.length > 0 ? (
-              <div className={styles.fieldsList}>
+                  <div className={styles.fieldsList}>
                     {plantations.map((plantation) => (
                       <div
                         key={plantation.id}
-                        className={`${styles.fieldCard} ${
-                          plantation.id === selectedPlantationId ? styles.fieldCardActive : ""
-                        }`}
+                        className={`${styles.fieldCard} ${plantation.id === selectedPlantationId ? styles.fieldCardActive : ""
+                          }`}
                         onClick={() => setSelectedPlantationId(plantation.id)}
                       >
                         <div className={styles.fieldIcon}>
@@ -436,7 +430,7 @@ useEffect(() => {
                             <span className={styles.fieldValue}>
                               {plantation.location || t('technician.details.locationNotSet')}
                             </span>
-  </div>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -444,9 +438,9 @@ useEffect(() => {
                 ) : (
                   <p className={styles.emptyMessage}>{t('technician.details.noPlantationsAvailable')}</p>
                 )
-                ) : (
-                  <p className={styles.emptyMessage}>{t('technician.empty.selectFarmer')}</p>
-                )}
+              ) : (
+                <p className={styles.emptyMessage}>{t('technician.empty.selectFarmer')}</p>
+              )}
             </div>
           </div>
 
@@ -461,9 +455,7 @@ useEffect(() => {
                     <h3 className={styles.detailsTitle}>{plantationDetails.name}</h3>
                     {plantationDetails.owner && (
                       <div className={styles.ownerInfo}>
-                        <div className={styles.ownerName}>
-                          {t('technician.details.owner')} {plantationDetails.owner.firstName} {plantationDetails.owner.lastName}
-                        </div>
+
                         {plantationDetails.owner.phone && (
                           <div className={styles.ownerPhone}>
                             <FaPhoneAlt /> {plantationDetails.owner.phone}
@@ -501,7 +493,11 @@ useEffect(() => {
                         {plantationDetails.sensors.map((sensor) => (
                           <div key={sensor.id} className={styles.sensorItem}>
                             <div className={styles.sensorInfo}>
-                              <span className={styles.sensorName}>{sensor.type}</span>
+                              <span className={styles.sensorName}>
+                                {t(`plantations.detail.sensors.${sensor.type.charAt(0).toLowerCase() + sensor.type.slice(1)}` as any) === `plantations.detail.sensors.${sensor.type.charAt(0).toLowerCase() + sensor.type.slice(1)}`
+                                  ? sensor.type
+                                  : t(`plantations.detail.sensors.${sensor.type.charAt(0).toLowerCase() + sensor.type.slice(1)}` as any)}
+                              </span>
                               {sensor.seuilMin !== undefined && sensor.seuilMax !== undefined && (
                                 <span className={styles.sensorThresholds}>
                                   {t('technician.details.thresholds')} {sensor.seuilMin} - {sensor.seuilMax}
@@ -509,9 +505,8 @@ useEffect(() => {
                               )}
                             </div>
                             <span
-                              className={`${styles.statusBadge} ${
-                                sensor.status === 'active' ? styles.statusActive : styles.statusInactive
-                              }`}
+                              className={`${styles.statusBadge} ${sensor.status === 'active' ? styles.statusActive : styles.statusInactive
+                                }`}
                             >
                               {sensor.status === 'active' ? `🟢 ${t('sensor.status.active')}` : `🔴 ${t('sensor.status.inactive')}`}
                             </span>
@@ -526,6 +521,16 @@ useEffect(() => {
                     <h4 className={styles.actuatorsTitle}>
                       {t('technician.details.actuators')} ({plantationDetails.actuators.length})
                     </h4>
+                    {plantationDetails.actuators.length > 0 && (
+                      <div className={styles.sensorsStats}>
+                        <span>
+                          {t('technician.details.activeCount')} {plantationDetails.actuators.filter(a => a.status === 'active').length} / {plantationDetails.actuators.length}
+                        </span>
+                        <span className={styles.percentage}>
+                          ({Math.round((plantationDetails.actuators.filter(a => a.status === 'active').length / plantationDetails.actuators.length) * 100)}%)
+                        </span>
+                      </div>
+                    )}
                     {plantationDetails.actuators.length === 0 ? (
                       <p className={styles.emptyMessage}>{t('technician.details.noActuators')}</p>
                     ) : (
@@ -533,22 +538,45 @@ useEffect(() => {
                         {plantationDetails.actuators.map((actuator) => (
                           <div key={actuator.id} className={styles.actuatorItem}>
                             <div className={styles.actuatorInfo}>
-                              <span className={styles.actuatorName}>{actuator.name || actuator.type}</span>
-                              <span className={styles.actuatorType}>{actuator.type}</span>
+                              <span className={styles.actuatorName}>
+                                {(() => {
+                                  // Map les noms connus vers les clés de traduction
+                                  const nameKeyMap: Record<string, string> = {
+                                    'Pompe principale': 'plantations.detail.actuators.names.mainPump',
+                                    'Ventilateur nord': 'plantations.detail.actuators.names.northFan',
+                                    'Éclairage LED': 'plantations.detail.actuators.names.ledLight'
+                                  };
+
+                                  const translationKey = nameKeyMap[actuator.name];
+                                  if (translationKey) {
+                                    return t(translationKey as any);
+                                  }
+
+                                  // Si pas de clé spécifique, utiliser le nom tel quel ou traduire le type
+                                  return actuator.name ||
+                                    (t(`plantations.detail.actuators.${actuator.type.toLowerCase()}` as any) === `plantations.detail.actuators.${actuator.type.toLowerCase()}`
+                                      ? actuator.type
+                                      : t(`plantations.detail.actuators.${actuator.type.toLowerCase()}` as any));
+                                })()}
+                              </span>
+                              <span className={styles.actuatorType}>
+                                {t(`plantations.detail.actuators.${actuator.type.toLowerCase()}` as any) === `plantations.detail.actuators.${actuator.type.toLowerCase()}`
+                                  ? actuator.type
+                                  : t(`plantations.detail.actuators.${actuator.type.toLowerCase()}` as any)}
+                              </span>
                             </div>
-            <span
-              className={`${styles.statusBadge} ${
-                                actuator.status === 'active' ? styles.statusActive : styles.statusInactive
-              }`}
-            >
+                            <span
+                              className={`${styles.statusBadge} ${actuator.status === 'active' ? styles.statusActive : styles.statusInactive
+                                }`}
+                            >
                               {actuator.status === 'active' ? `🟢 ${t('sensor.status.active')}` : `🔴 ${t('sensor.status.inactive')}`}
-            </span>
-          </div>
+                            </span>
+                          </div>
                         ))}
-    </div>
-  )}
+                      </div>
+                    )}
                   </div>
-</div>
+                </div>
               ) : (
                 <div className={styles.placeholderText}>
                   {t('technician.errors.loadDetails')}

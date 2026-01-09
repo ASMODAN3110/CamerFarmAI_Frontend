@@ -5,8 +5,10 @@ import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { Button } from '@/components/ui/Button/Button';
 import { adminService, type UserListItem } from '@/services/adminService';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function AdminPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,14 +35,14 @@ export function AdminPage() {
       const data = await adminService.getAllUsers();
       setUsers(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement des utilisateurs');
+      setError(err instanceof Error ? err.message : t('technician.errors.loadData'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteUser = async (userId: string, userName: string) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${userName} ? Cette action est irréversible.`)) {
+    if (!confirm(t('admin.delete.confirm').replace('{name}', userName))) {
       return;
     }
 
@@ -48,7 +50,7 @@ export function AdminPage() {
       await adminService.deleteUser(userId);
       await fetchUsers(); // Rafraîchir la liste
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Erreur lors de la suppression');
+      alert(err instanceof Error ? err.message : t('admin.delete.error'));
     }
   };
 
@@ -57,13 +59,13 @@ export function AdminPage() {
       await adminService.updateUserStatus(userId, !currentStatus);
       await fetchUsers(); // Rafraîchir la liste
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Erreur lors de la mise à jour');
+      alert(err instanceof Error ? err.message : t('admin.update.error'));
     }
   };
 
   const handleCreateTechnician = async () => {
     if (!newTechPhone.trim() || !newTechPassword.trim()) {
-      setCreateError('Le téléphone et le mot de passe sont requis');
+      setCreateError(t('admin.create.form.required'));
       return;
     }
 
@@ -86,11 +88,11 @@ export function AdminPage() {
       setNewTechLastName('');
       setNewTechEmail('');
       setCreateOpen(false);
-      
+
       // Rafraîchir la liste
       await fetchUsers();
     } catch (err) {
-      setCreateError(err instanceof Error ? err.message : 'Erreur lors de la création');
+      setCreateError(err instanceof Error ? err.message : t('admin.create.error'));
     } finally {
       setCreating(false);
     }
@@ -117,26 +119,26 @@ export function AdminPage() {
         {loading ? (
           <div className={styles.loading}>
             <Loader2 size={24} className={styles.spinner} />
-            <span>Chargement...</span>
+            <span>{t('admin.loading')}</span>
           </div>
         ) : error ? (
           <div className={styles.error}>
             <p>{error}</p>
             <Button variant="primary" size="sm" onClick={fetchUsers}>
-              Réessayer
+              {t('admin.retry')}
             </Button>
           </div>
         ) : (
           <>
-        {/* Comptes Agriculteurs */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <Users className={styles.sectionIcon} />
-                <h2 className={styles.sectionTitle}>Comptes Agriculteurs</h2>
+            {/* Comptes Agriculteurs */}
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <Users className={styles.sectionIcon} />
+                <h2 className={styles.sectionTitle}>{t('admin.farmers.title')}</h2>
                 <span className={styles.sectionBadge}>{farmers.length}</span>
               </div>
               {farmers.length === 0 ? (
-                <div className={styles.emptyMessage}>Aucun agriculteur</div>
+                <div className={styles.emptyMessage}>{t('admin.farmers.empty')}</div>
               ) : (
                 <div className={styles.cardsList}>
                   {farmers.map((farmer) => (
@@ -150,15 +152,15 @@ export function AdminPage() {
                               <span className={styles.cardDetail}>{farmer.email}</span>
                             )}
                             <span className={`${styles.cardStatus} ${farmer.isActive ? styles.statusActive : styles.statusInactive}`}>
-                              {farmer.isActive ? 'Actif' : 'Inactif'}
+                              {farmer.isActive ? t('admin.user.active') : t('admin.user.inactive')}
                             </span>
                           </div>
                           <div className={styles.cardDetails}>
                             <span className={styles.cardDetail}>
-                              {farmer.plantationsCount} {farmer.plantationsCount > 1 ? 'plantations' : 'plantation'}
+                              {farmer.plantationsCount} {farmer.plantationsCount > 1 ? t('admin.user.plantations') : t('admin.user.plantation')}
                             </span>
                           </div>
-          </div>
+                        </div>
                         <div className={styles.cardActions}>
                           <label className={styles.toggleSwitch}>
                             <input
@@ -168,30 +170,30 @@ export function AdminPage() {
                             />
                             <span className={styles.toggleSlider}></span>
                           </label>
-                    <button
-                      className={styles.deleteButton}
+                          <button
+                            className={styles.deleteButton}
                             onClick={() => handleDeleteUser(farmer.id, getUserDisplayName(farmer))}
                             aria-label="Supprimer"
-                    >
-                      <X size={16} />
-                    </button>
+                          >
+                            <X size={16} />
+                          </button>
                         </div>
                       </div>
                     </div>
-              ))}
+                  ))}
                 </div>
               )}
-        </section>
+            </section>
 
-        {/* Comptes Techniciens */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <Wrench className={styles.sectionIcon} />
-                <h2 className={styles.sectionTitle}>Comptes Techniciens</h2>
+            {/* Comptes Techniciens */}
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <Wrench className={styles.sectionIcon} />
+                <h2 className={styles.sectionTitle}>{t('admin.technicians.title')}</h2>
                 <span className={styles.sectionBadge}>{technicians.length}</span>
-          </div>
+              </div>
               {technicians.length === 0 ? (
-                <div className={styles.emptyMessage}>Aucun technicien</div>
+                <div className={styles.emptyMessage}>{t('admin.technicians.empty')}</div>
               ) : (
                 <div className={styles.cardsList}>
                   {technicians.map((technician) => (
@@ -205,7 +207,7 @@ export function AdminPage() {
                               <span className={styles.cardDetail}>{technician.email}</span>
                             )}
                             <span className={`${styles.cardStatus} ${technician.isActive ? styles.statusActive : styles.statusInactive}`}>
-                              {technician.isActive ? 'Actif' : 'Inactif'}
+                              {technician.isActive ? t('admin.user.active') : t('admin.user.inactive')}
                             </span>
                           </div>
                         </div>
@@ -218,17 +220,17 @@ export function AdminPage() {
                             />
                             <span className={styles.toggleSlider}></span>
                           </label>
-                    <button
-                      className={styles.deleteButton}
+                          <button
+                            className={styles.deleteButton}
                             onClick={() => handleDeleteUser(technician.id, getUserDisplayName(technician))}
                             aria-label="Supprimer"
-                    >
-                      <X size={16} />
-                    </button>
+                          >
+                            <X size={16} />
+                          </button>
                         </div>
                       </div>
                     </div>
-              ))}
+                  ))}
                 </div>
               )}
 
@@ -241,11 +243,11 @@ export function AdminPage() {
                     setCreateError(null);
                   }}
                 >
-            <PlusCircle size={18} />
-            Créer un technicien
+                  <PlusCircle size={18} />
+                  {t('admin.create.title')}
                 </Button>
               </div>
-        </section>
+            </section>
           </>
         )}
       </main>
@@ -255,61 +257,61 @@ export function AdminPage() {
           if (e.target === e.currentTarget) setCreateOpen(false);
         }}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3>Créer un technicien</h3>
+            <h3>{t('admin.create.title')}</h3>
 
             {createError && (
               <div className={styles.errorMessage}>{createError}</div>
             )}
 
             <div className={styles.formRow}>
-              <label>Téléphone *</label>
+              <label>{t('admin.create.form.phone')}</label>
               <input
                 type="tel"
                 value={newTechPhone}
                 onChange={(e) => setNewTechPhone(e.target.value)}
-                placeholder="+237612345678"
+                placeholder={t('admin.create.form.phonePlaceholder')}
                 required
               />
             </div>
 
             <div className={styles.formRow}>
-              <label>Mot de passe *</label>
+              <label>{t('admin.create.form.password')}</label>
               <input
                 type="password"
                 value={newTechPassword}
                 onChange={(e) => setNewTechPassword(e.target.value)}
-                placeholder="Minimum 8 caractères, majuscule, minuscule, chiffre, spécial"
+                placeholder={t('admin.create.form.passwordPlaceholder')}
                 required
               />
             </div>
 
             <div className={styles.formRow}>
-              <label>Prénom</label>
+              <label>{t('admin.create.form.firstName')}</label>
               <input
                 type="text"
                 value={newTechFirstName}
                 onChange={(e) => setNewTechFirstName(e.target.value)}
-                placeholder="Optionnel"
+                placeholder={t('admin.create.form.optional')}
               />
             </div>
 
             <div className={styles.formRow}>
-              <label>Nom</label>
-                    <input
+              <label>{t('admin.create.form.lastName')}</label>
+              <input
                 type="text"
                 value={newTechLastName}
                 onChange={(e) => setNewTechLastName(e.target.value)}
-                placeholder="Optionnel"
+                placeholder={t('admin.create.form.optional')}
               />
-              </div>
+            </div>
 
             <div className={styles.formRow}>
-              <label>Email</label>
+              <label>{t('admin.create.form.email')}</label>
               <input
                 type="email"
                 value={newTechEmail}
                 onChange={(e) => setNewTechEmail(e.target.value)}
-                placeholder="Optionnel"
+                placeholder={t('admin.create.form.optional')}
               />
             </div>
 
@@ -323,10 +325,10 @@ export function AdminPage() {
                 {creating ? (
                   <>
                     <Loader2 size={16} className={styles.spinner} />
-                    Création...
+                    {t('admin.create.creating')}
                   </>
                 ) : (
-                  'Créer'
+                  t('admin.create.button')
                 )}
               </Button>
               <Button
@@ -343,14 +345,14 @@ export function AdminPage() {
                 }}
                 disabled={creating}
               >
-                Annuler
+                {t('admin.create.cancel')}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      
+
     </div>
   );
 }
