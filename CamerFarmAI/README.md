@@ -180,7 +180,14 @@ src/
 │   ├── GraphsPage.tsx            # Page des graphiques
 │   ├── ListPlantationsPage.tsx   # Liste des plantations
 │   ├── PlantationDetailPage.tsx  # Détails d'une plantation
-│   └── ChatboxPage.tsx           # Page de chat IA
+│   ├── ChatboxPage.tsx           # Page de chat IA
+│   ├── ConfigurationPage.tsx     # Page de configuration
+│   ├── GuidePage.tsx             # Guide d'utilisation
+│   ├── DocumentationPage.tsx     # Documentation technique
+│   ├── PrivacyPage.tsx           # Politique de confidentialité
+│   ├── TermsPage.tsx             # Conditions d'utilisation
+│   ├── CookiesPage.tsx           # Politique des cookies
+│   └── SupportPage.tsx           # Page de support
 ├── components/                    # Composants réutilisables
 │   ├── auth/                     # Composants d'authentification
 │   │   ├── ProtectedRoute.tsx   # Route protégée
@@ -192,6 +199,7 @@ src/
 │   │   ├── NotificationList.tsx # Liste des notifications
 │   │   └── NotificationStats.tsx # Statistiques des notifications
 │   ├── cookies/                  # Gestion des cookies
+│   │   └── CookieBanner.tsx     # Bannière de cookies
 │   └── ui/                       # Composants UI
 │       ├── Button/              # Bouton
 │       ├── Card/                # Carte
@@ -251,6 +259,13 @@ src/
 | `/monitoring?plantationId=:id` | Monitoring en temps réel | Protégée |
 | `/ai` | Chatbot IA | Protégée |
 | `/technicien` | Tableau de bord technicien | Protégée (technicien uniquement) |
+| `/admin` | Panneau d'administration | Protégée (admin uniquement) |
+| `/support` | Centre de support | Publique |
+| `/guide` | Guide d'utilisation | Publique |
+| `/docs` | Documentation technique | Publique |
+| `/privacy` | Politique de confidentialité | Publique |
+| `/terms` | Conditions d'utilisation | Publique |
+| `/cookies` | Politique des cookies | Publique |
 
 ## 📡 API Backend
 
@@ -536,6 +551,15 @@ npm run lint         # Vérifie le code avec ESLint
 1. Vérifier que des lectures de capteurs existent pour la période sélectionnée
 2. Vérifier que les capteurs ont des données dans la plage de dates
 3. Vérifier les filtres de date dans la console
+
+## 📚 Documentation Technique
+
+Pour plus de détails sur l'implémentation et la configuration, consultez les documents suivants :
+
+- **[Guide de Déploiement](./DEPLOYMENT.md)** : Instructions détaillées pour déployer sur Vercel.
+- **[Configuration Backend des Notifications](./CONFIGURATION_BACKEND_NOTIFICATIONS.md)** : Spécifications de l'API de notifications.
+- **[Notifications Email](./DOCUMENTATION_NOTIFICATIONS_EMAIL.md)** : Fonctionnement du système de notifications par email.
+- **[Modèle de Données Backend](./MODELE_DONNEES_BACKEND.md)** : Structure des données attendues du backend.
 
 ## 📄 Licence
 
