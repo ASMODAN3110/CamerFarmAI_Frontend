@@ -17,7 +17,15 @@ import {
   FaBars,
   FaTimes
 } from 'react-icons/fa';
+import { TranslationKey } from '@/utils/translations';
+import { IconType } from 'react-icons';
 import styles from './PrivacyPage.module.css';
+
+interface PrivacySection {
+  id: string;
+  icon: IconType;
+  key: TranslationKey;
+}
 
 export function PrivacyPage() {
   const { t } = useTranslation();
@@ -31,7 +39,7 @@ export function PrivacyPage() {
     }
   };
 
-  const sections = [
+  const sections: PrivacySection[] = [
     { id: 'introduction', icon: FaHome, key: 'privacy.sections.introduction' },
     { id: 'data-collection', icon: FaDatabase, key: 'privacy.sections.dataCollection' },
     { id: 'data-usage', icon: FaSync, key: 'privacy.sections.dataUsage' },

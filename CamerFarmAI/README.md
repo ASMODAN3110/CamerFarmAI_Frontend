@@ -215,7 +215,8 @@ src/
 │   ├── useTranslation.ts        # Hook de traduction
 │   ├── useLanguage.ts           # Hook de langue
 │   ├── useScrollAnimation.ts     # Hook d'animation au scroll
-│   └── useNotifications.ts      # Hook de gestion des notifications
+│   ├── useNotifications.ts      # Hook de gestion des notifications
+│   └── useEnrichedNotifications.ts # Hook de notifications enrichies (noms des plantations)
 ├── contexts/                     # Contextes React
 │   ├── AuthContext.tsx          # Contexte d'authentification
 │   ├── CookieContext.tsx        # Contexte de gestion des cookies

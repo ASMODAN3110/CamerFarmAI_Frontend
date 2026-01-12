@@ -1,0 +1,111 @@
+.container {
+    min-height: calc(100vh - 64px);
+    /* Assuming header is ~64px */
+    background-color: #f3f4f6;
+    /* Gray 100 */
+}
+
+.hero {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    padding: 4rem 1rem 6rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #064e3b;
+    /* Emerald 900 */
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: #047857;
+    /* Emerald 700 */
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+.mainContent {
+    max-width: 1200px;
+    margin: -3rem auto 0;
+    padding: 0 1rem 4rem;
+    position: relative;
+    z-index: 10;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    /* Gray 900 */
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #10b981;
+    /* Emerald 500 */
+}
+
+.iconWrapper {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    background-color: #ecfdf5;
+    /* Emerald 50 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #059669;
+    /* Emerald 600 */
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.cardTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    /* Gray 800 */
+    margin-bottom: 0.5rem;
+}
+
+.cardDescription {
+    font-size: 0.875rem;
+    color: #6b7280;
+    /* Gray 500 */
+    line-height: 1.5;
+}
+
+.contactCard {
+    background: linear-gradient(to right, #ffffff, #f0fdf4);
+    grid-column: 1 / -1;
+    /* Span full width if using grid, but we put it in separate section in design if wanted */
+}

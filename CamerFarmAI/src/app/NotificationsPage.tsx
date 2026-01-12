@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotificationContext } from '@/contexts/NotificationContext';
+import { useEnrichedNotifications } from '@/hooks/useEnrichedNotifications';
 import { notificationService } from '@/services/notificationService';
 import { NotificationCanal, NotificationStatut } from '@/types/enums';
 import { NotificationStats } from '@/components/notifications/NotificationStats';
@@ -23,13 +24,16 @@ export function NotificationsPage() {
   const [isLoadingFiltered, setIsLoadingFiltered] = useState(false);
   const [isDeletingAll, setIsDeletingAll] = useState(false);
 
+  // Utiliser le hook pour enrichir les notifications (remplacer "undefined" par le nom de la plantation)
+  const enrichedNotifications = useEnrichedNotifications(notifications);
+
   // Charger les notifications selon le filtre
   useEffect(() => {
     const loadFilteredNotifications = async () => {
       setIsLoadingFiltered(true);
       try {
         let filtered: typeof contextNotifications = [];
-        
+
         switch (filter) {
           case 'web':
             filtered = await notificationService.getAllWeb();
@@ -45,7 +49,7 @@ export function NotificationsPage() {
             filtered = await notificationService.getAll();
             break;
         }
-        
+
         setNotifications(filtered);
       } catch (error) {
         console.error('Erreur lors du chargement des notifications filtrées:', error);
@@ -89,26 +93,24 @@ export function NotificationsPage() {
 
   const handleDeleteAll = async () => {
     if (notifications.length === 0) return;
-    
-    const confirmMessage = `${t('notifications.deleteAll.confirm') || 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.'}\n\n${notifications.length} notification(s) seront supprimée(s).`;
-    
-    if (!confirm(confirmMessage)) {
-      return;
-    }
 
-    setIsDeletingAll(true);
-    try {
-      // Supprimer toutes les notifications une par une
-      const deletePromises = notifications.map(notif => deleteNotification(notif.id));
-      await Promise.all(deletePromises);
-      
-      // Rafraîchir après la suppression
-      await refresh();
-    } catch (error) {
-      console.error('Erreur lors de la suppression de toutes les notifications:', error);
-      alert(t('notifications.deleteAll.error') || 'Une erreur est survenue lors de la suppression. Certaines notifications n\'ont peut-être pas été supprimées.');
-    } finally {
-      setIsDeletingAll(false);
+    const confirmMessage = `${t('notifications.deleteAll.confirm') || 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.'}\n\n${notifications.length} notification(s) seront supprimée(s).`;
+
+    if (confirm(confirmMessage)) {
+      setIsDeletingAll(true);
+      try {
+        // Supprimer toutes les notifications une par une
+        const deletePromises = notifications.map(notif => notificationService.delete(notif.id));
+        await Promise.all(deletePromises);
+
+        // Rafraîchir après la suppression
+        await refresh();
+      } catch (error) {
+        console.error('Erreur lors de la suppression de toutes les notifications:', error);
+        alert(t('notifications.deleteAll.error') || 'Une erreur est survenue lors de la suppression. Certaines notifications n\'ont peut-être pas été supprimées.');
+      } finally {
+        setIsDeletingAll(false);
+      }
     }
   };
 
@@ -146,7 +148,7 @@ export function NotificationsPage() {
       <main className={styles.page}>
         <div className={styles.container}>
           <div className={styles.headerSection}>
-          <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
+            <h1 className={styles.title}>{t('notifications.pageTitle') || 'Notifications'}</h1>
             {notifications.length > 0 && (
               <Button
                 variant="secondary"
@@ -157,14 +159,14 @@ export function NotificationsPage() {
                 aria-label={t('notifications.deleteAll.button') || 'Supprimer toutes les notifications'}
               >
                 <FaTrash size={14} />
-                {isDeletingAll 
+                {isDeletingAll
                   ? (t('notifications.deleteAll.deleting') || 'Suppression...')
                   : (t('notifications.deleteAll.button') || 'Tout supprimer')
                 }
               </Button>
             )}
           </div>
-          
+
           {/* Alerte pour les erreurs email */}
           {hasEmailErrors && !dismissedAlert && (
             <div className={styles.emailErrorAlert}>
@@ -202,11 +204,11 @@ export function NotificationsPage() {
               </button>
             </div>
           )}
-          
+
           <NotificationStats stats={stats} isLoading={isLoading} />
-          
+
           <NotificationList
-            notifications={notifications}
+            notifications={enrichedNotifications}
             isLoading={isLoading || isLoadingFiltered}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}

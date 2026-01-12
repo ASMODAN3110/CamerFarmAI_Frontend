@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon/Icon';
 import type { IconComponent } from '@/components/ui/Icon/Icon';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -81,9 +82,9 @@ export function Footer({
           <ul className={styles.footer__list}>
             {footerResources.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className={styles.footer__link}>
+                <Link to={link.href} className={styles.footer__link}>
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -94,9 +95,9 @@ export function Footer({
           <ul className={styles.footer__list}>
             {footerLegal.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className={styles.footer__link}>
+                <Link to={link.href} className={styles.footer__link}>
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

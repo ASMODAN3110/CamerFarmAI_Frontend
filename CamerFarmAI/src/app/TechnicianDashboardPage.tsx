@@ -591,7 +591,7 @@ export default function TechnicianDashboardPage() {
         {/* Indicateur de dernière mise à jour */}
         {lastRefresh && (
           <div className={styles.lastRefresh}>
-            {t('technician.details.lastUpdate')} {lastRefresh.toLocaleTimeString()}
+            {t('technician.details.lastUpdate')} {lastRefresh.toLocaleTimeString(language === 'en' ? 'en-US' : 'fr-FR')}
           </div>
         )}
       </main>

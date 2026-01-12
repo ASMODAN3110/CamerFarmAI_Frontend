@@ -362,7 +362,7 @@ export function ProfilePage() {
               size="md"
               onClick={() => navigate('/technicien')}
             >
-              <FaArrowLeft /> {t('profile.backToDashboard') || 'Retour au dashboard'}
+              <FaArrowLeft /> {t('profile.backToDashboard') || 'Retour au tableau de bord'}
             </Button>
           </div>
         )}
