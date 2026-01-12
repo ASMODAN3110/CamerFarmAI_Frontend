@@ -108,12 +108,12 @@ export const authService = {
   login: (email: string, password: string): Promise<LoginResponse> => {
     // Normaliser l'email (trim et lowercase)
     const normalizedEmail = email.trim().toLowerCase();
-    
+
     return api.post('/auth/login', { email: normalizedEmail, password }).then((res) => {
       console.log('🔐 Réponse complète de /auth/login:', res.data);
-      
+
       const responseData = res.data.data || res.data;
-      
+
       // Si 2FA est requis, retourner les informations nécessaires
       if (responseData.requires2FA) {
         console.log('🔐 2FA requis, temporaryToken reçu');
@@ -122,17 +122,17 @@ export const authService = {
           temporaryToken: responseData.temporaryToken,
         };
       }
-      
+
       // Extraire le token (peut être dans res.data.accessToken ou res.data.data.accessToken)
       const accessToken = responseData.accessToken || res.data.accessToken;
-      
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         console.log('✅ Token sauvegardé dans localStorage');
       } else {
         console.warn('⚠️ Aucun token trouvé dans la réponse de login');
       }
-      
+
       return {
         accessToken,
         user: responseData.user,
@@ -158,15 +158,15 @@ export const authService = {
       twoFactorCode,
     }).then((res) => {
       console.log('🔐 Réponse complète de /auth/login/verify-2fa:', res.data);
-      
+
       const responseData = res.data.data || res.data;
       const accessToken = responseData.accessToken || res.data.accessToken;
-      
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         console.log('✅ Token sauvegardé dans localStorage après vérification 2FA');
       }
-      
+
       return {
         accessToken,
         user: responseData.user,
@@ -227,18 +227,18 @@ export const authService = {
     // Vérifier le token avant de faire la requête
     const token = localStorage.getItem('accessToken');
     console.log('🔑 Token utilisé pour /auth/me:', token ? `Token présent (${token.substring(0, 20)}...)` : 'AUCUN TOKEN!');
-    
+
     return api.get('/auth/me').then(res => {
       console.log('🔍 Réponse complète de /auth/me:', res.data);
-      
+
       // Le backend retourne {success: true, data: {...}}
       // On doit accéder à res.data.data pour obtenir les vraies données
       const userData = res.data.data || res.data.user || res.data;
-      
+
       console.log('📦 Données utilisateur extraites:', userData);
       console.log('👤 ID utilisateur dans /auth/me:', userData?.id || userData?._id);
       console.log('👤 Rôle utilisateur dans /auth/me:', userData?.role);
-      
+
       // Normaliser les noms de propriétés (snake_case -> camelCase)
       if (userData && typeof userData === 'object') {
         const normalized: User = {
@@ -258,7 +258,7 @@ export const authService = {
         console.log('✅ ID final normalisé:', normalized.id, 'Rôle:', normalized.role, '2FA:', normalized.twoFactorEnabled, 'isActive:', normalized.isActive);
         return normalized;
       }
-      
+
       console.warn('⚠️ Format de données inattendu:', userData);
       return userData;
     });
@@ -271,9 +271,9 @@ export const authService = {
       console.log('✅ Réponse de updateProfile:', res.data);
       // Le backend retourne {success: true, data: {...}} ou { user: {...} } ou directement {...}
       const updatedUser = res.data.data || res.data.user || res.data;
-      
+
       console.log('📦 Données utilisateur extraites après update:', updatedUser);
-      
+
       // Si le backend retourne les données utilisateur mises à jour, les normaliser
       if (updatedUser && typeof updatedUser === 'object') {
         const normalized: User = {
@@ -292,7 +292,7 @@ export const authService = {
         console.log('🔄 Données normalisées après update:', normalized);
         return normalized;
       }
-      
+
       return updatedUser;
     });
   },
@@ -318,7 +318,7 @@ export const authService = {
       },
     }).then((res) => {
       // Extraire l'avatarUrl de la réponse
-      const avatarUrl = res.data.data?.avatarUrl || res.data.data?.avatar_url;
+      const avatarUrl = res.data.data?.avatarUrl;
       if (!avatarUrl) {
         throw new Error('URL de l\'avatar non trouvée dans la réponse');
       }
@@ -334,7 +334,7 @@ export const authService = {
   forgotPassword: (email: string): Promise<ApiResponse> => {
     // Normaliser l'email (trim et lowercase)
     const normalizedEmail = email.trim().toLowerCase();
-    
+
     return api.post<ApiResponse>('/auth/forgot-password', { email: normalizedEmail })
       .then((res) => {
         return res.data;

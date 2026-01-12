@@ -32,17 +32,17 @@ export function Dropdown({ isOpen, onClose, children, className, align = 'right'
         // Sur mobile, utiliser position fixed pour garantir la visibilité
         if (isMobile) {
           dropdown.style.position = 'fixed';
-          
+
           // Calculer la position optimale
           const dropdownWidth = dropdownRect.width || 200;
-          let left: number;
+          let left: number | undefined;
           let right: number | undefined;
 
           if (align === 'right') {
             // Essayer d'aligner à droite du parent
             right = viewportWidth - parentRect.right;
             left = undefined;
-            
+
             // Si le dropdown déborde à gauche, aligner à gauche du viewport
             if (parentRect.right - dropdownWidth < padding) {
               left = padding;
@@ -52,7 +52,7 @@ export function Dropdown({ isOpen, onClose, children, className, align = 'right'
             // Aligner à gauche du parent
             left = parentRect.left;
             right = undefined;
-            
+
             // Si le dropdown déborde à droite, aligner à droite du viewport
             if (parentRect.left + dropdownWidth > viewportWidth - padding) {
               right = padding;
@@ -63,7 +63,7 @@ export function Dropdown({ isOpen, onClose, children, className, align = 'right'
           // Position verticale : sous le parent
           const top = parentRect.bottom + 8; // margin-top équivalent
           dropdown.style.top = `${top}px`;
-          
+
           if (left !== undefined) {
             dropdown.style.left = `${left}px`;
             dropdown.style.right = '';
@@ -74,7 +74,7 @@ export function Dropdown({ isOpen, onClose, children, className, align = 'right'
         } else {
           // Sur desktop, utiliser position absolute normale mais ajuster si nécessaire
           dropdown.style.position = 'absolute';
-          
+
           const rect = dropdown.getBoundingClientRect();
           let needsAdjustment = false;
 
@@ -101,7 +101,7 @@ export function Dropdown({ isOpen, onClose, children, className, align = 'right'
       // Ajuster immédiatement et après un court délai pour s'assurer que le DOM est rendu
       adjustPosition();
       const timeoutId = setTimeout(adjustPosition, 0);
-      
+
       // Réajuster lors du redimensionnement
       window.addEventListener('resize', adjustPosition);
 

@@ -295,6 +295,14 @@ export type TranslationKey =
   | 'graphs.chart.title'
   | 'graphs.loading'
   | 'graphs.empty'
+  | 'graphs.selectPlantation'
+  | 'graphs.viewMyPlantations'
+  | 'graphs.noSensorsAvailable'
+  | 'graphs.noDataForSelectedSensors'
+  | 'graphs.noSensorSelected'
+  | 'graphs.noDataForSensor'
+  | 'graphs.dataPointsLoaded'
+  | 'graphs.noSensorsWithData'
   | 'monitoring.sensors.title'
   | 'monitoring.sensors.temperature'
   | 'monitoring.sensors.soilHumidity'
@@ -1193,6 +1201,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.chart.title': 'Évolution',
     'graphs.loading': 'Chargement des données des capteurs...',
     'graphs.empty': 'Aucune donnée de capteur disponible pour cette période.',
+    'graphs.selectPlantation': 'Veuillez sélectionner une plantation pour voir les graphiques',
+    'graphs.viewMyPlantations': 'Voir mes plantations',
+    'graphs.noSensorsAvailable': 'Aucun capteur disponible pour cette plantation',
+    'graphs.noDataForSelectedSensors': 'Aucune donnée disponible pour les capteurs sélectionnés',
+    'graphs.noSensorSelected': 'Veuillez sélectionner un capteur',
+    'graphs.noDataForSensor': 'Aucune donnée pour ce capteur',
+    'graphs.dataPointsLoaded': '{count} points de données chargés pour {sensorKey}',
+    'graphs.noSensorsWithData': 'Aucun capteur avec des données',
     'monitoring.sensors.title': 'Valeurs des capteurs en temps réel',
     'monitoring.sensors.temperature': 'Température',
     'monitoring.sensors.soilHumidity': 'Humidité du sol',
@@ -2211,9 +2227,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.dateTo': 'To',
     'graphs.applyFilter': 'Apply Filter',
     'graphs.resetFilter': 'Reset',
-    'graphs.chart.title': 'Evolution',
+    'graphs.chart.title': 'Trend',
     'graphs.loading': 'Loading sensor data...',
     'graphs.empty': 'No sensor data available for this period.',
+    'graphs.selectPlantation': 'Please select a plantation to view graphs',
+    'graphs.viewMyPlantations': 'View my plantations',
+    'graphs.noSensorsAvailable': 'No sensors available for this plantation',
+    'graphs.noDataForSelectedSensors': 'No data available for selected sensors',
+    'graphs.noSensorSelected': 'Please select a sensor',
+    'graphs.noDataForSensor': 'No data for this sensor',
+    'graphs.dataPointsLoaded': '{count} data points loaded for {sensorKey}',
+    'graphs.noSensorsWithData': 'No sensors with data',
     'monitoring.sensors.title': 'Real-time sensor values',
     'monitoring.sensors.temperature': 'Temperature',
     'monitoring.sensors.soilHumidity': 'Soil Humidity',
@@ -3173,6 +3197,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.chart.title': 'Ɓeydugol',
     'graphs.loading': 'Jokkondir keɓe jokkondirɗe...',
     'graphs.empty': 'Alaa keɓe jokkondirɗe njiyataa ngam nokkuure ngal.',
+    'graphs.selectPlantation': 'Labo nguurndam ngam yiyde giraafuuji',
+    'graphs.viewMyPlantations': 'Yiyde nguurndam am',
+    'graphs.noSensorsAvailable': 'Alaa jokkondirɗe nattaaɗe e nguurndam ngal',
+    'graphs.noDataForSelectedSensors': 'Alaa keɓe jokkondirɗe cuɓaaɗe',
+    'graphs.noSensorSelected': 'Labo jokkondirɗo',
+    'graphs.noDataForSensor': 'Alaa keɓe ngam jokkondirɗo oo',
+    'graphs.dataPointsLoaded': '{count} keɓe nawtude ngam {sensorKey}',
+    'graphs.noSensorsWithData': 'Alaa jokkondirɗe e keɓe',
     'monitoring.sensors.title': 'Keɓe jokkondirɗe waktu goonga',
     'monitoring.sensors.temperature': 'Temperatuur',
     'monitoring.sensors.soilHumidity': 'Ɓuɓɓe Leyɗe',
@@ -4070,6 +4102,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'graphs.chart.title': 'Ɓeydugol',
     'graphs.loading': 'Nawtude keɓe jokkondirɗe...',
     'graphs.empty': 'Alaa keɓe jokkondir heɓɓe e wakati ékpé.',
+    'graphs.selectPlantation': 'Tobo bisó ngam yene mfa\'a',
+    'graphs.viewMyPlantations': 'Fón bisó wá',
+    'graphs.noSensorsAvailable': 'Teké bíyém e bisó nyu',
+    'graphs.noDataForSelectedSensors': 'Teké nsango asu bíyém bi',
+    'graphs.noSensorSelected': 'Tobo bíyém',
+    'graphs.noDataForSensor': 'Teké nsango asu bíyém nyu',
+    'graphs.dataPointsLoaded': '{count} nsango nziñ asu {sensorKey}',
+    'graphs.noSensorsWithData': 'Teké bíyém na nsango',
     'monitoring.sensors.title': 'Limoore jokkondirɗe wakati goonga',
     'monitoring.sensors.temperature': 'Mvú',
     'monitoring.sensors.soilHumidity': 'Mvú bisó',

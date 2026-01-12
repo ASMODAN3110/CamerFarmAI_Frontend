@@ -23,12 +23,14 @@ export function getSensorStatusColor(status: SensorStatus | string): string {
   }
 }
 
+import { TranslationKey } from './translations';
+
 /**
  * Retourne le label associé à un statut de capteur
  */
-export function getSensorStatusLabel(status: SensorStatus | string, t?: (key: string) => string): string {
+export function getSensorStatusLabel(status: SensorStatus | string, t?: (key: TranslationKey) => string): string {
   const normalizedStatus = String(status).toLowerCase();
-  
+
   if (t) {
     switch (normalizedStatus) {
       case 'active':
@@ -40,7 +42,7 @@ export function getSensorStatusLabel(status: SensorStatus | string, t?: (key: st
         return t('sensor.status.unknown');
     }
   }
-  
+
   // Fallback sans traduction
   switch (normalizedStatus) {
     case 'active':
@@ -66,7 +68,7 @@ export function getTimeSinceLastReading(timestamp: string | null | undefined): s
   try {
     const now = new Date();
     const lastReading = new Date(timestamp);
-    
+
     if (isNaN(lastReading.getTime())) {
       return 'Date invalide';
     }
@@ -108,14 +110,14 @@ export function isSensorInactiveTooLong(
   try {
     const now = new Date();
     const lastReading = new Date(timestamp);
-    
+
     if (isNaN(lastReading.getTime())) {
       return true;
     }
 
     const diffMs = now.getTime() - lastReading.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
-    
+
     return diffHours > thresholdHours;
   } catch (error) {
     console.error('Erreur lors de la vérification de l\'inactivité:', error);
