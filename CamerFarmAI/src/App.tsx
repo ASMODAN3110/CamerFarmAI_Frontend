@@ -26,6 +26,7 @@ import { DocumentationPage } from './app/DocumentationPage';
 import { PrivacyPage } from './app/PrivacyPage';
 import { TermsPage } from './app/TermsPage';
 import { CookiesPage } from './app/CookiesPage';
+import { SupportPage } from './app/SupportPage';
 
 function App() {
   return (
@@ -120,14 +121,10 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* Support route - alias vers l'assistant AI */}
+              {/* Support route - Page de support */}
               <Route
                 path="/support"
-                element={
-                  <ProtectedRoute >
-                    <ChatboxPage />
-                  </ProtectedRoute>
-                }
+                element={<SupportPage />}
               />
               <Route
                 path="/profile"
