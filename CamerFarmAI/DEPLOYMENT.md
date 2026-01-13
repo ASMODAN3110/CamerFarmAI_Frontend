@@ -30,9 +30,9 @@ Your project uses the following environment variables which need to be configure
 5.  Click **"Deploy"**.
 
 ## 4. SPA Routing Configuration (Recommended)
-To ensure the application works correctly when users refresh a page (not the homepage), you should create a `vercel.json` file in the root of your frontend project (`d:\...\Frontend\CamerFarmAI`).
+To ensure the application works correctly when users refresh a page (not the homepage), a `vercel.json` file is included in the root of the frontend project (`d:\...\Frontend\CamerFarmAI`).
 
-**Create file: `vercel.json`**
+**Ensure file exists: `vercel.json`**
 ```json
 {
   "rewrites": [

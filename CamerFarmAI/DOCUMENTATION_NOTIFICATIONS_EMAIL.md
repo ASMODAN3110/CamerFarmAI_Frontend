@@ -42,7 +42,8 @@ src/
 ├── services/
 │   └── notificationService.ts      # Service API pour les notifications
 ├── hooks/
-│   └── useNotifications.ts          # Hook pour gérer les notifications
+│   ├── useNotifications.ts          # Hook pour gérer les notifications
+│   └── useEnrichedNotifications.ts # Hook pour enrichir les notifications (noms plantations)
 ├── contexts/
 │   └── NotificationContext.tsx      # Contexte React pour partager l'état
 ├── components/

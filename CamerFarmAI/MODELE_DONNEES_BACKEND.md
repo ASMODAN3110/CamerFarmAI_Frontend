@@ -282,7 +282,7 @@ interface Notification {
 ```typescript
 interface NotificationEvent {
   id: string;
-  type: string;                   // Types: 'seuil_depasse', 'actionneur_active', 'actionneur_desactive', 'mode_changed', 'sensor_active', 'sensor_inactive'
+  type: string;                   // Types: 'seuil_depasse', 'threshold_changed', 'actionneur_active', 'actionneur_desactive', 'mode_changed', 'sensor_active', 'sensor_inactive'
   description: string;
   date: string;
   plantationId?: string;           // Peut être dans event.plantationId, event.plantation.id, event.actuator.plantationId, ou event.sensor.plantationId

@@ -202,6 +202,7 @@ Le backend doit supporter les types d'événements suivants :
 | Type | Description | plantationId requis | sensor/actuator requis |
 |------|-------------|---------------------|----------------------|
 | `seuil_depasse` | Un seuil de capteur a été dépassé | Oui | sensor |
+| `threshold_changed` | Un seuil a été modifié manuellement | Oui | sensor |
 | `actionneur_active` | Un actionneur a été activé | Oui | actuator |
 | `actionneur_desactive` | Un actionneur a été désactivé | Oui | actuator |
 | `mode_changed` | Le mode d'une plantation a changé | Oui | Non |

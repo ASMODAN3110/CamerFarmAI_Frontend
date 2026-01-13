@@ -128,6 +128,16 @@ Le frontend convertit automatiquement les unités de superficie :
 - **Support multilingue** : Chat disponible en français, anglais, fulfulde et ewondo
 - **Interface intuitive** : Chatbox moderne avec historique des conversations
 
+### Administration et Rôles
+- **Espace Administrateur** : 
+  - Gestion des utilisateurs (bannissement, réactivation)
+  - Vue d'ensemble des statistiques système
+  - Gestion des rôles
+- **Espace Technicien** :
+  - Tableau de bord dédié
+  - Vue d'ensemble des plantations assignées
+  - Outils de diagnostic avancés
+
 ### Multilingue
 - Support de 4 langues : Français, English, Fulfulde, Ewondo
 - Changement de langue dynamique
@@ -175,13 +185,16 @@ src/
 │   ├── HomePage.tsx              # Page d'accueil
 │   ├── LoginPage.tsx             # Page de connexion
 │   ├── SignUpPage.tsx            # Page d'inscription
+│   ├── ForgotPasswordPage.tsx    # Page mot de passe oublié
+│   ├── ResetPasswordPage.tsx     # Page réinitialisation mot de passe
 │   ├── ProfilePage.tsx           # Page de profil utilisateur
 │   ├── MonitoringPage.tsx         # Page de monitoring en temps réel
 │   ├── GraphsPage.tsx            # Page des graphiques
 │   ├── ListPlantationsPage.tsx   # Liste des plantations
 │   ├── PlantationDetailPage.tsx  # Détails d'une plantation
 │   ├── ChatboxPage.tsx           # Page de chat IA
-│   ├── ConfigurationPage.tsx     # Page de configuration
+│   ├── TechnicianDashboardPage.tsx # Tableau de bord technicien
+│   ├── AdministrationPage.tsx    # Page d'administration
 │   ├── GuidePage.tsx             # Guide d'utilisation
 │   ├── DocumentationPage.tsx     # Documentation technique
 │   ├── PrivacyPage.tsx           # Politique de confidentialité
@@ -194,29 +207,33 @@ src/
 │   │   ├── PublicRoute.tsx     # Route publique
 │   │   └── RoleBasedRoute.tsx   # Route basée sur les rôles
 │   ├── layout/                   # Layout (Header, Footer)
-│   ├── blocks/                   # Blocs de contenu
+│   ├── blocks/                   # Blocs de contenu (Hero, Features, etc.)
 │   ├── notifications/            # Composants de notifications
 │   │   ├── NotificationList.tsx # Liste des notifications
 │   │   └── NotificationStats.tsx # Statistiques des notifications
 │   ├── cookies/                  # Gestion des cookies
-│   │   └── CookieBanner.tsx     # Bannière de cookies
-│   └── ui/                       # Composants UI
-│       ├── Button/              # Bouton
-│       ├── Card/                # Carte
-│       ├── FormField/           # Champ de formulaire
-│       ├── Icon/                # Icône
-│       ├── Modal/               # Modal
-│       ├── Dropdown/            # Menu déroulant (responsive)
-│       ├── LanguageSwitcher/    # Sélecteur de langue
-│       ├── FloatingButton/      # Bouton flottant
-│       ├── CreatePlantationModal/ # Modal de création de plantation
-│       ├── TwoFactorModal/      # Modal d'authentification à deux facteurs
-│       └── Background3D/        # Arrière-plan 3D
+│   ├── redirection/              # Composants de redirection (TechnicianRedirect)
+│   └── ui/                       # Composants UI génériques
+│       ├── Button/
+│       ├── Card/
+│       ├── FormField/
+│       ├── Icon/
+│       ├── Modal/
+│       ├── Dropdown/
+│       ├── LanguageSwitcher/
+│       ├── FloatingButton/
+│       ├── CreatePlantationModal/
+│       ├── TwoFactorModal/
+│       ├── Toast/
+│       └── Background3D/
 ├── services/                      # Services API
 │   ├── api.ts                    # Configuration Axios
 │   ├── authService.ts           # Service d'authentification
 │   ├── plantationService.ts     # Service de gestion des plantations
 │   ├── notificationService.ts  # Service de gestion des notifications
+│   ├── technicianService.ts     # Service technicien
+│   ├── adminService.ts          # Service administration
+│   ├── cookieService.ts         # Service cookies
 │   ├── authProvider.tsx          # Provider d'authentification
 │   └── useAuthStore.ts          # Store Zustand pour l'auth
 ├── hooks/                        # Hooks personnalisés
@@ -224,7 +241,7 @@ src/
 │   ├── useLanguage.ts           # Hook de langue
 │   ├── useScrollAnimation.ts     # Hook d'animation au scroll
 │   ├── useNotifications.ts      # Hook de gestion des notifications
-│   └── useEnrichedNotifications.ts # Hook de notifications enrichies (noms des plantations)
+│   └── useEnrichedNotifications.ts # Hook de notifications enrichies
 ├── contexts/                     # Contextes React
 │   ├── AuthContext.tsx          # Contexte d'authentification
 │   ├── CookieContext.tsx        # Contexte de gestion des cookies
@@ -234,12 +251,12 @@ src/
 │   ├── enums.ts                  # Enums (UserRole, SensorType, SensorStatus, etc.)
 │   └── dto.ts                    # DTOs pour les requêtes API
 ├── utils/                         # Utilitaires
-│   ├── translations.ts           # Fichiers de traduction (4 langues)
+│   ├── translations.ts           # Fichiers de traduction
 │   ├── sensorStatus.ts           # Utilitaires pour les statuts des capteurs
-│   ├── unitConverter.ts          # Conversion d'unités de superficie (m², ha, acre, km²)
+│   ├── unitConverter.ts          # Conversion d'unités de superficie
 │   ├── notificationFormatters.ts # Formatage des notifications
 │   ├── paramsSerializer.ts       # Sérialisation des paramètres URL
-│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email (dev uniquement)
+│   └── emailNotificationDiagnostic.ts  # Diagnostic des notifications email
 └── styles/                        # Styles globaux
     ├── global.css
     └── theme.ts
@@ -252,6 +269,8 @@ src/
 | `/` | Page d'accueil | Publique |
 | `/login` | Page de connexion | Publique |
 | `/signup` | Page d'inscription | Publique |
+| `/forgot-password` | Mot de passe oublié | Publique |
+| `/reset-password` | Réinitialisation du mot de passe | Publique |
 | `/profile` | Page de profil | Protégée |
 | `/plantations` | Liste des plantations | Protégée |
 | `/plantations/:id` | Détails d'une plantation | Protégée |
