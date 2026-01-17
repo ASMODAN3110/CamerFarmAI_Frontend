@@ -39,7 +39,7 @@ const processQueue = (error: any, token: string | null = null) => {
       prom.resolve(token);
     }
   });
-  
+
   failedQueue = [];
 };
 
@@ -49,9 +49,9 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
+
   const fullURL = `${config.baseURL}${config.url}`;
-  
+
   // Logs pour debug
   if (DEBUG) {
     console.log('🚀 API Request:', {
@@ -66,7 +66,7 @@ api.interceptors.request.use((config) => {
       }
     });
   }
-  
+
   return config;
 });
 
@@ -92,7 +92,7 @@ api.interceptors.response.use(
       // Détecter les erreurs CORS spécifiquement
       const isCorsError = error.message === 'Network Error' && !error.response;
       const isNetworkError = error.code === 'ERR_NETWORK' || error.code === 'ERR_FAILED';
-      
+
       if (isCorsError || isNetworkError) {
         console.error('❌ CORS/Network Error:', {
           message: error.message,
@@ -115,8 +115,11 @@ api.interceptors.response.use(
 
     // Ne pas tenter de refresh si c'est un compte désactivé
     const isAccountDisabled = error.response?.data?.errorCode === 'ACCOUNT_DISABLED';
-    
-    if (error.response?.status === 401 && !originalRequest._retry && !isAccountDisabled) {
+
+    // Ne pas tenter de refresh si c'est une tentative de connexion (erreur mot de passe)
+    const isLoginRequest = originalRequest.url?.includes('/auth/login');
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAccountDisabled && !isLoginRequest) {
       if (isRefreshing) {
         // Si un refresh est déjà en cours, mettre la requête en queue
         return new Promise((resolve, reject) => {
@@ -139,12 +142,12 @@ api.interceptors.response.use(
       }
 
       try {
-        const refreshURL = import.meta.env.VITE_API_URL 
+        const refreshURL = import.meta.env.VITE_API_URL
           ? `${import.meta.env.VITE_API_URL}/auth/refresh`
-          : import.meta.env.DEV 
+          : import.meta.env.DEV
             ? '/api/v1/auth/refresh'
             : 'http://localhost:3000/api/v1/auth/refresh';
-        
+
         const { data } = await axios.post(
           refreshURL,
           {},
@@ -175,7 +178,7 @@ api.interceptors.response.use(
             data: refreshError.response?.data
           });
         }
-        
+
         // Ne déconnecter que si c'est une erreur d'authentification (401, 403)
         // Pour les erreurs réseau, on peut laisser l'utilisateur réessayer
         if (refreshError?.response?.status === 401 || refreshError?.response?.status === 403) {
@@ -189,7 +192,7 @@ api.interceptors.response.use(
             console.log('⚠️ Erreur non-authentification lors du refresh, conservation de la session');
           }
         }
-        
+
         return Promise.reject(refreshError);
       }
     }
