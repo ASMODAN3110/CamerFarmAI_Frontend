@@ -235,7 +235,7 @@ export function ProfilePage() {
   };
 
   const handleImageClick = () => {
-    if (isEditing && canEdit && fileInputRef.current) {
+    if (canEdit && fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
@@ -369,7 +369,7 @@ export function ProfilePage() {
         <div className={styles.profileSection}>
           <div className={styles.profileImageContainer}>
             <div
-              className={`${styles.profileImage} ${isEditing && canEdit ? styles.profileImageEditable : ''}`}
+              className={`${styles.profileImage} ${canEdit ? styles.profileImageEditable : ''}`}
               onClick={handleImageClick}
               style={{
                 backgroundImage: imagePreview || profileImage ? `url(${imagePreview || profileImage})` : 'none',
@@ -378,7 +378,7 @@ export function ProfilePage() {
               }}
             >
               {!imagePreview && !profileImage && <FaUser size={60} />}
-              {isEditing && canEdit && (
+              {canEdit && (
                 <div className={styles.profileImageOverlay}>
                   {isUploading ? (
                     <div className={styles.uploadingSpinner}>⏳</div>
@@ -397,8 +397,17 @@ export function ProfilePage() {
               accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
               onChange={handleImageChange}
               className={styles.fileInput}
-              disabled={!isEditing || isUploading || !canEdit}
+              disabled={isUploading || !canEdit}
             />
+            {canEdit && (
+              <div
+                className={styles.editBadge}
+                onClick={handleImageClick}
+                title={t('profile.changePhoto')}
+              >
+                <FaCamera size={18} />
+              </div>
+            )}
           </div>
           <div className={styles.profileInfo}>
             <p className={styles.profileRoleBadge}>{getRoleLabel(user.role)}</p>
