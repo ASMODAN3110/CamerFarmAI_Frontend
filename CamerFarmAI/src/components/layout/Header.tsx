@@ -446,8 +446,14 @@ export function Header({
                 {/* Version spéciale pour les techniciens et administrateurs */}
                 {user?.role === 'technician' || user?.role === 'admin' ? (
                   <>
-                    <Link to="/profile" className={styles.header__iconButton} aria-label={t('auth.profile')}>
-                      <Icon icon={FaUser} size={22} />
+                    <Link
+                      to="/profile"
+                      className={styles.header__iconButton}
+                      aria-label={t('auth.profile')}
+                      title={t('auth.profile')}
+                    >
+                      <Icon icon={FaUser} size={20} />
+                      <span className={styles.header__iconLabel}>{t('auth.profile')}</span>
                     </Link>
 
                     <div className={styles.header__technicianSeparator}></div>
@@ -460,14 +466,16 @@ export function Header({
                         onClick={handleLogout}
                         className={styles.header__technicianLogout}
                         aria-label={t('auth.logout')}
+                        title={t('auth.logout')}
                       >
-                        <Icon icon={FaArrowUp} size={14} />
+                        <Icon icon={FaSignOutAlt} size={14} />
                         <span>{t('auth.logout')}</span>
                       </button>
                     </div>
                   </>
                 ) : (
                   <>
+
                     {/* Version normale pour les autres utilisateurs */}
                     <div className={styles.header__iconButtonContainer}>
                       <button
@@ -479,7 +487,8 @@ export function Header({
                         }}
                         aria-label={t('notifications.title')}
                       >
-                        <Icon icon={FaBell} size={22} />
+                        <Icon icon={FaBell} size={20} />
+                        <span className={styles.header__iconLabel}>{t('notifications.title')}</span>
                         {unreadWebCount > 0 && (
                           <span className={styles.header__notificationBadge}>
                             {unreadWebCount > 99 ? '99+' : unreadWebCount}
@@ -548,10 +557,10 @@ export function Header({
                       </Dropdown>
                     </div>
 
-                    <div className={styles.header__iconButtonContainer}>
+                    <div className={styles.header__userActions}>
                       <button
-                        className={`${styles.header__userInfoButton} ${location.pathname === '/profile' || profileMenuOpen ? styles.header__userInfoButtonActive : ''}`}
-                        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                        className={`${styles.header__userInfoButton} ${location.pathname === '/profile' ? styles.header__userInfoButtonActive : ''}`}
+                        onClick={() => navigate('/profile')}
                         aria-label={t('auth.profile')}
                       >
                         <div className={styles.header__userAvatarContainer}>
@@ -568,34 +577,19 @@ export function Header({
                           )}
                         </div>
                         <span className={styles.header__userName}>
-                          {user?.firstName ? `${user.firstName} ${user.lastName || ''}` : t('auth.profile')}
+                          {user?.firstName ? user.firstName : t('auth.profile')}
                         </span>
                       </button>
-                      <Dropdown
-                        isOpen={profileMenuOpen}
-                        onClose={() => setProfileMenuOpen(false)}
-                        align="right"
+
+                      <button
+                        className={styles.header__logoutButton}
+                        onClick={handleLogout}
+                        aria-label={t('auth.logout')}
+                        title={t('auth.logout')}
                       >
-                        <div className={styles.header__profileDropdown}>
-                          <button
-                            className={styles.header__profileMenuItem}
-                            onClick={() => {
-                              setProfileMenuOpen(false);
-                              navigate('/profile');
-                            }}
-                          >
-                            <Icon icon={FaUser} size={18} />
-                            {t('auth.profile')}
-                          </button>
-                          <button
-                            className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
-                            onClick={handleLogout}
-                          >
-                            <Icon icon={FaSignOutAlt} size={18} />
-                            {t('auth.logout')}
-                          </button>
-                        </div>
-                      </Dropdown>
+                        <Icon icon={FaSignOutAlt} size={18} />
+                        <span className={styles.header__iconLabel}>{t('auth.logout')}</span>
+                      </button>
                     </div>
                   </>
                 )}
@@ -648,59 +642,45 @@ export function Header({
           {(isAuthenticated || showAuthIcons) ? (
             <div className={styles.header__mobileActions}>
               <button
-                className={`${styles.header__mobileIconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
+                className={`${styles.header__mobileActionButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
                 onClick={() => {
                   setMobileMenuOpen(false);
                   navigate('/notifications');
                 }}
                 aria-label={t('notifications.title')}
               >
-                <Icon icon={FaBell} size={24} />
+                <Icon icon={FaBell} size={20} />
+                <span>{t('notifications.title')}</span>
                 {unreadWebCount > 0 && (
-                  <span className={styles.header__notificationBadge}>
+                  <span className={styles.header__notificationBadge} style={{ position: 'static', marginLeft: 'auto' }}>
                     {unreadWebCount > 99 ? '99+' : unreadWebCount}
                   </span>
                 )}
               </button>
-              <div className={styles.header__iconButtonContainer}>
-                <button
-                  className={`${styles.header__mobileIconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
-                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                  aria-label={t('auth.profile')}
-                >
-                  <Icon icon={FaUser} size={24} />
-                </button>
-                <Dropdown
-                  isOpen={profileMenuOpen}
-                  onClose={() => setProfileMenuOpen(false)}
-                  align="right"
-                >
-                  <div className={styles.header__profileDropdown}>
-                    <button
-                      className={styles.header__profileMenuItem}
-                      onClick={() => {
-                        setProfileMenuOpen(false);
-                        setMobileMenuOpen(false);
-                        navigate('/profile');
-                      }}
-                    >
-                      <Icon icon={FaUser} size={18} />
-                      {t('auth.profile')}
-                    </button>
-                    <button
-                      className={`${styles.header__profileMenuItem} ${styles.header__profileMenuItemDanger}`}
-                      onClick={() => {
-                        setProfileMenuOpen(false);
-                        setMobileMenuOpen(false);
-                        handleLogout();
-                      }}
-                    >
-                      <Icon icon={FaSignOutAlt} size={18} />
-                      {t('auth.logout')}
-                    </button>
-                  </div>
-                </Dropdown>
-              </div>
+
+              <button
+                className={`${styles.header__mobileActionButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate('/profile');
+                }}
+                aria-label={t('auth.profile')}
+              >
+                <Icon icon={FaUser} size={20} />
+                <span>{t('auth.profile')}</span>
+              </button>
+
+              <button
+                className={`${styles.header__mobileActionButton} ${styles.header__profileMenuItemDanger}`}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                aria-label={t('auth.logout')}
+              >
+                <Icon icon={FaSignOutAlt} size={20} />
+                <span>{t('auth.logout')}</span>
+              </button>
             </div>
           ) : (
             <div className={styles.header__mobileAuthButtons}>
