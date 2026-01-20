@@ -12,6 +12,7 @@ import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
 import { FaTrash } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal/ConfirmationModal';
 import styles from './NotificationsPage.module.css';
 
 type FilterType = 'all' | 'web' | 'email' | 'unread';
@@ -23,6 +24,7 @@ export function NotificationsPage() {
   const [notifications, setNotifications] = useState(contextNotifications);
   const [isLoadingFiltered, setIsLoadingFiltered] = useState(false);
   const [isDeletingAll, setIsDeletingAll] = useState(false);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
 
   // Utiliser le hook pour enrichir les notifications (remplacer "undefined" par le nom de la plantation)
   const enrichedNotifications = useEnrichedNotifications(notifications);
@@ -91,26 +93,26 @@ export function NotificationsPage() {
     setFilter(newFilter);
   };
 
-  const handleDeleteAll = async () => {
+  const handleDeleteAllClick = () => {
     if (notifications.length === 0) return;
+    setIsDeleteAllModalOpen(true);
+  };
 
-    const confirmMessage = `${t('notifications.deleteAll.confirm') || 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.'}\n\n${notifications.length} notification(s) seront supprimée(s).`;
+  const handleConfirmDeleteAll = async () => {
+    setIsDeletingAll(true);
+    try {
+      // Supprimer toutes les notifications une par une
+      const deletePromises = notifications.map(notif => notificationService.delete(notif.id));
+      await Promise.all(deletePromises);
 
-    if (confirm(confirmMessage)) {
-      setIsDeletingAll(true);
-      try {
-        // Supprimer toutes les notifications une par une
-        const deletePromises = notifications.map(notif => notificationService.delete(notif.id));
-        await Promise.all(deletePromises);
-
-        // Rafraîchir après la suppression
-        await refresh();
-      } catch (error) {
-        console.error('Erreur lors de la suppression de toutes les notifications:', error);
-        alert(t('notifications.deleteAll.error') || 'Une erreur est survenue lors de la suppression. Certaines notifications n\'ont peut-être pas été supprimées.');
-      } finally {
-        setIsDeletingAll(false);
-      }
+      // Rafraîchir après la suppression
+      await refresh();
+      setIsDeleteAllModalOpen(false);
+    } catch (error) {
+      console.error('Erreur lors de la suppression de toutes les notifications:', error);
+      // Ici on pourrait ajouter un toast d'erreur si disponible
+    } finally {
+      setIsDeletingAll(false);
     }
   };
 
@@ -136,7 +138,7 @@ export function NotificationsPage() {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={handleDeleteAll}
+                onClick={handleDeleteAllClick}
                 disabled={isDeletingAll || isLoading || isLoadingFiltered}
                 className={styles.deleteAllButton}
                 aria-label={t('notifications.deleteAll.button') || 'Supprimer toutes les notifications'}
@@ -161,6 +163,18 @@ export function NotificationsPage() {
             onDelete={handleDelete}
             filter={filter}
             onFilterChange={handleFilterChange}
+          />
+
+          <ConfirmationModal
+            isOpen={isDeleteAllModalOpen}
+            onClose={() => setIsDeleteAllModalOpen(false)}
+            onConfirm={handleConfirmDeleteAll}
+            title={t('notifications.deleteAll.button') || 'Tout supprimer'}
+            message={`${t('notifications.deleteAll.confirm') || 'Êtes-vous sûr de vouloir supprimer toutes les notifications ? Cette action est irréversible.'}\n\n${notifications.length} notification(s) seront supprimée(s).`}
+            confirmLabel={t('notifications.delete') || 'Supprimer'}
+            cancelLabel={t('plantations.createModal.cancel') || 'Annuler'}
+            isConfirming={isDeletingAll}
+            variant="danger"
           />
         </div>
       </main>

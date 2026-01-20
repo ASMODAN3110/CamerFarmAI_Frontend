@@ -1,3 +1,40 @@
+/* Loading Styles */
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-spin 0.75s linear infinite;
+  margin-right: 0.5em;
+  display: inline-block;
+  vertical-align: middle;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+}
+
+.loading {
+  position: relative;
+  cursor: wait;
+}
+
+.loadingText {
+  visibility: hidden;
+}
+
+@keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -52,6 +89,18 @@
   visibility: visible;
 }
 
+.button--danger {
+  background: rgba(220, 38, 38, 0.8);
+  color: white;
+  border: 1px solid rgba(220, 38, 38, 0.5);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
 .button--secondary {
   background-color: var(--color-secondary);
   color: var(--color-white);
@@ -87,4 +136,3 @@
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-size-lg);
 }
-
