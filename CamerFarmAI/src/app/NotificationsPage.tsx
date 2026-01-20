@@ -10,7 +10,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { FloatingButton } from '@/components/ui/FloatingButton/FloatingButton';
-import { FaExclamationTriangle, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import { Button } from '@/components/ui/Button/Button';
 import styles from './NotificationsPage.module.css';
 
@@ -114,24 +114,7 @@ export function NotificationsPage() {
     }
   };
 
-  // Détecter les erreurs email
-  const emailErrors = useMemo(() => {
-    return notifications.filter(
-      (n) => n.canal === NotificationCanal.EMAIL && n.statut === NotificationStatut.ERREUR
-    );
-  }, [notifications]);
 
-  const hasEmailErrors = emailErrors.length > 0;
-  const [dismissedAlert, setDismissedAlert] = useState(false);
-
-  // Fonction pour lancer le diagnostic (en développement)
-  const handleRunDiagnostic = async () => {
-    if (import.meta.env.DEV && (window as any).diagnoseEmailNotifications) {
-      await (window as any).diagnoseEmailNotifications();
-    } else {
-      console.log('💡 Pour diagnostiquer les erreurs email, ouvrez la console et tapez: diagnoseEmailNotifications()');
-    }
-  };
 
   const navItems = [
     { href: '/', label: t('nav.home') || 'Accueil' },
@@ -167,43 +150,7 @@ export function NotificationsPage() {
             )}
           </div>
 
-          {/* Alerte pour les erreurs email */}
-          {hasEmailErrors && !dismissedAlert && (
-            <div className={styles.emailErrorAlert}>
-              <div className={styles.alertContent}>
-                <FaExclamationTriangle className={styles.alertIcon} />
-                <div className={styles.alertText}>
-                  <h3 className={styles.alertTitle}>
-                    {t('notifications.emailErrors.title') || 'Erreurs d\'envoi d\'email détectées'}
-                  </h3>
-                  <p className={styles.alertMessage}>
-                    {`${emailErrors.length} ${t('notifications.emailErrors.message') || 'notification(s) email n\'ont pas pu être envoyée(s). Cela indique généralement un problème de configuration SMTP côté backend.'}`}
-                  </p>
-                  <ul className={styles.alertList}>
-                    <li>{t('notifications.emailErrors.check1') || 'Vérifiez que votre profil contient une adresse email valide'}</li>
-                    <li>{t('notifications.emailErrors.check2') || 'Vérifiez la configuration SMTP du backend (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)'}</li>
-                    <li>{t('notifications.emailErrors.check3') || 'Consultez les logs du backend pour plus de détails'}</li>
-                  </ul>
-                  {import.meta.env.DEV && (
-                    <button
-                      className={styles.diagnosticButton}
-                      onClick={handleRunDiagnostic}
-                    >
-                      <FaInfoCircle />
-                      {t('notifications.emailErrors.runDiagnostic') || 'Lancer le diagnostic'}
-                    </button>
-                  )}
-                </div>
-              </div>
-              <button
-                className={styles.alertClose}
-                onClick={() => setDismissedAlert(true)}
-                aria-label={t('notifications.emailErrors.dismiss') || 'Fermer'}
-              >
-                <FaTimes />
-              </button>
-            </div>
-          )}
+
 
           <NotificationStats stats={stats} isLoading={isLoading} />
 

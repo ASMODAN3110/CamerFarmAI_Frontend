@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Users, Wrench, PlusCircle, X, Loader2 } from "lucide-react";
+import { Users, Wrench, PlusCircle, X, Loader2, AlertTriangle, FileText } from "lucide-react";
 import styles from "./AdministrationPage.module.css";
 import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { Button } from '@/components/ui/Button/Button';
 import { adminService, type UserListItem } from '@/services/adminService';
 import { useTranslation } from '@/hooks/useTranslation';
+import { notificationService } from '@/services/notificationService';
+import type { Notification } from '@/services/notificationService';
+import { NotificationStatut } from '@/types/enums';
 
 export function AdminPage() {
   const { t } = useTranslation();
@@ -22,6 +25,10 @@ export function AdminPage() {
   const [newTechEmail, setNewTechEmail] = useState('');
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+
+  // State pour les logs d'erreurs
+  const [errorLogs, setErrorLogs] = useState<Notification[]>([]);
+  const [loadingLogs, setLoadingLogs] = useState(false);
 
   // Charger les utilisateurs au montage
   useEffect(() => {
@@ -40,6 +47,26 @@ export function AdminPage() {
       setLoading(false);
     }
   };
+
+  const fetchErrorLogs = async () => {
+    setLoadingLogs(true);
+    try {
+      // Dans une vraie app, on aurait un endpoint admin pour TOutEs les notifs
+      // Ici on utilise getAll() qui retourne les notifs de l'admin connecté
+      // C'est suffisant si l'admin reproduit le bug ou si le backend envoie les alertes système à l'admin
+      const allNotifs = await notificationService.getAll();
+      const errors = allNotifs.filter(n => n.statut === NotificationStatut.ERREUR);
+      setErrorLogs(errors);
+    } catch (err) {
+      console.error("Erreur chargement logs:", err);
+    } finally {
+      setLoadingLogs(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchErrorLogs();
+  }, []);
 
   const handleDeleteUser = async (userId: string, userName: string) => {
     if (!confirm(t('admin.delete.confirm').replace('{name}', userName))) {
@@ -247,6 +274,71 @@ export function AdminPage() {
                   {t('admin.create.title')}
                 </Button>
               </div>
+            </section>
+
+            {/* Journal des Erreurs Système */}
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <AlertTriangle className={styles.sectionIcon} color="#ef4444" />
+                <h2 className={styles.sectionTitle}>{t('admin.logs.title') || 'Journal des Erreurs Système'}</h2>
+                <span className={styles.sectionBadge} style={{ background: '#fee2e2', color: '#dc2626' }}>{errorLogs.length}</span>
+              </div>
+
+              {loadingLogs ? (
+                <div className={styles.loading}>
+                  <Loader2 size={24} className={styles.spinner} />
+                </div>
+              ) : errorLogs.length === 0 ? (
+                <div className={styles.emptyMessage}>{t('admin.logs.empty') || 'Aucune erreur système détectée récentement.'}</div>
+              ) : (
+                <div className={styles.cardsList}>
+                  {errorLogs.map((log) => {
+                    const user = users.find(u => u.id === log.userId);
+                    const userName = user ? getUserDisplayName(user) : 'Utilisateur Inconnu';
+                    return (
+                      <div key={log.id} className={styles.card} style={{ borderLeftColor: '#ef4444' }}>
+                        <div className={styles.cardContent}>
+                          <div className={styles.cardInfo}>
+                            <div className={styles.cardName} style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <FileText size={16} />
+                              {log.event?.description || 'Erreur notification'}
+                            </div>
+                            <div className={styles.cardDetails}>
+                              <span className={styles.cardDetail}>
+                                <strong>Date:</strong> {new Date(log.dateEnvoi).toLocaleString()}
+                              </span>
+                              <span className={styles.cardDetail}>
+                                <strong>Canal:</strong> {log.canal.toUpperCase()}
+                              </span>
+                              <span className={styles.cardDetail}>
+                                <strong>Concerne:</strong> {userName}
+                              </span>
+                            </div>
+                            {/* Message technique explicite pour l'admin */}
+                            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px', fontStyle: 'italic' }}>
+                              Status: {log.statut.toUpperCase()} - Échec de l'envoi via {log.canal}. Vérifiez les logs backend.
+                            </div>
+                          </div>
+                          <div className={styles.cardActions}>
+                            <button
+                              className={styles.deleteButton}
+                              onClick={async () => {
+                                if (confirm('Supprimer ce log ?')) {
+                                  await notificationService.delete(log.id);
+                                  fetchErrorLogs();
+                                }
+                              }}
+                              title="Supprimer ce log"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </section>
           </>
         )}

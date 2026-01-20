@@ -504,6 +504,8 @@ export type TranslationKey =
   | 'admin.create.form.optional'
   | 'admin.create.form.required'
   | 'admin.fakers.title'
+  | 'admin.logs.title'
+  | 'admin.logs.empty'
   | 'admin.fakers.subtitle'
   | 'admin.fakers.test.title'
   | 'admin.fakers.test.description'
@@ -1449,6 +1451,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.title': 'Comptes Techniciens',
     'admin.technicians.empty': 'Aucun technicien',
     'admin.technicians.create': 'Créer un technicien',
+    'admin.logs.title': 'Journal des Erreurs Système',
+    'admin.logs.empty': 'Aucune erreur système détectée.',
     'admin.user.active': 'Actif',
     'admin.user.inactive': 'Inactif',
     'admin.user.plantations': 'plantations',
@@ -2416,6 +2420,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.title': 'Technician Accounts',
     'admin.technicians.empty': 'No technicians',
     'admin.technicians.create': 'Create Technician',
+    'admin.logs.title': 'System Error Logs',
+    'admin.logs.empty': 'No system errors detected.',
     'admin.user.active': 'Active',
     'admin.user.inactive': 'Inactive',
     'admin.user.plantations': 'plantations',
@@ -3383,6 +3389,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.title': 'Konte Kuutoro',
     'admin.technicians.empty': 'Alaa kuutoro',
     'admin.technicians.create': 'Waɗtu Kuutoro',
+    'admin.logs.title': 'Journal des Erreurs',
+    'admin.logs.empty': 'Alaa jiiɓu.',
     'admin.user.active': 'Kuuɗe',
     'admin.user.inactive': 'Alaa kuuɗe',
     'admin.user.plantations': 'nguurndam',
@@ -4351,6 +4359,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.title': 'Konte Mfa\'a',
     'admin.technicians.empty': 'Teké mfa\'a',
     'admin.technicians.create': 'Tobo Mfa\'a',
+    'admin.logs.title': 'Journal des Erreurs',
+    'admin.logs.empty': 'Aucune erreur',
     'admin.user.active': 'Vè',
     'admin.user.inactive': 'Teké vè',
     'admin.user.plantations': 'bisó',
