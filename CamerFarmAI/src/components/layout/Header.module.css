@@ -81,7 +81,20 @@
 .header__actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+}
+
+.header__systemActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.header__divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-gray-300);
+  margin: 0 var(--spacing-xs);
 }
 
 .header__mobileLanguage {

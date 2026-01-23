@@ -437,15 +437,103 @@ export function Header({
           </nav>
         )}
 
-        {/* Actions Desktop */}
         {!isMobile && (
           <div className={styles.header__actions}>
-            <LanguageSwitcher />
+            <div className={styles.header__systemActions}>
+              <LanguageSwitcher />
+
+              {/* Notification Bell - Only for authenticated normal users or when forced */}
+              {(isAuthenticated || showAuthIcons) && !(user?.role === 'technician' || user?.role === 'admin') && (
+                <div className={styles.header__iconButtonContainer}>
+                  <button
+                    className={`${styles.header__iconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
+                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    onDoubleClick={() => {
+                      setNotificationsOpen(false);
+                      navigate('/notifications');
+                    }}
+                    aria-label={t('notifications.title')}
+                  >
+                    <Icon icon={FaBell} size={20} />
+                    <span className={styles.header__iconLabel}>{t('notifications.title')}</span>
+                    {unreadWebCount > 0 && (
+                      <span className={styles.header__notificationBadge}>
+                        {unreadWebCount > 99 ? '99+' : unreadWebCount}
+                      </span>
+                    )}
+                  </button>
+                  <Dropdown
+                    isOpen={notificationsOpen}
+                    onClose={() => setNotificationsOpen(false)}
+                    align="right"
+                  >
+                    <div className={styles.header__notificationsDropdown}>
+                      <div className={styles.header__notificationsHeader}>
+                        <h3 className={styles.header__notificationsTitle}>{t('notifications.title')}</h3>
+                        <button
+                          className={styles.header__closeButton}
+                          onClick={() => setNotificationsOpen(false)}
+                          aria-label={t('header.close')}
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className={styles.header__notificationsList}>
+                        {isLoadingNotifications ? (
+                          <div className={styles.header__notificationEmpty}>
+                            {t('notifications.loading') || 'Chargement...'}
+                          </div>
+                        ) : notifications.length > 0 ? (
+                          <>
+                            {notifications.map((notif) => (
+                              <div
+                                key={notif.id}
+                                className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
+                                onClick={() => {
+                                  if (!notif.isRead) {
+                                    handleMarkAsRead(notif.id);
+                                  }
+                                }}
+                              >
+                                <div className={styles.header__notificationContent}>
+                                  <div className={styles.header__notificationMessage}>
+                                    {getNotificationDescription(notif)}
+                                  </div>
+                                  <div className={styles.header__notificationTime}>
+                                    {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
+                                  </div>
+                                </div>
+                                <button
+                                  className={styles.header__notificationDelete}
+                                  onClick={(e) => handleDelete(notif.id, e)}
+                                  aria-label={t('notifications.delete') || 'Supprimer la notification'}
+                                  title={t('notifications.delete') || 'Supprimer'}
+                                >
+                                  <Icon icon={FaTrash} size={14} />
+                                </button>
+                              </div>
+                            ))}
+                          </>
+                        ) : (
+                          <div className={styles.header__notificationEmpty}>
+                            {t('notifications.empty')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Dropdown>
+                </div>
+              )}
+            </div>
+
+            {/* Divider and User Actions */}
             {(isAuthenticated || showAuthIcons) ? (
               <>
+                <div className={styles.header__divider} />
+
                 {/* Version spéciale pour les techniciens et administrateurs */}
                 {user?.role === 'technician' || user?.role === 'admin' ? (
-                  <>
+                  <div className={styles.header__userActions}>
                     <Link
                       to="/profile"
                       className={styles.header__iconButton}
@@ -472,130 +560,48 @@ export function Header({
                         <span>{t('auth.logout')}</span>
                       </button>
                     </div>
-                  </>
+                  </div>
                 ) : (
-                  <>
-
-                    {/* Version normale pour les autres utilisateurs */}
-                    <div className={styles.header__iconButtonContainer}>
-                      <button
-                        className={`${styles.header__iconButton} ${location.pathname === '/notifications' ? styles.header__iconButtonActive : ''}`}
-                        onClick={() => setNotificationsOpen(!notificationsOpen)}
-                        onDoubleClick={() => {
-                          setNotificationsOpen(false);
-                          navigate('/notifications');
-                        }}
-                        aria-label={t('notifications.title')}
-                      >
-                        <Icon icon={FaBell} size={20} />
-                        <span className={styles.header__iconLabel}>{t('notifications.title')}</span>
-                        {unreadWebCount > 0 && (
-                          <span className={styles.header__notificationBadge}>
-                            {unreadWebCount > 99 ? '99+' : unreadWebCount}
-                          </span>
+                  /* Version normale pour les autres utilisateurs */
+                  <div className={styles.header__userActions}>
+                    <button
+                      className={`${styles.header__userInfoButton} ${location.pathname === '/profile' ? styles.header__userInfoButtonActive : ''}`}
+                      onClick={() => navigate('/profile')}
+                      aria-label={t('auth.profile')}
+                    >
+                      <div className={styles.header__userAvatarContainer}>
+                        {(user as any)?.avatarUrl || (user as any)?.avatar_url ? (
+                          <img
+                            src={(user as any)?.avatarUrl || (user as any)?.avatar_url}
+                            alt="Profile"
+                            className={styles.header__userAvatar}
+                          />
+                        ) : (
+                          <div className={styles.header__userAvatarPlaceholder}>
+                            <Icon icon={FaUser} size={14} />
+                          </div>
                         )}
-                      </button>
-                      <Dropdown
-                        isOpen={notificationsOpen}
-                        onClose={() => setNotificationsOpen(false)}
-                        align="right"
-                      >
-                        <div className={styles.header__notificationsDropdown}>
-                          <div className={styles.header__notificationsHeader}>
-                            <h3 className={styles.header__notificationsTitle}>{t('notifications.title')}</h3>
-                            <button
-                              className={styles.header__closeButton}
-                              onClick={() => setNotificationsOpen(false)}
-                              aria-label={t('header.close')}
-                            >
-                              ×
-                            </button>
-                          </div>
-                          <div className={styles.header__notificationsList}>
-                            {isLoadingNotifications ? (
-                              <div className={styles.header__notificationEmpty}>
-                                {t('notifications.loading') || 'Chargement...'}
-                              </div>
-                            ) : notifications.length > 0 ? (
-                              <>
-                                {notifications.map((notif) => (
-                                  <div
-                                    key={notif.id}
-                                    className={`${styles.header__notificationItem} ${!notif.isRead ? styles.header__notificationItemUnread : ''}`}
-                                    onClick={() => {
-                                      if (!notif.isRead) {
-                                        handleMarkAsRead(notif.id);
-                                      }
-                                    }}
-                                  >
-                                    <div className={styles.header__notificationContent}>
-                                      <div className={styles.header__notificationMessage}>
-                                        {getNotificationDescription(notif)}
-                                      </div>
-                                      <div className={styles.header__notificationTime}>
-                                        {notif.dateLu ? formatRelativeTime(notif.dateLu) : formatRelativeTime(notif.dateEnvoi)}
-                                      </div>
-                                    </div>
-                                    <button
-                                      className={styles.header__notificationDelete}
-                                      onClick={(e) => handleDelete(notif.id, e)}
-                                      aria-label={t('notifications.delete') || 'Supprimer la notification'}
-                                      title={t('notifications.delete') || 'Supprimer'}
-                                    >
-                                      <Icon icon={FaTrash} size={14} />
-                                    </button>
-                                  </div>
-                                ))}
-                              </>
-                            ) : (
-                              <div className={styles.header__notificationEmpty}>
-                                {t('notifications.empty')}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </Dropdown>
-                    </div>
+                      </div>
+                      <span className={styles.header__userName}>
+                        {user?.firstName ? user.firstName : t('auth.profile')}
+                      </span>
+                    </button>
 
-                    <div className={styles.header__userActions}>
-                      <button
-                        className={`${styles.header__userInfoButton} ${location.pathname === '/profile' ? styles.header__userInfoButtonActive : ''}`}
-                        onClick={() => navigate('/profile')}
-                        aria-label={t('auth.profile')}
-                      >
-                        <div className={styles.header__userAvatarContainer}>
-                          {(user as any)?.avatarUrl || (user as any)?.avatar_url ? (
-                            <img
-                              src={(user as any)?.avatarUrl || (user as any)?.avatar_url}
-                              alt="Profile"
-                              className={styles.header__userAvatar}
-                            />
-                          ) : (
-                            <div className={styles.header__userAvatarPlaceholder}>
-                              <Icon icon={FaUser} size={14} />
-                            </div>
-                          )}
-                        </div>
-                        <span className={styles.header__userName}>
-                          {user?.firstName ? user.firstName : t('auth.profile')}
-                        </span>
-                      </button>
-
-                      <button
-                        className={styles.header__logoutButton}
-                        onClick={handleLogout}
-                        aria-label={t('auth.logout')}
-                        title={t('auth.logout')}
-                      >
-                        <Icon icon={FaSignOutAlt} size={18} />
-                        <span className={styles.header__iconLabel}>{t('auth.logout')}</span>
-                      </button>
-                    </div>
-                  </>
+                    <button
+                      className={styles.header__logoutButton}
+                      onClick={handleLogout}
+                      aria-label={t('auth.logout')}
+                      title={t('auth.logout')}
+                    >
+                      <Icon icon={FaSignOutAlt} size={18} />
+                      <span className={styles.header__iconLabel}>{t('auth.logout')}</span>
+                    </button>
+                  </div>
                 )}
               </>
             ) : (
               <>
+                <div className={styles.header__divider} />
                 <Button variant="primary" size="sm" href="/login">
                   {t('auth.login')}
                 </Button>
