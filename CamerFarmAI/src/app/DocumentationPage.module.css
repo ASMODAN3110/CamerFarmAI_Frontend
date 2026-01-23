@@ -401,3 +401,65 @@
   }
 }
 
+/* Sensor Documentation Specific Styles */
+.docsPage__featureList {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.docsPage__featureList li {
+  background: rgba(40, 167, 69, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+  font-size: 1.05rem;
+  margin-bottom: 0 !important;
+}
+
+.docsPage__statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.docsPage__statusCard {
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+  border: 1px solid #e9ecef;
+}
+
+.docsPage__statusCard:hover {
+  transform: translateY(-2px);
+}
+
+.docsPage__statusActive .docsPage__statusDot {
+  background-color: #28a745;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+}
+
+.docsPage__statusInactive .docsPage__statusDot {
+  background-color: #dc3545;
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+
+.docsPage__statusDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.docsPage__statusCard p {
+  margin: 0 !important;
+  font-weight: 500;
+  color: #343a40;
+}
