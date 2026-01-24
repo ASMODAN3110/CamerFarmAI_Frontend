@@ -463,3 +463,48 @@
   font-weight: 500;
   color: #343a40;
 }
+
+.docsPage__imageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.docsPage__sensorImage {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+.docsPage__sensorImage:hover {
+  transform: scale(1.05);
+}
+
+.docsPage__apiLink {
+  margin-top: 1rem;
+}
+
+.docsPage__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.docsPage__link:hover {
+  background-color: #218838;
+}

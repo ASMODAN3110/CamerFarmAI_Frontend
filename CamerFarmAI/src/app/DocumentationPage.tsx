@@ -21,6 +21,12 @@ import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './DocumentationPage.module.css';
 
+import sensorTempImg from '@/assets/sensors/sensor_temperature.png';
+import sensorSoilImg from '@/assets/sensors/sensor_soil_moisture.png';
+import sensorCo2Img from '@/assets/sensors/sensor_co2.png';
+import sensorWaterImg from '@/assets/sensors/sensor_water_level.png';
+import sensorLuminosityImg from '@/assets/sensors/sensor_luminosity.png';
+
 interface DocumentationSection {
   id: string;
   icon: IconType;
@@ -128,11 +134,15 @@ export function DocumentationPage() {
                   {t('docs.sections.temperature')}
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
+                  <div className={styles.docsPage__imageContainer}>
+                    <img src={sensorTempImg} alt="Capteur de température" className={styles.docsPage__sensorImage} />
+                  </div>
                   <h3>{t('docs.temperature.title')}</h3>
                   <p>{t('docs.temperature.description')}</p>
                   <ul className={styles.docsPage__featureList}>
                     <li><strong>{t('docs.temperature.unit')}</strong></li>
                     <li>{t('docs.temperature.importance')}</li>
+                    <li><strong>{t('docs.common.howItWorks')} :</strong> {t('docs.temperature.howItWorks')}</li>
                   </ul>
                 </div>
               </section>
@@ -144,11 +154,15 @@ export function DocumentationPage() {
                   {t('docs.sections.soilMoisture')}
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
+                  <div className={styles.docsPage__imageContainer}>
+                    <img src={sensorSoilImg} alt="Capteur d'humidité du sol" className={styles.docsPage__sensorImage} />
+                  </div>
                   <h3>{t('docs.soilMoisture.title')}</h3>
                   <p>{t('docs.soilMoisture.description')}</p>
                   <ul className={styles.docsPage__featureList}>
                     <li><strong>{t('docs.soilMoisture.unit')}</strong></li>
                     <li>{t('docs.soilMoisture.importance')}</li>
+                    <li><strong>{t('docs.common.howItWorks')} :</strong> {t('docs.soilMoisture.howItWorks')}</li>
                   </ul>
                 </div>
               </section>
@@ -160,11 +174,15 @@ export function DocumentationPage() {
                   {t('docs.sections.co2')}
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
+                  <div className={styles.docsPage__imageContainer}>
+                    <img src={sensorCo2Img} alt="Capteur de CO2" className={styles.docsPage__sensorImage} />
+                  </div>
                   <h3>{t('docs.co2.title')}</h3>
                   <p>{t('docs.co2.description')}</p>
                   <ul className={styles.docsPage__featureList}>
                     <li><strong>{t('docs.co2.unit')}</strong></li>
                     <li>{t('docs.co2.importance')}</li>
+                    <li><strong>{t('docs.common.howItWorks')} :</strong> {t('docs.co2.howItWorks')}</li>
                   </ul>
                 </div>
               </section>
@@ -176,11 +194,15 @@ export function DocumentationPage() {
                   {t('docs.sections.waterLevel')}
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
+                  <div className={styles.docsPage__imageContainer}>
+                    <img src={sensorWaterImg} alt="Capteur de niveau d'eau" className={styles.docsPage__sensorImage} />
+                  </div>
                   <h3>{t('docs.waterLevel.title')}</h3>
                   <p>{t('docs.waterLevel.description')}</p>
                   <ul className={styles.docsPage__featureList}>
                     <li><strong>{t('docs.waterLevel.unit')}</strong></li>
                     <li>{t('docs.waterLevel.importance')}</li>
+                    <li><strong>{t('docs.common.howItWorks')} :</strong> {t('docs.waterLevel.howItWorks')}</li>
                   </ul>
                 </div>
               </section>
@@ -192,11 +214,15 @@ export function DocumentationPage() {
                   {t('docs.sections.luminosity')}
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
+                  <div className={styles.docsPage__imageContainer}>
+                    <img src={sensorLuminosityImg} alt="Capteur de luminosité" className={styles.docsPage__sensorImage} />
+                  </div>
                   <h3>{t('docs.luminosity.title')}</h3>
                   <p>{t('docs.luminosity.description')}</p>
                   <ul className={styles.docsPage__featureList}>
                     <li><strong>{t('docs.luminosity.unit')}</strong></li>
                     <li>{t('docs.luminosity.importance')}</li>
+                    <li><strong>{t('docs.common.howItWorks')} :</strong> {t('docs.luminosity.howItWorks')}</li>
                   </ul>
                 </div>
               </section>
@@ -232,6 +258,11 @@ export function DocumentationPage() {
                 <div className={styles.docsPage__sectionContent}>
                   <h3>{t('docs.api.title')}</h3>
                   <p>{t('docs.api.description')}</p>
+                  <div className={styles.docsPage__apiLink}>
+                    <a href="http://localhost:3000/api-docs" target="_blank" rel="noopener noreferrer" className={styles.docsPage__link}>
+                      {t('docs.api.swaggerLink')}
+                    </a>
+                  </div>
                 </div>
               </section>
 
