@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Users, Wrench, PlusCircle, X, Loader2, AlertTriangle, FileText } from "lucide-react";
+import { Users, Wrench, PlusCircle, X, Trash2, Loader2, AlertTriangle, FileText } from "lucide-react";
 import styles from "./AdministrationPage.module.css";
 import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
@@ -207,9 +207,9 @@ export function AdminPage() {
                           <button
                             className={styles.deleteButton}
                             onClick={() => handleDeleteUser(farmer.id, getUserDisplayName(farmer))}
-                            aria-label="Supprimer"
+                            aria-label={t('admin.delete.ariaLabel')}
                           >
-                            <X size={16} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </div>
@@ -257,9 +257,9 @@ export function AdminPage() {
                           <button
                             className={styles.deleteButton}
                             onClick={() => handleDeleteUser(technician.id, getUserDisplayName(technician))}
-                            aria-label="Supprimer"
+                            aria-label={t('admin.delete.ariaLabel')}
                           >
-                            <X size={16} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </div>
@@ -308,7 +308,7 @@ export function AdminPage() {
                           <div className={styles.cardInfo}>
                             <div className={styles.cardName} style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px' }}>
                               <FileText size={16} />
-                              {log.event?.description || 'Erreur notification'}
+                              {log.event?.description || t('admin.logs.errorNotification')}
                             </div>
                             <div className={styles.cardDetails}>
                               <span className={styles.cardDetail}>
@@ -330,12 +330,12 @@ export function AdminPage() {
                             <button
                               className={styles.deleteButton}
                               onClick={async () => {
-                                if (confirm('Supprimer ce log ?')) {
+                                if (confirm(t('admin.logs.delete.confirm'))) {
                                   await notificationService.delete(log.id);
                                   fetchErrorLogs();
                                 }
                               }}
-                              title="Supprimer ce log"
+                              title={t('admin.logs.delete.title')}
                             >
                               <X size={16} />
                             </button>

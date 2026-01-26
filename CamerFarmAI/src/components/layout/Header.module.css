@@ -131,6 +131,13 @@
 .header__iconButtonActive {
   color: var(--color-primary) !important;
   background-color: rgba(46, 125, 50, 0.1);
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
+.header__iconButtonActive:hover {
+  box-shadow: none !important;
+  cursor: default !important;
 }
 
 .header__iconLabel {

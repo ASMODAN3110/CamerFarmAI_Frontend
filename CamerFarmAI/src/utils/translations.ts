@@ -487,6 +487,7 @@ export type TranslationKey =
   | 'admin.user.plantation'
   | 'admin.delete.confirm'
   | 'admin.delete.error'
+  | 'admin.delete.ariaLabel'
   | 'admin.update.error'
   | 'admin.create.title'
   | 'admin.create.success'
@@ -508,6 +509,9 @@ export type TranslationKey =
   | 'admin.fakers.title'
   | 'admin.logs.title'
   | 'admin.logs.empty'
+  | 'admin.logs.delete.confirm'
+  | 'admin.logs.delete.title'
+  | 'admin.logs.errorNotification'
   | 'admin.fakers.subtitle'
   | 'admin.fakers.test.title'
   | 'admin.fakers.test.description'
@@ -1412,12 +1416,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.create': 'Créer un technicien',
     'admin.logs.title': 'Journal des Erreurs Système',
     'admin.logs.empty': 'Aucune erreur système détectée.',
+    'admin.logs.delete.confirm': 'Supprimer ce log ?',
+    'admin.logs.delete.title': 'Supprimer ce log',
+    'admin.logs.errorNotification': 'Erreur notification',
     'admin.user.active': 'Actif',
     'admin.user.inactive': 'Inactif',
     'admin.user.plantations': 'plantations',
     'admin.user.plantation': 'plantation',
     'admin.delete.confirm': 'Êtes-vous sûr de vouloir supprimer {name} ? Cette action est irréversible.',
     'admin.delete.error': 'Erreur lors de la suppression',
+    'admin.delete.ariaLabel': 'Supprimer',
     'admin.update.error': 'Erreur lors de la mise à jour',
     'admin.create.title': 'Créer un technicien',
     'admin.create.success': 'Technicien créé avec succès',
@@ -2340,12 +2348,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.create': 'Create Technician',
     'admin.logs.title': 'System Error Logs',
     'admin.logs.empty': 'No system errors detected.',
+    'admin.logs.delete.confirm': 'Delete this log?',
+    'admin.logs.delete.title': 'Delete this log',
+    'admin.logs.errorNotification': 'Error notification',
     'admin.user.active': 'Active',
     'admin.user.inactive': 'Inactive',
     'admin.user.plantations': 'plantations',
     'admin.user.plantation': 'plantation',
     'admin.delete.confirm': 'Are you sure you want to delete {name}? This action cannot be undone.',
     'admin.delete.error': 'Error during deletion',
+    'admin.delete.ariaLabel': 'Delete',
     'admin.update.error': 'Error during update',
     'admin.create.title': 'Create Technician',
     'admin.create.success': 'Technician created successfully',
@@ -3268,12 +3280,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.create': 'Waɗtu Kuutoro',
     'admin.logs.title': 'Journal des Erreurs',
     'admin.logs.empty': 'Alaa jiiɓu.',
+    'admin.logs.delete.confirm': 'Momtu log ngal?',
+    'admin.logs.delete.title': 'Momtu log ngal',
+    'admin.logs.errorNotification': 'Jiiɓu notification',
     'admin.user.active': 'Kuuɗe',
     'admin.user.inactive': 'Alaa kuuɗe',
     'admin.user.plantations': 'nguurndam',
     'admin.user.plantation': 'nguurndam',
     'admin.delete.confirm': 'Aɗa yiɗi momtude {name}? Ɗuum faytii ruttoowo.',
     'admin.delete.error': 'Koɗɗe e momtude',
+    'admin.delete.ariaLabel': 'Momtu',
     'admin.update.error': 'Koɗɗe e ɓeydude',
     'admin.create.title': 'Waɗtu Kuutoro',
     'admin.create.success': 'Kuutoro waɗɗaama e moƴƴere',
@@ -4197,12 +4213,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.technicians.create': 'Tobo Mfa\'a',
     'admin.logs.title': 'Journal des Erreurs',
     'admin.logs.empty': 'Aucune erreur',
+    'admin.logs.delete.confirm': 'Momtude log ékpé?',
+    'admin.logs.delete.title': 'Momtude log ékpé',
+    'admin.logs.errorNotification': 'Abé notification',
     'admin.user.active': 'Vè',
     'admin.user.inactive': 'Teké vè',
     'admin.user.plantations': 'bisó',
     'admin.user.plantation': 'bisó',
     'admin.delete.confirm': 'Wá yiɗi momtude {name}? Dze yá bwa.',
     'admin.delete.error': 'Abé ya momtude',
+    'admin.delete.ariaLabel': 'Momtude',
     'admin.update.error': 'Abé ya nziñ',
     'admin.create.title': 'Tobo Mfa\'a',
     'admin.create.success': 'Mfa\'a tobo mán',
