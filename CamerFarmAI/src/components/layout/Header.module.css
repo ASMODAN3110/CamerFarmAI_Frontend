@@ -140,6 +140,10 @@
   display: inline-block;
 }
 
+.header__iconLabelActive {
+  color: var(--color-primary) !important;
+}
+
 .header__userActions {
   display: flex;
   align-items: center;
@@ -670,6 +674,10 @@
   font-weight: 700;
   color: #1f2937;
   line-height: 1.2;
+}
+
+.header__technicianUserLabelActive {
+  color: var(--color-primary) !important;
 }
 
 .header__technicianLogout {

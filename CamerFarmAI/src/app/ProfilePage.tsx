@@ -45,8 +45,9 @@ export function ProfilePage() {
 
   const profileNavItems = useMemo(
     () => {
-      // Pour les techniciens, ne pas passer de navItems pour que le Header utilise le variant technicien
-      if (isTechnician) {
+      // Pour les techniciens et administrateurs, ne pas passer de navItems 
+      // pour que le Header utilise le variant approprié (technicien ou admin)
+      if (isTechnician || user?.role === 'admin') {
         return undefined;
       }
       return [
@@ -56,7 +57,7 @@ export function ProfilePage() {
         { label: t('nav.support'), href: '/support' },
       ];
     },
-    [t, isTechnician]
+    [t, isTechnician, user?.role]
   );
 
   // Charger les données utilisateur au montage du composant seulement si pas déjà chargé

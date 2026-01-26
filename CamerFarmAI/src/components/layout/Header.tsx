@@ -334,8 +334,14 @@ export function Header({
   // Créer les items de navigation avec traductions
   let navItemsWithActive: NavItem[];
 
-  if (navItems) {
+  // Si on est sur la page de profil et que l'utilisateur est technicien ou admin,
+  // forcer l'affichage uniquement du lien approprié
+  const isOnProfilePage = currentPath === '/profile';
+  const shouldForceRoleNav = isOnProfilePage && (user?.role === 'technician' || user?.role === 'admin');
+
+  if (navItems && !shouldForceRoleNav) {
     // Si des navItems personnalisés sont fournis, les utiliser tels quels
+    // (sauf si on doit forcer l'affichage du lien de rôle)
     navItemsWithActive = navItems.map(item => ({
       ...item,
       active: item.href === currentPath,
@@ -536,12 +542,12 @@ export function Header({
                   <div className={styles.header__userActions}>
                     <Link
                       to="/profile"
-                      className={styles.header__iconButton}
+                      className={`${styles.header__iconButton} ${location.pathname === '/profile' ? styles.header__iconButtonActive : ''}`}
                       aria-label={t('auth.profile')}
                       title={t('auth.profile')}
                     >
                       <Icon icon={FaUser} size={20} />
-                      <span className={styles.header__iconLabel}>{t('auth.profile')}</span>
+                      <span className={`${styles.header__iconLabel} ${location.pathname === '/profile' ? styles.header__iconLabelActive : ''}`}>{t('auth.profile')}</span>
                     </Link>
 
                     <div className={styles.header__technicianSeparator}></div>
