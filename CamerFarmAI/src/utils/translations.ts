@@ -501,6 +501,8 @@ export type TranslationKey =
   | 'admin.create.form.firstName'
   | 'admin.create.form.lastName'
   | 'admin.create.form.email'
+  | 'admin.create.form.emailPlaceholder'
+  | 'admin.create.form.emailInvalid'
   | 'admin.create.form.optional'
   | 'admin.create.form.required'
   | 'admin.fakers.title'
@@ -1429,9 +1431,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.form.passwordPlaceholder': 'Minimum 8 caractères...',
     'admin.create.form.firstName': 'Prénom',
     'admin.create.form.lastName': 'Nom',
-    'admin.create.form.email': 'Email',
+    'admin.create.form.email': 'Email *',
+    'admin.create.form.emailPlaceholder': 'exemple@email.com',
+    'admin.create.form.emailInvalid': 'L\'adresse email n\'est pas valide',
     'admin.create.form.optional': 'Optionnel',
-    'admin.create.form.required': 'Le téléphone et le mot de passe sont requis',
+    'admin.create.form.required': 'Le téléphone, le mot de passe et l\'email sont requis',
     'admin.fakers.title': 'Générateur de données de test',
     'admin.fakers.subtitle': 'Générez des données factices pour tester l\'application',
     'admin.fakers.test.title': 'Tester les fakers',
@@ -2355,9 +2359,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.form.passwordPlaceholder': 'Minimum 8 characters...',
     'admin.create.form.firstName': 'First Name',
     'admin.create.form.lastName': 'Last Name',
-    'admin.create.form.email': 'Email',
+    'admin.create.form.email': 'Email *',
+    'admin.create.form.emailPlaceholder': 'example@email.com',
+    'admin.create.form.emailInvalid': 'Email address is invalid',
     'admin.create.form.optional': 'Optional',
-    'admin.create.form.required': 'Phone and password are required',
+    'admin.create.form.required': 'Phone, password and email are required',
     'admin.fakers.title': 'Test Data Generator',
     'admin.fakers.subtitle': 'Generate fake data to test the application',
     'admin.fakers.test.title': 'Test Fakers',
@@ -3281,9 +3287,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.form.passwordPlaceholder': 'Kalaa 8 karaktere...',
     'admin.create.form.firstName': 'Innde fuɗɗo',
     'admin.create.form.lastName': 'Innde',
-    'admin.create.form.email': 'Email',
+    'admin.create.form.email': 'Email *',
+    'admin.create.form.emailPlaceholder': 'exemple@email.com',
+    'admin.create.form.emailInvalid': 'Nder email fotaani',
     'admin.create.form.optional': 'Waɗɗa',
-    'admin.create.form.required': 'Tel e finnde ina tawaa',
+    'admin.create.form.required': 'Tel, finnde e email ina tawaa',
     'admin.fakers.title': 'Keɓe Ɓaawɗe Ngam Ƴeewtagol',
     'admin.fakers.subtitle': 'Ɓeydu keɓe ɓaawɗe ngam Ƴeewtagol baɗɗe',
     'admin.fakers.test.title': 'Ƴeewtu Keɓe Ɓaawɗe',
@@ -4208,9 +4216,11 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.form.passwordPlaceholder': 'Kalaa 8 caractères...',
     'admin.create.form.firstName': 'Nkómbó ndé',
     'admin.create.form.lastName': 'Nkómbó',
-    'admin.create.form.email': 'Email',
+    'admin.create.form.email': 'Email *',
+    'admin.create.form.emailPlaceholder': 'exemple@email.com',
+    'admin.create.form.emailInvalid': 'Email alé mán',
     'admin.create.form.optional': 'Ékpé',
-    'admin.create.form.required': 'Téléfón é mótí bía kômbô',
+    'admin.create.form.required': 'Téléfón, mótí é email bía kômbô',
     'admin.fakers.title': 'Keɓe Ɓaawɗe Ngam Ƴeewtagol',
     'admin.fakers.subtitle': 'Ɓeydu keɓe ɓaawɗe ngam Ƴeewtagol baɗɗe',
     'admin.fakers.test.title': 'Ƴeewtu Keɓe Ɓaawɗe',

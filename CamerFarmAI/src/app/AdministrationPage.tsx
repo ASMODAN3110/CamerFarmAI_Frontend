@@ -91,8 +91,15 @@ export function AdminPage() {
   };
 
   const handleCreateTechnician = async () => {
-    if (!newTechPhone.trim() || !newTechPassword.trim()) {
+    if (!newTechPhone.trim() || !newTechPassword.trim() || !newTechEmail.trim()) {
       setCreateError(t('admin.create.form.required'));
+      return;
+    }
+
+    // Validation de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newTechEmail.trim())) {
+      setCreateError(t('admin.create.form.emailInvalid') || 'Adresse email invalide');
       return;
     }
 
@@ -105,7 +112,7 @@ export function AdminPage() {
         password: newTechPassword,
         firstName: newTechFirstName.trim() || undefined,
         lastName: newTechLastName.trim() || undefined,
-        email: newTechEmail.trim() || undefined,
+        email: newTechEmail.trim(),
       });
 
       // Réinitialiser le formulaire
@@ -403,7 +410,8 @@ export function AdminPage() {
                 type="email"
                 value={newTechEmail}
                 onChange={(e) => setNewTechEmail(e.target.value)}
-                placeholder={t('admin.create.form.optional')}
+                placeholder={t('admin.create.form.emailPlaceholder')}
+                required
               />
             </div>
 
@@ -412,7 +420,7 @@ export function AdminPage() {
                 variant="primary"
                 size="md"
                 onClick={handleCreateTechnician}
-                disabled={creating || !newTechPhone.trim() || !newTechPassword.trim()}
+                disabled={creating || !newTechPhone.trim() || !newTechPassword.trim() || !newTechEmail.trim()}
               >
                 {creating ? (
                   <>
