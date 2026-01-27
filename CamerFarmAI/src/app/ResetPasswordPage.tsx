@@ -113,16 +113,37 @@ export function ResetPasswordPage() {
     } catch (error: any) {
       console.error('Erreur reset-password:', error);
       
-      // Gérer les erreurs spécifiques
-      if (error.response?.status === 401) {
+      // Gérer les erreurs spécifiques selon les codes HTTP des spécifications
+      const status = error.response?.status;
+      const responseData = error.response?.data;
+      
+      if (status === 400) {
+        // Erreur de validation
+        if (responseData?.errors) {
+          const validationErrors = responseData.errors.map((err: any) => err.msg);
+          setErrors(validationErrors);
+        } else {
+          setErrors([responseData?.message || t('resetPassword.errors.passwordInvalid') || 'Données invalides']);
+        }
+      } else if (status === 401) {
+        // Token invalide ou expiré
         setErrors([t('resetPassword.errors.tokenExpired') || 'Token de réinitialisation invalide ou expiré. Veuillez demander un nouveau lien.']);
-      } else if (error.response?.status === 403) {
+      } else if (status === 403) {
+        // Compte désactivé
         setErrors([t('resetPassword.errors.accountDisabled') || 'Impossible de réinitialiser le mot de passe d\'un compte désactivé']);
-      } else if (error.response?.data?.errors) {
-        const validationErrors = error.response.data.errors.map((err: any) => err.msg);
+      } else if (status === 404) {
+        // Utilisateur non trouvé
+        setErrors([responseData?.message || t('resetPassword.errors.userNotFound') || 'Utilisateur non trouvé']);
+      } else if (status === 500) {
+        // Erreur serveur
+        setErrors([responseData?.message || t('resetPassword.errors.serverError') || 'Erreur serveur lors de la réinitialisation du mot de passe. Veuillez réessayer plus tard.']);
+      } else if (responseData?.errors) {
+        // Autres erreurs de validation
+        const validationErrors = responseData.errors.map((err: any) => err.msg);
         setErrors(validationErrors);
       } else {
-        setErrors([error.response?.data?.message || 'Une erreur est survenue']);
+        // Erreur générique
+        setErrors([responseData?.message || t('resetPassword.errors.genericError') || 'Une erreur est survenue. Veuillez réessayer.']);
       }
     } finally {
       setLoading(false);

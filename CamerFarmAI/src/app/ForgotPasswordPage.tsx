@@ -63,7 +63,34 @@ export function ForgotPasswordPage() {
       }
     } catch (error: any) {
       console.error('Erreur forgot-password:', error);
-      setErrors(['Une erreur est survenue. Veuillez réessayer.']);
+      
+      // Gérer les erreurs spécifiques selon les codes HTTP des spécifications
+      const status = error.response?.status;
+      const responseData = error.response?.data;
+      
+      if (status === 400) {
+        // Erreur de validation
+        if (responseData?.errors) {
+          const validationErrors = responseData.errors.map((err: any) => err.msg);
+          setErrors(validationErrors);
+        } else {
+          setErrors([responseData?.message || t('forgotPassword.errors.emailInvalid') || 'Données invalides']);
+        }
+      } else if (status === 500) {
+        // Erreur serveur
+        setErrors([responseData?.message || t('forgotPassword.errors.serverError') || 'Erreur serveur. Veuillez réessayer plus tard.']);
+      } else if (responseData?.errors) {
+        // Autres erreurs de validation
+        const validationErrors = responseData.errors.map((err: any) => err.msg);
+        setErrors(validationErrors);
+      } else {
+        // Erreur réseau ou générique
+        if (!error.response) {
+          setErrors([t('forgotPassword.errors.networkError') || 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.']);
+        } else {
+          setErrors([responseData?.message || t('forgotPassword.errors.genericError') || 'Une erreur est survenue. Veuillez réessayer.']);
+        }
+      }
     } finally {
       setLoading(false);
     }

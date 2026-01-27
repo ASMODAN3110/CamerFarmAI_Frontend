@@ -13,7 +13,7 @@ export interface RegisterDto {
   password: string; // Requis, min 8 caractères, majuscule, minuscule, chiffre, caractère spécial
   firstName?: string; // Optionnel
   lastName?: string; // Optionnel
-  email?: string; // Optionnel, format email valide
+  email: string; // Requis, format email valide
 }
 
 /**

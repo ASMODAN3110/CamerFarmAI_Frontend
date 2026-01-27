@@ -69,6 +69,9 @@ export type TranslationKey =
   | 'forgotPassword.backToLogin'
   | 'forgotPassword.errors.emailRequired'
   | 'forgotPassword.errors.emailInvalid'
+  | 'forgotPassword.errors.serverError'
+  | 'forgotPassword.errors.networkError'
+  | 'forgotPassword.errors.genericError'
   | 'resetPassword.title'
   | 'resetPassword.subtitle'
   | 'resetPassword.newPasswordLabel'
@@ -90,6 +93,9 @@ export type TranslationKey =
   | 'resetPassword.errors.passwordMismatch'
   | 'resetPassword.errors.passwordInvalid'
   | 'resetPassword.errors.accountDisabled'
+  | 'resetPassword.errors.userNotFound'
+  | 'resetPassword.errors.serverError'
+  | 'resetPassword.errors.genericError'
   | 'resetPassword.requestNewLink'
   | 'resetPassword.backToLogin'
   | 'signup.title'
@@ -1008,6 +1014,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'forgotPassword.backToLogin': 'Retour à la connexion',
     'forgotPassword.errors.emailRequired': 'L\'adresse email est requise',
     'forgotPassword.errors.emailInvalid': 'L\'adresse email n\'est pas valide',
+    'forgotPassword.errors.serverError': 'Erreur serveur. Veuillez réessayer plus tard.',
+    'forgotPassword.errors.networkError': 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
+    'forgotPassword.errors.genericError': 'Une erreur est survenue. Veuillez réessayer.',
     'resetPassword.title': 'RÉINITIALISER VOTRE MOT DE PASSE',
     'resetPassword.subtitle': 'Créez un nouveau mot de passe sécurisé pour votre compte.',
     'resetPassword.newPasswordLabel': 'Nouveau mot de passe',
@@ -1029,6 +1038,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.passwordMismatch': 'Les mots de passe ne correspondent pas',
     'resetPassword.errors.passwordInvalid': 'Le mot de passe ne respecte pas toutes les règles requises',
     'resetPassword.errors.accountDisabled': 'Impossible de réinitialiser le mot de passe d\'un compte désactivé',
+    'resetPassword.errors.userNotFound': 'Utilisateur non trouvé',
+    'resetPassword.errors.serverError': 'Erreur serveur lors de la réinitialisation du mot de passe. Veuillez réessayer plus tard.',
+    'resetPassword.errors.genericError': 'Une erreur est survenue. Veuillez réessayer.',
     'resetPassword.requestNewLink': 'Demander un nouveau lien',
     'resetPassword.backToLogin': 'Retour à la connexion',
     'signup.title': 'INSCRIPTION',
@@ -1946,6 +1958,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'forgotPassword.backToLogin': 'Back to login',
     'forgotPassword.errors.emailRequired': 'Email address is required',
     'forgotPassword.errors.emailInvalid': 'Email address is invalid',
+    'forgotPassword.errors.serverError': 'Server error. Please try again later.',
+    'forgotPassword.errors.networkError': 'Network error. Please check your connection and try again.',
+    'forgotPassword.errors.genericError': 'An error occurred. Please try again.',
     'resetPassword.title': 'RESET YOUR PASSWORD',
     'resetPassword.subtitle': 'Create a new secure password for your account.',
     'resetPassword.newPasswordLabel': 'New password',
@@ -1967,6 +1982,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.passwordMismatch': 'Passwords do not match',
     'resetPassword.errors.passwordInvalid': 'Password does not meet all required rules',
     'resetPassword.errors.accountDisabled': 'Cannot reset password for a disabled account',
+    'resetPassword.errors.userNotFound': 'User not found',
+    'resetPassword.errors.serverError': 'Server error during password reset. Please try again later.',
+    'resetPassword.errors.genericError': 'An error occurred. Please try again.',
     'resetPassword.requestNewLink': 'Request a new link',
     'resetPassword.backToLogin': 'Back to login',
     'signup.title': 'SIGN UP',
@@ -2884,6 +2902,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'forgotPassword.backToLogin': 'Rutto seŋo',
     'forgotPassword.errors.emailRequired': 'Nder email ina tawaa',
     'forgotPassword.errors.emailInvalid': 'Nder email fotaani',
+    'forgotPassword.errors.serverError': 'Koɗɗe server. Ɗaɓɓu yeewto kadi.',
+    'forgotPassword.errors.networkError': 'Koɗɗe network. Ɗaɓɓu seŋŋa jokkol maa e yeewto.',
+    'forgotPassword.errors.genericError': 'Koɗɗe waɗii. Ɗaɓɓu yeewto.',
     'resetPassword.title': 'RUTTU FINNDE MAA',
     'resetPassword.subtitle': 'Waɗu finnde hesɗo ngam konte maa.',
     'resetPassword.newPasswordLabel': 'Finnde hesɗo',
@@ -2905,6 +2926,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.passwordMismatch': 'Finnde ɗe njaatondiraani',
     'resetPassword.errors.passwordInvalid': 'Finnde ngal alaa jokkondiraa koɗɗe fof',
     'resetPassword.errors.accountDisabled': 'Waawaa ruttude finnde konte ɓaawtaaɗe',
+    'resetPassword.errors.userNotFound': 'Kuutoro ngal njiytaani',
+    'resetPassword.errors.serverError': 'Koɗɗe server e ruttude finnde. Ɗaɓɓu yeewto kadi.',
+    'resetPassword.errors.genericError': 'Koɗɗe waɗii. Ɗaɓɓu yeewto.',
     'resetPassword.requestNewLink': 'Yeewto jokkol hesɗo',
     'resetPassword.backToLogin': 'Rutto seŋo',
     'signup.title': 'WINNDITO',
@@ -3822,6 +3846,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'forgotPassword.backToLogin': 'Bwá kómbí',
     'forgotPassword.errors.emailRequired': 'Email ékpé',
     'forgotPassword.errors.emailInvalid': 'Email alé mán',
+    'forgotPassword.errors.serverError': 'Abé ya server. Bwá sígní kadi.',
+    'forgotPassword.errors.networkError': 'Abé ya network. Bwá sígní jokkol maa ékpé sígní.',
+    'forgotPassword.errors.genericError': 'Abé ya waɗii. Bwá sígní.',
     'resetPassword.title': 'RUTTU MÓTÍ WÁ',
     'resetPassword.subtitle': 'Sígní mótí mán ngam kóntó wá.',
     'resetPassword.newPasswordLabel': 'Mótí mán',
@@ -3843,6 +3870,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.passwordMismatch': 'Mótí alé mán',
     'resetPassword.errors.passwordInvalid': 'Mótí alé jokkondira koɗɗe fof',
     'resetPassword.errors.accountDisabled': 'Alé waawi ruttu mótí kóntó ɓaawtaaɗe',
+    'resetPassword.errors.userNotFound': 'Kuutoro alé mán',
+    'resetPassword.errors.serverError': 'Abé ya server ékpé ruttu mótí. Bwá sígní kadi.',
+    'resetPassword.errors.genericError': 'Abé ya waɗii. Bwá sígní.',
     'resetPassword.requestNewLink': 'Bwá sígní jokkol mán',
     'resetPassword.backToLogin': 'Bwá kómbí',
     'signup.title': 'SÍGNÍ',
