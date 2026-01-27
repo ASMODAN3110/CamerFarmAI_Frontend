@@ -1,4 +1,4 @@
-﻿import type { Language } from '../contexts/LanguageContext';
+import type { Language } from '../contexts/LanguageContext';
 
 export type TranslationKey =
   | 'nav.home'
@@ -497,6 +497,12 @@ export type TranslationKey =
   | 'admin.create.cancel'
   | 'admin.create.form.phone'
   | 'admin.create.form.phonePlaceholder'
+  | 'admin.create.form.phoneInvalid'
+  | 'admin.create.form.phoneTooShort'
+  | 'admin.create.form.phoneTooLong'
+  | 'admin.create.form.phoneMissingCountryCode'
+  | 'admin.create.form.phoneInvalidCharacters'
+  | 'admin.create.form.phoneInvalidFormat'
   | 'admin.create.form.password'
   | 'admin.create.form.passwordPlaceholder'
   | 'admin.create.form.firstName'
@@ -1435,6 +1441,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.cancel': 'Annuler',
     'admin.create.form.phone': 'Téléphone *',
     'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.phoneInvalid': 'Le numéro de téléphone n\'est pas valide',
+    'admin.create.form.phoneTooShort': 'Le numéro de téléphone est trop court (minimum 10 chiffres)',
+    'admin.create.form.phoneTooLong': 'Le numéro de téléphone est trop long (maximum 15 chiffres)',
+    'admin.create.form.phoneMissingCountryCode': 'Le numéro doit commencer par + suivi de l\'indicatif pays',
+    'admin.create.form.phoneInvalidCharacters': 'Le numéro ne doit contenir que des chiffres et le signe + au début',
+    'admin.create.form.phoneInvalidFormat': 'Format de numéro invalide',
     'admin.create.form.password': 'Mot de passe *',
     'admin.create.form.passwordPlaceholder': 'Minimum 8 caractères...',
     'admin.create.form.firstName': 'Prénom',
@@ -2367,6 +2379,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.cancel': 'Cancel',
     'admin.create.form.phone': 'Phone *',
     'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.phoneInvalid': 'Phone number is invalid',
+    'admin.create.form.phoneTooShort': 'Phone number is too short (minimum 10 digits)',
+    'admin.create.form.phoneTooLong': 'Phone number is too long (maximum 15 digits)',
+    'admin.create.form.phoneMissingCountryCode': 'Number must start with + followed by country code',
+    'admin.create.form.phoneInvalidCharacters': 'Number must contain only digits and + sign at the beginning',
+    'admin.create.form.phoneInvalidFormat': 'Invalid phone number format',
     'admin.create.form.password': 'Password *',
     'admin.create.form.passwordPlaceholder': 'Minimum 8 characters...',
     'admin.create.form.firstName': 'First Name',
@@ -3299,6 +3317,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.cancel': 'Dirtu',
     'admin.create.form.phone': 'Tel *',
     'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.phoneInvalid': 'Nder tel fotaani',
+    'admin.create.form.phoneTooShort': 'Nder tel naatii (kalaa 10 karaktere)',
+    'admin.create.form.phoneTooLong': 'Nder tel mawnii (kalaa 15 karaktere)',
+    'admin.create.form.phoneMissingCountryCode': 'Nder tel ina fuɗɗa e + e nder lesdi',
+    'admin.create.form.phoneInvalidCharacters': 'Nder tel ina tawaa tan karaktere e + fuɗɗaande',
+    'admin.create.form.phoneInvalidFormat': 'Nder tel fotaani',
     'admin.create.form.password': 'Finnde *',
     'admin.create.form.passwordPlaceholder': 'Kalaa 8 karaktere...',
     'admin.create.form.firstName': 'Innde fuɗɗo',
@@ -4232,6 +4256,12 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'admin.create.cancel': 'Bwá',
     'admin.create.form.phone': 'Téléfón *',
     'admin.create.form.phonePlaceholder': '+237612345678',
+    'admin.create.form.phoneInvalid': 'Téléfón alé mán',
+    'admin.create.form.phoneTooShort': 'Téléfón ékpé kalaa (kalaa 10 caractères)',
+    'admin.create.form.phoneTooLong': 'Téléfón ékpé mawn (kalaa 15 caractères)',
+    'admin.create.form.phoneMissingCountryCode': 'Téléfón bía fuɗɗa e + ékpé nder lesdi',
+    'admin.create.form.phoneInvalidCharacters': 'Téléfón bía tawaa tan caractères ékpé + fuɗɗaande',
+    'admin.create.form.phoneInvalidFormat': 'Téléfón alé mán',
     'admin.create.form.password': 'Mótí *',
     'admin.create.form.passwordPlaceholder': 'Kalaa 8 caractères...',
     'admin.create.form.firstName': 'Nkómbó ndé',

@@ -25,6 +25,7 @@ export function AdminPage() {
   const [newTechEmail, setNewTechEmail] = useState('');
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [phoneValidationError, setPhoneValidationError] = useState<string | null>(null);
 
   // State pour les logs d'erreurs
   const [errorLogs, setErrorLogs] = useState<Notification[]>([]);
@@ -90,9 +91,101 @@ export function AdminPage() {
     }
   };
 
+  // Fonction de validation du téléphone renforcée avec normalisation E.164
+  const validatePhone = (phone: string): {
+    isValid: boolean;
+    normalized: string;
+    error?: string;
+  } => {
+    // 1. Nettoyage : supprimer espaces, tirets, points, parenthèses
+    const cleaned = phone.replace(/[\s\-\.\(\)]/g, '');
+    
+    // 2. Vérifier présence du + au début
+    if (!cleaned.startsWith('+')) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneMissingCountryCode')
+      };
+    }
+    
+    // 3. Extraire la partie après le +
+    const afterPlus = cleaned.substring(1);
+    
+    // 4. Vérifier que ce ne sont que des chiffres après le +
+    if (!/^\d+$/.test(afterPlus)) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneInvalidCharacters')
+      };
+    }
+    
+    // 5. Vérifier indicatif pays (1-4 chiffres après +)
+    const countryCodeMatch = afterPlus.match(/^(\d{1,4})/);
+    if (!countryCodeMatch) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneMissingCountryCode')
+      };
+    }
+    
+    const countryCode = countryCodeMatch[1];
+    const localNumber = afterPlus.substring(countryCode.length);
+    
+    // 6. Vérifier longueur totale (10-15 chiffres selon E.164)
+    const totalDigits = afterPlus.length;
+    if (totalDigits < 10) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneTooShort')
+      };
+    }
+    if (totalDigits > 15) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneTooLong')
+      };
+    }
+    
+    // 7. Vérifier longueur du numéro local (au moins 4 chiffres)
+    if (localNumber.length < 4) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneTooShort')
+      };
+    }
+    
+    // 8. Vérifier que ce n'est pas un numéro invalide (tous zéros ou répétitions suspectes)
+    if (/^0+$/.test(localNumber) || /^(\d)\1{8,}$/.test(afterPlus)) {
+      return {
+        isValid: false,
+        normalized: cleaned,
+        error: t('admin.create.form.phoneInvalidFormat')
+      };
+    }
+    
+    // 9. Retourner le numéro normalisé en format E.164
+    return {
+      isValid: true,
+      normalized: `+${afterPlus}`
+    };
+  };
+
   const handleCreateTechnician = async () => {
     if (!newTechPhone.trim() || !newTechPassword.trim() || !newTechEmail.trim()) {
       setCreateError(t('admin.create.form.required'));
+      return;
+    }
+
+    // Validation du téléphone avec normalisation
+    const phoneValidation = validatePhone(newTechPhone.trim());
+    if (!phoneValidation.isValid) {
+      setCreateError(phoneValidation.error || t('admin.create.form.phoneInvalid'));
       return;
     }
 
@@ -108,7 +201,7 @@ export function AdminPage() {
 
     try {
       await adminService.createTechnician({
-        phone: newTechPhone.trim(),
+        phone: phoneValidation.normalized, // Utiliser le numéro normalisé
         password: newTechPassword,
         firstName: newTechFirstName.trim() || undefined,
         lastName: newTechLastName.trim() || undefined,
@@ -121,6 +214,7 @@ export function AdminPage() {
       setNewTechFirstName('');
       setNewTechLastName('');
       setNewTechEmail('');
+      setPhoneValidationError(null);
       setCreateOpen(false);
 
       // Rafraîchir la liste
@@ -275,6 +369,7 @@ export function AdminPage() {
                   onClick={() => {
                     setCreateOpen(true);
                     setCreateError(null);
+                    setPhoneValidationError(null);
                   }}
                 >
                   <PlusCircle size={18} />
@@ -367,10 +462,62 @@ export function AdminPage() {
               <input
                 type="tel"
                 value={newTechPhone}
-                onChange={(e) => setNewTechPhone(e.target.value)}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  
+                  // Normalisation automatique : supprimer les caractères non autorisés sauf + et chiffres
+                  // Permettre seulement + au début et des chiffres après
+                  if (value.length > 0) {
+                    // Si le premier caractère n'est pas +, l'ajouter automatiquement si c'est un chiffre
+                    if (!value.startsWith('+') && /^\d/.test(value)) {
+                      value = '+' + value;
+                    }
+                    // Supprimer tous les caractères non autorisés (garder seulement + et chiffres)
+                    value = value.replace(/[^\d+]/g, '');
+                    // S'assurer qu'il n'y a qu'un seul + au début
+                    const plusCount = (value.match(/\+/g) || []).length;
+                    if (plusCount > 1) {
+                      value = '+' + value.replace(/\+/g, '');
+                    } else if (!value.startsWith('+') && value.length > 0) {
+                      value = '+' + value;
+                    }
+                  }
+                  
+                  setNewTechPhone(value);
+                  
+                  // Validation en temps réel
+                  if (value.trim()) {
+                    const validation = validatePhone(value.trim());
+                    if (!validation.isValid) {
+                      setPhoneValidationError(validation.error || t('admin.create.form.phoneInvalid'));
+                    } else {
+                      setPhoneValidationError(null);
+                    }
+                  } else {
+                    setPhoneValidationError(null);
+                  }
+                  
+                  // Réinitialiser l'erreur générale quand l'utilisateur tape
+                  if (createError) {
+                    setCreateError(null);
+                  }
+                }}
                 placeholder={t('admin.create.form.phonePlaceholder')}
                 required
               />
+              {phoneValidationError && (
+                <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                  {phoneValidationError}
+                </span>
+              )}
+              {newTechPhone.trim() && !phoneValidationError && (() => {
+                const validation = validatePhone(newTechPhone.trim());
+                return validation.isValid && (
+                  <span style={{ fontSize: '12px', color: '#16a34a', marginTop: '4px', display: 'block' }}>
+                    ✓ {validation.normalized}
+                  </span>
+                );
+              })()}
             </div>
 
             <div className={styles.formRow}>
@@ -420,7 +567,7 @@ export function AdminPage() {
                 variant="primary"
                 size="md"
                 onClick={handleCreateTechnician}
-                disabled={creating || !newTechPhone.trim() || !newTechPassword.trim() || !newTechEmail.trim()}
+                disabled={creating || !newTechPhone.trim() || !newTechPassword.trim() || !newTechEmail.trim() || !validatePhone(newTechPhone.trim()).isValid}
               >
                 {creating ? (
                   <>
@@ -442,6 +589,7 @@ export function AdminPage() {
                   setNewTechFirstName('');
                   setNewTechLastName('');
                   setNewTechEmail('');
+                  setPhoneValidationError(null);
                 }}
                 disabled={creating}
               >
