@@ -7,6 +7,7 @@ import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { AccountDisabledModal } from '@/components/ui/AccountDisabledModal/AccountDisabledModal';
+import { GoogleSignInButton } from '@/components/ui/GoogleSignInButton/GoogleSignInButton';
 import { useAuthStore } from '@/services/useAuthStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -312,6 +313,16 @@ export function LoginPage() {
                 >
                   {isSubmitting ? t('login.submitting') : t('login.submitButton')}
                 </Button>
+
+                {/* Séparateur "ou" */}
+                <div className={styles.loginPage__divider}>
+                  <span className={styles.loginPage__dividerLine}></span>
+                  <span className={styles.loginPage__dividerText}>{t('login.or') || 'ou'}</span>
+                  <span className={styles.loginPage__dividerLine}></span>
+                </div>
+
+                {/* Bouton Google Sign-In */}
+                <GoogleSignInButton className={styles.loginPage__googleButton} />
 
                 <div className={styles.loginPage__links}>
                   <Link to="/forgot-password" className={styles.loginPage__link}>

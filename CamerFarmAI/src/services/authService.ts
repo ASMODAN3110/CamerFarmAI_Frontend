@@ -45,6 +45,24 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
+export interface GoogleAuthRequest {
+  idToken: string;
+}
+
+export interface GoogleAuthResponse {
+  user: {
+    id: string;
+    phone: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    role: UserRole;
+    avatarUrl: string | null;
+    authProvider: 'google' | 'local';
+  };
+  accessToken: string;
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   message: string;
@@ -357,6 +375,26 @@ export const authService = {
    */
   resetPassword: (token: string, newPassword: string): Promise<ApiResponse> => {
     return api.post<ApiResponse>('/auth/reset-password', { token, newPassword })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        // Si le backend retourne une erreur, la retourner
+        if (error.response?.data) {
+          return error.response.data;
+        }
+        // Sinon, propager l'erreur
+        throw error;
+      });
+  },
+
+  /**
+   * Authentification Google avec token ID
+   * @param idToken - Token ID Google obtenu via Google Identity Services
+   * @returns Promise avec la réponse de l'API contenant user et accessToken
+   */
+  googleAuth: (idToken: string): Promise<ApiResponse<GoogleAuthResponse>> => {
+    return api.post<ApiResponse<GoogleAuthResponse>>('/auth/google', { idToken })
       .then((res) => {
         return res.data;
       })

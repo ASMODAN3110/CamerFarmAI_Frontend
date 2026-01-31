@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { FormField } from '@/components/ui/FormField/FormField';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher/LanguageSwitcher';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { GoogleSignInButton } from '@/components/ui/GoogleSignInButton/GoogleSignInButton';
 import { useAuthStore } from '@/services/useAuthStore';
 import { authService } from '@/services/authService';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -529,6 +530,16 @@ export function SignUpPage() {
             >
               {isSubmitting ? t('signup.submitting') : t('signup.submitButton')}
             </Button>
+
+            {/* Séparateur "ou" */}
+            <div className={styles.signUpPage__divider}>
+              <span className={styles.signUpPage__dividerLine}></span>
+              <span className={styles.signUpPage__dividerText}>{t('login.or') || 'ou'}</span>
+              <span className={styles.signUpPage__dividerLine}></span>
+            </div>
+
+            {/* Bouton Google Sign-In */}
+            <GoogleSignInButton className={styles.signUpPage__googleButton} />
 
             <div className={styles.signUpPage__loginLink}>
               <p className={styles.signUpPage__loginText}>

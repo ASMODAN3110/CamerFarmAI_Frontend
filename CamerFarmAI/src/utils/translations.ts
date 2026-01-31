@@ -97,6 +97,17 @@ export type TranslationKey =
   | 'resetPassword.errors.serverError'
   | 'resetPassword.errors.genericError'
   | 'resetPassword.requestNewLink'
+  | 'login.or'
+  | 'googleAuth.loading'
+  | 'googleAuth.errors.scriptNotLoaded'
+  | 'googleAuth.errors.networkError'
+  | 'googleAuth.errors.validationError'
+  | 'googleAuth.errors.tokenInvalid'
+  | 'googleAuth.errors.emailNotVerified'
+  | 'googleAuth.errors.accountExists'
+  | 'googleAuth.errors.serverError'
+  | 'googleAuth.errors.generic'
+  | 'common.locale'
   | 'resetPassword.backToLogin'
   | 'signup.title'
   | 'signup.lastNameLabel'
@@ -1043,6 +1054,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.genericError': 'Une erreur est survenue. Veuillez réessayer.',
     'resetPassword.requestNewLink': 'Demander un nouveau lien',
     'resetPassword.backToLogin': 'Retour à la connexion',
+    'login.or': 'ou',
+    'googleAuth.loading': 'Connexion en cours...',
+    'googleAuth.errors.scriptNotLoaded': 'Erreur: Script Google non chargé',
+    'googleAuth.errors.networkError': 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.',
+    'googleAuth.errors.validationError': 'Données invalides',
+    'googleAuth.errors.tokenInvalid': 'Token Google invalide ou expiré. Veuillez réessayer.',
+    'googleAuth.errors.emailNotVerified': 'Votre email Google n\'est pas vérifié. Veuillez vérifier votre email Google.',
+    'googleAuth.errors.accountExists': 'Un compte existe déjà avec cet email. Veuillez vous connecter avec votre mot de passe.',
+    'googleAuth.errors.serverError': 'Erreur serveur. Veuillez réessayer plus tard.',
+    'googleAuth.errors.generic': 'Erreur lors de l\'authentification Google',
+    'common.locale': 'fr',
     'signup.title': 'INSCRIPTION',
     'signup.lastNameLabel': 'Nom',
     'signup.lastNamePlaceholder': 'Nom',
@@ -1987,6 +2009,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.genericError': 'An error occurred. Please try again.',
     'resetPassword.requestNewLink': 'Request a new link',
     'resetPassword.backToLogin': 'Back to login',
+    'login.or': 'or',
+    'googleAuth.loading': 'Signing in...',
+    'googleAuth.errors.scriptNotLoaded': 'Error: Google script not loaded',
+    'googleAuth.errors.networkError': 'Network error. Please check your connection and try again.',
+    'googleAuth.errors.validationError': 'Invalid data',
+    'googleAuth.errors.tokenInvalid': 'Google token invalid or expired. Please try again.',
+    'googleAuth.errors.emailNotVerified': 'Your Google email is not verified. Please verify your Google email.',
+    'googleAuth.errors.accountExists': 'An account already exists with this email. Please sign in with your password.',
+    'googleAuth.errors.serverError': 'Server error. Please try again later.',
+    'googleAuth.errors.generic': 'Error during Google authentication',
+    'common.locale': 'en',
     'signup.title': 'SIGN UP',
     'signup.lastNameLabel': 'Last Name',
     'signup.lastNamePlaceholder': 'Last Name',
@@ -2931,6 +2964,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.genericError': 'Koɗɗe waɗii. Ɗaɓɓu yeewto.',
     'resetPassword.requestNewLink': 'Yeewto jokkol hesɗo',
     'resetPassword.backToLogin': 'Rutto seŋo',
+    'login.or': 'walla',
+    'googleAuth.loading': 'Nana seŋa...',
+    'googleAuth.errors.scriptNotLoaded': 'Koɗɗe: Script Google ngal alaa jokkondiraa',
+    'googleAuth.errors.networkError': 'Koɗɗe network. Ɗaɓɓu seŋŋa jokkol maa e yeewto.',
+    'googleAuth.errors.validationError': 'Koɗɗe fotaani',
+    'googleAuth.errors.tokenInvalid': 'Token Google fotaani walla faytii. Ɗaɓɓu yeewto.',
+    'googleAuth.errors.emailNotVerified': 'Email Google maa alaa tiimtinaa. Ɗaɓɓu tiimtina email Google maa.',
+    'googleAuth.errors.accountExists': 'Konte njahii e nder email ngol. Ɗaɓɓu seŋo e finnde maa.',
+    'googleAuth.errors.serverError': 'Koɗɗe server. Ɗaɓɓu yeewto kadi.',
+    'googleAuth.errors.generic': 'Koɗɗe e tiimtinde Google',
+    'common.locale': 'ff',
     'signup.title': 'WINNDITO',
     'signup.lastNameLabel': 'Innde',
     'signup.lastNamePlaceholder': 'Innde',
@@ -3875,6 +3919,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'resetPassword.errors.genericError': 'Abé ya waɗii. Bwá sígní.',
     'resetPassword.requestNewLink': 'Bwá sígní jokkol mán',
     'resetPassword.backToLogin': 'Bwá kómbí',
+    'login.or': 'walla',
+    'googleAuth.loading': 'Seŋo...',
+    'googleAuth.errors.scriptNotLoaded': 'Abé: Script Google alé jokkondira',
+    'googleAuth.errors.networkError': 'Abé ya network. Bwá sígní jokkol maa ékpé sígní.',
+    'googleAuth.errors.validationError': 'Abé ya fotaani',
+    'googleAuth.errors.tokenInvalid': 'Token Google alé mán walla faytí. Bwá sígní.',
+    'googleAuth.errors.emailNotVerified': 'Email Google wá alé tiimtina. Bwá tiimtina email Google wá.',
+    'googleAuth.errors.accountExists': 'Kóntó njahí e email ékpé. Bwá seŋo e mótí wá.',
+    'googleAuth.errors.serverError': 'Abé ya server. Bwá sígní kadi.',
+    'googleAuth.errors.generic': 'Abé ya tiimtinde Google',
+    'common.locale': 'ew',
     'signup.title': 'SÍGNÍ',
     'signup.lastNameLabel': 'Nkómbó',
     'signup.lastNamePlaceholder': 'Sígní nkómbó wá',

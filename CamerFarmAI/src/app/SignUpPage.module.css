@@ -439,6 +439,32 @@
   transform: translateY(-2px);
 }
 
+.signUpPage__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  margin: var(--spacing-md) 0;
+}
+
+.signUpPage__dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.signUpPage__dividerText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.signUpPage__googleButton {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
 .signUpPage__loginLink {
   text-align: center;
   margin-top: var(--spacing-md);

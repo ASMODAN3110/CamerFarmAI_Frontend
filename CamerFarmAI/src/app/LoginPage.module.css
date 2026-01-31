@@ -489,6 +489,32 @@
   transform: translateY(-2px);
 }
 
+.loginPage__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  margin: var(--spacing-lg) 0;
+}
+
+.loginPage__dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.loginPage__dividerText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.loginPage__googleButton {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
 @keyframes buttonFadeIn {
   from {
     opacity: 0;
