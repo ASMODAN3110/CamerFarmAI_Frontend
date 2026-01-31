@@ -333,12 +333,37 @@
 }
 
 .errorMessage {
-  background: #fee2e2;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: var(--border-radius-md);
   color: #dc2626;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  margin-bottom: 16px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorMessage p {
+  margin: 0;
+}
+
+.successMessage {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: #d1fae5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--border-radius-md);
+  color: #065f46;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.successMessage p {
+  margin: 0;
 }
 
 .statusActive {

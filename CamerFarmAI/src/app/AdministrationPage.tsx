@@ -4,6 +4,7 @@ import styles from "./AdministrationPage.module.css";
 import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { Button } from '@/components/ui/Button/Button';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal/ConfirmationModal';
 import { adminService, type UserListItem } from '@/services/adminService';
 import { useTranslation } from '@/hooks/useTranslation';
 import { notificationService } from '@/services/notificationService';
@@ -30,6 +31,13 @@ export function AdminPage() {
   // State pour les logs d'erreurs
   const [errorLogs, setErrorLogs] = useState<Notification[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(false);
+
+  // State pour le modal de confirmation de suppression
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleteSuccess, setDeleteSuccess] = useState<string | null>(null);
 
   // Charger les utilisateurs au montage
   useEffect(() => {
@@ -70,24 +78,50 @@ export function AdminPage() {
   }, []);
 
   const handleDeleteUser = async (userId: string, userName: string) => {
-    if (!confirm(t('admin.delete.confirm').replace('{name}', userName))) {
-      return;
-    }
+    setUserToDelete({ id: userId, name: userName });
+    setDeleteModalOpen(true);
+    setDeleteError(null);
+    setDeleteSuccess(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+
+    setIsDeleting(true);
+    setDeleteError(null);
+    setDeleteSuccess(null);
 
     try {
-      await adminService.deleteUser(userId);
+      await adminService.deleteUser(userToDelete.id);
+      setDeleteSuccess(`L'utilisateur ${userToDelete.name} a été supprimé avec succès.`);
+      setDeleteModalOpen(false);
+      setUserToDelete(null);
       await fetchUsers(); // Rafraîchir la liste
+      
+      // Masquer le message de succès après 3 secondes
+      setTimeout(() => {
+        setDeleteSuccess(null);
+      }, 3000);
     } catch (err) {
-      alert(err instanceof Error ? err.message : t('admin.delete.error'));
+      setDeleteError(err instanceof Error ? err.message : t('admin.delete.error'));
+    } finally {
+      setIsDeleting(false);
     }
   };
 
+  const [updateError, setUpdateError] = useState<string | null>(null);
+
   const handleToggleUserStatus = async (userId: string, currentStatus: boolean) => {
+    setUpdateError(null);
     try {
       await adminService.updateUserStatus(userId, !currentStatus);
       await fetchUsers(); // Rafraîchir la liste
     } catch (err) {
-      alert(err instanceof Error ? err.message : t('admin.update.error'));
+      setUpdateError(err instanceof Error ? err.message : t('admin.update.error'));
+      // Masquer l'erreur après 5 secondes
+      setTimeout(() => {
+        setUpdateError(null);
+      }, 5000);
     }
   };
 
@@ -244,6 +278,23 @@ export function AdminPage() {
 
       {/* CONTENU */}
       <main className={styles.main}>
+        {/* Messages de succès/erreur globaux */}
+        {deleteSuccess && (
+          <div className={styles.successMessage}>
+            <p>{deleteSuccess}</p>
+          </div>
+        )}
+        {deleteError && (
+          <div className={styles.errorMessage}>
+            <p>{deleteError}</p>
+          </div>
+        )}
+        {updateError && (
+          <div className={styles.errorMessage}>
+            <p>{updateError}</p>
+          </div>
+        )}
+
         {loading ? (
           <div className={styles.loading}>
             <Loader2 size={24} className={styles.spinner} />
@@ -600,6 +651,26 @@ export function AdminPage() {
         </div>
       )}
 
+      {/* Modal de confirmation de suppression */}
+      <ConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setUserToDelete(null);
+          setDeleteError(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Supprimer un utilisateur"
+        message={
+          userToDelete 
+            ? `${t('admin.delete.confirm').replace('{name}', userToDelete.name)}${deleteError ? `\n\n${deleteError}` : ''}`
+            : ''
+        }
+        confirmLabel={t('admin.delete.ariaLabel') || 'Supprimer'}
+        cancelLabel={t('admin.create.cancel') || 'Annuler'}
+        isConfirming={isDeleting}
+        variant="danger"
+      />
 
     </div>
   );
