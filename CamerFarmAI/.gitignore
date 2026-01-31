@@ -28,6 +28,9 @@ build
 .env.production.local
 .env*.local
 
+# Keep .env.example as a template (do not ignore)
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

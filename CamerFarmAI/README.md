@@ -49,6 +49,7 @@ Le frontend convertit automatiquement les unités de superficie :
 ### Authentification
 - **Inscription** : Création de compte avec email, téléphone, nom et prénom
 - **Connexion** : Authentification par email et mot de passe
+- **Authentification Google** : Connexion rapide via Google OAuth 2.0 (disponible sur les pages de connexion et d'inscription)
 - **Authentification à deux facteurs (2FA)** : Sécurisation supplémentaire avec codes de vérification (Google Authenticator, Authy, etc.)
 - **Gestion de session** : Refresh token automatique, déconnexion
 - **Protection des routes** : Routes protégées nécessitant une authentification
@@ -167,8 +168,16 @@ npm install
 
 Créer un fichier `.env` à la racine du projet :
 ```env
+# Configuration du serveur backend
 VITE_API_URL=http://localhost:3000/api/v1
+
+# Google OAuth 2.0 Client ID (optionnel)
+# Doit être identique au GOOGLE_CLIENT_ID configuré dans le backend
+# Format: xxxxx.apps.googleusercontent.com
+VITE_GOOGLE_CLIENT_ID=votre-client-id.apps.googleusercontent.com
 ```
+
+**Note :** Pour plus de détails sur la configuration de l'authentification Google, consultez le fichier [GOOGLE_AUTH_SETUP.md](./GOOGLE_AUTH_SETUP.md).
 
 4. **Lancer le serveur de développement**
 ```bash
@@ -225,6 +234,8 @@ src/
 │       ├── CreatePlantationModal/
 │       ├── TwoFactorModal/
 │       ├── Toast/
+│       ├── ConfirmationModal/
+│       ├── GoogleSignInButton/
 │       └── Background3D/
 ├── services/                      # Services API
 │   ├── api.ts                    # Configuration Axios
@@ -291,6 +302,7 @@ src/
 ### Endpoints d'authentification
 - `POST /auth/register` - Inscription
 - `POST /auth/login` - Connexion
+- `POST /auth/google` - Authentification Google (avec token ID)
 - `POST /auth/logout` - Déconnexion
 - `GET /auth/me` - Récupération du profil utilisateur
 - `PUT /auth/profile` - Mise à jour du profil
@@ -525,9 +537,12 @@ Les gradients sont convertis en **gradients CSS linéaires** pour une compatibil
 
 ### Variables d'environnement
 
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `VITE_API_URL` | URL de l'API backend | `http://localhost:3000/api/v1` |
+| Variable | Description | Défaut | Requis |
+|----------|-------------|--------|--------|
+| `VITE_API_URL` | URL de l'API backend | `http://localhost:3000/api/v1` | Non |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 Client ID pour l'authentification Google | - | Non (optionnel) |
+
+**Note :** Le bouton d'authentification Google ne s'affichera que si `VITE_GOOGLE_CLIENT_ID` est défini. Pour plus de détails, consultez [GOOGLE_AUTH_SETUP.md](./GOOGLE_AUTH_SETUP.md).
 
 ## 🚀 Scripts disponibles
 
@@ -576,6 +591,7 @@ npm run lint         # Vérifie le code avec ESLint
 Pour plus de détails sur l'implémentation et la configuration, consultez les documents suivants :
 
 - **[Guide de Déploiement](./DEPLOYMENT.md)** : Instructions détaillées pour déployer sur Vercel.
+- **[Configuration Authentification Google](./GOOGLE_AUTH_SETUP.md)** : Guide complet pour configurer l'authentification Google OAuth 2.0.
 - **[Configuration Backend des Notifications](./CONFIGURATION_BACKEND_NOTIFICATIONS.md)** : Spécifications de l'API de notifications.
 - **[Notifications Email](./DOCUMENTATION_NOTIFICATIONS_EMAIL.md)** : Fonctionnement du système de notifications par email.
 - **[Modèle de Données Backend](./MODELE_DONNEES_BACKEND.md)** : Structure des données attendues du backend.
