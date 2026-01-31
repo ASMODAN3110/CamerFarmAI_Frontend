@@ -322,7 +322,7 @@ export function LoginPage() {
                 </div>
 
                 {/* Bouton Google Sign-In */}
-                <GoogleSignInButton className={styles.loginPage__googleButton} />
+                <GoogleSignInButton mode="login" className={styles.loginPage__googleButton} />
 
                 <div className={styles.loginPage__links}>
                   <Link to="/forgot-password" className={styles.loginPage__link}>

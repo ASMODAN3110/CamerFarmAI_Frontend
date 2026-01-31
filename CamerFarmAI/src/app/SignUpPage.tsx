@@ -539,7 +539,7 @@ export function SignUpPage() {
             </div>
 
             {/* Bouton Google Sign-In */}
-            <GoogleSignInButton className={styles.signUpPage__googleButton} />
+            <GoogleSignInButton mode="register" className={styles.signUpPage__googleButton} />
 
             <div className={styles.signUpPage__loginLink}>
               <p className={styles.signUpPage__loginText}>

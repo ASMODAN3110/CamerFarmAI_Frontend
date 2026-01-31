@@ -389,22 +389,71 @@ export const authService = {
   },
 
   /**
-   * Authentification Google avec token ID
+   * Connexion Google (utilisateur existant)
    * @param idToken - Token ID Google obtenu via Google Identity Services
    * @returns Promise avec la réponse de l'API contenant user et accessToken
    */
-  googleAuth: (idToken: string): Promise<ApiResponse<GoogleAuthResponse>> => {
-    return api.post<ApiResponse<GoogleAuthResponse>>('/auth/google', { idToken })
+  googleLogin: (idToken: string): Promise<ApiResponse<GoogleAuthResponse>> => {
+    return api.post<ApiResponse<GoogleAuthResponse>>('/auth/google/login', { idToken })
       .then((res) => {
         return res.data;
       })
       .catch((error: any) => {
-        // Si le backend retourne une erreur, la retourner
+        // Si le backend retourne une erreur, la propager avec le statut
         if (error.response?.data) {
-          return error.response.data;
+          const errorWithStatus = error.response.data;
+          errorWithStatus.status = error.response.status;
+          throw errorWithStatus;
         }
         // Sinon, propager l'erreur
         throw error;
       });
+  },
+
+  /**
+   * Inscription Google (nouvel utilisateur)
+   * @param idToken - Token ID Google obtenu via Google Identity Services
+   * @returns Promise avec la réponse de l'API contenant user et accessToken
+   */
+  googleRegister: (idToken: string): Promise<ApiResponse<GoogleAuthResponse>> => {
+    return api.post<ApiResponse<GoogleAuthResponse>>('/auth/google/register', { idToken })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        // Si le backend retourne une erreur, la propager avec le statut
+        if (error.response?.data) {
+          const errorWithStatus = error.response.data;
+          errorWithStatus.status = error.response.status;
+          throw errorWithStatus;
+        }
+        // Sinon, propager l'erreur
+        throw error;
+      });
+  },
+
+  /**
+   * Authentification Google automatique (essaie login puis register si nécessaire)
+   * @param idToken - Token ID Google obtenu via Google Identity Services
+   * @returns Promise avec la réponse de l'API et l'action effectuée ('login' | 'register')
+   */
+  googleAuthAuto: async (idToken: string): Promise<{ action: 'login' | 'register'; data: ApiResponse<GoogleAuthResponse> }> => {
+    try {
+      // Essayer la connexion d'abord
+      const result = await authService.googleLogin(idToken);
+      return { action: 'login', data: result };
+    } catch (err: any) {
+      // Si 404 (aucun compte trouvé), essayer l'inscription
+      if (err.status === 404) {
+        try {
+          const result = await authService.googleRegister(idToken);
+          return { action: 'register', data: result };
+        } catch (registerErr: any) {
+          throw registerErr;
+        }
+      }
+      // Sinon, relancer l'erreur
+      throw err;
+    }
   },
 };

@@ -107,6 +107,9 @@ export type TranslationKey =
   | 'googleAuth.errors.accountExists'
   | 'googleAuth.errors.serverError'
   | 'googleAuth.errors.generic'
+  | 'googleAuth.errors.noAccount'
+  | 'googleAuth.suggest.login'
+  | 'googleAuth.suggest.register'
   | 'common.locale'
   | 'resetPassword.backToLogin'
   | 'signup.title'
@@ -1064,6 +1067,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'googleAuth.errors.accountExists': 'Un compte existe déjà avec cet email. Veuillez vous connecter avec votre mot de passe.',
     'googleAuth.errors.serverError': 'Erreur serveur. Veuillez réessayer plus tard.',
     'googleAuth.errors.generic': 'Erreur lors de l\'authentification Google',
+    'googleAuth.errors.noAccount': 'Aucun compte trouvé avec ce compte Google.',
+    'googleAuth.suggest.login': 'Se connecter',
+    'googleAuth.suggest.register': 'S\'inscrire',
     'common.locale': 'fr',
     'signup.title': 'INSCRIPTION',
     'signup.lastNameLabel': 'Nom',
@@ -2019,6 +2025,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'googleAuth.errors.accountExists': 'An account already exists with this email. Please sign in with your password.',
     'googleAuth.errors.serverError': 'Server error. Please try again later.',
     'googleAuth.errors.generic': 'Error during Google authentication',
+    'googleAuth.errors.noAccount': 'No account found with this Google account.',
+    'googleAuth.suggest.login': 'Sign in',
+    'googleAuth.suggest.register': 'Sign up',
     'common.locale': 'en',
     'signup.title': 'SIGN UP',
     'signup.lastNameLabel': 'Last Name',
@@ -2974,6 +2983,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'googleAuth.errors.accountExists': 'Konte njahii e nder email ngol. Ɗaɓɓu seŋo e finnde maa.',
     'googleAuth.errors.serverError': 'Koɗɗe server. Ɗaɓɓu yeewto kadi.',
     'googleAuth.errors.generic': 'Koɗɗe e tiimtinde Google',
+    'googleAuth.errors.noAccount': 'Alaa konte njahii e nder konte Google ngol.',
+    'googleAuth.suggest.login': 'Seŋo',
+    'googleAuth.suggest.register': 'Winndito',
     'common.locale': 'ff',
     'signup.title': 'WINNDITO',
     'signup.lastNameLabel': 'Innde',
@@ -3929,6 +3941,9 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'googleAuth.errors.accountExists': 'Kóntó njahí e email ékpé. Bwá seŋo e mótí wá.',
     'googleAuth.errors.serverError': 'Abé ya server. Bwá sígní kadi.',
     'googleAuth.errors.generic': 'Abé ya tiimtinde Google',
+    'googleAuth.errors.noAccount': 'Kóntó alé njahí e Google ékpé.',
+    'googleAuth.suggest.login': 'Kómbí',
+    'googleAuth.suggest.register': 'Sígní',
     'common.locale': 'ew',
     'signup.title': 'SÍGNÍ',
     'signup.lastNameLabel': 'Nkómbó',
