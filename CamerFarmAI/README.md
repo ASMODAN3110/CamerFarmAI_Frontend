@@ -49,7 +49,12 @@ Le frontend convertit automatiquement les unités de superficie :
 ### Authentification
 - **Inscription** : Création de compte avec email, téléphone, nom et prénom
 - **Connexion** : Authentification par email et mot de passe
-- **Authentification Google** : Connexion rapide via Google OAuth 2.0 (disponible sur les pages de connexion et d'inscription)
+- **Authentification Google** : 
+  - Connexion Google pour utilisateurs existants (`POST /auth/google/login`)
+  - Inscription Google pour nouveaux utilisateurs (`POST /auth/google/register`)
+  - Flux automatique : essaie la connexion puis l'inscription si nécessaire
+  - Gestion intelligente des erreurs avec suggestions de redirection
+  - Disponible sur les pages de connexion et d'inscription
 - **Authentification à deux facteurs (2FA)** : Sécurisation supplémentaire avec codes de vérification (Google Authenticator, Authy, etc.)
 - **Gestion de session** : Refresh token automatique, déconnexion
 - **Protection des routes** : Routes protégées nécessitant une authentification
@@ -302,7 +307,8 @@ src/
 ### Endpoints d'authentification
 - `POST /auth/register` - Inscription
 - `POST /auth/login` - Connexion
-- `POST /auth/google` - Authentification Google (avec token ID)
+- `POST /auth/google/login` - Connexion Google (utilisateur existant)
+- `POST /auth/google/register` - Inscription Google (nouvel utilisateur)
 - `POST /auth/logout` - Déconnexion
 - `GET /auth/me` - Récupération du profil utilisateur
 - `PUT /auth/profile` - Mise à jour du profil
@@ -542,7 +548,11 @@ Les gradients sont convertis en **gradients CSS linéaires** pour une compatibil
 | `VITE_API_URL` | URL de l'API backend | `http://localhost:3000/api/v1` | Non |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth 2.0 Client ID pour l'authentification Google | - | Non (optionnel) |
 
-**Note :** Le bouton d'authentification Google ne s'affichera que si `VITE_GOOGLE_CLIENT_ID` est défini. Pour plus de détails, consultez [GOOGLE_AUTH_SETUP.md](./GOOGLE_AUTH_SETUP.md).
+**Note :** 
+- Le bouton d'authentification Google ne s'affichera que si `VITE_GOOGLE_CLIENT_ID` est défini
+- L'authentification Google utilise deux endpoints distincts : `/auth/google/login` pour la connexion et `/auth/google/register` pour l'inscription
+- Le composant `GoogleSignInButton` supporte un mode automatique qui essaie la connexion puis l'inscription si nécessaire
+- Pour plus de détails, consultez [GOOGLE_AUTH_SETUP.md](./GOOGLE_AUTH_SETUP.md)
 
 ## 🚀 Scripts disponibles
 
