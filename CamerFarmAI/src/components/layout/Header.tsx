@@ -634,19 +634,31 @@ export function Header({
 
       {/* Menu Mobile */}
       {isMobile && (
-        <div className={`${styles.header__mobileMenu} ${mobileMenuOpen ? styles.header__mobileMenuOpen : ''}`}>
-          <nav className={styles.header__mobileNav} aria-label="Navigation mobile">
-            {navItemsWithActive.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`${styles.header__mobileNavLink} ${item.active ? styles.header__mobileNavLinkActive : ''}`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+        <>
+          {/* Overlay pour fermer le menu en cliquant dessus */}
+          {mobileMenuOpen && (
+            <div 
+              className={`${styles.header__mobileOverlay} ${mobileMenuOpen ? styles.header__mobileOverlayVisible : ''}`}
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+          )}
+          <div 
+            className={`${styles.header__mobileMenu} ${mobileMenuOpen ? styles.header__mobileMenuOpen : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <nav className={styles.header__mobileNav} aria-label="Navigation mobile">
+              {navItemsWithActive.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={`${styles.header__mobileNavLink} ${item.active ? styles.header__mobileNavLinkActive : ''}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
           <div className={styles.header__mobileLanguage}>
             <LanguageSwitcher />
@@ -714,7 +726,8 @@ export function Header({
               </Button>
             </div>
           )}
-        </div>
+          </div>
+        </>
       )}
     </header>
   );
