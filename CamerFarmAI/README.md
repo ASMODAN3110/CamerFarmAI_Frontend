@@ -145,7 +145,7 @@ Le frontend convertit automatiquement les unités de superficie :
   - Outils de diagnostic avancés
 
 ### Multilingue
-- Support de 4 langues : Français, English, Fulfulde, Ewondo
+- Support de 4 langues : Français, English, Fulfulde, Ewondo,,,
 - Changement de langue dynamique
 - Traductions complètes de l'interface
 - Approche hybride pour l'Ewondo : termes techniques modernes conservés en français pour une meilleure compréhension
