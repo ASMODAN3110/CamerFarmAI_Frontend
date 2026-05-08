@@ -11,3 +11,10 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
+/** https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent */
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
+

@@ -956,7 +956,15 @@ export type TranslationKey =
   | 'cookies.preferences.enabled'
   | 'cookies.preferences.disabled'
   | 'cookies.management.currentPreferences'
-  | 'cookies.management.manageButton';
+  | 'cookies.management.manageButton'
+  | 'pwa.install.title'
+  | 'pwa.install.androidDescription'
+  | 'pwa.install.button'
+  | 'pwa.install.dismiss'
+  | 'pwa.install.iosTitle'
+  | 'pwa.install.iosDescription'
+  | 'pwa.install.iosUseSafariTitle'
+  | 'pwa.install.iosUseSafariDescription';
 
 export const translations: Record<Language, Record<TranslationKey, string>> = {
   fr: {
@@ -1904,6 +1912,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'cookies.preferences.disabled': 'Désactivé',
     'cookies.management.currentPreferences': 'Vos préférences actuelles',
     'cookies.management.manageButton': 'Gérer mes préférences',
+    'pwa.install.title': 'Installer CamerFarm sur votre téléphone',
+    'pwa.install.androidDescription':
+      'Ajoutez l\'appli à l\'écran d\'accueil pour un accès rapide, comme une app native.',
+    'pwa.install.button': 'Installer',
+    'pwa.install.dismiss': 'Plus tard',
+    'pwa.install.iosTitle': 'Ajouter à l\'écran d\'accueil',
+    'pwa.install.iosDescription':
+      'Dans Safari : touchez Partager (carré avec flèche), puis « Sur l\'écran d\'accueil ». Validez : l\'icône « CamerFarm » doit apparaître sur l\'accueil. Si elle manque, vérifiez que vous n\'êtes pas en navigation privée.',
+    'pwa.install.iosUseSafariTitle': 'Ouvrir dans Safari pour installer',
+    'pwa.install.iosUseSafariDescription':
+      'Sur iPhone, seul Safari permet d\'ajouter l\'app à l\'écran d\'accueil avec icône. Copiez l\'adresse, ouvrez Safari, collez-la, puis Partager → « Sur l\'écran d\'accueil ».',
     'support.hero.title': 'Comment pouvons-nous vous aider ?',
     'support.hero.subtitle': 'Trouvez les réponses dont vous avez besoin',
     'support.section.help.title': 'Besoin d\'une aide supplémentaire ?',
@@ -2862,6 +2881,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'cookies.preferences.disabled': 'Disabled',
     'cookies.management.currentPreferences': 'Your current preferences',
     'cookies.management.manageButton': 'Manage my preferences',
+    'pwa.install.title': 'Install CamerFarm on your phone',
+    'pwa.install.androidDescription':
+      'Add the app to your home screen for quick access, like a native app.',
+    'pwa.install.button': 'Install',
+    'pwa.install.dismiss': 'Not now',
+    'pwa.install.iosTitle': 'Add to Home Screen',
+    'pwa.install.iosDescription':
+      'In Safari: tap Share (square with arrow), then « Add to Home Screen ». Confirm: the CamerFarm icon should appear on your home screen. If it is missing, make sure you are not in private browsing.',
+    'pwa.install.iosUseSafariTitle': 'Open in Safari to install',
+    'pwa.install.iosUseSafariDescription':
+      'On iPhone, only Safari can add the app to your home screen with an icon. Copy the URL, open Safari, paste it, then Share → « Add to Home Screen ».',
     'support.hero.title': 'How can we help you?',
     'support.hero.subtitle': 'Find the answers you need',
     'support.section.help.title': 'Need extra help?',
@@ -3820,6 +3850,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'cookies.preferences.disabled': 'Mbatu',
     'cookies.management.currentPreferences': 'Cuɓal maa jeyaaɗe',
     'cookies.management.manageButton': 'Laamngo cuɓal am',
+    'pwa.install.title': 'Ɓettu CamerFarm e cinnde maa',
+    'pwa.install.androidDescription':
+      'Ɓettu jilli e hello hello ngam ɗoofde hesɗi, no app.',
+    'pwa.install.button': 'Ɓettu',
+    'pwa.install.dismiss': 'Kadi',
+    'pwa.install.iosTitle': 'Ɓettu e hello hello',
+    'pwa.install.iosDescription':
+      'Safari: ƴoƴo Rewind (kuusal e ɗoogal), nden « E hello hello ». Ɓeydu: tamndel « CamerFarm » ena heɓoo e hello. So alaa, ƴeelo so a wonaa e ɗooɗre suturo.',
+    'pwa.install.iosUseSafariTitle': 'Uddit Safari ngam ɓettude',
+    'pwa.install.iosUseSafariDescription':
+      'E iPhone, Safari taney ɓettude app e hello e tamnde. Natto hello hello, uddit Safari, ƴoƴo, nden Rewind → « E hello hello ».',
     'support.hero.title': 'Comment pouvons-nous vous aider ?',
     'support.hero.subtitle': 'Trouvez les réponses dont vous avez besoin',
     'support.section.help.title': 'Besoin d\'une aide supplémentaire ?',
@@ -4779,6 +4820,17 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     'cookies.preferences.disabled': 'Mbatu',
     'cookies.management.currentPreferences': 'Cuɓal wá jeyaaɗe',
     'cookies.management.manageButton': 'Laamngo cuɓal am',
+    'pwa.install.title': 'Ɓettu CamerFarm e cinnde wá',
+    'pwa.install.androidDescription':
+      'Ɓettu jilli e hello hello ngam ɗoofde hesɗi, no app.',
+    'pwa.install.button': 'Ɓettu',
+    'pwa.install.dismiss': 'Kadi',
+    'pwa.install.iosTitle': 'Ɓettu e hello hello',
+    'pwa.install.iosDescription':
+      'Safari: ƴoƴo Rewind (kuusal e ɗoogal), nden « E hello hello ». Ɓeydu: tamndel « CamerFarm » ena heɓoo e hello. So alaa, ƴeelo so wá wonaa e ɗooɗre suturo.',
+    'pwa.install.iosUseSafariTitle': 'Uddit Safari ngam ɓettude',
+    'pwa.install.iosUseSafariDescription':
+      'E iPhone, Safari taney ɓettude app e hello e tamnde. Natto hello hello, uddit Safari, ƴoƴo, nden Rewind → « E hello hello ».',
     'support.hero.title': 'Comment pouvons-nous vous aider ?',
     'support.hero.subtitle': 'Trouvez les réponses dont vous avez besoin',
     'support.section.help.title': 'Besoin d\'une aide supplémentaire ?',

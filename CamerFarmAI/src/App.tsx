@@ -3,6 +3,7 @@ import { AuthProvider } from './services/authProvider';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { CookieProvider } from './contexts/CookieContext';
 import { CookieBanner } from './components/cookies/CookieBanner';
+import { PwaInstallPrompt } from './components/pwa/PwaInstallPrompt';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { PublicRoute } from './components/auth/PublicRoute';
 import { RoleBasedRoute } from './components/auth/RoleBasedRoute';
@@ -164,6 +165,7 @@ function App() {
               {/* <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
             </Routes>
           </BrowserRouter>
+          <PwaInstallPrompt />
           <CookieBanner />
         </CookieProvider>
       </NotificationProvider>
