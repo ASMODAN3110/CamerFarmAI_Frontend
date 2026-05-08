@@ -21,11 +21,11 @@ import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './DocumentationPage.module.css';
 
-import sensorTempImg from '@/assets/sensors/sensor_temperature.png';
-import sensorSoilImg from '@/assets/sensors/sensor_soil_moisture.png';
+import sensorTempImg from '@/assets/sensors/sensor_temperature.jpg';
+import sensorSoilImg from '@/assets/sensors/sensor_soil_moisture.jpg';
 import sensorCo2Img from '@/assets/sensors/sensor_co2.png';
 import sensorWaterImg from '@/assets/sensors/sensor_water_level.png';
-import sensorLuminosityImg from '@/assets/sensors/sensor_luminosity.png';
+import sensorLuminosityImg from '@/assets/sensors/sensor_luminosity.jpg';
 
 interface DocumentationSection {
   id: string;
@@ -135,7 +135,7 @@ export function DocumentationPage() {
                 </h2>
                 <div className={styles.docsPage__sectionContent}>
                   <div className={styles.docsPage__imageContainer}>
-                    <img src={sensorTempImg} alt="Capteur de température" className={styles.docsPage__sensorImage} />
+                    <img src={sensorTempImg} alt="Capteur DHT22" className={styles.docsPage__sensorImage} />
                   </div>
                   <h3>{t('docs.temperature.title')}</h3>
                   <p>{t('docs.temperature.description')}</p>
