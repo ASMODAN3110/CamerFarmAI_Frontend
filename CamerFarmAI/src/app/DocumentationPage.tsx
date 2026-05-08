@@ -37,6 +37,21 @@ export function DocumentationPage() {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const swaggerHref = (() => {
+    const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
+    if (!apiUrl) return 'http://localhost:3000/api-docs';
+
+    try {
+      // VITE_API_URL est généralement de la forme: http://host:port/api/v1
+      // Swagger est attendu sur: http://host:port/api-docs
+      const url = new URL(apiUrl);
+      url.pathname = url.pathname.replace(/\/api\/v1\/?$/, '');
+      return `${url.origin}/api-docs`;
+    } catch {
+      return 'http://localhost:3000/api-docs';
+    }
+  })();
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -259,7 +274,7 @@ export function DocumentationPage() {
                   <h3>{t('docs.api.title')}</h3>
                   <p>{t('docs.api.description')}</p>
                   <div className={styles.docsPage__apiLink}>
-                    <a href="http://localhost:3000/api-docs" target="_blank" rel="noopener noreferrer" className={styles.docsPage__link}>
+                    <a href={swaggerHref} target="_blank" rel="noopener noreferrer" className={styles.docsPage__link}>
                       {t('docs.api.swaggerLink')}
                     </a>
                   </div>
