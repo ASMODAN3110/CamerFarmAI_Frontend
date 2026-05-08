@@ -1,8 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { registerSW } from 'virtual:pwa-register';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import './styles/global.css';
 import App from './App.tsx';
+
 // Import du script de diagnostic (disponible en développement)
 if (import.meta.env.DEV) {
   import('./utils/emailNotificationDiagnostic').then((module) => {
@@ -12,6 +14,8 @@ if (import.meta.env.DEV) {
     // Ignorer les erreurs d'import du script de diagnostic
   });
 }
+
+registerSW({ immediate: true });
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
