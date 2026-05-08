@@ -330,11 +330,16 @@ export const authService = {
         userId: string;
         avatarUrl: string;
       };
-    }>('/auth/profile/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then((res) => {
+    }>(
+      '/auth/profile/avatar',
+      formData,
+      {
+        // Ne pas définir Content-Type : axios + FormData laissent le navigateur
+        // envoyer multipart/form-data avec le boundary, requis par multer.
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      }
+    ).then((res) => {
       // Extraire l'avatarUrl de la réponse
       const avatarUrl = res.data.data?.avatarUrl;
       if (!avatarUrl) {
