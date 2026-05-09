@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './CookiesPage.module.css';
+import { Footer } from '@/components/layout/Footer';
 
 interface CookiesSection {
   id: string;
@@ -244,6 +245,7 @@ export function CookiesPage() {
           </div>
         </div>
       </main>
+      <Footer />
       <CookiePreferencesModal
         isOpen={isPreferencesModalOpen}
         onClose={() => setIsPreferencesModalOpen(false)}

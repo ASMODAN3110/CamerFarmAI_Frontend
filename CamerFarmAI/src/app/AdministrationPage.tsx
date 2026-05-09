@@ -3,6 +3,7 @@ import { Users, Wrench, PlusCircle, X, Trash2, Loader2, AlertTriangle, FileText 
 import styles from "./AdministrationPage.module.css";
 import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
+import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button/Button';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal/ConfirmationModal';
 import { adminService, type UserListItem } from '@/services/adminService';
@@ -650,6 +651,8 @@ export function AdminPage() {
           </div>
         </div>
       )}
+
+      <Footer />
 
       {/* Modal de confirmation de suppression */}
       <ConfirmationModal

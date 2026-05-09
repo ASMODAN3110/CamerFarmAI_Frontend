@@ -20,6 +20,7 @@ import {
 import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './PrivacyPage.module.css';
+import { Footer } from '@/components/layout/Footer';
 
 interface PrivacySection {
   id: string;
@@ -260,6 +261,7 @@ export function PrivacyPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

@@ -20,6 +20,7 @@ import {
 import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './DocumentationPage.module.css';
+import { Footer } from '@/components/layout/Footer';
 
 import sensorTempImg from '@/assets/sensors/sensor_temperature.jpg';
 import sensorSoilImg from '@/assets/sensors/sensor_soil_moisture.jpg';
@@ -285,6 +286,7 @@ export function DocumentationPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

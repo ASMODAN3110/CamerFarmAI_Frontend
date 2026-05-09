@@ -20,6 +20,7 @@ import {
 import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
 import styles from './TermsPage.module.css';
+import { Footer } from '@/components/layout/Footer';
 
 interface TermsSection {
   id: string;
@@ -257,6 +258,7 @@ export function TermsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }
