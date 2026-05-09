@@ -49,8 +49,7 @@
 .termsPage__sidebar {
   position: sticky;
   top: 2rem;
-  max-height: calc(100vh - 4rem);
-  overflow-y: auto;
+  z-index: 50;
 }
 
 .termsPage__sidebarHeader {
@@ -76,6 +75,11 @@
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  position: sticky;
+  top: 2rem;
+  z-index: 50;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
 }
 
 .termsPage__tocTitle {
