@@ -7,7 +7,6 @@ import styles from "./TechnicianDashboardPage.module.css"
 import { Header } from "@/components/layout/Header"
 import { Background3D } from "@/components/ui/Background3D/Background3D"
 import { useTranslation } from "@/hooks/useTranslation"
-import { Footer } from "@/components/layout/Footer"
 
 import {
   technicianService,
@@ -596,7 +595,6 @@ export default function TechnicianDashboardPage() {
           </div>
         )}
       </main>
-      <Footer />
     </>
   )
 }

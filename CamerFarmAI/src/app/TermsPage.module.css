@@ -50,6 +50,13 @@
   position: sticky;
   top: 2rem;
   z-index: 50;
+  align-self: start;
+  max-height: calc(100vh - 4rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 .termsPage__sidebarHeader {
@@ -75,11 +82,6 @@
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  position: sticky;
-  top: 2rem;
-  z-index: 50;
-  max-height: calc(100vh - 4rem);
-  overflow-y: auto;
 }
 
 .termsPage__tocTitle {
@@ -239,12 +241,18 @@
   .termsPage__sidebar {
     position: static;
     max-height: none;
+    overflow-y: visible;
   }
 
   .termsPage__toc {
     position: sticky;
     top: 1rem;
     z-index: 10;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 }
 
@@ -325,13 +333,18 @@
     left: 0;
     width: 280px;
     height: 100vh;
+    max-height: none;
     background: white;
     z-index: 1001;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 
   .termsPage__sidebarOpen {
