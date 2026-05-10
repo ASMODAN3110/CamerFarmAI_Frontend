@@ -221,6 +221,38 @@ export default function TechnicianDashboardPage() {
   }, [])
 
   /* =======================
+     RAFRAÎCHISSEMENT AUTOMATIQUE D'UNE PLANTATION
+     (pour refléter les capteurs active/inactive)
+  ======================= */
+  useEffect(() => {
+    if (!selectedPlantationId) return
+
+    let isCancelled = false
+
+    const refreshPlantationDetails = async () => {
+      try {
+        const details = await technicianService.getPlantationDetails(selectedPlantationId)
+        if (!isCancelled) {
+          setPlantationDetails(details)
+          setLastRefresh(new Date())
+        }
+      } catch (err) {
+        // On ne stoppe pas l'UI si le refresh échoue ponctuellement
+        console.error('Erreur lors du rafraîchissement des détails:', err)
+      }
+    }
+
+    // Backend met à jour périodiquement (ex: toutes les 5 minutes) :
+    // on rafraîchit l'écran plus fréquemment (cadence 2 min) pour rester à jour.
+    const interval = setInterval(refreshPlantationDetails, 120000)
+
+    return () => {
+      isCancelled = true
+      clearInterval(interval)
+    }
+  }, [selectedPlantationId])
+
+  /* =======================
      CALCULS DÉRIVÉS
   ======================= */
   const selectedFarmer = useMemo(
