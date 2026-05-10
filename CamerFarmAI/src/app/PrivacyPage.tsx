@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Background3D } from '@/components/ui/Background3D/Background3D';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -15,7 +16,8 @@ import {
   FaEdit,
   FaEnvelope,
   FaBars,
-  FaTimes
+  FaTimes,
+  FaListUl
 } from 'react-icons/fa';
 import { TranslationKey } from '@/utils/translations';
 import { IconType } from 'react-icons';
@@ -31,6 +33,8 @@ interface PrivacySection {
 export function PrivacyPage() {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isTocVisible, setIsTocVisible] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -39,6 +43,44 @@ export function PrivacyPage() {
       setMobileMenuOpen(false);
     }
   };
+
+  const jumpToToc = () => {
+    setMobileMenuOpen(true);
+    const toc = document.getElementById('privacy-toc');
+    if (toc) {
+      toc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  useEffect(() => {
+    const toc = document.getElementById('privacy-toc');
+    if (!toc) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsTocVisible(Boolean(entry?.isIntersecting));
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(toc);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const footer = document.querySelector('footer[role="contentinfo"]');
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFooterVisible(Boolean(entry?.isIntersecting));
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
 
   const sections: PrivacySection[] = [
     { id: 'introduction', icon: FaHome, key: 'privacy.sections.introduction' },
@@ -78,7 +120,7 @@ export function PrivacyPage() {
                   <FaTimes />
                 </button>
               </div>
-              <nav className={styles.privacyPage__toc}>
+              <nav id="privacy-toc" className={styles.privacyPage__toc}>
                 <ul className={styles.privacyPage__tocList}>
                   {sections.map((section) => {
                     const Icon = section.icon;
@@ -261,6 +303,17 @@ export function PrivacyPage() {
           </div>
         </div>
       </main>
+      {!isTocVisible && !isFooterVisible && (
+        <button
+          type="button"
+          className={styles.privacyPage__tocJumpButton}
+          onClick={jumpToToc}
+          aria-label="Jump to table of contents"
+        >
+          <FaListUl className={styles.privacyPage__tocJumpIcon} />
+          {t('privacy.tableOfContents')}
+        </button>
+      )}
       <Footer />
     </>
   );

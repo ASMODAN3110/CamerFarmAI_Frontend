@@ -47,16 +47,12 @@
 }
 
 .cookiesPage__sidebar {
-  position: sticky;
-  top: 2rem;
-  z-index: 50;
-  align-self: start;
-  max-height: calc(100vh - 4rem);
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  position: static;
+  z-index: auto;
+  align-self: auto;
+  max-height: none;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
 .cookiesPage__sidebarHeader {
@@ -82,6 +78,9 @@
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  position: static;
+  max-height: none;
+  overflow-y: visible;
 }
 
 .cookiesPage__tocTitle {
@@ -157,6 +156,33 @@
 .cookiesPage__mobileToggle:hover {
   background: #218838;
   transform: scale(1.1);
+}
+
+.cookiesPage__tocJumpButton {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 6.5rem; /* au-dessus du bandeau cookies */
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.85rem 1.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.cookiesPage__tocJumpButton:hover {
+  transform: translateY(-1px);
+  background: #218838;
+}
+
+.cookiesPage__tocJumpIcon {
+  font-size: 1.1rem;
 }
 
 .cookiesPage__main {
@@ -268,14 +294,11 @@
   }
 
   .cookiesPage__toc {
-    position: sticky;
-    top: 1rem;
-    z-index: 10;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
+    position: static;
+    top: auto;
+    z-index: auto;
+    max-height: none;
+    overflow-y: visible;
   }
 }
 
@@ -351,27 +374,22 @@
   }
 
   .cookiesPage__sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    height: 100vh;
+    display: block;
+    position: static;
+    width: auto;
+    height: auto;
     max-height: none;
-    background: white;
-    z-index: 1001;
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
+    background: transparent;
+    z-index: auto;
+    transform: none;
+    transition: none;
+    box-shadow: none;
+    padding: 0;
+    overflow: visible;
   }
 
   .cookiesPage__sidebarOpen {
-    transform: translateX(0);
+    display: block;
   }
 
   .cookiesPage__toc {

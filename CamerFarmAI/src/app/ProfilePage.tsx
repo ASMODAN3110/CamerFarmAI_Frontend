@@ -532,12 +532,6 @@ export function ProfilePage() {
                 disabled={!isEditing || isTechnician}
               />
 
-              <div className={styles.infoField}>
-                <label className={styles.infoLabel}>{t('profile.idLabel')}</label>
-                <div className={styles.infoValue}>{user.id}</div>
-                <p className={styles.infoHint}>{t('profile.idHint')}</p>
-              </div>
-
               <div className={styles.twoFactorSection}>
                 <label className={styles.twoFactorLabel}>
                   <FaShieldAlt /> {t('profile.twoFactor.title')}
