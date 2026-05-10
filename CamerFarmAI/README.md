@@ -568,7 +568,15 @@ npm run preview      # Prévisualise le build de production localement
 
 # Linter
 npm run lint         # Vérifie le code avec ESLint
+
+# Tests unitaires
+npm test             # Lance les tests unitaires (Vitest)
+npm run test:watch   # Lance les tests en mode watch
 ```
+
+## 🧪 Tests unitaires
+Les tests unitaires utilisent **Vitest** (configuration : `vitest.config.ts`).
+Les fichiers de tests sont placés typiquement dans `src/**/*.test.ts` / `src/**/*.spec.ts`.
 
 ## 🐛 Dépannage
 
